@@ -1,0 +1,12 @@
+[package]
+name = "stackablectl"
+description = "Commandline tool to interact with a Stackable Data Platform"
+authors = ["Stackable GmbH <info@stackable.de>"]
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/stackabletech/stackablecrt"
+
+[dependencies]
+clap = { version = "3.1", features = ["derive", "cargo"] }
+phf = { version = "0.10", features = ["macros"] }
+which = "4.2"
