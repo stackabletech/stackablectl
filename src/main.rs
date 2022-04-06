@@ -9,26 +9,7 @@ mod helpers;
 mod kind;
 mod operator;
 
-/// key: Operator Name
-/// value: Optional example file
-// const STACKABLE_HELM_REPOS: phf::Map<&'static str, &'static str> = phf_map! {
-//     "stackable-dev" => "https://repo.stackable.tech/repository/helm-dev",
-//     "stackable-test" => "https://repo.stackable.tech/repository/helm-test",
-//     "stackable" => "https://repo.stackable.tech/repository/helm-stable",
-//     "prometheus-community" => "https://prometheus-community.github.io/helm-charts",
-// };
-
-// HELM_DEV_REPO_NAME = "stackable-dev"
-// HELM_DEV_REPO_URL = "https://repo.stackable.tech/repository/helm-dev"
-// HELM_TEST_REPO_NAME = "stackable-test"
-// HELM_TEST_REPO_URL = "https://repo.stackable.tech/repository/helm-test"
-// HELM_STABLE_REPO_NAME = "stackable"
-// HELM_STABLE_REPO_URL = "https://repo.stackable.tech/repository/helm-stable"
-// HELM_PROMETHEUS_REPO_NAME = "prometheus-community"
-// HELM_PROMETHEUS_REPO_URL = "https://prometheus-community.github.io/helm-charts"
-// HELM_PROMETHEUS_CHART_NAME = "kube-prometheus-stack"
-
-/// key: Operator Name
+/// key: Operator name
 /// value: Optional example file
 const VALID_OPERATORS_WITH_EXAMPLES: phf::Map<&'static str, Option<&'static str>> = phf_map! {
     "airflow" => Some("https://raw.githubusercontent.com/stackabletech/airflow-operator/main/examples/simple-airflow-cluster.yaml"),

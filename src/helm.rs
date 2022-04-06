@@ -1,5 +1,6 @@
 use crate::helpers;
 use log::{debug, error};
+use std::process::exit;
 
 pub const HELM_DEV_REPO_URL: &str = "https://repo.stackable.tech/repository/helm-dev";
 pub const HELM_TEST_REPO_URL: &str = "https://repo.stackable.tech/repository/helm-test";
@@ -12,14 +13,14 @@ pub fn install_helm_release<'a>(
 ) {
     if check_if_helm_release_exists(name) {
         error!("The operator {name} is already running in the helm release {name}. Use \"helm uninstall {name}\" to uninstall it.");
-        panic!();
-    } else {
-        // TODO Check if directory with same name exists. If it does print at least a WARN
-        debug!("Installing release {name}");
-        let mut args = vec!["helm", "install", "--repo", repo_url, name, name];
-        args.append(&mut additional_helm_args);
-        helpers::execute_command(args);
+        exit(1);
     }
+
+    // TODO Check if directory with same name exists. If it does print at least a WARN
+    debug!("Installing release {name}");
+    let mut args = vec!["helm", "install", "--repo", repo_url, name, name];
+    args.append(&mut additional_helm_args);
+    helpers::execute_command(args);
 }
 
 fn check_if_helm_release_exists(name: &str) -> bool {
