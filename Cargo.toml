@@ -8,5 +8,11 @@ repository = "https://github.com/stackabletech/stackablecrt"
 
 [dependencies]
 clap = { version = "3.1", features = ["derive", "cargo"] }
+env_logger = "0.9"
+log = "0.4"
 phf = { version = "0.10", features = ["macros"] }
 which = "4.2"
+
+[profile.release]
+# strip = true # By default on Linux and macOS, symbol information is included in the compiled .elf file. This information is not needed to properly execute the binary.
+lto = true # Enable Link Time Optimization to reduce binary size
