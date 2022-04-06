@@ -1,6 +1,6 @@
 [package]
 name = "stackablectl"
-description = "Commandline tool to interact with a Stackable Data Platform"
+description = "Command line tool to interact with a Stackable Data Platform"
 authors = ["Stackable GmbH <info@stackable.de>"]
 version = "0.1.0"
 edition = "2021"
