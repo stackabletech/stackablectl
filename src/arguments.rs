@@ -15,11 +15,36 @@ pub struct CliArgs {
 
 #[derive(Parser)]
 pub enum CliCommand {
-    Deploy(DeployCommand),
+    /// Create a local kubernetes cluster for testing purposes
+    ///
+    /// Kind is a tool to spin up a local kubernetes cluster running on docker on your machine.
+    /// This scripts creates such a cluster consisting of 4 nodes to test the Stackable Data Platform.
+    ///
+    /// You need to have `docker` and `kind` installed. Have a look at the README at https://github.com/stackabletech/stackablectl on how to install them
+    CreateKindCluster(CreateKindClusterCommand),
+    /// Deploy product operators
+    ///
+    /// You need to have `kubectl` and `helm` installed. Have a look at the README at https://github.com/stackabletech/stackablectl on how to install them
+    DeployOperators(DeployOperatorsCommand),
+    /// Deploy additional tooling like S3 data storage or Prometheus
+    ///
+    /// You need to have `kubectl` and `helm` installed. Have a look at the README at https://github.com/stackabletech/stackablectl on how to install them
+    DeployTooling,
+    /// Access deployed services
+    ///
+    /// You need to have `kubectl` installed. Have a look at the README at https://github.com/stackabletech/stackablectl on how to install them
+    AccessServices,
 }
 
 #[derive(Parser)]
-pub struct DeployCommand {
+pub struct CreateKindClusterCommand {
+    /// The name of the kind cluster to create
+    #[clap(short, long, default_value = "stackable-platform")]
+    pub name: String,
+}
+
+#[derive(Parser)]
+pub struct DeployOperatorsCommand {
     /// Stackable operators to install with optional version specification.
     /// Must have the form `name[=version]` e.g. `superset=0.3.0`, `superset=0.3.0-nightly` or `superset=0.3.0-pr123`.
     /// If you want to deploy multiple operators you have to use the -o flag multiple times.
@@ -29,14 +54,4 @@ pub struct DeployCommand {
     /// Will install the `simple` examples for the operators specified via `--operator` or `-o`
     #[clap(short, long)]
     pub examples: bool,
-
-    /// When enabled we'll automatically create a 4 node kind cluster.
-    /// If this was provided with no argument the kind cluster will have the name default name "stackable-demo".
-    /// Otherwise the provided name will be used.
-    #[clap(short, long)]
-    pub kind: bool,
-
-    /// The name of the created kind cluster when `--kind` is used.
-    #[clap(long, default_value = "stackable-platform")]
-    pub kind_cluster_name: String,
 }

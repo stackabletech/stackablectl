@@ -33,7 +33,7 @@ nodes:
 
 pub fn create_cluster(name: &str) {
     if check_if_kind_cluster_exists(name) {
-        warn!("The kind cluster {name} is already running, not creating it again");
+        warn!("The kind cluster {name} is already running, not re-creating it");
     } else {
         let child = Command::new("kind")
             .args(["create", "cluster", "--name", name, "--config", "-"])

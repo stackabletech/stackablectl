@@ -1,6 +1,7 @@
 use crate::arguments::CliCommand;
 use arguments::CliArgs;
 use clap::Parser;
+use log::info;
 use phf::phf_map;
 
 mod arguments;
@@ -38,20 +39,23 @@ fn main() {
         .init();
 
     match &args.cmd {
-        CliCommand::Deploy(deploy_command) => {
-            if deploy_command.kind {
-                helpers::ensure_program_installed("docker");
-                helpers::ensure_program_installed("kind");
+        CliCommand::CreateKindCluster(command) => {
+            helpers::ensure_program_installed("docker");
+            helpers::ensure_program_installed("kind");
 
-                kind::create_cluster(&deploy_command.kind_cluster_name);
-            }
-
+            kind::create_cluster(&command.name);
+        }
+        CliCommand::DeployOperators(command) => {
             helpers::ensure_program_installed("kubectl");
             helpers::ensure_program_installed("helm");
 
-            for operator in &deploy_command.operator {
-                operator.install(deploy_command.examples);
+            if command.operator.is_empty() {
+                info!("No operators to install, specify them via the option `-o` or `--operator`");
+            }
+            for operator in &command.operator {
+                operator.install(command.examples);
             }
         }
+        _ => todo!("Must implement all the available commands"),
     }
 }
