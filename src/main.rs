@@ -1,13 +1,13 @@
-extern crate core;
-
 use crate::arguments::CliCommand;
 use arguments::CliArgs;
 use clap::Parser;
 use phf::phf_map;
 
 mod arguments;
+mod helm;
 mod helpers;
 mod kind;
+mod operator;
 
 /// key: Operator Name
 /// value: Optional example file
@@ -50,14 +50,27 @@ const VALID_OPERATORS_WITH_EXAMPLES: phf::Map<&'static str, Option<&'static str>
 
 fn main() {
     let args = CliArgs::parse();
+    env_logger::builder()
+        .format_timestamp(None)
+        .format_target(false)
+        .filter_level(args.log_level)
+        .init();
 
     match &args.cmd {
         CliCommand::Deploy(deploy_command) => {
             if deploy_command.kind {
-                kind::start(&deploy_command.kind_cluster_name);
+                helpers::ensure_program_installed("docker");
+                helpers::ensure_program_installed("kind");
+
+                kind::create_cluster(&deploy_command.kind_cluster_name);
             }
 
-            println!("TODO: Starting deploying operators");
+            helpers::ensure_program_installed("kubectl");
+            helpers::ensure_program_installed("helm");
+
+            for operator in &deploy_command.operator {
+                operator.install();
+            }
         }
     }
 }
