@@ -50,7 +50,7 @@ fn main() {
             helpers::ensure_program_installed("helm");
 
             for operator in &deploy_command.operator {
-                operator.install();
+                operator.install(deploy_command.examples);
             }
         }
     }

@@ -26,6 +26,10 @@ pub struct DeployCommand {
     #[clap(short, long, multiple_occurrences(true))]
     pub operator: Vec<Operator>,
 
+    /// Will install the `simple` examples for the operators specified via `--operator` or `-o`
+    #[clap(short, long)]
+    pub examples: bool,
+
     /// When enabled we'll automatically create a 4 node kind cluster.
     /// If this was provided with no argument the kind cluster will have the name default name "stackable-demo".
     /// Otherwise the provided name will be used.

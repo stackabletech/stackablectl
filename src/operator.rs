@@ -1,6 +1,6 @@
 use crate::helm::{HELM_DEV_REPO_URL, HELM_STABLE_REPO_URL, HELM_TEST_REPO_URL};
-use crate::{helm, VALID_OPERATORS_WITH_EXAMPLES};
-use log::info;
+use crate::{helm, helpers, VALID_OPERATORS_WITH_EXAMPLES};
+use log::{debug, info};
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -24,17 +24,17 @@ impl Operator {
         }
     }
 
-    pub fn install(&self) {
+    pub fn install(&self, install_example: bool) {
         info!(
-            "Deploying operator {} in {} {}",
+            "Deploying {} operator{}{}",
             self.name,
             match &self.version {
-                None => "development version".to_string(),
-                Some(version) => format!("version {version}"),
+                Some(version) => format!(" in version {version}"),
+                None => "".to_string(),
             },
             match &self.example {
-                None => "without example".to_string(),
-                Some(example) => format!("with example {example}"),
+                Some(_) if install_example => " with example",
+                _ => "",
             }
         );
 
@@ -58,6 +58,16 @@ impl Operator {
                 HELM_STABLE_REPO_URL,
                 vec!["--version", version],
             ),
+        }
+
+        if install_example {
+            if let Some(example) = &self.example {
+                debug!(
+                    "Installing the following example for {}: {example}",
+                    self.name
+                );
+                helpers::execute_command(vec!["kubectl", "apply", "-f", example]);
+            }
         }
     }
 }
