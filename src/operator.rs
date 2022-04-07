@@ -24,7 +24,7 @@ impl Operator {
         }
     }
 
-    pub fn install(&self, install_example: bool) {
+    pub fn deploy(&self, install_example: bool) {
         info!(
             "Deploying {} operator{}{}",
             self.name,
