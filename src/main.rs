@@ -9,6 +9,7 @@ mod helm;
 mod helpers;
 mod kind;
 mod operator;
+mod tooling;
 
 /// key: Operator name
 /// value: Optional example file
@@ -53,8 +54,14 @@ fn main() {
                 info!("No operators to install, specify them via the option `-o` or `--operator`");
             }
             for operator in &command.operator {
-                operator.install(command.examples);
+                operator.deploy(command.examples);
             }
+        }
+        CliCommand::DeployTooling(command) => {
+            helpers::ensure_program_installed("kubectl");
+            helpers::ensure_program_installed("helm");
+
+            tooling::deploy(command);
         }
         _ => todo!("Must implement all the available commands"),
     }

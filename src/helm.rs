@@ -5,6 +5,7 @@ use std::process::exit;
 pub const HELM_DEV_REPO_URL: &str = "https://repo.stackable.tech/repository/helm-dev";
 pub const HELM_TEST_REPO_URL: &str = "https://repo.stackable.tech/repository/helm-test";
 pub const HELM_STABLE_REPO_URL: &str = "https://repo.stackable.tech/repository/helm-stable";
+pub const HELM_PROMETHEUS_REPO_URL: &str = "https://prometheus-community.github.io/helm-charts";
 
 pub fn install_helm_release<'a>(
     name: &'a str,
@@ -12,7 +13,7 @@ pub fn install_helm_release<'a>(
     mut additional_helm_args: Vec<&'a str>,
 ) {
     if check_if_helm_release_exists(name) {
-        error!("The operator {name} is already running in the helm release {name}. Use \"helm uninstall {name}\" to uninstall it.");
+        error!("The helm release {name} is already running. Use \"helm uninstall {name}\" to uninstall it.");
         exit(1);
     }
 

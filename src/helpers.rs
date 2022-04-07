@@ -1,4 +1,5 @@
 use log::trace;
+use std::io::Write;
 use std::process::{Command, Stdio};
 use std::str;
 use which::which;
@@ -50,4 +51,29 @@ pub fn execute_command_and_return_exit_code(mut args: Vec<&str>) -> i32 {
         .expect("")
         .code()
         .expect("")
+}
+
+pub fn execute_command_with_stdin(mut args: Vec<&str>, stdin: &str) {
+    assert!(!args.is_empty());
+
+    let args_string = args.join(" ");
+    trace!("Executing command \"{args_string}\" with the following stdin input:\n{stdin}");
+
+    let command = args.remove(0);
+    let child = Command::new(command)
+        .args(args)
+        .stdin(Stdio::piped())
+        .spawn()
+        .unwrap_or_else(|_| panic!("Failed to spawn the command \"{args_string}\""));
+
+    child
+        .stdin
+        .as_ref()
+        .unwrap()
+        .write_all(stdin.as_bytes())
+        .expect("Failed to write kind cluster definition via stdin");
+
+    if !child.wait_with_output().unwrap().status.success() {
+        panic!("Failed to execute the command \"{args_string}\"");
+    }
 }

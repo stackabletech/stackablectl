@@ -26,10 +26,11 @@ pub enum CliCommand {
     ///
     /// You need to have `kubectl` and `helm` installed. Have a look at the README at https://github.com/stackabletech/stackablectl on how to install them
     DeployOperators(DeployOperatorsCommand),
-    /// Deploy additional tooling like S3 data storage or Prometheus
+    /// Deploy additional tooling like S3 data storage or Monitoring
     ///
     /// You need to have `kubectl` and `helm` installed. Have a look at the README at https://github.com/stackabletech/stackablectl on how to install them
-    DeployTooling,
+    #[clap(subcommand)]
+    DeployTooling(DeployToolingCommand),
     /// Access deployed services
     ///
     /// You need to have `kubectl` installed. Have a look at the README at https://github.com/stackabletech/stackablectl on how to install them
@@ -54,4 +55,12 @@ pub struct DeployOperatorsCommand {
     /// Will install the `simple` examples for the operators specified via `--operator` or `-o`
     #[clap(short, long)]
     pub examples: bool,
+}
+
+#[derive(Parser)]
+pub enum DeployToolingCommand {
+    /// S3 storage provider
+    Minio,
+    /// Monitoring with Prometheus and Grafana
+    Prometheus,
 }
