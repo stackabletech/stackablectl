@@ -47,7 +47,7 @@ pub struct CreateKindClusterCommand {
 #[derive(Parser)]
 pub struct DeployOperatorsCommand {
     /// Stackable operators to install with optional version specification.
-    /// Must have the form `name[=version]` e.g. `superset=0.3.0`, `superset=0.3.0-nightly` or `superset=0.3.0-pr123`.
+    /// Must have the form `name[=version]` e.g. `superset`, `superset=0.3.0`, `superset=0.3.0-nightly` or `superset=0.3.0-pr123`.
     /// If you want to deploy multiple operators you have to use the -o flag multiple times.
     #[clap(short, long, multiple_occurrences(true))]
     pub operator: Vec<Operator>,

@@ -48,7 +48,6 @@ fn main() {
         }
         CliCommand::DeployOperators(command) => {
             helpers::ensure_program_installed("kubectl");
-            helpers::ensure_program_installed("helm");
 
             if command.operator.is_empty() {
                 info!("No operators to install, specify them via the option `-o` or `--operator`");
@@ -59,7 +58,6 @@ fn main() {
         }
         CliCommand::DeployTooling(command) => {
             helpers::ensure_program_installed("kubectl");
-            helpers::ensure_program_installed("helm");
 
             tooling::deploy(command);
         }

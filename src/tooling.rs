@@ -1,5 +1,4 @@
 use crate::arguments::DeployToolingCommand;
-use crate::helm::HELM_PROMETHEUS_REPO_URL;
 use crate::{helm, helpers};
 use log::info;
 
@@ -28,7 +27,13 @@ pub fn deploy(command: &DeployToolingCommand) {
         }
         DeployToolingCommand::Prometheus => {
             info!("Installing Prometheus");
-            helm::install_helm_release("prometheus-operator", HELM_PROMETHEUS_REPO_URL, vec![]);
+            helm::install_helm_release_from_repo(
+                "prometheus-operator",
+                "prometheus-community",
+                "prometheus-operator",
+                None,
+                false,
+            );
             info!("Installing Prometheus scrape configuration");
             helpers::execute_command_with_stdin(
                 vec!["kubectl", "apply", "-f", "-"],

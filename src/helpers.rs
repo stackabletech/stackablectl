@@ -4,6 +4,21 @@ use std::process::{Command, Stdio};
 use std::str;
 use which::which;
 
+#[repr(C)]
+pub struct GoString {
+    p: *const u8,
+    n: i64,
+}
+
+impl From<&str> for GoString {
+    fn from(str: &str) -> Self {
+        GoString {
+            p: str.as_ptr(),
+            n: str.len() as i64,
+        }
+    }
+}
+
 /// Ensures that the program is installed
 /// If the program is not installed it will panic
 pub fn ensure_program_installed(program: &str) {
@@ -36,21 +51,6 @@ pub fn execute_command(mut args: Vec<&str>) -> String {
     trace!("Command output for \"{args_string}\":\n{stdout_string}");
 
     stdout_string.to_string()
-}
-
-pub fn execute_command_and_return_exit_code(mut args: Vec<&str>) -> i32 {
-    let args_string = args.join(" ");
-    trace!("Executing command \"{args_string}\"");
-
-    let command = args.remove(0);
-    Command::new(command)
-        .args(args)
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
-        .status()
-        .expect("")
-        .code()
-        .expect("")
 }
 
 pub fn execute_command_with_stdin(mut args: Vec<&str>, stdin: &str) {
