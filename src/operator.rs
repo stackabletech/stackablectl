@@ -1,4 +1,3 @@
-use crate::helm::{HELM_DEV_REPO_URL, HELM_STABLE_REPO_URL, HELM_TEST_REPO_URL};
 use crate::{helm, helpers, VALID_OPERATORS_WITH_EXAMPLES};
 use log::{debug, info};
 use std::str::FromStr;
@@ -40,23 +39,33 @@ impl Operator {
 
         let helm_release_name = format!("{}-operator", self.name);
         match &self.version {
-            None => {
-                helm::install_helm_release(&helm_release_name, HELM_DEV_REPO_URL, vec!["--devel"])
-            }
-            Some(version) if version.ends_with("-nightly") => helm::install_helm_release(
+            None => helm::install_helm_release_from_repo(
                 &helm_release_name,
-                HELM_DEV_REPO_URL,
-                vec!["--version", version],
+                "stackable-dev",
+                &helm_release_name,
+                None,
+                true,
             ),
-            Some(version) if version.contains("-pr") => helm::install_helm_release(
+            Some(version) if version.ends_with("-nightly") => helm::install_helm_release_from_repo(
                 &helm_release_name,
-                HELM_TEST_REPO_URL,
-                vec!["--version", version],
+                "stackable-dev",
+                &helm_release_name,
+                Some(version),
+                false,
             ),
-            Some(version) => helm::install_helm_release(
+            Some(version) if version.contains("-pr") => helm::install_helm_release_from_repo(
                 &helm_release_name,
-                HELM_STABLE_REPO_URL,
-                vec!["--version", version],
+                "stackable-test",
+                &helm_release_name,
+                Some(version),
+                false,
+            ),
+            Some(version) => helm::install_helm_release_from_repo(
+                &helm_release_name,
+                "stackable-stable",
+                &helm_release_name,
+                Some(version),
+                false,
             ),
         }
 

@@ -2,3 +2,7 @@
 Cargo.lock
 
 .idea/
+
+go-helm-wrapper/go-helm-wrapper
+go-helm-wrapper/libhelm.a
+go-helm-wrapper/libhelm.h

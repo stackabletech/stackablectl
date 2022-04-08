@@ -1,72 +1,61 @@
-use crate::helpers;
-use log::{debug, error};
+use crate::helpers::GoString;
+use log::{debug, error, warn};
+use phf::phf_map;
 use std::process::exit;
 
-pub const HELM_DEV_REPO_URL: &str = "https://repo.stackable.tech/repository/helm-dev";
-pub const HELM_TEST_REPO_URL: &str = "https://repo.stackable.tech/repository/helm-test";
-pub const HELM_STABLE_REPO_URL: &str = "https://repo.stackable.tech/repository/helm-stable";
-pub const HELM_PROMETHEUS_REPO_URL: &str = "https://prometheus-community.github.io/helm-charts";
+/// key: Helm repo name
+/// value: Helm repo url
+const HELM_REPOS: phf::Map<&'static str, &'static str> = phf_map! {
+    "stackable-dev" => "https://repo.stackable.tech/repository/helm-dev",
+    "stackable-test" => "https://repo.stackable.tech/repository/helm-test",
+    "stackable-stable" => "https://repo.stackable.tech/repository/helm-stable",
+    "prometheus-community" =>"https://prometheus-community.github.io/helm-charts",
+};
 
-pub fn install_helm_release<'a>(
-    name: &'a str,
-    repo_url: &'a str,
-    mut additional_helm_args: Vec<&'a str>,
+extern "C" {
+    fn go_install_helm_release(release_name: GoString, chart_name: GoString);
+    fn go_helm_release_exists(release_name: GoString) -> bool;
+    fn go_add_helm_repo(name: GoString, url: GoString);
+}
+
+// Wrapper around the go functions
+fn install_helm_release(release_name: &str, chart_name: &str) {
+    unsafe { go_install_helm_release(GoString::from(release_name), GoString::from(chart_name)) }
+}
+
+fn helm_release_exists(release_name: &str) -> bool {
+    unsafe { go_helm_release_exists(GoString::from(release_name)) }
+}
+
+fn add_helm_repo(name: &str, url: &str) {
+    unsafe { go_add_helm_repo(GoString::from(name), GoString::from(url)) }
+}
+
+pub fn install_helm_release_from_repo(
+    release_name: &str,
+    repo_name: &str,
+    chart_name: &str,
+    _version: Option<&str>, // TODO
+    _develop_version: bool, // TODO
 ) {
-    if check_if_helm_release_exists(name) {
-        error!("The helm release {name} is already running. Use \"helm uninstall {name}\" to uninstall it.");
+    if helm_release_exists(release_name) {
+        error!("The helm release {release_name} is already running. Use \"helm uninstall {release_name}\" to uninstall it.");
+        warn!("TODO: Implement user prompt to delete it for him");
         exit(1);
     }
 
-    // TODO Check if directory with same name exists. If it does print at least a WARN
-    debug!("Installing release {name}");
-    let mut args = vec!["helm", "install", "--repo", repo_url, name, name];
-    args.append(&mut additional_helm_args);
-    helpers::execute_command(args);
+    match HELM_REPOS.get_entry(repo_name) {
+        None => {
+            error!("I don't know about the helm repo {repo_name}");
+            exit(1);
+        }
+        Some((repo_name, repo_url)) => {
+            debug!("Adding helm repo {repo_name} with URL {repo_url}");
+            add_helm_repo(repo_name, repo_url);
+        }
+    }
+
+    let full_chart_name = format!("{repo_name}/{chart_name}");
+    debug!("Installing helm release {repo_name} from chart {full_chart_name}");
+    install_helm_release(release_name, &full_chart_name);
 }
-
-fn check_if_helm_release_exists(name: &str) -> bool {
-    helpers::execute_command_and_return_exit_code(vec!["helm", "status", name]) == 0
-}
-
-// pub fn add_and_update_repo(name: &str, url: &str) {
-//     debug!("Adding Helm repo {name} with URL {url}");
-//     helpers::execute_command(vec!["helm", "repo", "add", name, url]);
-//     debug!("Updating Helm repo {name}");
-//     helpers::execute_command(vec!["helm", "repo", "update", name]);
-// }
-
-// Adds Helm repository if it does not exist yet (it looks for a repository with the same URL, not name).
-// An `update` command will also be run in either case.
-// Returns the name of the repository, might differ from the passed name if it did already exist
-// pub fn add_repo(name: &str, url: &str) -> String {
-//     debug!("Checking whether Helm repository {name} already exists");
-//
-//     #[derive(Serialize, Deserialize, Debug)]
-//     struct Repo {
-//         name: String,
-//         url: String,
-//     }
-//
-//     let repos_json = helpers::execute_command(vec!["helm", "repo", "list", "-o", "json"]);
-//     let repos: Vec<Repo> = serde_json::from_str(&repos_json).expect("Could not parse helm repo json");
-//     trace!("Found the repos {:?}", repos);
-//
-//     let repo = repos.iter().filter(|repo| repo.name == name).next();
-//
-//     let repo_name = match repo {
-//         None => {
-//             debug!("Helm repository {name} (URL {url}) missing - adding now");
-//             "TODO".to_string()
-//         }
-//         Some(repo) => {
-//             debug!("Found existing repository {} with URL {}", repo.name, repo.url);
-//
-//             repo.name.to_string()
-//         }
-//     };
-//
-//     debug!("Updating repository {}", &repo_name);
-//     helpers::execute_command(vec!["helm", "repo", "update", &repo_name]);
-//
-//     repo_name
-// }
