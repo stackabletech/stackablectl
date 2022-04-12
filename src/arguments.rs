@@ -40,7 +40,7 @@ pub enum CliCommand {
 #[derive(Parser)]
 pub struct CreateKindClusterCommand {
     /// The name of the kind cluster to create
-    #[clap(short, long, default_value = "stackable-platform")]
+    #[clap(short, long, default_value = "stackable-data-platform")]
     pub name: String,
 }
 

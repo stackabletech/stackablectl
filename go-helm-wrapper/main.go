@@ -10,21 +10,18 @@ import (
 
 func main() {
     go_add_helm_repo("stackable-stable", "https://repo.stackable.tech/repository/helm-stable/")
-
-    if ! go_helm_release_exists("superset-operator") {
-	    go_install_helm_release("superset-operator", "stackable-stable/superset-operator")
-    }
 }
 
 //export go_install_helm_release
-func go_install_helm_release(releaseName string, chartName string) {
-// 	fmt.Printf("Installing helm release %s with chart URL %s\n", releaseName, chartName)
+func go_install_helm_release(releaseName string, chartName string, chartVersion string, ) {
+// 	fmt.Printf("Installing helm release %s with chart URL %s in version %s\n", releaseName, chartName, chartVersion)
 	helmClient := getHelmClient()
 
 	timeout, _ := time.ParseDuration("10m")
 	chartSpec := gohelm.ChartSpec{
 		ReleaseName: releaseName,
 		ChartName:   chartName,
+		Version:     chartVersion,
 		Namespace:   "default",
 		UpgradeCRDs: true,
 		Wait:        true,
