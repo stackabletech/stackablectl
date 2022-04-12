@@ -32,9 +32,9 @@ pub fn deploy(command: &DeployToolingCommand) {
                 "prometheus-community",
                 "prometheus-operator",
                 None,
-                false,
             );
             info!("Installing Prometheus scrape configuration");
+            // TODO Switch to go wrapper
             helpers::execute_command_with_stdin(
                 vec!["kubectl", "apply", "-f", "-"],
                 PROMETHEUS_SCRAPE_CONFIG,

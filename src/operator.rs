@@ -44,28 +44,24 @@ impl Operator {
                 "stackable-dev",
                 &helm_release_name,
                 None,
-                true,
             ),
             Some(version) if version.ends_with("-nightly") => helm::install_helm_release_from_repo(
                 &helm_release_name,
                 "stackable-dev",
                 &helm_release_name,
                 Some(version),
-                false,
             ),
             Some(version) if version.contains("-pr") => helm::install_helm_release_from_repo(
                 &helm_release_name,
                 "stackable-test",
                 &helm_release_name,
                 Some(version),
-                false,
             ),
             Some(version) => helm::install_helm_release_from_repo(
                 &helm_release_name,
                 "stackable-stable",
                 &helm_release_name,
                 Some(version),
-                false,
             ),
         }
 
