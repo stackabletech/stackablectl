@@ -61,6 +61,8 @@ fn main() {
 
             tooling::deploy(command);
         }
-        _ => todo!("Must implement all the available commands"),
+        CliCommand::AccessServices => {
+            todo!("Must implement access-services command");
+        }
     }
 }
