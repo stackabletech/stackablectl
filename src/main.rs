@@ -8,6 +8,7 @@ mod arguments;
 mod helm;
 mod helpers;
 mod kind;
+mod kube;
 mod operator;
 mod tooling;
 
