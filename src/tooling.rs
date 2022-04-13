@@ -1,5 +1,5 @@
 use crate::arguments::DeployToolingCommand;
-use crate::{helm, helpers};
+use crate::{helm, helpers, kube};
 use log::info;
 
 const PROMETHEUS_SCRAPE_CONFIG: &str = r#"
@@ -34,11 +34,7 @@ pub fn deploy(command: &DeployToolingCommand) {
                 None,
             );
             info!("Installing Prometheus scrape configuration");
-            // TODO Switch to go wrapper
-            helpers::execute_command_with_stdin(
-                vec!["kubectl", "apply", "-f", "-"],
-                PROMETHEUS_SCRAPE_CONFIG,
-            );
+            kube::deploy_manifest(PROMETHEUS_SCRAPE_CONFIG);
         }
     }
 }
