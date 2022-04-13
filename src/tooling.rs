@@ -1,5 +1,5 @@
 use crate::arguments::DeployToolingCommand;
-use crate::{helm, helpers, kube};
+use crate::{helm, kube};
 use log::info;
 
 const PROMETHEUS_SCRAPE_CONFIG: &str = r#"
