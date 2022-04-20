@@ -9,11 +9,11 @@ import (
 )
 
 func main() {
-    go_add_helm_repo("stackable-stable", "https://repo.stackable.tech/repository/helm-stable/")
+
 }
 
 //export go_install_helm_release
-func go_install_helm_release(releaseName string, chartName string, chartVersion string, ) {
+func go_install_helm_release(releaseName string, chartName string, chartVersion string) {
 // 	fmt.Printf("Installing helm release %s with chart URL %s in version %s\n", releaseName, chartName, chartVersion)
 	helmClient := getHelmClient()
 
@@ -31,6 +31,15 @@ func go_install_helm_release(releaseName string, chartName string, chartVersion 
 	if _, err := helmClient.InstallChart(context.Background(), &chartSpec); err != nil {
 		panic(err)
 	}
+}
+
+//export go_uninstall_helm_release
+func go_uninstall_helm_release(releaseName string) {
+	helmClient := getHelmClient()
+
+    if err := helmClient.UninstallReleaseByName(releaseName); err != nil {
+        panic(err)
+    }
 }
 
 //export go_helm_release_exists
