@@ -1,5 +1,7 @@
 use crate::helpers;
-use log::warn;
+use log::{info, warn};
+
+const DEFAULT_KIND_CLUSTER_NAME: &str = "stackable-data-platform";
 
 const KIND_CLUSTER_DEFINITION: &str = r#"
 kind: Cluster
@@ -29,10 +31,23 @@ nodes:
           node-labels: node=3
 "#;
 
-pub fn create_cluster(name: &str) {
+pub fn handle_cli_arguments(kind_cluster: &Option<Option<String>>) {
+    helpers::ensure_program_installed("docker");
+    helpers::ensure_program_installed("kind");
+
+    if let Some(kind_cluster) = kind_cluster {
+        match kind_cluster {
+            Some(kind_cluster_nane) => create_cluster_if_not_exists(kind_cluster_nane),
+            None => create_cluster_if_not_exists(DEFAULT_KIND_CLUSTER_NAME),
+        }
+    }
+}
+
+fn create_cluster_if_not_exists(name: &str) {
     if check_if_kind_cluster_exists(name) {
-        warn!("The kind cluster {name} is already running, not re-creating it");
+        warn!("The kind cluster {name} is already running, not re-creating it. Use `kind delete cluster --name {name}` to delete it");
     } else {
+        info!("Creating kind cluster {name}");
         helpers::execute_command_with_stdin(
             vec!["kind", "create", "cluster", "--name", name, "--config", "-"],
             KIND_CLUSTER_DEFINITION,
