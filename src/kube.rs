@@ -1,10 +1,8 @@
-use crate::helpers;
-
-/// This function currently uses `kubectl apply`.
-/// In the future we want to switch to kube-rs or something else to not require the user to install kubectl.
-pub fn deploy_manifest(yaml: &str) {
-    helpers::execute_command_with_stdin(vec!["kubectl", "apply", "-f", "-"], yaml);
-}
+// /// This function currently uses `kubectl apply`.
+// /// In the future we want to switch to kube-rs or something else to not require the user to install kubectl.
+// pub fn deploy_manifest(yaml: &str) {
+//     helpers::execute_command_with_stdin(vec!["kubectl", "apply", "-f", "-"], yaml);
+// }
 
 // use crate::kube::Error::TypelessManifest;
 // use kube::api::{DynamicObject, GroupVersionKind, TypeMeta};
