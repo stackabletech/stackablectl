@@ -16,7 +16,7 @@ pub struct CliArgs {
 #[derive(Parser)]
 pub enum CliCommand {
     /// This subcommand interacts with single operators if you don’t want to install the full platform.
-    #[clap(subcommand)]
+    #[clap(subcommand, alias("op"))]
     Operator(CliCommandOperator),
 }
 

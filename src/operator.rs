@@ -10,17 +10,20 @@ use std::str::FromStr;
 #[derive(Parser)]
 pub enum CliCommandOperator {
     /// List all the available operators
+    #[clap(alias("ls"))]
     List {
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
     },
     /// Show details of a specific operator
+    #[clap(alias("desc"))]
     Describe {
         operator: String,
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
     },
     /// Install a operator
+    #[clap(alias("in"))]
     Install {
         /// Space separated list of operators to install.
         /// Must have the form `name[=version]` e.g. `superset`, `superset=0.3.0`, `superset=0.3.0-nightly` or `superset=0.3.0-pr123`.
@@ -37,6 +40,7 @@ pub enum CliCommandOperator {
         kind_cluster: Option<Option<String>>,
     },
     /// Uninstall a operator
+    #[clap(alias("un"))]
     Uninstall {
         /// Space separated list of operators to uninstall.
         #[clap(multiple_occurrences(true), required = true)]
