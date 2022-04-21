@@ -1,19 +1,16 @@
 use crate::helpers::GoString;
 use cached::proc_macro::cached;
+use lazy_static::lazy_static;
 use log::{debug, error, warn};
-use phf::phf_map;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::process::exit;
+use crate::CliArgs;
+use std::sync::Mutex;
 
-/// key: Helm repo name
-/// value: Helm repo url
-pub const HELM_REPOS: phf::Map<&'static str, &'static str> = phf_map! {
-    "stackable-dev" => "https://repo.stackable.tech/repository/helm-dev",
-    "stackable-test" => "https://repo.stackable.tech/repository/helm-test",
-    "stackable-stable" => "https://repo.stackable.tech/repository/helm-stable",
-    "prometheus-community" =>"https://prometheus-community.github.io/helm-charts",
-};
+lazy_static! {
+    pub static ref HELM_REPOS: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new());
+}
 
 extern "C" {
     fn go_install_helm_release(
@@ -24,6 +21,13 @@ extern "C" {
     fn go_uninstall_helm_release(release_name: GoString);
     fn go_helm_release_exists(release_name: GoString) -> bool;
     fn go_add_helm_repo(name: GoString, url: GoString);
+}
+
+pub fn add_helm_repos_from_cli_args(args: &CliArgs) {
+    let mut repos = HELM_REPOS.lock().unwrap();
+    repos.insert("stackable-stable".to_string(), args.helm_repo_stackable_stable.clone());
+    repos.insert("stackable-test".to_string(), args.helm_repo_stackable_test.clone());
+    repos.insert("stackable-dev".to_string(), args.helm_repo_stackable_dev.clone());
 }
 
 /// Installs the specified helm chart with the release_name
@@ -43,12 +47,12 @@ pub fn install_helm_release_from_repo(
         exit(1);
     }
 
-    match HELM_REPOS.get_entry(repo_name) {
+    match HELM_REPOS.lock().unwrap().get(repo_name) {
         None => {
             error!("I don't know about the helm repo {repo_name}");
             exit(1);
         }
-        Some((repo_name, repo_url)) => {
+        Some(repo_url) => {
             debug!("Adding helm repo {repo_name} with URL {repo_url}");
             add_helm_repo(repo_name, repo_url);
         }
@@ -71,7 +75,7 @@ pub fn uninstall_helm_release(release_name: &str) {
 }
 
 #[cached]
-pub fn get_repo_index(repo_url: &'static str) -> HelmRepo {
+pub fn get_repo_index(repo_url: String) -> HelmRepo {
     let index_url = format!("{repo_url}/index.yaml");
     debug!("Fetching helm repo index from {index_url}");
 

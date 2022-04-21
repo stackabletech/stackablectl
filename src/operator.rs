@@ -147,11 +147,10 @@ fn describe_operator(operator: &str, output_type: &OutputType) {
 fn get_versions_from_repo(operator: &str, helm_repo_name: &str) -> Vec<String> {
     let chart_name = format!("{operator}-operator");
 
-    let repo = helm::get_repo_index(
-        HELM_REPOS
-            .get(helm_repo_name)
-            .unwrap_or_else(|| panic!("Could not find a helm repo with the name {helm_repo_name}")),
-    );
+    let repo =
+        helm::get_repo_index(HELM_REPOS.lock().unwrap().get(helm_repo_name).unwrap_or_else(|| {
+            panic!("Could not find a helm repo with the name {helm_repo_name}")
+        }).to_string());
     match repo.entries.get(&chart_name) {
         None => {
             warn!("Could not find {operator} operator (chart name {chart_name}) in helm repo {helm_repo_name}");
