@@ -1,11 +1,12 @@
-use crate::helpers::GoString;
+use crate::helpers::{c_str_ptr_to_str, GoString};
+use crate::CliArgs;
 use cached::proc_macro::cached;
 use lazy_static::lazy_static;
 use log::{debug, error, warn};
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::os::raw::c_char;
 use std::process::exit;
-use crate::CliArgs;
 use std::sync::Mutex;
 
 lazy_static! {
@@ -20,14 +21,24 @@ extern "C" {
     );
     fn go_uninstall_helm_release(release_name: GoString);
     fn go_helm_release_exists(release_name: GoString) -> bool;
+    fn go_helm_list_releases() -> *const c_char;
     fn go_add_helm_repo(name: GoString, url: GoString);
 }
 
 pub fn add_helm_repos_from_cli_args(args: &CliArgs) {
     let mut repos = HELM_REPOS.lock().unwrap();
-    repos.insert("stackable-stable".to_string(), args.helm_repo_stackable_stable.clone());
-    repos.insert("stackable-test".to_string(), args.helm_repo_stackable_test.clone());
-    repos.insert("stackable-dev".to_string(), args.helm_repo_stackable_dev.clone());
+    repos.insert(
+        "stackable-stable".to_string(),
+        args.helm_repo_stackable_stable.clone(),
+    );
+    repos.insert(
+        "stackable-test".to_string(),
+        args.helm_repo_stackable_test.clone(),
+    );
+    repos.insert(
+        "stackable-dev".to_string(),
+        args.helm_repo_stackable_dev.clone(),
+    );
 }
 
 /// Installs the specified helm chart with the release_name
@@ -100,6 +111,23 @@ fn install_helm_release(release_name: &str, chart_name: &str, chart_version: &st
 
 fn helm_release_exists(release_name: &str) -> bool {
     unsafe { go_helm_release_exists(GoString::from(release_name)) }
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Release {
+    pub name: String,
+    pub version: String,
+    pub namespace: String,
+    pub last_updated: String,
+}
+
+pub fn helm_list_releases() -> Vec<Release> {
+    let releases_json = c_str_ptr_to_str(unsafe { go_helm_list_releases() });
+
+    serde_json::from_str(releases_json).unwrap_or_else(|_| {
+        panic!("Failed to parse helm releases JSON from go wrapper {releases_json}")
+    })
 }
 
 fn add_helm_repo(name: &str, url: &str) {

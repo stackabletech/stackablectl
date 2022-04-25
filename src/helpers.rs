@@ -1,5 +1,7 @@
 use log::trace;
+use std::ffi::CStr;
 use std::io::Write;
+use std::os::raw::c_char;
 use std::process::{Command, Stdio};
 use std::str;
 use which::which;
@@ -17,6 +19,11 @@ impl From<&str> for GoString {
             n: str.len() as i64,
         }
     }
+}
+
+pub fn c_str_ptr_to_str(ptr: *const c_char) -> &'static str {
+    let c_str = unsafe { CStr::from_ptr(ptr) };
+    c_str.to_str().unwrap()
 }
 
 /// Ensures that the program is installed

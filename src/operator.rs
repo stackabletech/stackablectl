@@ -46,6 +46,11 @@ pub enum CliCommandOperator {
         #[clap(multiple_occurrences(true), required = true)]
         operators: Vec<String>,
     },
+    /// List installed operators
+    Installed {
+        #[clap(short, long, arg_enum, default_value = "text")]
+        output: OutputType,
+    },
 }
 
 impl CliCommandOperator {
@@ -65,6 +70,7 @@ impl CliCommandOperator {
                 }
             }
             CliCommandOperator::Uninstall { operators } => uninstall_operators(operators),
+            CliCommandOperator::Installed { output } => list_installed_operators(output),
         }
     }
 }
@@ -80,17 +86,19 @@ fn list_operators(output_type: &OutputType) {
         dev_versions: Vec<String>,
     }
 
-    let mut output = Output::new();
-    for operator in AVAILABLE_OPERATORS {
-        output.insert(
-            operator.to_string(),
-            OutputOperatorEntry {
-                stable_versions: get_versions_from_repo(operator, "stackable-stable"),
-                test_versions: get_versions_from_repo(operator, "stackable-test"),
-                dev_versions: get_versions_from_repo(operator, "stackable-dev"),
-            },
-        );
-    }
+    let output: Output = AVAILABLE_OPERATORS
+        .iter()
+        .map(|operator| {
+            (
+                operator.to_string(),
+                OutputOperatorEntry {
+                    stable_versions: get_versions_from_repo(operator, "stackable-stable"),
+                    test_versions: get_versions_from_repo(operator, "stackable-test"),
+                    dev_versions: get_versions_from_repo(operator, "stackable-dev"),
+                },
+            )
+        })
+        .collect();
 
     match output_type {
         OutputType::Text => {
@@ -147,10 +155,14 @@ fn describe_operator(operator: &str, output_type: &OutputType) {
 fn get_versions_from_repo(operator: &str, helm_repo_name: &str) -> Vec<String> {
     let chart_name = format!("{operator}-operator");
 
-    let repo =
-        helm::get_repo_index(HELM_REPOS.lock().unwrap().get(helm_repo_name).unwrap_or_else(|| {
-            panic!("Could not find a helm repo with the name {helm_repo_name}")
-        }).to_string());
+    let repo = helm::get_repo_index(
+        HELM_REPOS
+            .lock()
+            .unwrap()
+            .get(helm_repo_name)
+            .unwrap_or_else(|| panic!("Could not find a helm repo with the name {helm_repo_name}"))
+            .to_string(),
+    );
     match repo.entries.get(&chart_name) {
         None => {
             warn!("Could not find {operator} operator (chart name {chart_name}) in helm repo {helm_repo_name}");
@@ -168,6 +180,58 @@ fn uninstall_operators(operators: &Vec<String>) {
     for operator in operators {
         info!("Uninstalling {operator} operator");
         helm::uninstall_helm_release(format!("{operator}-operator").as_str())
+    }
+}
+
+fn list_installed_operators(output_type: &OutputType) {
+    type Output = IndexMap<String, OutputInstalledOperatorEntry>;
+
+    #[derive(Serialize)]
+    #[serde(rename_all = "camelCase")]
+    struct OutputInstalledOperatorEntry {
+        version: String,
+        namespace: String,
+        last_updated: String,
+    }
+
+    let output: Output = helm::helm_list_releases()
+        .into_iter()
+        .filter(|release| {
+            AVAILABLE_OPERATORS
+                .iter()
+                .any(|available| release.name == format!("{available}-operator"))
+        })
+        .map(|release| {
+            (
+                release.name.trim_end_matches("-operator").to_string(),
+                OutputInstalledOperatorEntry {
+                    version: release.version,
+                    namespace: release.namespace,
+                    last_updated: release.last_updated,
+                },
+            )
+        })
+        .collect();
+
+    match output_type {
+        OutputType::Text => {
+            println!("OPERATOR              VERSION         NAMESPACE             LAST UPDATED");
+            for (operator, operator_entry) in output.iter() {
+                println!(
+                    "{:21} {:15} {:21} {}",
+                    operator,
+                    operator_entry.version,
+                    operator_entry.namespace,
+                    operator_entry.last_updated
+                );
+            }
+        }
+        OutputType::Json => {
+            println!("{}", serde_json::to_string_pretty(&output).unwrap());
+        }
+        OutputType::Yaml => {
+            println!("{}", serde_yaml::to_string(&output).unwrap());
+        }
     }
 }
 
