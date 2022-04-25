@@ -8,6 +8,7 @@ mod helpers;
 mod kind;
 mod kube;
 mod operator;
+mod release;
 
 const AVAILABLE_OPERATORS: &[&str] = &[
     "airflow",
@@ -38,5 +39,6 @@ fn main() {
 
     match &args.cmd {
         CliCommand::Operator(command) => command.handle(),
+        CliCommand::Release(command) => command.handle(),
     }
 }
