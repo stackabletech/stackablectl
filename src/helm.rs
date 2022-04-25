@@ -2,7 +2,7 @@ use crate::helpers::{c_str_ptr_to_str, GoString};
 use crate::CliArgs;
 use cached::proc_macro::cached;
 use lazy_static::lazy_static;
-use log::{debug, error, warn};
+use log::{debug, error, info, warn};
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::os::raw::c_char;
@@ -53,9 +53,25 @@ pub fn install_helm_release_from_repo(
     chart_version: Option<&str>,
 ) {
     if helm_release_exists(release_name) {
-        error!("The helm release {release_name} is already running. Use \"stackablectl operator uninstall {operator_name}\" to uninstall it.");
-        warn!("TODO: Implement user prompt to delete it for him");
-        exit(1);
+        let helm_release = get_helm_release(release_name).unwrap();
+        let current_version = helm_release.version;
+
+        match chart_version {
+            None => {
+                warn!("The release {release_name} in version {current_version} is already running and you have not requested a specific version, not re-installing it");
+                return;
+            }
+            Some(chart_version) => {
+                if chart_version == current_version {
+                    info!("The release {release_name} in version {current_version} is already running, not installing it");
+                    return;
+                } else {
+                    error!("The helm release {release_name} is already running in version {current_version} but you requested to install it in version {chart_version}. \
+                    Use \"stackablectl operator uninstall {operator_name}\" to uninstall it.");
+                    exit(1);
+                }
+            }
+        }
     }
 
     match HELM_REPOS.lock().unwrap().get(repo_name) {
@@ -129,6 +145,12 @@ pub fn helm_list_releases() -> Vec<Release> {
     serde_json::from_str(releases_json).unwrap_or_else(|_| {
         panic!("Failed to parse helm releases JSON from go wrapper {releases_json}")
     })
+}
+
+pub fn get_helm_release(release_name: &str) -> Option<Release> {
+    helm_list_releases()
+        .into_iter()
+        .find(|release| release.name == release_name)
 }
 
 fn add_helm_repo(name: &str, url: &str) {

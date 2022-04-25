@@ -1,7 +1,9 @@
 use crate::arguments::OutputType;
+use crate::operator::Operator;
+use crate::{kind, operator};
 use clap::Parser;
 use indexmap::IndexMap;
-use log::error;
+use log::{error, info};
 use serde::{Deserialize, Serialize};
 use std::process::exit;
 
@@ -20,6 +22,28 @@ pub enum CliCommandRelease {
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
     },
+    /// Install a specific release
+    #[clap(alias("in"))]
+    Install {
+        /// Name of the release to install
+        #[clap(required = true)]
+        release: String,
+
+        /// If this argument is specified a local kubernetes cluster for testing purposes is created.
+        /// Kind is a tool to spin up a local kubernetes cluster running on docker on your machine.
+        /// This scripts creates such a cluster consisting of 4 nodes to test the Stackable Data Platform.
+        /// The default cluster name is `stackable-data-platform` which can be overwritten by specifying the cluster name after `--kind-cluster`
+        /// You need to have `docker` and `kind` installed. Have a look at the README at https://github.com/stackabletech/stackablectl on how to install them
+        #[clap(short, long)]
+        kind_cluster: Option<Option<String>>,
+    },
+    /// Uninstall a release
+    #[clap(alias("un"))]
+    Uninstall {
+        /// Name of the release to uninstall
+        #[clap(required = true)]
+        release: String,
+    },
 }
 
 impl CliCommandRelease {
@@ -27,6 +51,14 @@ impl CliCommandRelease {
         match self {
             CliCommandRelease::List { output } => list_releases(output),
             CliCommandRelease::Describe { release, output } => describe_release(release, output),
+            CliCommandRelease::Install {
+                release,
+                kind_cluster,
+            } => {
+                kind::handle_cli_arguments(kind_cluster);
+                install_release(release);
+            }
+            CliCommandRelease::Uninstall { release } => uninstall_release(release),
         }
     }
 }
@@ -76,21 +108,13 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
         operators: IndexMap<String, String>,
     }
 
-    let releases = get_releases();
-    let output = releases.releases
-        .get(release_name)
-        .map(|release| {
-            Output {
-                release: release_name.to_string(),
-                release_date: release.release_date.to_string(),
-                description: release.description.to_string(),
-                operators: release.operators.clone(),
-            }
-        })
-        .unwrap_or_else(|| {
-        error!("Release {release_name} not found. Use `stackablectl release list` to list the available releases.");
-        exit(1);
-    });
+    let release = get_release(release_name);
+    let output = Output {
+        release: release_name.to_string(),
+        release_date: release.release_date,
+        description: release.description,
+        operators: release.operators,
+    };
 
     match output_type {
         OutputType::Text => {
@@ -116,6 +140,24 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
     }
 }
 
+fn install_release(release_name: &str) {
+    info!("Installing release {release_name}");
+    let release = get_release(release_name);
+
+    for (operator_name, operator_version) in release.operators.into_iter() {
+        Operator::new(operator_name, Some(operator_version))
+            .expect("Failed to construct operator definition")
+            .install();
+    }
+}
+
+fn uninstall_release(release_name: &str) {
+    info!("Uninstalling release {release_name}");
+    let release = get_release(release_name);
+
+    operator::uninstall_operators(&release.operators.into_keys().collect());
+}
+
 fn get_releases() -> Releases {
     // TODO Read from URL/file/whatever
     let file_name = "releases.yaml";
@@ -124,4 +166,14 @@ fn get_releases() -> Releases {
 
     serde_yaml::from_reader(file)
         .expect(format!("Failed to parse release list from {file_name}").as_str())
+}
+
+fn get_release(release_name: &str) -> Release {
+    get_releases()
+        .releases
+        .remove(release_name) // We need to remove to take ownership
+        .unwrap_or_else(|| {
+            error!("Release {release_name} not found. Use `stackablectl release list` to list the available releases.");
+            exit(1);
+        })
 }
