@@ -85,6 +85,7 @@ pub fn uninstall_helm_release(release_name: &str) {
     }
 }
 
+/// Cached because of slow network calls
 #[cached]
 pub fn get_repo_index(repo_url: String) -> HelmRepo {
     let index_url = format!("{repo_url}/index.yaml");
