@@ -26,6 +26,9 @@ const AVAILABLE_OPERATORS: &[&str] = &[
     "superset",
     "trino",
     "zookeeper",
+    // Deprecated
+    "regorule",
+    "monitoring",
 ];
 
 fn main() {

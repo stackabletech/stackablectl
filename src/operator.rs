@@ -22,7 +22,7 @@ pub enum CliCommandOperator {
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
     },
-    /// Install a operator
+    /// Install one or multiple operators
     #[clap(alias("in"))]
     Install {
         /// Space separated list of operators to install.
@@ -34,7 +34,7 @@ pub enum CliCommandOperator {
         /// If this argument is specified a local kubernetes cluster for testing purposes is created.
         /// Kind is a tool to spin up a local kubernetes cluster running on docker on your machine.
         /// This scripts creates such a cluster consisting of 4 nodes to test the Stackable Data Platform.
-        /// The default cluster name is `stackable-data-platform` which can be overwritten by specifiing the cluster name after `--kind-cluster`
+        /// The default cluster name is `stackable-data-platform` which can be overwritten by specifying the cluster name after `--kind-cluster`
         /// You need to have `docker` and `kind` installed. Have a look at the README at https://github.com/stackabletech/stackablectl on how to install them
         #[clap(short, long)]
         kind_cluster: Option<Option<String>>,
@@ -176,7 +176,7 @@ fn get_versions_from_repo(operator: &str, helm_repo_name: &str) -> Vec<String> {
     }
 }
 
-fn uninstall_operators(operators: &Vec<String>) {
+pub fn uninstall_operators(operators: &Vec<String>) {
     for operator in operators {
         info!("Uninstalling {operator} operator");
         helm::uninstall_helm_release(format!("{operator}-operator").as_str())
@@ -215,10 +215,10 @@ fn list_installed_operators(output_type: &OutputType) {
 
     match output_type {
         OutputType::Text => {
-            println!("OPERATOR              VERSION         NAMESPACE             LAST UPDATED");
+            println!("OPERATOR              VERSION         NAMESPACE                LAST UPDATED");
             for (operator, operator_entry) in output.iter() {
                 println!(
-                    "{:21} {:15} {:21} {}",
+                    "{:21} {:15} {:24} {}",
                     operator,
                     operator_entry.version,
                     operator_entry.namespace,
@@ -242,7 +242,7 @@ pub struct Operator {
 }
 
 impl Operator {
-    fn new(name: String, version: Option<String>) -> Result<Self, String> {
+    pub fn new(name: String, version: Option<String>) -> Result<Self, String> {
         if !AVAILABLE_OPERATORS.contains(&name.as_str()) {
             Err(format!(
                 "The operator {name} does not exist or stackablectl is to old to know the operator"
