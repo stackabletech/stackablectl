@@ -1,7 +1,7 @@
 use crate::arguments::OutputType;
 use clap::Parser;
 use indexmap::IndexMap;
-use serde::{Deserialize,Serialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Parser)]
 pub enum CliCommandStack {
@@ -31,7 +31,7 @@ struct Stacks {
 #[serde(rename_all = "camelCase")]
 struct Stack {
     description: String,
-    stackable_release: String
+    stackable_release: String,
 }
 
 fn list_stacks(output_type: &OutputType) {
@@ -64,4 +64,3 @@ fn get_stacks() -> Stacks {
     serde_yaml::from_reader(file)
         .expect(format!("Failed to parse release list from {file_name}").as_str())
 }
-

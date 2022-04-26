@@ -42,8 +42,8 @@ fn main() {
     helm::add_helm_repos_from_cli_args(&args);
 
     match &args.cmd {
-        CliCommand::Operator(command) => command.handle(),
-        CliCommand::Release(command) => command.handle(),
+        CliCommand::Operator(command) => command.handle(args.log_level),
+        CliCommand::Release(command) => command.handle(args.log_level),
         CliCommand::Stack(command) => command.handle(),
     }
 }

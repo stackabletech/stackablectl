@@ -3,7 +3,7 @@ use crate::helm::HELM_REPOS;
 use crate::{helm, kind, AVAILABLE_OPERATORS};
 use clap::Parser;
 use indexmap::IndexMap;
-use log::{info, warn};
+use log::{info, warn, LevelFilter};
 use serde::Serialize;
 use std::str::FromStr;
 
@@ -54,7 +54,7 @@ pub enum CliCommandOperator {
 }
 
 impl CliCommandOperator {
-    pub fn handle(&self) {
+    pub fn handle(&self, log_level: LevelFilter) {
         match self {
             CliCommandOperator::List { output } => list_operators(output),
             CliCommandOperator::Describe { operator, output } => {
@@ -66,10 +66,12 @@ impl CliCommandOperator {
             } => {
                 kind::handle_cli_arguments(kind_cluster);
                 for operator in operators {
-                    operator.install();
+                    operator.install(log_level);
                 }
             }
-            CliCommandOperator::Uninstall { operators } => uninstall_operators(operators),
+            CliCommandOperator::Uninstall { operators } => {
+                uninstall_operators(operators, log_level)
+            }
             CliCommandOperator::Installed { output } => list_installed_operators(output),
         }
     }
@@ -176,10 +178,10 @@ fn get_versions_from_repo(operator: &str, helm_repo_name: &str) -> Vec<String> {
     }
 }
 
-pub fn uninstall_operators(operators: &Vec<String>) {
+pub fn uninstall_operators(operators: &Vec<String>, log_level: LevelFilter) {
     for operator in operators {
         info!("Uninstalling {operator} operator");
-        helm::uninstall_helm_release(format!("{operator}-operator").as_str())
+        helm::uninstall_helm_release(format!("{operator}-operator").as_str(), log_level)
     }
 }
 
@@ -252,7 +254,7 @@ impl Operator {
         }
     }
 
-    pub fn install(&self) {
+    pub fn install(&self, log_level: LevelFilter) {
         info!(
             "Installing {} operator{}",
             self.name,
@@ -270,6 +272,7 @@ impl Operator {
                 "stackable-dev",
                 &helm_release_name,
                 None,
+                log_level,
             ),
             Some(version) if version.ends_with("-nightly") => helm::install_helm_release_from_repo(
                 &self.name,
@@ -277,6 +280,7 @@ impl Operator {
                 "stackable-dev",
                 &helm_release_name,
                 Some(version),
+                log_level,
             ),
             Some(version) if version.contains("-pr") => helm::install_helm_release_from_repo(
                 &self.name,
@@ -284,6 +288,7 @@ impl Operator {
                 "stackable-test",
                 &helm_release_name,
                 Some(version),
+                log_level,
             ),
             Some(version) => helm::install_helm_release_from_repo(
                 &self.name,
@@ -291,6 +296,7 @@ impl Operator {
                 "stackable-stable",
                 &helm_release_name,
                 Some(version),
+                log_level,
             ),
         }
     }

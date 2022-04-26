@@ -3,7 +3,7 @@ module go-helm-wrapper
 go 1.18
 
 require (
-	github.com/mittwald/go-helm-client v0.9.0
+	github.com/mittwald/go-helm-client v0.9.1
 	helm.sh/helm/v3 v3.8.1
 )
 

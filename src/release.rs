@@ -3,7 +3,7 @@ use crate::operator::Operator;
 use crate::{kind, operator};
 use clap::Parser;
 use indexmap::IndexMap;
-use log::{error, info};
+use log::{error, info, LevelFilter};
 use serde::{Deserialize, Serialize};
 use std::process::exit;
 
@@ -47,7 +47,7 @@ pub enum CliCommandRelease {
 }
 
 impl CliCommandRelease {
-    pub fn handle(&self) {
+    pub fn handle(&self, log_level: LevelFilter) {
         match self {
             CliCommandRelease::List { output } => list_releases(output),
             CliCommandRelease::Describe { release, output } => describe_release(release, output),
@@ -56,9 +56,9 @@ impl CliCommandRelease {
                 kind_cluster,
             } => {
                 kind::handle_cli_arguments(kind_cluster);
-                install_release(release);
+                install_release(release, log_level);
             }
-            CliCommandRelease::Uninstall { release } => uninstall_release(release),
+            CliCommandRelease::Uninstall { release } => uninstall_release(release, log_level),
         }
     }
 }
@@ -143,22 +143,22 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
     }
 }
 
-fn install_release(release_name: &str) {
+fn install_release(release_name: &str, log_level: LevelFilter) {
     info!("Installing release {release_name}");
     let release = get_release(release_name);
 
     for (product_name, product) in release.products.into_iter() {
         Operator::new(product_name, Some(product.operator_version))
             .expect("Failed to construct operator definition")
-            .install();
+            .install(log_level);
     }
 }
 
-fn uninstall_release(release_name: &str) {
+fn uninstall_release(release_name: &str, log_level: LevelFilter) {
     info!("Uninstalling release {release_name}");
     let release = get_release(release_name);
 
-    operator::uninstall_operators(&release.products.into_keys().collect());
+    operator::uninstall_operators(&release.products.into_keys().collect(), log_level);
 }
 
 fn get_releases() -> Releases {
