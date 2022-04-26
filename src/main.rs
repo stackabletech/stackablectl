@@ -41,6 +41,7 @@ fn main() {
         .init();
     helm::handle_common_cli_args(&args);
     release::handle_common_cli_args(&args);
+    stack::handle_common_cli_args(&args);
 
     match &args.cmd {
         CliCommand::Operator(command) => command.handle(),
