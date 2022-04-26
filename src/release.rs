@@ -1,11 +1,20 @@
 use crate::arguments::OutputType;
 use crate::operator::Operator;
-use crate::{kind, operator};
+use crate::{helpers, kind, operator, CliArgs};
+use cached::proc_macro::cached;
 use clap::Parser;
 use indexmap::IndexMap;
-use log::{error, info};
+use lazy_static::lazy_static;
+use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
+use std::ops::Deref;
 use std::process::exit;
+use std::sync::Mutex;
+
+lazy_static! {
+    pub static ref RELEASE_FILES: Mutex<Vec<String>> =
+        Mutex::new(vec!["releases.yaml".to_string()]);
+}
 
 #[derive(Parser)]
 pub enum CliCommandRelease {
@@ -63,13 +72,18 @@ impl CliCommandRelease {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+pub fn handle_common_cli_args(args: &CliArgs) {
+    let mut release_files = RELEASE_FILES.lock().unwrap();
+    release_files.append(&mut args.additional_release_files.clone());
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct Releases {
     releases: IndexMap<String, Release>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct Release {
     release_date: String,
@@ -77,7 +91,7 @@ struct Release {
     products: IndexMap<String, ReleaseProduct>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct ReleaseProduct {
     operator_version: String,
@@ -161,14 +175,27 @@ fn uninstall_release(release_name: &str) {
     operator::uninstall_operators(&release.products.into_keys().collect());
 }
 
+/// Cached because of potential slow network calls
+#[cached]
 fn get_releases() -> Releases {
-    // TODO Read from URL/file/whatever
-    let file_name = "releases.yaml";
-    let file = std::fs::File::open(file_name)
-        .expect(format!("Could not read releases from {file_name}").as_str());
+    let mut all_releases: IndexMap<String, Release> = IndexMap::new();
+    for release_file in RELEASE_FILES.lock().unwrap().deref() {
+        let releases_yaml = helpers::read_from_url_or_file(&release_file);
+        match releases_yaml {
+            Ok(yaml) => {
+                let releases: Releases = serde_yaml::from_str(&yaml)
+                    .expect(format!("Failed to parse release list from {release_file}").as_str());
+                all_releases.extend(releases.releases.clone());
+            }
+            Err(err) => {
+                warn!("Could not read from releases file \"{release_file}\": {err}");
+            }
+        }
+    }
 
-    serde_yaml::from_reader(file)
-        .expect(format!("Failed to parse release list from {file_name}").as_str())
+    Releases {
+        releases: all_releases,
+    }
 }
 
 fn get_release(release_name: &str) -> Release {
