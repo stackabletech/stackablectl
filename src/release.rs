@@ -74,7 +74,13 @@ struct Releases {
 struct Release {
     release_date: String,
     description: String,
-    operators: IndexMap<String, String>,
+    products: IndexMap<String, ReleaseProduct>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct ReleaseProduct {
+    operator_version: String,
 }
 
 fn list_releases(output_type: &OutputType) {
@@ -105,7 +111,7 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
         release: String,
         release_date: String,
         description: String,
-        operators: IndexMap<String, String>,
+        products: IndexMap<String, ReleaseProduct>,
     }
 
     let release = get_release(release_name);
@@ -113,7 +119,7 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
         release: release_name.to_string(),
         release_date: release.release_date,
         description: release.description,
-        operators: release.operators,
+        products: release.products,
     };
 
     match output_type {
@@ -121,15 +127,12 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
             println!("Release:            {}", output.release);
             println!("Release date:       {}", output.release_date);
             println!("Description:        {}", output.description);
-            println!(
-                "Operators:          {}",
-                output
-                    .operators
-                    .iter()
-                    .map(|operator| format!("{}={}", operator.0, operator.1))
-                    .collect::<Vec<_>>()
-                    .join(", ")
-            );
+            println!("Included products:");
+            println!();
+            println!("PRODUCT             OPERATOR VERSION");
+            for (product_name, product) in output.products.iter() {
+                println!("{:19} {}", product_name, product.operator_version);
+            }
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output).unwrap());
@@ -144,8 +147,8 @@ fn install_release(release_name: &str) {
     info!("Installing release {release_name}");
     let release = get_release(release_name);
 
-    for (operator_name, operator_version) in release.operators.into_iter() {
-        Operator::new(operator_name, Some(operator_version))
+    for (product_name, product) in release.products.into_iter() {
+        Operator::new(product_name, Some(product.operator_version))
             .expect("Failed to construct operator definition")
             .install();
     }
@@ -155,7 +158,7 @@ fn uninstall_release(release_name: &str) {
     info!("Uninstalling release {release_name}");
     let release = get_release(release_name);
 
-    operator::uninstall_operators(&release.operators.into_keys().collect());
+    operator::uninstall_operators(&release.products.into_keys().collect());
 }
 
 fn get_releases() -> Releases {
