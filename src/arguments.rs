@@ -1,5 +1,6 @@
 use crate::operator::CliCommandOperator;
 use crate::release::CliCommandRelease;
+use crate::stack::CliCommandStack;
 use clap::{ArgEnum, Parser};
 use log::LevelFilter;
 
@@ -41,12 +42,16 @@ pub struct CliArgs {
 #[derive(Parser)]
 pub enum CliCommand {
     /// This subcommand interacts with single operators if you don’t want to install the full platform.
-    #[clap(subcommand, alias("op"))]
+    #[clap(subcommand, alias("o"), alias("op"))]
     Operator(CliCommandOperator),
 
     /// This subcommand interacts with all operators of the platform that are released together.
-    #[clap(subcommand, alias("r"))]
+    #[clap(subcommand, alias("r"), alias("re"))]
     Release(CliCommandRelease),
+
+    /// This subcommand interacts with stacks, which are ready-to-use combinations of products.
+    #[clap(subcommand, alias("s"), alias("st"))]
+    Stack(CliCommandStack),
 }
 
 #[derive(Clone, Parser, ArgEnum)]
