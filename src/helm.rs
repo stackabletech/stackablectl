@@ -11,6 +11,7 @@ use std::sync::Mutex;
 
 lazy_static! {
     pub static ref HELM_REPOS: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new());
+    pub static ref LOG_LEVEL: Mutex<LevelFilter> = Mutex::new(LevelFilter::Trace);
 }
 
 extern "C" {
@@ -26,7 +27,7 @@ extern "C" {
     fn go_add_helm_repo(name: GoString, url: GoString);
 }
 
-pub fn add_helm_repos_from_cli_args(args: &CliArgs) {
+pub fn handle_common_cli_args(args: &CliArgs) {
     let mut repos = HELM_REPOS.lock().unwrap();
     repos.insert(
         "stackable-stable".to_string(),
@@ -40,6 +41,8 @@ pub fn add_helm_repos_from_cli_args(args: &CliArgs) {
         "stackable-dev".to_string(),
         args.helm_repo_stackable_dev.clone(),
     );
+
+    *(LOG_LEVEL.lock().unwrap()) = args.log_level;
 }
 
 /// Installs the specified helm chart with the release_name
@@ -52,7 +55,6 @@ pub fn install_helm_release_from_repo(
     repo_name: &str,
     chart_name: &str,
     chart_version: Option<&str>,
-    log_level: LevelFilter,
 ) {
     if helm_release_exists(release_name) {
         let helm_release = get_helm_release(release_name).unwrap();
@@ -90,7 +92,7 @@ pub fn install_helm_release_from_repo(
     let full_chart_name = format!("{repo_name}/{chart_name}");
     let chart_version = chart_version.unwrap_or(">0.0.0-0");
     debug!("Installing helm release {repo_name} from chart {full_chart_name} in version {chart_version}");
-    install_helm_release(release_name, &full_chart_name, chart_version, log_level);
+    install_helm_release(release_name, &full_chart_name, chart_version);
 }
 
 /// Cached because of slow network calls
@@ -108,28 +110,26 @@ pub fn get_repo_index(repo_url: String) -> HelmRepo {
         .unwrap_or_else(|_| panic!("Failed to parse helm repo index from {index_url}"))
 }
 
-pub fn uninstall_helm_release(release_name: &str, log_level: LevelFilter) {
+pub fn uninstall_helm_release(release_name: &str) {
     if helm_release_exists(release_name) {
         unsafe {
-            go_uninstall_helm_release(GoString::from(release_name), log_level < LevelFilter::Debug);
+            go_uninstall_helm_release(
+                GoString::from(release_name),
+                *LOG_LEVEL.lock().unwrap() < LevelFilter::Debug,
+            );
         }
     } else {
         warn!("The helm release {release_name} is not installed, not removing.");
     }
 }
 
-fn install_helm_release(
-    release_name: &str,
-    chart_name: &str,
-    chart_version: &str,
-    log_level: LevelFilter,
-) {
+fn install_helm_release(release_name: &str, chart_name: &str, chart_version: &str) {
     unsafe {
         go_install_helm_release(
             GoString::from(release_name),
             GoString::from(chart_name),
             GoString::from(chart_version),
-            log_level < LevelFilter::Debug,
+            *LOG_LEVEL.lock().unwrap() < LevelFilter::Debug,
         )
     }
 }

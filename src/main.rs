@@ -39,11 +39,11 @@ fn main() {
         .format_target(false)
         .filter_level(args.log_level)
         .init();
-    helm::add_helm_repos_from_cli_args(&args);
+    helm::handle_common_cli_args(&args);
 
     match &args.cmd {
-        CliCommand::Operator(command) => command.handle(args.log_level),
-        CliCommand::Release(command) => command.handle(args.log_level),
+        CliCommand::Operator(command) => command.handle(),
+        CliCommand::Release(command) => command.handle(),
         CliCommand::Stack(command) => command.handle(),
     }
 }
