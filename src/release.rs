@@ -180,8 +180,8 @@ fn uninstall_release(release_name: &str) {
 fn get_releases() -> Releases {
     let mut all_releases: IndexMap<String, Release> = IndexMap::new();
     for release_file in RELEASE_FILES.lock().unwrap().deref() {
-        let releases_yaml = helpers::read_from_url_or_file(&release_file);
-        match releases_yaml {
+        let yaml = helpers::read_from_url_or_file(&release_file);
+        match yaml {
             Ok(yaml) => {
                 let releases: Releases = serde_yaml::from_str(&yaml)
                     .expect(format!("Failed to parse release list from {release_file}").as_str());

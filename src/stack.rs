@@ -1,7 +1,17 @@
 use crate::arguments::OutputType;
+use crate::{helpers, CliArgs};
+use cached::proc_macro::cached;
 use clap::Parser;
 use indexmap::IndexMap;
+use lazy_static::lazy_static;
+use log::warn;
 use serde::{Deserialize, Serialize};
+use std::ops::Deref;
+use std::sync::Mutex;
+
+lazy_static! {
+    pub static ref STACK_FILES: Mutex<Vec<String>> = Mutex::new(vec!["stacks.yaml".to_string()]);
+}
 
 #[derive(Parser)]
 pub enum CliCommandStack {
@@ -21,13 +31,18 @@ impl CliCommandStack {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+pub fn handle_common_cli_args(args: &CliArgs) {
+    let mut stack_files = STACK_FILES.lock().unwrap();
+    stack_files.append(&mut args.additional_stack_files.clone());
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct Stacks {
     stacks: IndexMap<String, Stack>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct Stack {
     description: String,
@@ -55,12 +70,23 @@ fn list_stacks(output_type: &OutputType) {
     }
 }
 
+/// Cached because of potential slow network calls
+#[cached]
 fn get_stacks() -> Stacks {
-    // TODO Read from URL/file/whatever
-    let file_name = "stacks.yaml";
-    let file = std::fs::File::open(file_name)
-        .expect(format!("Could not read releases from {file_name}").as_str());
+    let mut all_stacks: IndexMap<String, Stack> = IndexMap::new();
+    for stack_file in STACK_FILES.lock().unwrap().deref() {
+        let yaml = helpers::read_from_url_or_file(&stack_file);
+        match yaml {
+            Ok(yaml) => {
+                let stacks: Stacks = serde_yaml::from_str(&yaml)
+                    .expect(format!("Failed to parse stack list from {stack_file}").as_str());
+                all_stacks.extend(stacks.stacks.clone());
+            }
+            Err(err) => {
+                warn!("Could not read from stacks file \"{stack_file}\": {err}");
+            }
+        }
+    }
 
-    serde_yaml::from_reader(file)
-        .expect(format!("Failed to parse release list from {file_name}").as_str())
+    Stacks { stacks: all_stacks }
 }
