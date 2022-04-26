@@ -10,6 +10,7 @@ use std::process::exit;
 use std::sync::Mutex;
 
 lazy_static! {
+    pub static ref NAMESPACE: Mutex<String> = Mutex::new(String::new());
     pub static ref HELM_REPOS: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new());
     pub static ref LOG_LEVEL: Mutex<LevelFilter> = Mutex::new(LevelFilter::Trace);
 }
@@ -19,11 +20,16 @@ extern "C" {
         release_name: GoString,
         chart_name: GoString,
         chart_version: GoString,
+        namespace: GoString,
         supress_output: bool,
     );
-    fn go_uninstall_helm_release(release_name: GoString, suppress_output: bool);
-    fn go_helm_release_exists(release_name: GoString) -> bool;
-    fn go_helm_list_releases() -> *const c_char;
+    fn go_uninstall_helm_release(
+        release_name: GoString,
+        namespace: GoString,
+        suppress_output: bool,
+    );
+    fn go_helm_release_exists(release_name: GoString, namespace: GoString) -> bool;
+    fn go_helm_list_releases(namespace: GoString) -> *const c_char;
     fn go_add_helm_repo(name: GoString, url: GoString);
 }
 
@@ -43,6 +49,13 @@ pub fn handle_common_cli_args(args: &CliArgs) {
     );
 
     *(LOG_LEVEL.lock().unwrap()) = args.log_level;
+
+    let namespace = &args.namespace;
+    if namespace != "default" {
+        info!("Deploying into non-default namespace.\
+            Please make sure not to deploy the same operator multiple times in different namespaces unless you know what you are doing (TM).");
+    }
+    *(NAMESPACE.lock().unwrap()) = namespace.to_string();
 }
 
 /// Installs the specified helm chart with the release_name
@@ -115,6 +128,7 @@ pub fn uninstall_helm_release(release_name: &str) {
         unsafe {
             go_uninstall_helm_release(
                 GoString::from(release_name),
+                GoString::from(NAMESPACE.lock().unwrap().as_str()),
                 *LOG_LEVEL.lock().unwrap() < LevelFilter::Debug,
             );
         }
@@ -129,13 +143,19 @@ fn install_helm_release(release_name: &str, chart_name: &str, chart_version: &st
             GoString::from(release_name),
             GoString::from(chart_name),
             GoString::from(chart_version),
+            GoString::from(NAMESPACE.lock().unwrap().as_str()),
             *LOG_LEVEL.lock().unwrap() < LevelFilter::Debug,
         )
     }
 }
 
 fn helm_release_exists(release_name: &str) -> bool {
-    unsafe { go_helm_release_exists(GoString::from(release_name)) }
+    unsafe {
+        go_helm_release_exists(
+            GoString::from(release_name),
+            GoString::from(NAMESPACE.lock().unwrap().as_str()),
+        )
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -148,7 +168,9 @@ pub struct Release {
 }
 
 pub fn helm_list_releases() -> Vec<Release> {
-    let releases_json = c_str_ptr_to_str(unsafe { go_helm_list_releases() });
+    let releases_json = c_str_ptr_to_str(unsafe {
+        go_helm_list_releases(GoString::from(NAMESPACE.lock().unwrap().as_str()))
+    });
 
     serde_json::from_str(releases_json).unwrap_or_else(|_| {
         panic!("Failed to parse helm releases JSON from go wrapper {releases_json}")

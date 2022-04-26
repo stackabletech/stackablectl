@@ -14,15 +14,15 @@ func main() {
 }
 
 //export go_install_helm_release
-func go_install_helm_release(releaseName string, chartName string, chartVersion string, suppressOutput bool) {
-    helmClient := getHelmClient(suppressOutput)
+func go_install_helm_release(releaseName string, chartName string, chartVersion string, namespace string, suppressOutput bool) {
+    helmClient := getHelmClient(namespace, suppressOutput)
 
     timeout, _ := time.ParseDuration("10m")
     chartSpec := gohelm.ChartSpec{
         ReleaseName: releaseName,
         ChartName:   chartName,
         Version:     chartVersion,
-        Namespace:   "default",
+        Namespace:   namespace,
         UpgradeCRDs: true,
         Wait:        true,
         Timeout:     timeout,
@@ -34,8 +34,8 @@ func go_install_helm_release(releaseName string, chartName string, chartVersion 
 }
 
 //export go_uninstall_helm_release
-func go_uninstall_helm_release(releaseName string, suppressOutput bool) {
-    helmClient := getHelmClient(suppressOutput)
+func go_uninstall_helm_release(releaseName string, namespace string, suppressOutput bool) {
+    helmClient := getHelmClient(namespace, suppressOutput)
 
     if err := helmClient.UninstallReleaseByName(releaseName); err != nil {
         panic(err)
@@ -43,8 +43,8 @@ func go_uninstall_helm_release(releaseName string, suppressOutput bool) {
 }
 
 //export go_helm_release_exists
-func go_helm_release_exists(releaseName string) bool {
-    helmClient := getHelmClient(true)
+func go_helm_release_exists(releaseName string, namespace string) bool {
+    helmClient := getHelmClient(namespace, true)
 
     release, _ := helmClient.GetRelease(releaseName)
     return release != nil
@@ -59,8 +59,8 @@ type Release struct {
 
 //export go_helm_list_releases
 //We are returning a JSON document as GoSlices (array) of objects was a nightmare to share between Go and Rust
-func go_helm_list_releases() *C.char {
-    helmClient := getHelmClient(true)
+func go_helm_list_releases(namespace string) *C.char {
+    helmClient := getHelmClient(namespace, true)
 
     releases, err := helmClient.ListDeployedReleases()
     if err != nil {
@@ -86,7 +86,7 @@ func go_helm_list_releases() *C.char {
 
 //export go_add_helm_repo
 func go_add_helm_repo(name string, url string) {
-    helmClient := getHelmClient(true)
+    helmClient := getHelmClient("default", true) // Namespace doesn't matter
 
     chartRepo := repo.Entry{
         Name: name,
@@ -98,9 +98,9 @@ func go_add_helm_repo(name string, url string) {
     }
 }
 
-func getHelmClient(suppressOutput bool) gohelm.Client {
+func getHelmClient(namespace string, suppressOutput bool) gohelm.Client {
     options := gohelm.Options {
-        Namespace: "default",
+        Namespace: namespace,
         Debug:     false,
     }
 

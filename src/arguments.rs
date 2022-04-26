@@ -14,6 +14,10 @@ pub struct CliArgs {
     #[clap(short, long, default_value = "Info")]
     pub log_level: LevelFilter,
 
+    /// Namespace where to deploy the products and operators
+    #[clap(short, long, default_value = "default")]
+    pub namespace: String,
+
     /// If you don't have access to the Stackable Helm repos you can mirror the repo and provide the URL here
     /// (e.g. https://my.repo/repository/stackable-stable/).
     #[clap(
