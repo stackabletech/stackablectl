@@ -1,9 +1,9 @@
 use log::trace;
 use std::ffi::CStr;
-use std::io::Write;
 use std::os::raw::c_char;
 use std::process::{Command, Stdio};
 use std::str;
+use std::{fs, io::Write};
 use which::which;
 
 #[repr(C)]
@@ -24,6 +24,19 @@ impl From<&str> for GoString {
 pub fn c_str_ptr_to_str(ptr: *const c_char) -> &'static str {
     let c_str = unsafe { CStr::from_ptr(ptr) };
     c_str.to_str().unwrap()
+}
+
+pub fn read_from_url_or_file(url_or_file: &str) -> Result<String, String> {
+    if let Ok(str) = fs::read_to_string(url_or_file) {
+        return Ok(str);
+    }
+
+    match reqwest::blocking::get(url_or_file) {
+        Ok(response) => Ok(response.text().unwrap()),
+        Err(err) => Err(format!(
+            "Couldn't read a file or a URL with the name \"{url_or_file}\": {err}"
+        )),
+    }
 }
 
 /// Ensures that the program is installed

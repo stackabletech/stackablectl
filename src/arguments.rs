@@ -14,7 +14,7 @@ pub struct CliArgs {
     #[clap(short, long, default_value = "Info")]
     pub log_level: LevelFilter,
 
-    /// f you don't have access to the Stackable Helm repos you can mirror the repo and provide the URL here
+    /// If you don't have access to the Stackable Helm repos you can mirror the repo and provide the URL here
     /// (e.g. https://my.repo/repository/stackable-stable/).
     #[clap(
         long,
@@ -22,7 +22,7 @@ pub struct CliArgs {
     )]
     pub helm_repo_stackable_stable: String,
 
-    /// f you don't have access to the Stackable Helm repos you can mirror the repo and provide the URL here
+    /// If you don't have access to the Stackable Helm repos you can mirror the repo and provide the URL here
     /// (e.g. https://my.repo/repository/stackable-test/).
     #[clap(
         long,
@@ -30,13 +30,27 @@ pub struct CliArgs {
     )]
     pub helm_repo_stackable_test: String,
 
-    /// f you don't have access to the Stackable Helm repos you can mirror the repo and provide the URL here
+    /// If you don't have access to the Stackable Helm repos you can mirror the repo and provide the URL here
     /// (e.g. https://my.repo/repository/stackable-dev/).
     #[clap(
         long,
         default_value = "https://repo.stackable.tech/repository/helm-dev"
     )]
     pub helm_repo_stackable_dev: String,
+
+    /// If you don't have access to the Stackable GitHub repos or you want to maintain your own releases you can specify additional YAML files containing release information.
+    /// Have a look here <TODO link when exists> for the structure.
+    /// Can either be an URL or a path to a file e.g. `https://my.server/my-releases.yaml` or '/etc/my-releases.yaml' or `C:\Users\Sebastian\my-releases.yaml`.
+    /// Can be specified multiple times.
+    #[clap(long, multiple_occurrences(true))]
+    pub additional_release_files: Vec<String>,
+
+    /// If you don't have access to the Stackable GitHub repos or you want to maintain your own stacks you can specify additional YAML files containing stack information.
+    /// Have a look here <TODO link when exists> for the structure.
+    /// Can either be an URL or a path to a file e.g. `https://my.server/my-stacks.yaml` or '/etc/my-stacks.yaml' or `C:\Users\Sebastian\my-stacks.yaml`.
+    /// Can be specified multiple times.
+    #[clap(long, multiple_occurrences(true))]
+    pub additional_stack_files: Vec<String>,
 }
 
 #[derive(Parser)]

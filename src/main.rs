@@ -40,6 +40,7 @@ fn main() {
         .filter_level(args.log_level)
         .init();
     helm::handle_common_cli_args(&args);
+    release::handle_common_cli_args(&args);
 
     match &args.cmd {
         CliCommand::Operator(command) => command.handle(),
