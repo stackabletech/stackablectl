@@ -17,7 +17,7 @@ Each layer gets deployed via its dedicated `stackablectl` command
 Operators manage the products of the Stackable Data Platform.
 This command can be used as a direct replacement of `create_test_cluster.py`.
 We decided to drop dependency resolution (like the superset operator requires the commons-, secret-, druid-, trino-operator and a postgres) for the following reasons:
-1. Image the situation "install `trino=1.2.3` and `superset`". Superset expresses a dependency on the latest trino version.
+1. Imagine the situation "install `trino=1.2.3` and `superset`". Superset expresses a dependency on the latest Trino version.
 Now the situation gets complicated because we have conflicting version requirements for the trino-operator.
 We could try to resolve this using dependency trees and other magic stuff.
 2. Even more important: When you deploy the superset-operator `stackablectl` has no way to know to which data products you want integrate with.
