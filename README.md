@@ -79,8 +79,7 @@ stackablectl deploy-operators https://raw.githubusercontent.com/stackabletech/de
 ```
 
 ### Stack
-The Stack contains all the third party (data) products we are offering.
-Third party products like MinIO, Prometheus and Grafana are also included here.
+A Stack contains data products that are managed by Stackable operators. Additional products like MinIO, Prometheus and Grafana can also be included.
 
 If you deploy a Stack with `stackablectl` it will automatically install the needed operators layer.
 For this to work you also need to include the `operators.yaml` in your stack.
