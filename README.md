@@ -55,7 +55,7 @@ We used the same notation (`name[=version]`) as when using the CLI for easy copy
 
 #### Command with arguments (meant for developers)
 ```bash
-stackablectl deploy-operators --operator commons --operator secret --operator trino --operator superset=0.3.0
+stackablectl operator install commons secret trino superset=0.3.0
 ```
 
 #### Command with file (meant for end-users)
