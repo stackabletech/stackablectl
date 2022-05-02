@@ -22,7 +22,7 @@ Now the situation gets complicated because we have conflicting version requireme
 We could try to resolve this using dependency trees and other magic stuff.
 2. Even more important: When you deploy the superset-operator `stackablectl` has no way to know to which data products you want integrate with.
 Because of this it would need to deploy the operators for **all** the products Superset supports.
-As a result it would install like 90% of the operators by simply specifying superset.
+As a result it would install like 90% of the operators by simply specifying Superset.
 And all of that on possible non-fixed versions.
 
 We also don't deploy examples any more as that functionality is now provided by the stack layer below.
