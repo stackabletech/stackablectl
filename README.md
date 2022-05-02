@@ -1,5 +1,27 @@
 # stackablectl
 
+**IMPORTANT: This document is outdated!**
+
+The interface of stackablectl is not decided yet.
+When the interface is stable we will write docs on how to use stackablectl and put them on our docs website.
+Until than this document is mean for internal usage and will be replaced by the new docs.
+
+## Building
+You need to have Rust and go installed.
+To run stackablectl you need to execute the following commands:
+``` bash
+sbernauer@sbernauer:~/stackabletech/stackablectl$ cd go-helm-wrapper/ && ./build.sh && cd ..
+# [...]
+
+sbernauer@sbernauer:~/stackabletech/stackablectl$ cargo r
+    Finished dev [unoptimized + debuginfo] target(s) in 0.03s
+     Running `target/debug/stackablectl`
+stackablectl 0.1.0
+Stackable GmbH <info@stackable.de>
+Command line tool to interact with a Stackable Data Platform
+# [...]
+```
+
 We separate the deployed services into 3 layers:
 
 | Layer         | Description                                                 | Examples                                      |
