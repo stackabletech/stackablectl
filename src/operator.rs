@@ -264,36 +264,20 @@ impl Operator {
         );
 
         let helm_release_name = format!("{}-operator", self.name);
-        match &self.version {
-            None => helm::install_helm_release_from_repo(
-                &self.name,
-                &helm_release_name,
-                "stackable-dev",
-                &helm_release_name,
-                None,
-            ),
-            Some(version) if version.ends_with("-nightly") => helm::install_helm_release_from_repo(
-                &self.name,
-                &helm_release_name,
-                "stackable-dev",
-                &helm_release_name,
-                Some(version),
-            ),
-            Some(version) if version.contains("-pr") => helm::install_helm_release_from_repo(
-                &self.name,
-                &helm_release_name,
-                "stackable-test",
-                &helm_release_name,
-                Some(version),
-            ),
-            Some(version) => helm::install_helm_release_from_repo(
-                &self.name,
-                &helm_release_name,
-                "stackable-stable",
-                &helm_release_name,
-                Some(version),
-            ),
-        }
+        let helm_repo_name = match &self.version {
+            None => "stackable-dev",
+            Some(version) if version.ends_with("-nightly") => "stackable-dev",
+            Some(version) if version.contains("-pr") => "stackable-test",
+            Some(_) => "stackable-stable",
+        };
+
+        helm::install_helm_release_from_repo(
+            &self.name,
+            &helm_release_name,
+            helm_repo_name,
+            &helm_release_name,
+            self.version.as_deref(),
+        );
     }
 }
 
