@@ -183,8 +183,9 @@ fn get_releases() -> Releases {
         let yaml = helpers::read_from_url_or_file(release_file);
         match yaml {
             Ok(yaml) => {
-                let releases: Releases = serde_yaml::from_str(&yaml)
-                    .unwrap_or_else(|err| panic!("Failed to parse release list from {release_file}: {err}"));
+                let releases: Releases = serde_yaml::from_str(&yaml).unwrap_or_else(|err| {
+                    panic!("Failed to parse release list from {release_file}: {err}")
+                });
                 all_releases.extend(releases.releases.clone());
             }
             Err(err) => {

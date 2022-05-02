@@ -78,8 +78,9 @@ fn get_stacks() -> Stacks {
         let yaml = helpers::read_from_url_or_file(stack_file);
         match yaml {
             Ok(yaml) => {
-                let stacks: Stacks = serde_yaml::from_str(&yaml)
-                    .unwrap_or_else(|err| panic!("Failed to parse stack list from {stack_file}: {err}"));
+                let stacks: Stacks = serde_yaml::from_str(&yaml).unwrap_or_else(|err| {
+                    panic!("Failed to parse stack list from {stack_file}: {err}")
+                });
                 all_stacks.extend(stacks.stacks.clone());
             }
             Err(err) => {
