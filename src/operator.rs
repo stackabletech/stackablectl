@@ -179,6 +179,7 @@ fn get_versions_from_repo(operator: &str, helm_repo_name: &str) -> Vec<String> {
 pub fn uninstall_operators(operators: &Vec<String>) {
     for operator in operators {
         info!("Uninstalling {operator} operator");
+        // TODO: Check if CRD objects of these products exist and warn if they do
         helm::uninstall_helm_release(format!("{operator}-operator").as_str())
     }
 }
