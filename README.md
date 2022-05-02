@@ -28,7 +28,7 @@ And all of that on possible non-fixed versions.
 We also don't deploy examples any more as that functionality is now provided by the stack layer below.
 
 As an alternative we provide the possibly to provide a simple yaml file containing the list of operators needed for a particular demo, stack or integration test (more on that below).
-The yaml files simply contains a list of the operators to install (with the possibility to specify the version).
+The yaml file simply contains a list of operators to install including an optional version.
 We used the same notation (`name[=version]`) as when using the CLI for easy copy/pasting.
 
 #### Command with arguments (meant for developers)
