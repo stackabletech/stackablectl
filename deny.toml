@@ -32,6 +32,9 @@ allow = [
     "MIT",
     "Zlib"
 ]
+exceptions = [
+    { name = "stackablectl", allow = ["OSL-3.0"] }
+]
 
 [sources]
 unknown-registry = "deny"
