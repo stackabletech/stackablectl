@@ -8,19 +8,7 @@ Until than this document is mean for internal usage and will be replaced by the 
 
 ## Building
 You need to have Rust and go installed.
-To run stackablectl you need to execute the following commands:
-``` bash
-sbernauer@sbernauer:~/stackabletech/stackablectl$ cd go-helm-wrapper/ && ./build.sh && cd ..
-# [...]
-
-sbernauer@sbernauer:~/stackabletech/stackablectl$ cargo r
-    Finished dev [unoptimized + debuginfo] target(s) in 0.03s
-     Running `target/debug/stackablectl`
-stackablectl 0.1.0
-Stackable GmbH <info@stackable.de>
-Command line tool to interact with a Stackable Data Platform
-# [...]
-```
+To run stackablectl execute `cargo run`.
 
 We separate the deployed services into 3 layers:
 
