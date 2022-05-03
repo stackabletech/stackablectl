@@ -35,7 +35,7 @@ pub enum CliCommandOperator {
         /// Kind is a tool to spin up a local kubernetes cluster running on docker on your machine.
         /// This scripts creates such a cluster consisting of 4 nodes to test the Stackable Data Platform.
         /// The default cluster name is `stackable-data-platform` which can be overwritten by specifying the cluster name after `--kind-cluster`
-        /// You need to have `docker` and `kind` installed. Have a look at the README at https://github.com/stackabletech/stackablectl on how to install them
+        /// You need to have `docker` and `kind` installed. Have a look at the README at <https://github.com/stackabletech/stackablectl> on how to install them
         #[clap(short, long)]
         kind_cluster: Option<Option<String>>,
     },
