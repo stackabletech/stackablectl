@@ -1,0 +1,48 @@
+---
+name: Stackable Release Pipeline
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    name: Release for ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            file-suffix: ""
+          - target: x86_64-pc-windows-gnu
+            os: windows-latest
+            file-suffix: ".exe"
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            file-suffix: ""
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            file-suffix: ""
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '^1.18.1'
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: ${{ matrix.target }}
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --target=${{ matrix.target }}
+      - name: Rename binary file
+        run: mv target/${{ matrix.target }}/release/stackablectl${{ matrix.file-suffix }} stackablectl-${{ matrix.target }}${{ matrix.file-suffix }}
+      - name: Upload Release binaries
+        uses: softprops/action-gh-release@v1
+        with:
+          files: stackablectl-${{ matrix.target }}${{ matrix.file-suffix }}

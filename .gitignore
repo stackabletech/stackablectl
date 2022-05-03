@@ -2,6 +2,7 @@
 Cargo.lock
 
 .idea/
+.vscode/
 
 go-helm-wrapper/go-helm-wrapper
 go-helm-wrapper/libhelm.a

@@ -159,3 +159,37 @@ jobs:
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # renovate: tag=v1.0.3
         with:
           command: test
+
+  run_build:
+    name: Build for ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: x86_64-pc-windows-gnu
+            os: windows-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: aarch64-apple-darwin
+            os: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '^1.18.1'
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: ${{ matrix.target }}
+          override: true
+      - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
+        with:
+          key: build-${{ matrix.target }}
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --target=${{ matrix.target }}

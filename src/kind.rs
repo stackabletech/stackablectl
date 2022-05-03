@@ -32,10 +32,10 @@ nodes:
 "#;
 
 pub fn handle_cli_arguments(kind_cluster: &Option<Option<String>>) {
-    helpers::ensure_program_installed("docker");
-    helpers::ensure_program_installed("kind");
-
     if let Some(kind_cluster) = kind_cluster {
+        helpers::ensure_program_installed("docker");
+        helpers::ensure_program_installed("kind");
+
         match kind_cluster {
             Some(kind_cluster_nane) => create_cluster_if_not_exists(kind_cluster_nane),
             None => create_cluster_if_not_exists(DEFAULT_KIND_CLUSTER_NAME),
