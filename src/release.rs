@@ -46,7 +46,7 @@ pub enum CliCommandRelease {
         #[clap(short, long)]
         kind_cluster: bool,
 
-        // Name of the kind cluster created if `--kind-cluster` is specified
+        /// Name of the kind cluster created if `--kind-cluster` is specified
         #[clap(long, default_value = "stackable-data-platform")]
         kind_cluster_name: String,
     },
