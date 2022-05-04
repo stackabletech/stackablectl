@@ -12,8 +12,10 @@ use std::process::exit;
 use std::sync::Mutex;
 
 lazy_static! {
-    pub static ref RELEASE_FILES: Mutex<Vec<String>> =
-        Mutex::new(vec!["releases.yaml".to_string()]);
+    pub static ref RELEASE_FILES: Mutex<Vec<String>> = Mutex::new(vec![
+        "https://raw.githubusercontent.com/stackabletech/stackablectl/main/releases.yaml"
+            .to_string()
+    ]);
 }
 
 #[derive(Parser)]

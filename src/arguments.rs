@@ -43,14 +43,14 @@ pub struct CliArgs {
     pub helm_repo_stackable_dev: String,
 
     /// If you don't have access to the Stackable GitHub repos or you want to maintain your own releases you can specify additional YAML files containing release information.
-    /// Have a look here <TODO link when exists> for the structure.
+    /// Have a look [here](https://raw.githubusercontent.com/stackabletech/stackablectl/main/releases.yaml) for the structure.
     /// Can either be an URL or a path to a file e.g. `https://my.server/my-releases.yaml` or '/etc/my-releases.yaml' or `C:\Users\Sebastian\my-releases.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true))]
     pub additional_release_files: Vec<String>,
 
     /// If you don't have access to the Stackable GitHub repos or you want to maintain your own stacks you can specify additional YAML files containing stack information.
-    /// Have a look here <TODO link when exists> for the structure.
+    /// Have a look [here](https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks.yaml) for the structure.
     /// Can either be an URL or a path to a file e.g. `https://my.server/my-stacks.yaml` or '/etc/my-stacks.yaml' or `C:\Users\Sebastian\my-stacks.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true))]
