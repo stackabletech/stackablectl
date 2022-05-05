@@ -7,6 +7,10 @@ import (
     "time"
     "helm.sh/helm/v3/pkg/repo"
     gohelm "github.com/mittwald/go-helm-client"
+
+    // Needed for authentication against clusters, e.g. GCP
+    // see https://github.com/kubernetes/client-go/issues/242
+    _ "k8s.io/client-go/plugin/pkg/client/auth"
 )
 
 func main() {
