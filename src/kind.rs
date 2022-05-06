@@ -1,8 +1,6 @@
 use crate::helpers;
 use log::{info, warn};
 
-const DEFAULT_KIND_CLUSTER_NAME: &str = "stackable-data-platform";
-
 const KIND_CLUSTER_DEFINITION: &str = r#"
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
@@ -31,15 +29,12 @@ nodes:
           node-labels: node=3
 "#;
 
-pub fn handle_cli_arguments(kind_cluster: &Option<Option<String>>) {
-    if let Some(kind_cluster) = kind_cluster {
+pub fn handle_cli_arguments(kind_cluster: bool, kind_cluster_name: &str) {
+    if kind_cluster {
         helpers::ensure_program_installed("docker");
         helpers::ensure_program_installed("kind");
 
-        match kind_cluster {
-            Some(kind_cluster_nane) => create_cluster_if_not_exists(kind_cluster_nane),
-            None => create_cluster_if_not_exists(DEFAULT_KIND_CLUSTER_NAME),
-        }
+        create_cluster_if_not_exists(kind_cluster_name);
     }
 }
 
