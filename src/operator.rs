@@ -38,7 +38,11 @@ pub enum CliCommandOperator {
         kind_cluster: bool,
 
         /// Name of the kind cluster created if `--kind-cluster` is specified
-        #[clap(long, default_value = "stackable-data-platform", requires="kind-cluster")]
+        #[clap(
+            long,
+            default_value = "stackable-data-platform",
+            requires = "kind-cluster"
+        )]
         kind_cluster_name: String,
     },
     /// Uninstall a operator
