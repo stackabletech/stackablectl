@@ -22,6 +22,8 @@ releases:
         operatorVersion: 0.5.0
       opa:
         operatorVersion: 0.8.0
+      regorule:
+        operatorVersion: 0.7.0
       secret:
         operatorVersion: 0.3.0
       spark:
