@@ -137,6 +137,7 @@ fn describe_stack(stack_name: &str, output_type: &OutputType) {
         OutputType::Text => {
             println!("Stack:              {}", output.stack);
             println!("Description:        {}", output.description);
+            println!("Stackable release:  {}", output.stackable_release);
             println!("Manifests:          {}", output.manifests);
             println!("Labels:             {}", output.labels.join(", "));
         }
