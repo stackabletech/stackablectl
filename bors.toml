@@ -1,3 +1,6 @@
+status = [
+    '%' # All checks must pass before merging into main
+]
 delete_merged_branches = true
 use_squash_merge = true
 pr_status = [ 'license/cla' ]
