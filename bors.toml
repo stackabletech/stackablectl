@@ -1,6 +1,3 @@
-status = [
-    'All tests passed'
-]
 delete_merged_branches = true
 use_squash_merge = true
 pr_status = [ 'license/cla' ]
