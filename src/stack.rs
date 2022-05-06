@@ -1,10 +1,10 @@
 use crate::arguments::OutputType;
-use crate::{helpers, CliArgs};
+use crate::{helpers, kind, kube, release, CliArgs};
 use cached::proc_macro::cached;
 use clap::Parser;
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
-use log::{error, warn};
+use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
 use std::ops::Deref;
 use std::process::exit;
@@ -32,6 +32,27 @@ pub enum CliCommandStack {
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
     },
+    /// Install a specific stack
+    #[clap(alias("in"))]
+    Install {
+        /// Name of the stack to install
+        #[clap(required = true)]
+        stack: String,
+
+        /// If specified a local kubernetes cluster consisting of 4 nodes for testing purposes will be created.
+        /// Kind is a tool to spin up a local kubernetes cluster running on docker on your machine.
+        /// You need to have `docker` and `kind` installed. Have a look at the README at <https://github.com/stackabletech/stackablectl> on how to install them.
+        #[clap(short, long)]
+        kind_cluster: bool,
+
+        /// Name of the kind cluster created if `--kind-cluster` is specified
+        #[clap(
+            long,
+            default_value = "stackable-data-platform",
+            requires = "kind-cluster"
+        )]
+        kind_cluster_name: String,
+    },
 }
 
 impl CliCommandStack {
@@ -39,6 +60,14 @@ impl CliCommandStack {
         match self {
             CliCommandStack::List { output } => list_stacks(output),
             CliCommandStack::Describe { stack, output } => describe_stack(stack, output),
+            CliCommandStack::Install {
+                stack,
+                kind_cluster,
+                kind_cluster_name,
+            } => {
+                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
+                install_stack(stack);
+            }
         }
     }
 }
@@ -118,6 +147,27 @@ fn describe_stack(stack_name: &str, output_type: &OutputType) {
             println!("{}", serde_yaml::to_string(&output).unwrap());
         }
     }
+}
+
+fn install_stack(stack_name: &str) {
+    info!("Installing stack {stack_name}");
+    let stack = get_stack(stack_name);
+
+    release::install_release(&stack.stackable_release);
+
+    info!("Installing products of stack {stack_name}");
+    match helpers::read_from_url_or_file(&stack.manifests) {
+        Ok(manifests) => kube::deploy_manifest(&manifests),
+        Err(err) => {
+            panic!(
+                "Could not read stack manifests from file \"{}\": {err}",
+                &stack.manifests
+            );
+        }
+    }
+
+    info!("");
+    info!("Installed stack {stack_name}. Have a nice day!");
 }
 
 /// Cached because of potential slow network calls

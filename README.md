@@ -7,6 +7,7 @@ When the interface is stable we will write docs on how to use stackablectl and p
 Until than this document is mean for internal usage and will be replaced by the new docs.
 
 ## TODOs
+* Switch from `kubectl` shell calls to proper library (best case in Rust)
 * Check if CRD resources still exist when uninstalling the operators. If so warn the user.
 * Use Result instead of panic!() in multiple places
 

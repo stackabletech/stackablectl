@@ -1,16 +1,23 @@
 ---
 stacks:
+  trino:
+    description: Simply stack only containing Trino
+    stackableRelease: 22.05-sbernauer
+    labels:
+      - trino
+    manifests: stacks/trino.yaml
+    # TODO additional services
   trino-superset:
-    description: A modern data-analysis stack with S3, Trino and Superset
-    stackableRelease: 22.04-sbernauer
+    description: NOT READY! A modern data-analysis stack with S3, Trino and Superset
+    stackableRelease: 22.05-sbernauer
     labels:
       - trino
       - superset
     manifests: stacks/trino-superset.yaml
     # TODO additional services
   kafka-nifi-druid-superset:
-    description: Streaming applications and persistent storage with Druid on S3 and Superset for visualization
-    stackableRelease: 22.04-sbernauer
+    description: NOT READY! Streaming applications and persistent storage with Druid on S3 and Superset for visualization
+    stackableRelease: 22.05-sbernauer
     labels:
       - kafka
       - nifi

@@ -1,5 +1,5 @@
 use crate::helpers::{c_str_ptr_to_str, GoString};
-use crate::CliArgs;
+use crate::{CliArgs, NAMESPACE};
 use cached::proc_macro::cached;
 use lazy_static::lazy_static;
 use log::{debug, error, info, warn, LevelFilter};
@@ -10,7 +10,6 @@ use std::process::exit;
 use std::sync::Mutex;
 
 lazy_static! {
-    pub static ref NAMESPACE: Mutex<String> = Mutex::new(String::new());
     pub static ref HELM_REPOS: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new());
     pub static ref LOG_LEVEL: Mutex<LevelFilter> = Mutex::new(LevelFilter::Trace);
 }

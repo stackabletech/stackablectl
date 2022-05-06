@@ -167,7 +167,7 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
     }
 }
 
-fn install_release(release_name: &str) {
+pub fn install_release(release_name: &str) {
     info!("Installing release {release_name}");
     let release = get_release(release_name);
 

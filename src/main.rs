@@ -1,6 +1,10 @@
+use std::sync::Mutex;
+
 use crate::arguments::CliCommand;
 use arguments::CliArgs;
 use clap::Parser;
+use lazy_static::lazy_static;
+use log::info;
 
 mod arguments;
 mod helm;
@@ -32,6 +36,10 @@ const AVAILABLE_OPERATORS: &[&str] = &[
     "monitoring",
 ];
 
+lazy_static! {
+    pub static ref NAMESPACE: Mutex<String> = Mutex::new(String::new());
+}
+
 fn main() {
     let args = CliArgs::parse();
     env_logger::builder()
@@ -39,6 +47,14 @@ fn main() {
         .format_target(false)
         .filter_level(args.log_level)
         .init();
+
+    let namespace = &args.namespace;
+    if namespace != "default" {
+        info!("Deploying into non-default namespace.\
+            Please make sure not to deploy the same operator multiple times in different namespaces unless you know what you are doing (TM).");
+    }
+    *(NAMESPACE.lock().unwrap()) = namespace.to_string();
+
     helm::handle_common_cli_args(&args);
     release::handle_common_cli_args(&args);
     stack::handle_common_cli_args(&args);
