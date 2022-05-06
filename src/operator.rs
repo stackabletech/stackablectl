@@ -19,6 +19,7 @@ pub enum CliCommandOperator {
     #[clap(alias("desc"))]
     Describe {
         operator: String,
+
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
     },

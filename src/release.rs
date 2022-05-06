@@ -14,7 +14,7 @@ use std::sync::Mutex;
 lazy_static! {
     pub static ref RELEASE_FILES: Mutex<Vec<String>> = Mutex::new(vec![
         "https://raw.githubusercontent.com/stackabletech/stackablectl/main/releases.yaml"
-            .to_string()
+            .to_string(),
     ]);
 }
 
@@ -30,6 +30,7 @@ pub enum CliCommandRelease {
     #[clap(alias("desc"))]
     Describe {
         release: String,
+
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
     },
@@ -191,12 +192,10 @@ fn get_releases() -> Releases {
     for release_file in RELEASE_FILES.lock().unwrap().deref() {
         let yaml = helpers::read_from_url_or_file(release_file);
         match yaml {
-            Ok(yaml) => {
-                let releases: Releases = serde_yaml::from_str(&yaml).unwrap_or_else(|err| {
-                    panic!("Failed to parse release list from {release_file}: {err}")
-                });
-                all_releases.extend(releases.releases.clone());
-            }
+            Ok(yaml) => match serde_yaml::from_str::<Releases>(&yaml) {
+                Ok(releases) => all_releases.extend(releases.releases),
+                Err(err) => warn!("Failed to parse release list from {release_file}: {err}"),
+            },
             Err(err) => {
                 warn!("Could not read from releases file \"{release_file}\": {err}");
             }
