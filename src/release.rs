@@ -91,7 +91,7 @@ impl CliCommandRelease {
                 kind_cluster_name,
             } => {
                 kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
-                install_release(release, &include_products, &exclude_products);
+                install_release(release, include_products, exclude_products);
             }
             CliCommandRelease::Uninstall { release } => uninstall_release(release),
         }
