@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add option to only install subset of operators from release ([#18](https://github.com/stackabletech/stackablectl/pull/18))
+
 ## [0.1.1] - 2022-05-06
 
 ### Added
