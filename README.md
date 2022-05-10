@@ -1,18 +1,28 @@
 # stackablectl
 
-**IMPORTANT: This document is outdated!**
+# Installing
+## Linux
+Download `stackablectl-x86_64-unknown-linux-gnu` from the [latest release](https://github.com/stackabletech/stackablectl/releases/latest).
+Run `mv stackablectl-x86_64-unknown-linux-gnu stackablectl` and `chmod +x stackablectl`.
+You than can invoke stackablectl via `./stackablectl`.
+## Windows
+Download `stackablectl-x86_64-pc-windows-gnu.exe` from the [latest release](https://github.com/stackabletech/stackablectl/releases/latest).
+You can simply execute it.
 
-The interface of stackablectl is not decided yet.
-When the interface is stable we will write docs on how to use stackablectl and put them on our docs website.
-Until than this document is mean for internal usage and will be replaced by the new docs.
+# Usage
+## List available releases
+One good step to start using stackablectl is to list the available Releases with
+```bash
+$ ./stackablectl release list
+```
+You can also ask for the list of currently supported Product operators with
+```bash
+$ ./stackablectl operator list
+```
 
-## TODOs
-* Check if CRD resources still exist when uninstalling the operators. If so warn the user.
-* Use Result instead of panic!() in multiple places
-
-## Building
+# Building
 You need to have Rust and go installed.
-To run stackablectl execute `cargo run`.
+To build stackablectl execute `cargo build` or `cargo run` to run it.
 
 We separate the deployed services into 3 layers:
 
@@ -26,8 +36,8 @@ We separate the deployed services into 3 layers:
 
 Each layer gets deployed via its dedicated `stackablectl` command
 
-## Deploying
-### Operators
+# Deploying
+## Operators
 Operators manage the products of the Stackable Data Platform.
 This command can be used as a direct replacement of `create_test_cluster.py`.
 We decided to drop dependency resolution (like the superset operator requires the commons-, secret-, druid-, trino-operator and a postgres) for the following reasons:
@@ -41,125 +51,17 @@ And all of that on possible non-fixed versions.
 
 We also don't deploy examples any more as that functionality is now provided by the stack layer below.
 
-As an alternative we provide the possibly to provide a simple yaml file containing the list of operators needed for a particular demo, stack or integration test (more on that below).
-The yaml file simply contains a list of operators to install including an optional version.
-We used the same notation (`name[=version]`) as when using the CLI for easy copy/pasting.
-
-#### Command with arguments (meant for developers)
-```bash
-stackablectl operator install commons secret trino superset=0.3.0
-```
-
-#### Command with file (meant for end-users)
-A operator layer's definition looks like the following:
-
-`demo-nytaxidata/operators.yaml`
-```yaml
-operators:
-  - commons
-  - secret
-  - trino
-  - superset=0.3.0
-```
-Call it by the directory
-```bash
-stackablectl deploy-operators demo-nytaxidata/
-```
-Or directly from GitHub
-```bash
-stackablectl deploy-operators https://raw.githubusercontent.com/stackabletech/demos/main/demo-nytaxidata/
-```
-
-### Stack
+## Stack
 A Stack contains data products that are managed by Stackable operators. Additional products like MinIO, Prometheus and Grafana can also be included.
 
-If you deploy a Stack with `stackablectl` it will automatically install the needed operators layer.
-For this to work you also need to include the `operators.yaml` in your stack.
+If you deploy a Stack with `stackablectl` it will automatically install the needed operators layer from the provided release.
 
-#### Command
-`demo-nytaxidata/operators.yaml`
-```yaml
-operators:
-  - commons
-  - secret
-  - trino
-  - superset=0.3.0
-```
-
-`demo-nytaxidata/stack.yaml`
-```yaml
-kind: ZookeeperCluster
-  [...]
----
-kind: KafkaCluster
-  [...]
----
-kind: DruidCluster
-  [...]
----
-kind: SupersetCluster
-  [...]
-```
-
-`demo-nytaxidata/additional-services.yaml`
-```yaml
-services:
-  - postgres:
-      name: postgres-superset
-      version: 11.0.0
-      username: superset
-      password: superset
-      database: superset
-  - postgres:
-      name: postgres-druid
-      version: 11.0.0
-      username: druid
-      password: druid
-      database: druid
-  - minio:
-      name: minio
-      version: 4.2.3
-      accessKey: minio
-      secretKey: minio
-      servers: 1
-      size: 10Mi
-  - prometheus:
-      name: prometheus
-```
-
-Call it by the directory
-```bash
-stackablectl deploy-stack demo-nytaxidata/
-```
-Or directly from GitHub
-```bash
-stackablectl deploy-stack https://raw.githubusercontent.com/stackabletech/demos/main/demo-nytaxidata/
-```
-
-The command will
-1. Install the operators the same way the `stackablectl deploy-operators ...` command would do
-2. Install the additional services listed in `additional-services.yaml`. It uses something like
-`helm repo add bitnami https://charts.bitnami.com/bitnami` and
-`helm install postgres-superset bitnami/postgresql --version 11.0.0 --set auth.username=superset --set auth.password=superset --set auth.database=superset`
-4. Wait for the additional services to be ready
-5. Apply the manifests inside `stack.yaml`
-6. Wait for the stack to be ready
-
-### Demo
+## Demo
 The highest layer - demo - is not really needed to spin up a Stackable Data Platform.
 It enables us to run end-to-end demos with a single command.
 
 If you deploy a Demo with `stackablectl` it will automatically install the needed stack and operators layers. 
 
-TODO: Design files needed to deploy the demo.
-Rob currently modelled them as helm-charts.
-Of course the files defining the stack must be included as well.
-
-Call it by the directory
-```bash
-stackablectl deploy-demo demo-nytaxidata/
-```
-Or directly from GitHub
-```bash
-stackablectl deploy-demo https://raw.githubusercontent.com/stackabletech/demos/main/demo-nytaxidata/
-```
+# TODOs
+* Check if CRD resources still exist when uninstalling the operators. If so warn the user.
+* Use Result instead of panic!() in multiple places
