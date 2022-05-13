@@ -5,6 +5,7 @@ import (
     "context"
     "encoding/json"
     "time"
+    "helm.sh/helm/v3/pkg/action"
     "helm.sh/helm/v3/pkg/repo"
     gohelm "github.com/mittwald/go-helm-client"
 
@@ -58,6 +59,7 @@ type Release struct {
     Name string         `json:"name"`
     Version string      `json:"version"`
     Namespace string    `json:"namespace"`
+    Status string       `json:"status"`
     LastUpdated string  `json:"lastUpdated"`
 }
 
@@ -66,7 +68,8 @@ type Release struct {
 func go_helm_list_releases(namespace string) *C.char {
     helmClient := getHelmClient(namespace, true)
 
-    releases, err := helmClient.ListDeployedReleases()
+    // List all releases, not only the deployed ones (e.g. include pending installations)
+    releases, err := helmClient.ListReleasesByStateMask(action.ListAll)
     if err != nil {
         panic(err)
     }
@@ -76,6 +79,7 @@ func go_helm_list_releases(namespace string) *C.char {
             Name: release.Name,
             Version: release.Chart.Metadata.Version,
             Namespace: release.Namespace,
+            Status: release.Info.Status.String(),
             LastUpdated: release.Info.LastDeployed.String(),
         };
     }
