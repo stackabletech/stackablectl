@@ -5,6 +5,7 @@
 ### Added
 
 - Add option to only install subset of operators from release ([#18](https://github.com/stackabletech/stackablectl/pull/18))
+- Add support to show helm release status ([#20](https://github.com/stackabletech/stackablectl/pull/20))
 
 ## [0.1.1] - 2022-05-06
 

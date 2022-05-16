@@ -199,6 +199,7 @@ fn list_installed_operators(output_type: &OutputType) {
     struct OutputInstalledOperatorEntry {
         version: String,
         namespace: String,
+        status: String,
         last_updated: String,
     }
 
@@ -215,6 +216,7 @@ fn list_installed_operators(output_type: &OutputType) {
                 OutputInstalledOperatorEntry {
                     version: release.version,
                     namespace: release.namespace,
+                    status: release.status,
                     last_updated: release.last_updated,
                 },
             )
@@ -223,13 +225,14 @@ fn list_installed_operators(output_type: &OutputType) {
 
     match output_type {
         OutputType::Text => {
-            println!("OPERATOR              VERSION         NAMESPACE                LAST UPDATED");
+            println!("OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED");
             for (operator, operator_entry) in output.iter() {
                 println!(
-                    "{:21} {:15} {:24} {}",
+                    "{:21} {:15} {:30} {:16} {}",
                     operator,
                     operator_entry.version,
                     operator_entry.namespace,
+                    operator_entry.status,
                     operator_entry.last_updated
                 );
             }

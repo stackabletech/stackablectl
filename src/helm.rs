@@ -70,20 +70,24 @@ pub fn install_helm_release_from_repo(
     chart_version: Option<&str>,
 ) {
     if helm_release_exists(release_name) {
-        let helm_release = get_helm_release(release_name).unwrap();
+        let helm_release = get_helm_release(release_name).unwrap_or_else(|| {
+            panic!(
+                "Failed to find helm release {release_name} besides helm saying it should be there"
+            )
+        });
         let current_version = helm_release.version;
 
         match chart_version {
             None => {
-                warn!("The release {release_name} in version {current_version} is already running and you have not requested a specific version, not re-installing it");
+                warn!("The release {release_name} in version {current_version} is already installed and you have not requested a specific version, not re-installing it");
                 return;
             }
             Some(chart_version) => {
                 if chart_version == current_version {
-                    info!("The release {release_name} in version {current_version} is already running, not installing it");
+                    info!("The release {release_name} in version {current_version} is already installed, not installing it");
                     return;
                 } else {
-                    error!("The helm release {release_name} is already running in version {current_version} but you requested to install it in version {chart_version}. \
+                    error!("The helm release {release_name} is already installed in version {current_version} but you requested to install it in version {chart_version}. \
                     Use \"stackablectl operator uninstall {operator_name}\" to uninstall it.");
                     exit(1);
                 }
@@ -164,6 +168,7 @@ pub struct Release {
     pub name: String,
     pub version: String,
     pub namespace: String,
+    pub status: String,
     pub last_updated: String,
 }
 
