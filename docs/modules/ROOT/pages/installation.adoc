@@ -1,0 +1,3 @@
+= Installation
+
+Download the binary from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest releases] for your operating system and simply execute it. For unix based systems, set the executable flag first.

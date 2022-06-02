@@ -1,3 +1,4 @@
-# stackablectl
+= stackablectl
 
-Here be dragons!
+The `stackablectl` command line tool is used to interact with Stackable operators. Either individually or whole data pipelines consisting of multiple operators and multiple deployments of tools.
+
