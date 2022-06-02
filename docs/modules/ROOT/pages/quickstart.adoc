@@ -1,4 +1,4 @@
-= Usage
+= Quickstart
 
 `stackablectl` interacts with the Stackable platform at three abstraction levels: The <<Operator level>>, <<Release level>> and <<Stack level>>. These are to interact with individual operators, a whole release of the platform, or specific combinations of products that form a software stack for a specific use case.
 
