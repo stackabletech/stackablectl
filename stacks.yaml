@@ -1,7 +1,7 @@
 ---
 stacks:
   trino-superset:
-    description: BROKEN, ONLY FOR DEMONSTRATION PURPOSE! Stack containing MinIO, Trino and Superset for Data visualization
+    description: BROKEN, ONLY FOR DEMONSTRATION PURPOSE! Stack containing MinIO, Trino and Superset for data visualization
     stackableRelease: 22.06-sbernauer
     labels:
       - minio
