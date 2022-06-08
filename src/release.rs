@@ -2,7 +2,7 @@ use crate::arguments::OutputType;
 use crate::operator::Operator;
 use crate::{helpers, kind, operator, CliArgs};
 use cached::proc_macro::cached;
-use clap::Parser;
+use clap::{ArgGroup, Parser};
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{error, info, warn};
@@ -36,10 +36,25 @@ pub enum CliCommandRelease {
     },
     /// Install a specific release
     #[clap(alias("in"))]
+    #[clap(group(
+        ArgGroup::new("list-of-products")
+            .required(false)
+            .args(&["include-products", "exclude-products"]),
+    ))]
     Install {
         /// Name of the release to install
         #[clap(required = true)]
         release: String,
+
+        /// Whitelist of product operators to install.
+        /// Mutually exclusive with `--exclude-products`
+        #[clap(short, long)]
+        include_products: Vec<String>,
+
+        /// Blacklist of product operators to install.
+        /// Mutually exclusive with `--include-products`
+        #[clap(short, long)]
+        exclude_products: Vec<String>,
 
         /// If specified a local kubernetes cluster consisting of 4 nodes for testing purposes will be created.
         /// Kind is a tool to spin up a local kubernetes cluster running on docker on your machine.
@@ -71,11 +86,13 @@ impl CliCommandRelease {
             CliCommandRelease::Describe { release, output } => describe_release(release, output),
             CliCommandRelease::Install {
                 release,
+                include_products,
+                exclude_products,
                 kind_cluster,
                 kind_cluster_name,
             } => {
                 kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
-                install_release(release);
+                install_release(release, include_products, exclude_products);
             }
             CliCommandRelease::Uninstall { release } => uninstall_release(release),
         }
@@ -167,14 +184,21 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
     }
 }
 
-pub fn install_release(release_name: &str) {
+/// If include_operators is an non-empty list only the whitelisted product operators will be installed.
+/// If exclude_operators is an non-empty list the blacklisted product operators will be skipped.
+fn install_release(release_name: &str, include_products: &[String], exclude_products: &[String]) {
     info!("Installing release {release_name}");
     let release = get_release(release_name);
 
     for (product_name, product) in release.products.into_iter() {
-        Operator::new(product_name, Some(product.operator_version))
-            .expect("Failed to construct operator definition")
-            .install();
+        let included = include_products.is_empty() || include_products.contains(&product_name);
+        let excluded = exclude_products.contains(&product_name);
+
+        if included && !excluded {
+            Operator::new(product_name, Some(product.operator_version))
+                .expect("Failed to construct operator definition")
+                .install();
+        }
     }
 }
 
