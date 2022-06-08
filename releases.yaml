@@ -2,10 +2,10 @@
 releases:
   22.05-sbernauer:
     releaseDate: 2022-05-06
-    description: Non-offical release from sbernauer to demonstrate stackablectl. It includes the latest stable versions.
+    description: Non-official release from sbernauer to demonstrate stackablectl. It includes the latest stable versions.
     products:
       airflow:
-        operatorVersion: 0.2.0
+        operatorVersion: 0.3.0
       commons:
         operatorVersion: 0.1.0
       druid:
@@ -23,7 +23,7 @@ releases:
       opa:
         operatorVersion: 0.8.0
       secret:
-        operatorVersion: 0.3.0
+        operatorVersion: 0.4.0
       spark:
         operatorVersion: 0.5.0
       spark-k8s:

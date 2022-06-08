@@ -154,7 +154,7 @@ fn install_stack(stack_name: &str) {
     info!("Installing stack {stack_name}");
     let stack = get_stack(stack_name);
 
-    release::install_release(&stack.stackable_release);
+    release::install_release(&stack.stackable_release, &[], &[]);
 
     info!("Installing products of stack {stack_name}");
     match helpers::read_from_url_or_file(&stack.manifests) {
