@@ -212,8 +212,7 @@ fn install_stack(stack_name: &str) {
         }
     }
 
-    info!("");
-    info!("Installed stack {stack_name}. Have a nice day!");
+    info!("Installed stack {stack_name}");
 }
 
 /// Cached because of potential slow network calls
