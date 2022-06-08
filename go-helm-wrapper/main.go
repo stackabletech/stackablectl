@@ -34,7 +34,7 @@ func go_install_helm_release(releaseName string, chartName string, chartVersion 
         Timeout:     timeout,
     }
 
-    if _, err := helmClient.InstallChart(context.Background(), &chartSpec); err != nil {
+    if _, err := helmClient.InstallChart(context.Background(), &chartSpec, nil); err != nil {
         panic(err)
     }
 }
