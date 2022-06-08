@@ -1,4 +1,32 @@
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: superset-credentials
+type: Opaque
+stringData:
+  adminUser.username: admin
+  adminUser.firstname: Superset
+  adminUser.lastname: Admin
+  adminUser.email: admin@superset.com
+  adminUser.password: admin
+  connections.secretKey: thisISaSECRET_1234
+  connections.sqlalchemyDatabaseUri: postgresql://superset:superset@postgresql-superset/superset
+---
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: superset
+spec:
+  version: 1.4.1
+  statsdExporterVersion: v0.22.4
+  credentialsSecret: superset-credentials
+  loadExamplesOnInit: true
+  nodes:
+    roleGroups:
+      default:
+        replicas: 1
+---
 apiVersion: hive.stackable.tech/v1alpha1
 kind: HiveCluster
 metadata:

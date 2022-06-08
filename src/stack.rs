@@ -1,10 +1,10 @@
 use crate::arguments::OutputType;
-use crate::{helpers, kind, kube, release, CliArgs};
+use crate::{helm, helpers, kind, kube, release, CliArgs};
 use cached::proc_macro::cached;
 use clap::Parser;
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
-use log::{error, info, warn};
+use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 use std::ops::Deref;
 use std::process::exit;
@@ -89,7 +89,28 @@ struct Stack {
     description: String,
     stackable_release: String,
     labels: Vec<String>,
-    manifests: String,
+    manifests: Vec<StackManifest>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+enum StackManifest {
+    #[serde(rename_all = "camelCase")]
+    HelmChart {
+        release_name: String,
+        name: String,
+        repo: HelmChartRepo,
+        version: String,
+        options: serde_yaml::Value,
+    },
+    PlainYaml(String),
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct HelmChartRepo {
+    name: String,
+    url: String,
 }
 
 fn list_stacks(output_type: &OutputType) {
@@ -121,7 +142,6 @@ fn describe_stack(stack_name: &str, output_type: &OutputType) {
         description: String,
         stackable_release: String,
         labels: Vec<String>,
-        manifests: String,
     }
 
     let stack = get_stack(stack_name);
@@ -130,7 +150,6 @@ fn describe_stack(stack_name: &str, output_type: &OutputType) {
         description: stack.description,
         stackable_release: stack.stackable_release,
         labels: stack.labels,
-        manifests: stack.manifests,
     };
 
     match output_type {
@@ -138,7 +157,6 @@ fn describe_stack(stack_name: &str, output_type: &OutputType) {
             println!("Stack:              {}", output.stack);
             println!("Description:        {}", output.description);
             println!("Stackable release:  {}", output.stackable_release);
-            println!("Manifests:          {}", output.manifests);
             println!("Labels:             {}", output.labels.join(", "));
         }
         OutputType::Json => {
@@ -156,14 +174,41 @@ fn install_stack(stack_name: &str) {
 
     release::install_release(&stack.stackable_release, &[], &[]);
 
-    info!("Installing products of stack {stack_name}");
-    match helpers::read_from_url_or_file(&stack.manifests) {
-        Ok(manifests) => kube::deploy_manifest(&manifests),
-        Err(err) => {
-            panic!(
-                "Could not read stack manifests from file \"{}\": {err}",
-                &stack.manifests
-            );
+    info!("Installing components of stack {stack_name}");
+    for manifest in stack.manifests {
+        match manifest {
+            StackManifest::HelmChart {
+                release_name,
+                name,
+                repo,
+                version,
+                options,
+            } => {
+                debug!("Installing helm chart {name} as {release_name}");
+                helm::add_helm_repo(&repo.name, &repo.url);
+
+                let values_yaml = serde_yaml::to_string(&options).unwrap();
+                helm::install_helm_release_from_repo(
+                    &release_name,
+                    &release_name,
+                    &repo.name,
+                    &name,
+                    Some(&version),
+                    Some(&values_yaml),
+                )
+            }
+            StackManifest::PlainYaml(yaml_url_or_file) => {
+                debug!("Installing yaml manifest from {yaml_url_or_file}");
+                match helpers::read_from_url_or_file(&yaml_url_or_file) {
+                    Ok(manifests) => kube::deploy_manifest(&manifests),
+                    Err(err) => {
+                        panic!(
+                            "Could not read stack manifests from file \"{}\": {err}",
+                            &yaml_url_or_file
+                        );
+                    }
+                }
+            }
         }
     }
 

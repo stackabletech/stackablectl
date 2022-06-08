@@ -19,6 +19,7 @@ extern "C" {
         release_name: GoString,
         chart_name: GoString,
         chart_version: GoString,
+        values_yaml: GoString,
         namespace: GoString,
         supress_output: bool,
     );
@@ -67,6 +68,7 @@ pub fn install_helm_release_from_repo(
     repo_name: &str,
     chart_name: &str,
     chart_version: Option<&str>,
+    values_yaml: Option<&str>,
 ) {
     if helm_release_exists(release_name) {
         let helm_release = get_helm_release(release_name).unwrap_or_else(|| {
@@ -108,7 +110,7 @@ pub fn install_helm_release_from_repo(
     let full_chart_name = format!("{repo_name}/{chart_name}");
     let chart_version = chart_version.unwrap_or(">0.0.0-0");
     debug!("Installing helm release {repo_name} from chart {full_chart_name} in version {chart_version}");
-    install_helm_release(release_name, &full_chart_name, chart_version);
+    install_helm_release(release_name, &full_chart_name, chart_version, values_yaml);
 }
 
 /// Cached because of slow network calls
@@ -140,12 +142,18 @@ pub fn uninstall_helm_release(release_name: &str) {
     }
 }
 
-fn install_helm_release(release_name: &str, chart_name: &str, chart_version: &str) {
+fn install_helm_release(
+    release_name: &str,
+    chart_name: &str,
+    chart_version: &str,
+    values_yaml: Option<&str>,
+) {
     unsafe {
         go_install_helm_release(
             GoString::from(release_name),
             GoString::from(chart_name),
             GoString::from(chart_version),
+            GoString::from(values_yaml.unwrap_or("")),
             GoString::from(NAMESPACE.lock().unwrap().as_str()),
             *LOG_LEVEL.lock().unwrap() < LevelFilter::Debug,
         )
@@ -187,7 +195,7 @@ pub fn get_helm_release(release_name: &str) -> Option<Release> {
         .find(|release| release.name == release_name)
 }
 
-fn add_helm_repo(name: &str, url: &str) {
+pub fn add_helm_repo(name: &str, url: &str) {
     unsafe { go_add_helm_repo(GoString::from(name), GoString::from(url)) }
 }
 

@@ -1,27 +1,35 @@
 ---
 stacks:
-  trino:
-    description: Simply stack only containing Trino
-    stackableRelease: 22.05-sbernauer
-    labels:
-      - trino
-    manifests: stacks/trino.yaml
-    # TODO additional services
   trino-superset:
-    description: NOT READY! A modern data-analysis stack with S3, Trino and Superset
+    description: BROKEN, ONLY FOR DEMONSTRATION PURPOSE! Stack containing MinIO, Trino and Superset for Data visualization
     stackableRelease: 22.05-sbernauer
     labels:
+      - minio
       - trino
       - superset
-    manifests: stacks/trino-superset.yaml
-    # TODO additional services
-  kafka-nifi-druid-superset:
-    description: NOT READY! Streaming applications and persistent storage with Druid on S3 and Superset for visualization
-    stackableRelease: 22.05-sbernauer
-    labels:
-      - kafka
-      - nifi
-      - druid
-      - superset
-    manifests: stacks/kafka-nifi-druid-superset.yaml
-    # TODO additional services
+      - s3
+    manifests:
+      - helmChart:
+          releaseName: minio-trino
+          name: minio/minio
+          repo:
+            name: minio
+            url: https://charts.min.io/
+          version: 4.0.2
+          options:
+            rootUser: accessKey
+            rootPassword: secretKey
+            mode: standalone
+      - helmChart:
+          releaseName: postgresql-superset
+          name: bitnami/postgresql
+          repo:
+            name: bitnami
+            url: https://charts.bitnami.com/bitnami/
+          version: 11.0.0
+          options:
+            auth:
+              username: superset
+              password: superset
+              database: superset
+      - plainYaml: stacks/trino-superset.yaml

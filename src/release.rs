@@ -186,7 +186,11 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
 
 /// If include_operators is an non-empty list only the whitelisted product operators will be installed.
 /// If exclude_operators is an non-empty list the blacklisted product operators will be skipped.
-pub fn install_release(release_name: &str, include_products: &[String], exclude_products: &[String]) {
+pub fn install_release(
+    release_name: &str,
+    include_products: &[String],
+    exclude_products: &[String],
+) {
     info!("Installing release {release_name}");
     let release = get_release(release_name);
 

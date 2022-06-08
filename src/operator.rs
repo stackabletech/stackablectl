@@ -288,6 +288,7 @@ impl Operator {
             helm_repo_name,
             &helm_release_name,
             self.version.as_deref(),
+            None,
         );
     }
 }
