@@ -1,5 +1,11 @@
 ---
 releases:
+  This version of stackablectl has been deprecated, please update:
+    releaseDate: 2022-06-02
+    description:
+    products:
+      commons:
+        operatorVersion: 0.1.0
   22.06-sbernauer:
     releaseDate: 2022-06-08
     description: Non-official release from sbernauer to demonstrate stackablectl. It includes the latest stable versions.

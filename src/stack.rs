@@ -186,7 +186,10 @@ fn install_stack(stack_name: &str) {
                 options,
             } => {
                 debug!("Installing helm chart {name} as {release_name}");
-                HELM_REPOS.lock().unwrap().insert(repo.name.clone(), repo.url);
+                HELM_REPOS
+                    .lock()
+                    .unwrap()
+                    .insert(repo.name.clone(), repo.url);
 
                 let values_yaml = serde_yaml::to_string(&options).unwrap();
                 helm::install_helm_release_from_repo(
