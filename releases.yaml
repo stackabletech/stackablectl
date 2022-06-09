@@ -9,7 +9,7 @@ releases:
       commons:
         operatorVersion: 0.1.0
       druid:
-        operatorVersion: 0.5.0
+        operatorVersion: 0.6.0-pr245
       hbase:
         operatorVersion: 0.2.0
       hdfs:
@@ -29,11 +29,11 @@ releases:
       spark-k8s:
         operatorVersion: 0.1.0
       superset:
-        operatorVersion: 0.4.0
+        operatorVersion: 0.5.0-nightly
       trino:
-        operatorVersion: 0.3.2-nightly # Trino < 0.4.0 requires regorule-operator and 0.4.0 will be released soon-ish.
+        operatorVersion: 0.3.2-pr213 # Trino < 0.4.0 requires regorule-operator and 0.4.0 will be released soon-ish. Picking a fixed version anyway
       zookeeper:
-        operatorVersion: 0.9.0
+        operatorVersion: 0.10.0-nightly
   alpha-3:
     releaseDate: 2022-02-14
     description: Second release which added Airflow, Druid and Superset
