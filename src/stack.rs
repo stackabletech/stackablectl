@@ -1,4 +1,5 @@
 use crate::arguments::OutputType;
+use crate::helm::HELM_REPOS;
 use crate::{helm, helpers, kind, kube, release, CliArgs};
 use cached::proc_macro::cached;
 use clap::Parser;
@@ -185,7 +186,7 @@ fn install_stack(stack_name: &str) {
                 options,
             } => {
                 debug!("Installing helm chart {name} as {release_name}");
-                helm::add_helm_repo(&repo.name, &repo.url);
+                HELM_REPOS.lock().unwrap().insert(repo.name.clone(), repo.url);
 
                 let values_yaml = serde_yaml::to_string(&options).unwrap();
                 helm::install_helm_release_from_repo(

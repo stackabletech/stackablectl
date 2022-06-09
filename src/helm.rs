@@ -59,7 +59,7 @@ pub fn handle_common_cli_args(args: &CliArgs) {
 }
 
 /// Installs the specified helm chart with the release_name
-/// If the release is already running it errors out (maybe in the future prompt the user if it should be deleted)
+/// If the release is already running in a different version it errors out (maybe in the future prompt the user if it should be deleted)
 /// If the chart_version is None the version `>0.0.0-0` will be used.
 /// This is equivalent to the `helm install` flag `--devel`.
 pub fn install_helm_release_from_repo(
