@@ -113,14 +113,17 @@ pub fn install_helm_release_from_repo(
 }
 
 /// Cached because of slow network calls
+/// Not returning an Result<HelmRepo, Error> because i couldn't get it to work with #[cached]
 #[cached]
-pub fn get_repo_index(repo_url: String) -> HelmRepo {
+pub async fn get_repo_index(repo_url: String) -> HelmRepo {
     let index_url = format!("{repo_url}/index.yaml");
     debug!("Fetching helm repo index from {index_url}");
 
-    let resp = reqwest::blocking::get(&index_url)
+    let resp = reqwest::get(&index_url)
+        .await
         .unwrap_or_else(|_| panic!("Failed to download helm repo index from {index_url}"))
         .text()
+        .await
         .unwrap_or_else(|_| panic!("Failed to get text from {index_url}"));
 
     serde_yaml::from_str(&resp)

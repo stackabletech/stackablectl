@@ -16,6 +16,8 @@ pub enum CliCommandOperator {
     /// Show details of a specific operator
     #[clap(alias("desc"))]
     Describe {
+        /// Name of the operator to describe
+        #[clap(required = true)]
         operator: String,
 
         #[clap(short, long, arg_enum, default_value = "text")]
@@ -59,11 +61,11 @@ pub enum CliCommandOperator {
 }
 
 impl CliCommandOperator {
-    pub fn handle(&self) {
+    pub async fn handle(&self) {
         match self {
-            CliCommandOperator::List { output } => list_operators(output),
+            CliCommandOperator::List { output } => list_operators(output).await,
             CliCommandOperator::Describe { operator, output } => {
-                describe_operator(operator, output)
+                describe_operator(operator, output).await
             }
             CliCommandOperator::Install {
                 operators,
@@ -81,7 +83,7 @@ impl CliCommandOperator {
     }
 }
 
-fn list_operators(output_type: &OutputType) {
+async fn list_operators(output_type: &OutputType) {
     type Output = IndexMap<String, OutputOperatorEntry>;
 
     #[derive(Serialize)]
@@ -92,19 +94,17 @@ fn list_operators(output_type: &OutputType) {
         dev_versions: Vec<String>,
     }
 
-    let output: Output = AVAILABLE_OPERATORS
-        .iter()
-        .map(|operator| {
-            (
-                operator.to_string(),
-                OutputOperatorEntry {
-                    stable_versions: get_versions_from_repo(operator, "stackable-stable"),
-                    test_versions: get_versions_from_repo(operator, "stackable-test"),
-                    dev_versions: get_versions_from_repo(operator, "stackable-dev"),
-                },
-            )
-        })
-        .collect();
+    let mut output: Output = IndexMap::new();
+    for operator in AVAILABLE_OPERATORS {
+        output.insert(
+            operator.to_string(),
+            OutputOperatorEntry {
+                stable_versions: get_versions_from_repo(operator, "stackable-stable").await,
+                test_versions: get_versions_from_repo(operator, "stackable-test").await,
+                dev_versions: get_versions_from_repo(operator, "stackable-dev").await,
+            },
+        );
+    }
 
     match output_type {
         OutputType::Text => {
@@ -126,7 +126,7 @@ fn list_operators(output_type: &OutputType) {
     }
 }
 
-fn describe_operator(operator: &str, output_type: &OutputType) {
+async fn describe_operator(operator: &str, output_type: &OutputType) {
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
     struct Output {
@@ -137,9 +137,9 @@ fn describe_operator(operator: &str, output_type: &OutputType) {
     }
     let output = Output {
         operator: operator.to_string(),
-        stable_versions: get_versions_from_repo(operator, "stackable-stable"),
-        test_versions: get_versions_from_repo(operator, "stackable-test"),
-        dev_versions: get_versions_from_repo(operator, "stackable-dev"),
+        stable_versions: get_versions_from_repo(operator, "stackable-stable").await,
+        test_versions: get_versions_from_repo(operator, "stackable-test").await,
+        dev_versions: get_versions_from_repo(operator, "stackable-dev").await,
     };
 
     match output_type {
@@ -158,7 +158,7 @@ fn describe_operator(operator: &str, output_type: &OutputType) {
     }
 }
 
-fn get_versions_from_repo(operator: &str, helm_repo_name: &str) -> Vec<String> {
+async fn get_versions_from_repo(operator: &str, helm_repo_name: &str) -> Vec<String> {
     let chart_name = format!("{operator}-operator");
 
     let repo = helm::get_repo_index(
@@ -168,7 +168,8 @@ fn get_versions_from_repo(operator: &str, helm_repo_name: &str) -> Vec<String> {
             .get(helm_repo_name)
             .unwrap_or_else(|| panic!("Could not find a helm repo with the name {helm_repo_name}"))
             .to_string(),
-    );
+    )
+    .await;
     match repo.entries.get(&chart_name) {
         None => {
             warn!("Could not find {operator} operator (chart name {chart_name}) in helm repo {helm_repo_name}");

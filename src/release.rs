@@ -24,6 +24,8 @@ pub enum CliCommandRelease {
     /// Show details of a specific release
     #[clap(alias("desc"))]
     Describe {
+        /// Name of the release to describe
+        #[clap(required = true)]
         release: String,
 
         #[clap(short, long, arg_enum, default_value = "text")]
@@ -75,10 +77,12 @@ pub enum CliCommandRelease {
 }
 
 impl CliCommandRelease {
-    pub fn handle(&self) {
+    pub async fn handle(&self) {
         match self {
-            CliCommandRelease::List { output } => list_releases(output),
-            CliCommandRelease::Describe { release, output } => describe_release(release, output),
+            CliCommandRelease::List { output } => list_releases(output).await,
+            CliCommandRelease::Describe { release, output } => {
+                describe_release(release, output).await
+            }
             CliCommandRelease::Install {
                 release,
                 include_products,
@@ -87,9 +91,9 @@ impl CliCommandRelease {
                 kind_cluster_name,
             } => {
                 kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
-                install_release(release, include_products, exclude_products);
+                install_release(release, include_products, exclude_products).await;
             }
-            CliCommandRelease::Uninstall { release } => uninstall_release(release),
+            CliCommandRelease::Uninstall { release } => uninstall_release(release).await,
         }
     }
 }
@@ -119,8 +123,8 @@ struct ReleaseProduct {
     operator_version: String,
 }
 
-fn list_releases(output_type: &OutputType) {
-    let output = get_releases();
+async fn list_releases(output_type: &OutputType) {
+    let output = get_releases().await;
     match output_type {
         OutputType::Text => {
             println!("RELEASE            RELEASE DATE   DESCRIPTION");
@@ -140,7 +144,7 @@ fn list_releases(output_type: &OutputType) {
     }
 }
 
-fn describe_release(release_name: &str, output_type: &OutputType) {
+async fn describe_release(release_name: &str, output_type: &OutputType) {
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
     struct Output {
@@ -150,7 +154,7 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
         products: IndexMap<String, ReleaseProduct>,
     }
 
-    let release = get_release(release_name);
+    let release = get_release(release_name).await;
     let output = Output {
         release: release_name.to_string(),
         release_date: release.release_date,
@@ -181,13 +185,13 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
 
 /// If include_operators is an non-empty list only the whitelisted product operators will be installed.
 /// If exclude_operators is an non-empty list the blacklisted product operators will be skipped.
-pub fn install_release(
+pub async fn install_release(
     release_name: &str,
     include_products: &[String],
     exclude_products: &[String],
 ) {
     info!("Installing release {release_name}");
-    let release = get_release(release_name);
+    let release = get_release(release_name).await;
 
     for (product_name, product) in release.products.into_iter() {
         let included = include_products.is_empty() || include_products.contains(&product_name);
@@ -201,19 +205,19 @@ pub fn install_release(
     }
 }
 
-fn uninstall_release(release_name: &str) {
+async fn uninstall_release(release_name: &str) {
     info!("Uninstalling release {release_name}");
-    let release = get_release(release_name);
+    let release = get_release(release_name).await;
 
     operator::uninstall_operators(&release.products.into_keys().collect());
 }
 
 /// Cached because of potential slow network calls
 #[cached]
-fn get_releases() -> Releases {
+async fn get_releases() -> Releases {
     let mut all_releases: IndexMap<String, Release> = IndexMap::new();
     for release_file in RELEASE_FILES.lock().unwrap().deref() {
-        let yaml = helpers::read_from_url_or_file(release_file);
+        let yaml = helpers::read_from_url_or_file(release_file).await;
         match yaml {
             Ok(yaml) => match serde_yaml::from_str::<Releases>(&yaml) {
                 Ok(releases) => all_releases.extend(releases.releases),
@@ -230,8 +234,9 @@ fn get_releases() -> Releases {
     }
 }
 
-fn get_release(release_name: &str) -> Release {
+async fn get_release(release_name: &str) -> Release {
     get_releases()
+    .await
         .releases
         .remove(release_name) // We need to remove to take ownership
         .unwrap_or_else(|| {

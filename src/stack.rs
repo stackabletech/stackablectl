@@ -24,6 +24,8 @@ pub enum CliCommandStack {
     /// Show details of a specific stack
     #[clap(alias("desc"))]
     Describe {
+        /// Name of the stack to describe
+        #[clap(required = true)]
         stack: String,
 
         #[clap(short, long, arg_enum, default_value = "text")]
@@ -53,17 +55,17 @@ pub enum CliCommandStack {
 }
 
 impl CliCommandStack {
-    pub fn handle(&self) {
+    pub async fn handle(&self) {
         match self {
-            CliCommandStack::List { output } => list_stacks(output),
-            CliCommandStack::Describe { stack, output } => describe_stack(stack, output),
+            CliCommandStack::List { output } => list_stacks(output).await,
+            CliCommandStack::Describe { stack, output } => describe_stack(stack, output).await,
             CliCommandStack::Install {
                 stack,
                 kind_cluster,
                 kind_cluster_name,
             } => {
                 kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
-                install_stack(stack);
+                install_stack(stack).await;
             }
         }
     }
@@ -110,8 +112,8 @@ struct HelmChartRepo {
     url: String,
 }
 
-fn list_stacks(output_type: &OutputType) {
-    let output = get_stacks();
+async fn list_stacks(output_type: &OutputType) {
+    let output = get_stacks().await;
     match output_type {
         OutputType::Text => {
             println!("STACK                               STACKABLE RELEASE  DESCRIPTION");
@@ -131,7 +133,7 @@ fn list_stacks(output_type: &OutputType) {
     }
 }
 
-fn describe_stack(stack_name: &str, output_type: &OutputType) {
+async fn describe_stack(stack_name: &str, output_type: &OutputType) {
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
     struct Output {
@@ -141,7 +143,7 @@ fn describe_stack(stack_name: &str, output_type: &OutputType) {
         labels: Vec<String>,
     }
 
-    let stack = get_stack(stack_name);
+    let stack = get_stack(stack_name).await;
     let output = Output {
         stack: stack_name.to_string(),
         description: stack.description,
@@ -165,11 +167,11 @@ fn describe_stack(stack_name: &str, output_type: &OutputType) {
     }
 }
 
-fn install_stack(stack_name: &str) {
+async fn install_stack(stack_name: &str) {
     info!("Installing stack {stack_name}");
-    let stack = get_stack(stack_name);
+    let stack = get_stack(stack_name).await;
 
-    release::install_release(&stack.stackable_release, &[], &[]);
+    release::install_release(&stack.stackable_release, &[], &[]).await;
 
     info!("Installing components of stack {stack_name}");
     for manifest in stack.manifests {
@@ -199,7 +201,7 @@ fn install_stack(stack_name: &str) {
             }
             StackManifest::PlainYaml(yaml_url_or_file) => {
                 debug!("Installing yaml manifest from {yaml_url_or_file}");
-                match helpers::read_from_url_or_file(&yaml_url_or_file) {
+                match helpers::read_from_url_or_file(&yaml_url_or_file).await {
                     Ok(manifests) => kube::deploy_manifest(&manifests),
                     Err(err) => {
                         panic!(
@@ -217,10 +219,10 @@ fn install_stack(stack_name: &str) {
 
 /// Cached because of potential slow network calls
 #[cached]
-fn get_stacks() -> Stacks {
+async fn get_stacks() -> Stacks {
     let mut all_stacks: IndexMap<String, Stack> = IndexMap::new();
     for stack_file in STACK_FILES.lock().unwrap().deref() {
-        let yaml = helpers::read_from_url_or_file(stack_file);
+        let yaml = helpers::read_from_url_or_file(stack_file).await;
         match yaml {
             Ok(yaml) => match serde_yaml::from_str::<Stacks>(&yaml) {
                 Ok(stacks) => all_stacks.extend(stacks.stacks),
@@ -235,8 +237,9 @@ fn get_stacks() -> Stacks {
     Stacks { stacks: all_stacks }
 }
 
-fn get_stack(stack_name: &str) -> Stack {
+async fn get_stack(stack_name: &str) -> Stack {
     get_stacks()
+    .await
         .stacks
         .remove(stack_name) // We need to remove to take ownership
         .unwrap_or_else(|| {

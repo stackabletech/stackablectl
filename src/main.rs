@@ -3,7 +3,7 @@ use arguments::CliArgs;
 use clap::Parser;
 use lazy_static::lazy_static;
 use log::info;
-use std::sync::Mutex;
+use std::{error::Error, sync::Mutex};
 
 mod arguments;
 mod helm;
@@ -12,6 +12,7 @@ mod kind;
 mod kube;
 mod operator;
 mod release;
+mod services;
 mod stack;
 
 const AVAILABLE_OPERATORS: &[&str] = &[
@@ -39,7 +40,8 @@ lazy_static! {
     pub static ref NAMESPACE: Mutex<String> = Mutex::new(String::new());
 }
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
     let args = CliArgs::parse();
     env_logger::builder()
         .format_timestamp(None)
@@ -59,8 +61,11 @@ fn main() {
     stack::handle_common_cli_args(&args);
 
     match &args.cmd {
-        CliCommand::Operator(command) => command.handle(),
-        CliCommand::Release(command) => command.handle(),
-        CliCommand::Stack(command) => command.handle(),
+        CliCommand::Operator(command) => command.handle().await,
+        CliCommand::Release(command) => command.handle().await,
+        CliCommand::Stack(command) => command.handle().await,
+        CliCommand::Services(command) => command.handle().await?,
     }
+
+    Ok(())
 }

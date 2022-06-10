@@ -1,4 +1,7 @@
-use crate::{operator::CliCommandOperator, release::CliCommandRelease, stack::CliCommandStack};
+use crate::{
+    operator::CliCommandOperator, release::CliCommandRelease, services::CliCommandServices,
+    stack::CliCommandStack,
+};
 use clap::{ArgEnum, Parser};
 use log::LevelFilter;
 
@@ -68,6 +71,10 @@ pub enum CliCommand {
     /// This subcommand interacts with stacks, which are ready-to-use combinations of products.
     #[clap(subcommand, alias("s"), alias("st"))]
     Stack(CliCommandStack),
+
+    /// This subcommand interacts with deployed services of products.
+    #[clap(subcommand, alias("se"))]
+    Services(CliCommandServices),
 }
 
 #[derive(Clone, Parser, ArgEnum)]
