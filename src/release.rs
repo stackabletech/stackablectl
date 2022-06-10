@@ -216,8 +216,9 @@ async fn uninstall_release(release_name: &str) {
 #[cached]
 async fn get_releases() -> Releases {
     let mut all_releases: IndexMap<String, Release> = IndexMap::new();
-    for release_file in RELEASE_FILES.lock().unwrap().deref() {
-        let yaml = helpers::read_from_url_or_file(release_file).await;
+    let release_files = RELEASE_FILES.lock().unwrap().deref().clone();
+    for release_file in release_files {
+        let yaml = helpers::read_from_url_or_file(&release_file).await;
         match yaml {
             Ok(yaml) => match serde_yaml::from_str::<Releases>(&yaml) {
                 Ok(releases) => all_releases.extend(releases.releases),

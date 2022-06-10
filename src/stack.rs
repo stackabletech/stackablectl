@@ -221,8 +221,9 @@ async fn install_stack(stack_name: &str) {
 #[cached]
 async fn get_stacks() -> Stacks {
     let mut all_stacks: IndexMap<String, Stack> = IndexMap::new();
-    for stack_file in STACK_FILES.lock().unwrap().deref() {
-        let yaml = helpers::read_from_url_or_file(stack_file).await;
+    let stack_files = STACK_FILES.lock().unwrap().deref().clone();
+    for stack_file in stack_files {
+        let yaml = helpers::read_from_url_or_file(&stack_file).await;
         match yaml {
             Ok(yaml) => match serde_yaml::from_str::<Stacks>(&yaml) {
                 Ok(stacks) => all_stacks.extend(stacks.stacks),
