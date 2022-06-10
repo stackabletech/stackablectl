@@ -1,6 +1,4 @@
-use crate::operator::CliCommandOperator;
-use crate::release::CliCommandRelease;
-use crate::stack::CliCommandStack;
+use crate::{operator::CliCommandOperator, release::CliCommandRelease, stack::CliCommandStack};
 use clap::{ArgEnum, Parser};
 use log::LevelFilter;
 
