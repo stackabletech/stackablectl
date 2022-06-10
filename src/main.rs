@@ -1,10 +1,9 @@
-use std::sync::Mutex;
-
 use crate::arguments::CliCommand;
 use arguments::CliArgs;
 use clap::Parser;
 use lazy_static::lazy_static;
 use log::info;
+use std::sync::Mutex;
 
 mod arguments;
 mod helm;

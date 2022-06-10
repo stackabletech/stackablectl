@@ -1,6 +1,4 @@
-use crate::arguments::OutputType;
-use crate::helm::HELM_REPOS;
-use crate::{helm, kind, AVAILABLE_OPERATORS};
+use crate::{arguments::OutputType, helm, helm::HELM_REPOS, kind, AVAILABLE_OPERATORS};
 use clap::Parser;
 use indexmap::IndexMap;
 use log::{info, warn};

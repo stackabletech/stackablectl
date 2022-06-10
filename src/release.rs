@@ -1,15 +1,11 @@
-use crate::arguments::OutputType;
-use crate::operator::Operator;
-use crate::{helpers, kind, operator, CliArgs};
+use crate::{arguments::OutputType, helpers, kind, operator, operator::Operator, CliArgs};
 use cached::proc_macro::cached;
 use clap::{ArgGroup, Parser};
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
-use std::ops::Deref;
-use std::process::exit;
-use std::sync::Mutex;
+use std::{ops::Deref, process::exit, sync::Mutex};
 
 lazy_static! {
     pub static ref RELEASE_FILES: Mutex<Vec<String>> = Mutex::new(vec![

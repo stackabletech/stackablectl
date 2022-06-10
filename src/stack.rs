@@ -1,15 +1,11 @@
-use crate::arguments::OutputType;
-use crate::helm::HELM_REPOS;
-use crate::{helm, helpers, kind, kube, release, CliArgs};
+use crate::{arguments::OutputType, helm, helm::HELM_REPOS, helpers, kind, kube, release, CliArgs};
 use cached::proc_macro::cached;
 use clap::Parser;
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
-use std::ops::Deref;
-use std::process::exit;
-use std::sync::Mutex;
+use std::{ops::Deref, process::exit, sync::Mutex};
 
 lazy_static! {
     pub static ref STACK_FILES: Mutex<Vec<String>> = Mutex::new(vec![
