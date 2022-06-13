@@ -1,10 +1,116 @@
+use core::panic;
 use std::error::Error;
 
+use ::kube::api::GroupVersionKind;
 use clap::Parser;
 use indexmap::IndexMap;
+use lazy_static::lazy_static;
 use serde::Serialize;
 
 use crate::{arguments::OutputType, kube};
+
+// Additional services we need to think of in the future
+// * MinIO
+lazy_static! {
+    pub static ref PRODUCT_CRDS: IndexMap<&'static str, GroupVersionKind> = IndexMap::from([
+        (
+            "airflow",
+            GroupVersionKind {
+                group: "airflow.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "AirflowCluster".to_string(),
+            }
+        ),
+        (
+            "druid",
+            GroupVersionKind {
+                group: "druid.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "DruidCluster".to_string(),
+            }
+        ),
+        (
+            "hbase",
+            GroupVersionKind {
+                group: "hbase.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "HbaseCluster".to_string(),
+            }
+        ),
+        (
+            "hdfs",
+            GroupVersionKind {
+                group: "hdfs.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "HdfsCluster".to_string(),
+            }
+        ),
+        (
+            "hive",
+            GroupVersionKind {
+                group: "hive.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "HiveCluster".to_string(),
+            }
+        ),
+        (
+            "kafka",
+            GroupVersionKind {
+                group: "kafka.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "KafkaCluster".to_string(),
+            }
+        ),
+        (
+            "nifi",
+            GroupVersionKind {
+                group: "nifi.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "NifiCluster".to_string(),
+            }
+        ),
+        (
+            "opa",
+            GroupVersionKind {
+                group: "opa.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "OpenPolicyAgent".to_string(),
+            }
+        ),
+        (
+            "spark",
+            GroupVersionKind {
+                group: "spark.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "SparkCluster".to_string(),
+            }
+        ),
+        (
+            "superset",
+            GroupVersionKind {
+                group: "superset.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "SupersetCluster".to_string(),
+            }
+        ),
+        (
+            "trino",
+            GroupVersionKind {
+                group: "trino.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "TrinoCluster".to_string(),
+            }
+        ),
+        (
+            "zookeeper",
+            GroupVersionKind {
+                group: "zookeeper.stackable.tech".to_string(),
+                version: "v1alpha1".to_string(),
+                kind: "ZookeeperCluster".to_string(),
+            }
+        ),
+    ]);
+}
 
 #[derive(Parser)]
 pub enum CliCommandServices {
@@ -48,11 +154,11 @@ async fn list_services(
 
     match output_type {
         OutputType::Text => {
-            println!("PRODUCT              NAMESPACE                      NAME                                     ENDPOINTS");
+            println!("PRODUCT         NAMESPACE                      NAME                                     ENDPOINTS");
             for (product_name, installed_products) in output.iter() {
                 for installed_product in installed_products {
                     println!(
-                        "{:20} {:30} {:40} {}",
+                        "{:15} {:30} {:40} {}",
                         product_name,
                         installed_product
                             .namespace
@@ -75,4 +181,13 @@ async fn list_services(
     }
 
     Ok(())
+}
+
+pub fn get_service_names(product_name: &str, product: &str) -> Vec<String> {
+    match product {
+        "druid" => vec![format!("{product_name}-middlemanager")],
+        "superset" => vec![format!("{product_name}-external")],
+        "zookeeper" => vec![product_name.to_string()],
+        _ => panic!("product {product} not known"),
+    }
 }
