@@ -2,7 +2,6 @@ use crate::arguments::CliCommand;
 use arguments::CliArgs;
 use clap::Parser;
 use lazy_static::lazy_static;
-use log::info;
 use std::{error::Error, sync::Mutex};
 
 mod arguments;
@@ -50,10 +49,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .init();
 
     let namespace = &args.namespace;
-    if namespace != "default" {
-        info!("Deploying into non-default namespace.\
-            Please make sure not to deploy the same operator multiple times in different namespaces unless you know what you are doing (TM).");
-    }
     *(NAMESPACE.lock().unwrap()) = namespace.to_string();
 
     helm::handle_common_cli_args(&args);

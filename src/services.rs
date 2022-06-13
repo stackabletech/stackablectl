@@ -1,6 +1,8 @@
 use std::error::Error;
 
 use clap::Parser;
+use indexmap::IndexMap;
+use serde::Serialize;
 
 use crate::{arguments::OutputType, kube};
 
@@ -30,6 +32,14 @@ impl CliCommandServices {
     }
 }
 
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct InstalledProduct {
+    pub name: String,
+    pub namespace: Option<String>, // Some CRDs are cluster scoped
+    pub endpoints: IndexMap<String, String>, // key: service name (e.g. web-ui), value: url
+}
+
 async fn list_services(
     all_namespaces: bool,
     output_type: &OutputType,
@@ -38,21 +48,22 @@ async fn list_services(
 
     match output_type {
         OutputType::Text => {
-            println!(
-                "SERVICE                                  NAMESPACE                      PORTS"
-            );
-            for (service_name, service_entry) in output.iter() {
-                println!(
-                    "{:40} {:30} {}",
-                    service_name,
-                    service_entry.namespace,
-                    service_entry
-                        .ports
-                        .iter()
-                        .filter_map(|port| port.name.clone())
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                );
+            println!("PRODUCT              NAMESPACE                      NAME                                     ENDPOINTS");
+            for (product_name, installed_products) in output.iter() {
+                for installed_product in installed_products {
+                    println!(
+                        "{:20} {:30} {:40} {}",
+                        product_name,
+                        installed_product
+                            .namespace
+                            .as_ref()
+                            .unwrap_or(&"~".to_string()),
+                        installed_product.name,
+                        installed_product.endpoints.iter().map(|(name, url)| {
+                            format!("{:10} {url}", format!("{name}:"))
+                        }).collect::<Vec<_>>().join("\n                                                                                             ")
+                    );
+                }
             }
         }
         OutputType::Json => {

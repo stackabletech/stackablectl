@@ -20,7 +20,7 @@ extern "C" {
         chart_version: GoString,
         values_yaml: GoString,
         namespace: GoString,
-        supress_output: bool,
+        suppress_output: bool,
     );
     fn go_uninstall_helm_release(
         release_name: GoString,
