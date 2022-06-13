@@ -1,13 +1,11 @@
-use crate::arguments::OutputType;
-use crate::{helpers, CliArgs};
+use crate::{arguments::OutputType, helpers, CliArgs};
 use cached::proc_macro::cached;
 use clap::Parser;
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::warn;
 use serde::{Deserialize, Serialize};
-use std::ops::Deref;
-use std::sync::Mutex;
+use std::{ops::Deref, sync::Mutex};
 
 lazy_static! {
     pub static ref STACK_FILES: Mutex<Vec<String>> = Mutex::new(vec![

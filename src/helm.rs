@@ -1,13 +1,12 @@
-use crate::helpers::{c_str_ptr_to_str, GoString};
-use crate::CliArgs;
+use crate::{
+    helpers::{c_str_ptr_to_str, GoString},
+    CliArgs,
+};
 use cached::proc_macro::cached;
 use lazy_static::lazy_static;
 use log::{debug, error, info, warn, LevelFilter};
 use serde::Deserialize;
-use std::collections::HashMap;
-use std::os::raw::c_char;
-use std::process::exit;
-use std::sync::Mutex;
+use std::{collections::HashMap, os::raw::c_char, process::exit, sync::Mutex};
 
 lazy_static! {
     pub static ref NAMESPACE: Mutex<String> = Mutex::new(String::new());

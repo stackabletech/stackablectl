@@ -1,9 +1,12 @@
 use log::trace;
-use std::ffi::CStr;
-use std::os::raw::c_char;
-use std::process::{Command, Stdio};
-use std::str;
-use std::{fs, io::Write};
+use std::{
+    ffi::CStr,
+    fs,
+    io::Write,
+    os::raw::c_char,
+    process::{Command, Stdio},
+    str,
+};
 use which::which;
 
 #[repr(C)]
