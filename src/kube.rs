@@ -1,6 +1,6 @@
 use crate::{
     helpers,
-    services::{get_service_names, InstalledProduct, PRODUCT_CRDS},
+    services::{get_extra_infos, get_service_names, InstalledProduct, PRODUCT_CRDS},
     NAMESPACE,
 };
 use cached::proc_macro::cached;
@@ -48,6 +48,8 @@ pub async fn get_services(
                     let object_namespace = object.namespace();
 
                     let service_names = get_service_names(&object_name, product_name);
+                    let extra_infos = get_extra_infos(product_name, &object).await?;
+
                     let mut endpoints = IndexMap::new();
                     for service_name in service_names {
                         let service_endpoint_urls =
@@ -64,6 +66,7 @@ pub async fn get_services(
                         name: object_name,
                         namespace: object_namespace,
                         endpoints,
+                        extra_infos,
                     };
                     installed_products.push(product);
                 }
@@ -176,6 +179,6 @@ async fn get_node_name_ip_mapping() -> HashMap<String, String> {
     result
 }
 
-async fn get_client() -> Result<Client, Box<dyn Error>> {
+pub async fn get_client() -> Result<Client, Box<dyn Error>> {
     Ok(Client::try_default().await?)
 }

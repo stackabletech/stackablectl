@@ -1,13 +1,20 @@
-use core::panic;
 use std::error::Error;
 
-use ::kube::api::GroupVersionKind;
+use ::kube::{
+    api::{DynamicObject, GroupVersionKind},
+    Api, ResourceExt,
+};
 use clap::Parser;
 use indexmap::IndexMap;
+use k8s_openapi::api::core::v1::Secret;
 use lazy_static::lazy_static;
+use log::warn;
 use serde::Serialize;
 
-use crate::{arguments::OutputType, kube};
+use crate::{
+    arguments::OutputType,
+    kube::{self, get_client},
+};
 
 // Additional services we need to think of in the future
 // * MinIO
@@ -144,6 +151,7 @@ pub struct InstalledProduct {
     pub name: String,
     pub namespace: Option<String>, // Some CRDs are cluster scoped
     pub endpoints: IndexMap<String, String>, // key: service name (e.g. web-ui), value: url
+    pub extra_infos: Vec<String>,
 }
 
 async fn list_services(
@@ -154,21 +162,49 @@ async fn list_services(
 
     match output_type {
         OutputType::Text => {
-            println!("PRODUCT         NAMESPACE                      NAME                                     ENDPOINTS");
+            println!("PRODUCT      NAME                                     NAMESPACE                      ENDPOINTS                                EXTRA INFOS");
             for (product_name, installed_products) in output.iter() {
                 for installed_product in installed_products {
                     println!(
-                        "{:15} {:30} {:40} {}",
+                        "{:12} {:40} {:30} {:40} {}",
                         product_name,
+                        installed_product.name,
                         installed_product
                             .namespace
                             .as_ref()
-                            .unwrap_or(&"~".to_string()),
-                        installed_product.name,
-                        installed_product.endpoints.iter().map(|(name, url)| {
-                            format!("{:10} {url}", format!("{name}:"))
-                        }).collect::<Vec<_>>().join("\n                                                                                             ")
+                            .map(|s| s.to_string())
+                            .unwrap_or_default(),
+                        installed_product
+                            .endpoints
+                            .first()
+                            .map(|(name, url)| { format!("{:10} {url}", format!("{name}:")) })
+                            .unwrap_or_default(),
+                        installed_product
+                            .extra_infos
+                            .first()
+                            .map(|s| s.to_string())
+                            .unwrap_or_default(),
                     );
+
+                    let mut endpoints = installed_product.endpoints.iter().skip(1);
+                    let mut extra_infos = installed_product.extra_infos.iter().skip(1);
+
+                    loop {
+                        let endpoint = endpoints.next();
+                        let extra_info = extra_infos.next();
+
+                        println!(
+                            "                                                                                     {:40} {}",
+                            endpoint
+                                .map(|(name, url)| { format!("{:10} {url}", format!("{name}:")) })
+                                .unwrap_or_default(),
+                            extra_info.map(|s| s.to_string()).unwrap_or_default(),
+                        );
+
+                        if endpoint.is_none() && extra_info.is_none() {
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -186,8 +222,47 @@ async fn list_services(
 pub fn get_service_names(product_name: &str, product: &str) -> Vec<String> {
     match product {
         "druid" => vec![format!("{product_name}-router")],
+        "hive" => vec![],
         "superset" => vec![format!("{product_name}-external")],
+        "trino" => vec![format!("{product_name}-coordinator")],
         "zookeeper" => vec![],
-        _ => panic!("product {product} not known"),
+        _ => {
+            warn!("Cannot calculated exposed services names as product {product} is not known");
+            vec![]
+        }
     }
+}
+
+pub async fn get_extra_infos(
+    product: &str,
+    product_crd: &DynamicObject,
+) -> Result<Vec<String>, Box<dyn Error>> {
+    let mut result = match product_crd.data["spec"]["version"].as_str() {
+        Some(version) => Vec::from([format!("Version {version}")]),
+        None => Vec::new(),
+    };
+
+    match product {
+        "superset" => {
+            if let Some(secret_name) = product_crd.data["spec"]["credentialsSecret"].as_str() {
+                let client = get_client().await?;
+                let secret_api: Api<Secret> =
+                    Api::namespaced(client, &product_crd.namespace().unwrap());
+                let secret = secret_api.get(secret_name).await?;
+                let secret_data = secret.data.unwrap();
+
+                if let (Some(username), Some(password)) = (
+                    secret_data.get("adminUser.username"),
+                    secret_data.get("adminUser.password"),
+                ) {
+                    let username = String::from_utf8(username.0.clone()).unwrap();
+                    let password = String::from_utf8(password.0.clone()).unwrap();
+                    result.push(format!("user: {username}, password: {password}"));
+                }
+            }
+        }
+        _ => (),
+    }
+
+    Ok(result)
 }
