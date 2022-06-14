@@ -39,6 +39,6 @@ stacks:
               username: superset
               password: superset
               database: superset
-      - plainYaml: stacks/druid-superset/zookeeper.yaml
-      - plainYaml: stacks/druid-superset/druid.yaml
-      - plainYaml: stacks/druid-superset/superset.yaml
+      - plainYaml: stacks/druid-superset-s3/zookeeper.yaml
+      - plainYaml: stacks/druid-superset-s3/druid.yaml
+      - plainYaml: stacks/druid-superset-s3/superset.yaml

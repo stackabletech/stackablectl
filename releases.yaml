@@ -15,7 +15,7 @@ releases:
       commons:
         operatorVersion: 0.1.0
       druid:
-        operatorVersion: 0.6.0-pr245
+        operatorVersion: 0.6.0-nightly
       hbase:
         operatorVersion: 0.2.0
       hdfs:
@@ -37,7 +37,7 @@ releases:
       superset:
         operatorVersion: 0.5.0-nightly
       trino:
-        operatorVersion: 0.3.2-pr213 # Trino < 0.4.0 requires regorule-operator and 0.4.0 will be released soon-ish. Picking a fixed version anyway
+        operatorVersion: 0.3.2-nightly
       zookeeper:
         operatorVersion: 0.10.0-nightly
   alpha-3:
