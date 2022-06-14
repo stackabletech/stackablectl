@@ -98,25 +98,25 @@ pub async fn get_service_endpoint_urls(
             Some(addresses) if addresses.len() == 1 => match &addresses[0].node_name {
                 Some(node_name) => node_name,
                 None => {
-                    warn!("Could not determine the node the endpoint is running on because the address of the subset didn't had a node name");
+                    warn!("Could not determine the node the endpoint {service_name} is running on because the address of the subset didn't had a node name");
                     return Ok(IndexMap::new());
                 }
             },
             Some(_) => {
-                warn!("Could not determine the node the endpoint is running on because subset had multiple addresses");
+                warn!("Could not determine the node the endpoint {service_name} is running on because subset had multiple addresses");
                 return Ok(IndexMap::new());
             }
             None => {
-                warn!("Could not determine the node the endpoint is running on because subset had no addresses");
+                warn!("Could not determine the node the endpoint {service_name} is running on because subset had no addresses");
                 return Ok(IndexMap::new());
             }
         },
         Some(_) => {
-            warn!("Could not determine the node the endpoint is running on because endpoints consists of multiple subsets");
+            warn!("Could not determine the node the endpoint {service_name} is running on because endpoints consists of multiple subsets");
             return Ok(IndexMap::new());
         }
         None => {
-            warn!("Could not determine the node the endpoint is running on because the endpoint has no subset");
+            warn!("Could not determine the node the endpoint {service_name} is running on because the endpoint has no subset");
             return Ok(IndexMap::new());
         }
     };

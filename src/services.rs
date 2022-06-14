@@ -185,9 +185,9 @@ async fn list_services(
 
 pub fn get_service_names(product_name: &str, product: &str) -> Vec<String> {
     match product {
-        "druid" => vec![format!("{product_name}-middlemanager")],
+        "druid" => vec![format!("{product_name}-router")],
         "superset" => vec![format!("{product_name}-external")],
-        "zookeeper" => vec![product_name.to_string()],
+        "zookeeper" => vec![],
         _ => panic!("product {product} not known"),
     }
 }
