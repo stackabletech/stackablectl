@@ -318,10 +318,7 @@ pub async fn get_extra_infos(
     product_crd: &DynamicObject,
     hide_credentials: bool,
 ) -> Result<Vec<String>, Box<dyn Error>> {
-    let mut result = match product_crd.data["spec"]["version"].as_str() {
-        Some(version) => Vec::from([format!("Version {version}")]),
-        None => Vec::new(),
-    };
+    let mut result = Vec::new();
 
     match product {
         "superset" => {
@@ -351,6 +348,10 @@ pub async fn get_extra_infos(
             }
         }
         _ => (),
+    }
+
+    if let Some(version) = product_crd.data["spec"]["version"].as_str() {
+        result.push(format!("version {version}"));
     }
 
     Ok(result)
