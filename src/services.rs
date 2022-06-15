@@ -329,20 +329,24 @@ pub async fn get_extra_infos(
                 let client = get_client().await?;
                 let secret_api: Api<Secret> =
                     Api::namespaced(client, &product_crd.namespace().unwrap());
-                let secret = secret_api.get(secret_name).await?;
-                let secret_data = secret.data.unwrap();
 
-                if let (Some(username), Some(password)) = (
-                    secret_data.get("adminUser.username"),
-                    secret_data.get("adminUser.password"),
-                ) {
-                    let username = String::from_utf8(username.0.clone()).unwrap();
-                    let password = if hide_credentials {
-                        REDACTED_PASSWORD.to_string()
-                    } else {
-                        String::from_utf8(password.0.clone()).unwrap()
-                    };
-                    result.push(format!("admin username: {username}, password: {password}"));
+                if let Ok(Secret {
+                    data: Some(secret_data),
+                    ..
+                }) = secret_api.get(secret_name).await
+                {
+                    if let (Some(username), Some(password)) = (
+                        secret_data.get("adminUser.username"),
+                        secret_data.get("adminUser.password"),
+                    ) {
+                        let username = String::from_utf8(username.0.clone()).unwrap();
+                        let password = if hide_credentials {
+                            REDACTED_PASSWORD.to_string()
+                        } else {
+                            String::from_utf8(password.0.clone()).unwrap()
+                        };
+                        result.push(format!("admin user: {username}, password: {password}"));
+                    }
                 }
             }
         }
@@ -373,10 +377,6 @@ async fn get_minio_services(
             deployment_name.clone(),
             format!("{deployment_name}-console"),
         ];
-        let extra_infos = vec![
-            "This service is not part of the official Stackable Platform".to_string(),
-            "It is provided as a helper utility".to_string(),
-        ];
 
         let mut endpoints = IndexMap::new();
         for service_name in service_names {
@@ -392,6 +392,72 @@ async fn get_minio_services(
                 Err(err) => warn!("Failed to get endpoint_urls of service {service_name}: {err}"),
             }
         }
+
+        let mut extra_infos = vec!["Third party service".to_string()];
+        let containers = minio_deployment
+            .spec
+            .unwrap()
+            .template
+            .spec
+            .unwrap()
+            .containers;
+        if let Some(minio_container) = containers.iter().find(|c| c.name == "minio") {
+            if let Some(env) = &minio_container.env {
+                let admin_user = env.iter().find(|e| e.name == "MINIO_ROOT_USER");
+                let admin_password = env.iter().find(|e| e.name == "MINIO_ROOT_PASSWORD");
+
+                if let (Some(admin_user), Some(admin_password)) = (admin_user, admin_password) {
+                    let admin_user = admin_user
+                        .value_from
+                        .as_ref()
+                        .unwrap()
+                        .secret_key_ref
+                        .as_ref()
+                        .unwrap();
+                    let admin_password = admin_password
+                        .value_from
+                        .as_ref()
+                        .unwrap()
+                        .secret_key_ref
+                        .as_ref()
+                        .unwrap();
+
+                    let api: Api<Secret> = Api::namespaced(client.clone(), &deployment_namespace);
+                    let admin_user_secret = api.get(admin_user.name.as_ref().unwrap()).await;
+                    let admin_password_secret =
+                        api.get(admin_password.name.as_ref().unwrap()).await;
+
+                    if let (
+                        Ok(Secret {
+                            data: Some(admin_user_secret_data),
+                            ..
+                        }),
+                        Ok(Secret {
+                            data: Some(admin_password_secret_data),
+                            ..
+                        }),
+                    ) = (admin_user_secret, admin_password_secret)
+                    {
+                        let admin_user = admin_user_secret_data
+                            .get(&admin_user.key)
+                            .map(|b| String::from_utf8(b.clone().0).unwrap())
+                            .unwrap_or_default();
+                        let admin_password = if hide_credentials {
+                            REDACTED_PASSWORD.to_string()
+                        } else {
+                            admin_password_secret_data
+                                .get(&admin_password.key)
+                                .map(|b| String::from_utf8(b.clone().0).unwrap())
+                                .unwrap_or_default()
+                        };
+                        extra_infos.push(format!(
+                            "admin user: {admin_user}, password: {admin_password}"
+                        ));
+                    }
+                }
+            }
+        }
+
         let product = InstalledProduct {
             name: deployment_name,
             namespace: Some(deployment_namespace),
