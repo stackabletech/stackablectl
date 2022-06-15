@@ -196,6 +196,10 @@ async fn list_services(
                         let endpoint = endpoints.next();
                         let extra_info = extra_infos.next();
 
+                        if endpoint.is_none() && extra_info.is_none() {
+                            break;
+                        }
+
                         println!(
                             "                                                                                     {:50} {}",
                             endpoint
@@ -203,10 +207,6 @@ async fn list_services(
                                 .unwrap_or_default(),
                             extra_info.map(|s| s.to_string()).unwrap_or_default(),
                         );
-
-                        if endpoint.is_none() && extra_info.is_none() {
-                            break;
-                        }
                     }
                 }
             }

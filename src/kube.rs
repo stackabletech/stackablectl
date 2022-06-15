@@ -139,14 +139,18 @@ pub async fn get_service_endpoint_urls(
                     .trim_start_matches('-');
 
                 let port_name = service_port.name.unwrap_or_else(|| node_port.to_string());
-                result.insert(
-                    if endpoint_name.is_empty() {
-                        port_name
-                    } else {
-                        format!("{endpoint_name}-{port_name}")
-                    },
-                    format!("http://{node_ip}:{node_port} "),
-                );
+                let endpoint_name = if endpoint_name.is_empty() {
+                    port_name.clone()
+                } else {
+                    format!("{endpoint_name}-{port_name}")
+                };
+                let endpoint = match port_name.as_str()  {
+                    "http" => format!("http://{node_ip}:{node_port}"),
+                    "https" => format!("https://{node_ip}:{node_port}"),
+                    _ => format!("{node_ip}:{node_port}"),
+                };
+
+                result.insert(endpoint_name, endpoint);
             }
             None => warn!("Could not get endpoint_url as service {service_name} has no nodePort"),
         }
