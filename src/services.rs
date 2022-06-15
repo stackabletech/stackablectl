@@ -17,10 +17,8 @@ use crate::{
     NAMESPACE,
 };
 
-// Additional services we need to think of in the future
-// * MinIO
 lazy_static! {
-    pub static ref PRODUCT_CRDS: IndexMap<&'static str, GroupVersionKind> = IndexMap::from([
+    pub static ref STACKABLE_PRODUCT_CRDS: IndexMap<&'static str, GroupVersionKind> = IndexMap::from([
         (
             "airflow",
             GroupVersionKind {

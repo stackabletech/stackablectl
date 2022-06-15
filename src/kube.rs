@@ -1,6 +1,6 @@
 use crate::{
     helpers,
-    services::{get_extra_infos, get_service_names, InstalledProduct, PRODUCT_CRDS},
+    services::{get_extra_infos, get_service_names, InstalledProduct, STACKABLE_PRODUCT_CRDS},
     NAMESPACE,
 };
 use cached::proc_macro::cached;
@@ -33,7 +33,7 @@ pub async fn get_stackable_services(
 
     let client = get_client().await?;
 
-    for (product_name, product_gvk) in PRODUCT_CRDS.iter() {
+    for (product_name, product_gvk) in STACKABLE_PRODUCT_CRDS.iter() {
         let api_resource = kube::core::discovery::ApiResource::from_gvk(product_gvk);
         let api: Api<DynamicObject> = match namespaced {
             true => Api::namespaced_with(client.clone(), &namespace, &api_resource),
