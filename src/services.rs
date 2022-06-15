@@ -132,8 +132,8 @@ pub enum CliCommandServices {
         all_namespaces: bool,
 
         /// Don't show credentials in the output
-        #[clap(long)]
-        hide_credentials: bool,
+        #[clap(short, long)]
+        redact_credentials: bool,
 
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
@@ -146,8 +146,8 @@ impl CliCommandServices {
             CliCommandServices::List {
                 all_namespaces,
                 output,
-                hide_credentials,
-            } => list_services(*all_namespaces, *hide_credentials, output).await?,
+                redact_credentials,
+            } => list_services(*all_namespaces, *redact_credentials, output).await?,
         }
         Ok(())
     }
@@ -164,13 +164,13 @@ pub struct InstalledProduct {
 
 async fn list_services(
     all_namespaces: bool,
-    hide_credentials: bool,
+    redact_credentials: bool,
     output_type: &OutputType,
 ) -> Result<(), Box<dyn Error>> {
-    let mut output = get_stackable_services(!all_namespaces, hide_credentials).await?;
+    let mut output = get_stackable_services(!all_namespaces, redact_credentials).await?;
     output.insert(
         "minio".to_string(),
-        get_minio_services(!all_namespaces, hide_credentials).await?,
+        get_minio_services(!all_namespaces, redact_credentials).await?,
     );
 
     match output_type {
@@ -234,7 +234,7 @@ async fn list_services(
 
 pub async fn get_stackable_services(
     namespaced: bool,
-    hide_credentials: bool,
+    redact_credentials: bool,
 ) -> Result<IndexMap<String, Vec<InstalledProduct>>, Box<dyn Error>> {
     let mut result = IndexMap::new();
     let namespace = NAMESPACE.lock().unwrap().clone();
@@ -257,7 +257,7 @@ pub async fn get_stackable_services(
 
                     let service_names = get_service_names(&object_name, product_name);
                     let extra_infos =
-                        get_extra_infos(product_name, &object, hide_credentials).await?;
+                        get_extra_infos(product_name, &object, redact_credentials).await?;
 
                     let mut endpoints = IndexMap::new();
                     for service_name in service_names {
@@ -316,7 +316,7 @@ pub fn get_service_names(product_name: &str, product: &str) -> Vec<String> {
 pub async fn get_extra_infos(
     product: &str,
     product_crd: &DynamicObject,
-    hide_credentials: bool,
+    redact_credentials: bool,
 ) -> Result<Vec<String>, Box<dyn Error>> {
     let mut result = Vec::new();
 
@@ -337,7 +337,7 @@ pub async fn get_extra_infos(
                         secret_data.get("adminUser.password"),
                     ) {
                         let username = String::from_utf8(username.0.clone()).unwrap();
-                        let password = if hide_credentials {
+                        let password = if redact_credentials {
                             REDACTED_PASSWORD.to_string()
                         } else {
                             String::from_utf8(password.0.clone()).unwrap()
@@ -359,7 +359,7 @@ pub async fn get_extra_infos(
 
 async fn get_minio_services(
     namespaced: bool,
-    hide_credentials: bool,
+    redact_credentials: bool,
 ) -> Result<Vec<InstalledProduct>, Box<dyn Error>> {
     let client = get_client().await?;
     let deployment_api: Api<Deployment> = match namespaced {
@@ -443,7 +443,7 @@ async fn get_minio_services(
                             .get(&admin_user.key)
                             .map(|b| String::from_utf8(b.clone().0).unwrap())
                             .unwrap_or_default();
-                        let admin_password = if hide_credentials {
+                        let admin_password = if redact_credentials {
                             REDACTED_PASSWORD.to_string()
                         } else {
                             admin_password_secret_data
