@@ -1,121 +1,125 @@
 use std::error::Error;
 
-use ::kube::{
-    api::{DynamicObject, GroupVersionKind, ListParams},
-    Api, ResourceExt,
-};
 use clap::Parser;
 use indexmap::IndexMap;
 use k8s_openapi::api::{apps::v1::Deployment, core::v1::Secret};
+use kube::{
+    api::{DynamicObject, GroupVersionKind, ListParams},
+    core::ErrorResponse,
+    Api, ResourceExt,
+};
 use lazy_static::lazy_static;
-use log::warn;
+use log::{debug, warn};
 use serde::Serialize;
 
 use crate::{
     arguments::OutputType,
-    kube::{self, get_client, get_service_endpoint_urls},
+    kube::{get_client, get_service_endpoint_urls},
     NAMESPACE,
 };
 
+pub static REDACTED_PASSWORD: &str = "<redacted>";
+
 lazy_static! {
-    pub static ref STACKABLE_PRODUCT_CRDS: IndexMap<&'static str, GroupVersionKind> = IndexMap::from([
-        (
-            "airflow",
-            GroupVersionKind {
-                group: "airflow.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "AirflowCluster".to_string(),
-            }
-        ),
-        (
-            "druid",
-            GroupVersionKind {
-                group: "druid.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "DruidCluster".to_string(),
-            }
-        ),
-        (
-            "hbase",
-            GroupVersionKind {
-                group: "hbase.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "HbaseCluster".to_string(),
-            }
-        ),
-        (
-            "hdfs",
-            GroupVersionKind {
-                group: "hdfs.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "HdfsCluster".to_string(),
-            }
-        ),
-        (
-            "hive",
-            GroupVersionKind {
-                group: "hive.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "HiveCluster".to_string(),
-            }
-        ),
-        (
-            "kafka",
-            GroupVersionKind {
-                group: "kafka.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "KafkaCluster".to_string(),
-            }
-        ),
-        (
-            "nifi",
-            GroupVersionKind {
-                group: "nifi.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "NifiCluster".to_string(),
-            }
-        ),
-        (
-            "opa",
-            GroupVersionKind {
-                group: "opa.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "OpenPolicyAgent".to_string(),
-            }
-        ),
-        (
-            "spark",
-            GroupVersionKind {
-                group: "spark.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "SparkCluster".to_string(),
-            }
-        ),
-        (
-            "superset",
-            GroupVersionKind {
-                group: "superset.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "SupersetCluster".to_string(),
-            }
-        ),
-        (
-            "trino",
-            GroupVersionKind {
-                group: "trino.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "TrinoCluster".to_string(),
-            }
-        ),
-        (
-            "zookeeper",
-            GroupVersionKind {
-                group: "zookeeper.stackable.tech".to_string(),
-                version: "v1alpha1".to_string(),
-                kind: "ZookeeperCluster".to_string(),
-            }
-        ),
-    ]);
+    pub static ref STACKABLE_PRODUCT_CRDS: IndexMap<&'static str, GroupVersionKind> =
+        IndexMap::from([
+            (
+                "airflow",
+                GroupVersionKind {
+                    group: "airflow.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "AirflowCluster".to_string(),
+                }
+            ),
+            (
+                "druid",
+                GroupVersionKind {
+                    group: "druid.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "DruidCluster".to_string(),
+                }
+            ),
+            (
+                "hbase",
+                GroupVersionKind {
+                    group: "hbase.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "HbaseCluster".to_string(),
+                }
+            ),
+            (
+                "hdfs",
+                GroupVersionKind {
+                    group: "hdfs.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "HdfsCluster".to_string(),
+                }
+            ),
+            (
+                "hive",
+                GroupVersionKind {
+                    group: "hive.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "HiveCluster".to_string(),
+                }
+            ),
+            (
+                "kafka",
+                GroupVersionKind {
+                    group: "kafka.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "KafkaCluster".to_string(),
+                }
+            ),
+            (
+                "nifi",
+                GroupVersionKind {
+                    group: "nifi.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "NifiCluster".to_string(),
+                }
+            ),
+            (
+                "opa",
+                GroupVersionKind {
+                    group: "opa.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "OpenPolicyAgent".to_string(),
+                }
+            ),
+            (
+                "spark",
+                GroupVersionKind {
+                    group: "spark.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "SparkCluster".to_string(),
+                }
+            ),
+            (
+                "superset",
+                GroupVersionKind {
+                    group: "superset.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "SupersetCluster".to_string(),
+                }
+            ),
+            (
+                "trino",
+                GroupVersionKind {
+                    group: "trino.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "TrinoCluster".to_string(),
+                }
+            ),
+            (
+                "zookeeper",
+                GroupVersionKind {
+                    group: "zookeeper.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "ZookeeperCluster".to_string(),
+                }
+            ),
+        ]);
 }
 
 #[derive(Parser)]
@@ -126,6 +130,10 @@ pub enum CliCommandServices {
         /// If specified services of all namespaces will be shown, not only the namespace you're currently in
         #[clap(short, long)]
         all_namespaces: bool,
+
+        /// Don't show credentials in the output
+        #[clap(long)]
+        hide_credentials: bool,
 
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
@@ -138,7 +146,8 @@ impl CliCommandServices {
             CliCommandServices::List {
                 all_namespaces,
                 output,
-            } => list_services(*all_namespaces, output).await?,
+                hide_credentials,
+            } => list_services(*all_namespaces, *hide_credentials, output).await?,
         }
         Ok(())
     }
@@ -155,12 +164,13 @@ pub struct InstalledProduct {
 
 async fn list_services(
     all_namespaces: bool,
+    hide_credentials: bool,
     output_type: &OutputType,
 ) -> Result<(), Box<dyn Error>> {
-    let mut output = kube::get_stackable_services(!all_namespaces).await?;
+    let mut output = get_stackable_services(!all_namespaces, hide_credentials).await?;
     output.insert(
         "minio".to_string(),
-        get_minio_services(!all_namespaces).await?,
+        get_minio_services(!all_namespaces, hide_credentials).await?,
     );
 
     match output_type {
@@ -222,6 +232,70 @@ async fn list_services(
     Ok(())
 }
 
+pub async fn get_stackable_services(
+    namespaced: bool,
+    hide_credentials: bool,
+) -> Result<IndexMap<String, Vec<InstalledProduct>>, Box<dyn Error>> {
+    let mut result = IndexMap::new();
+    let namespace = NAMESPACE.lock().unwrap().clone();
+
+    let client = get_client().await?;
+
+    for (product_name, product_gvk) in STACKABLE_PRODUCT_CRDS.iter() {
+        let api_resource = kube::core::discovery::ApiResource::from_gvk(product_gvk);
+        let api: Api<DynamicObject> = match namespaced {
+            true => Api::namespaced_with(client.clone(), &namespace, &api_resource),
+            false => Api::all_with(client.clone(), &api_resource),
+        };
+        let objects = api.list(&ListParams::default()).await;
+        match objects {
+            Ok(objects) => {
+                let mut installed_products = Vec::new();
+                for object in objects {
+                    let object_name = object.name();
+                    let object_namespace = object.namespace();
+
+                    let service_names = get_service_names(&object_name, product_name);
+                    let extra_infos =
+                        get_extra_infos(product_name, &object, hide_credentials).await?;
+
+                    let mut endpoints = IndexMap::new();
+                    for service_name in service_names {
+                        let service_endpoint_urls =
+                            get_service_endpoint_urls(&service_name, &object_name, object_namespace
+                                .as_ref()
+                                .expect("Failed to get the namespace of object {object_name} besides it having an service")
+                            , client.clone())
+                                .await;
+                        match service_endpoint_urls {
+                            Ok(service_endpoint_urls) => endpoints.extend(service_endpoint_urls),
+                            Err(err) => warn!(
+                                "Failed to get endpoint_urls of service {service_name}: {err}"
+                            ),
+                        }
+                    }
+                    let product = InstalledProduct {
+                        name: object_name,
+                        namespace: object_namespace,
+                        endpoints,
+                        extra_infos,
+                    };
+                    installed_products.push(product);
+                }
+                result.insert(product_name.to_string(), installed_products);
+            }
+            Err(kube::Error::Api(ErrorResponse { code: 404, .. })) => {
+                debug!("ProductCRD for product {product_name} not installed");
+            }
+            Err(err) => {
+                return Err(Box::new(err));
+            }
+        }
+    }
+
+    Ok(result)
+}
+
 pub fn get_service_names(product_name: &str, product: &str) -> Vec<String> {
     match product {
         "druid" => vec![
@@ -242,6 +316,7 @@ pub fn get_service_names(product_name: &str, product: &str) -> Vec<String> {
 pub async fn get_extra_infos(
     product: &str,
     product_crd: &DynamicObject,
+    hide_credentials: bool,
 ) -> Result<Vec<String>, Box<dyn Error>> {
     let mut result = match product_crd.data["spec"]["version"].as_str() {
         Some(version) => Vec::from([format!("Version {version}")]),
@@ -262,8 +337,12 @@ pub async fn get_extra_infos(
                     secret_data.get("adminUser.password"),
                 ) {
                     let username = String::from_utf8(username.0.clone()).unwrap();
-                    let password = String::from_utf8(password.0.clone()).unwrap();
-                    result.push(format!("user: {username}, password: {password}"));
+                    let password = if hide_credentials {
+                        REDACTED_PASSWORD.to_string()
+                    } else {
+                        String::from_utf8(password.0.clone()).unwrap()
+                    };
+                    result.push(format!("admin username: {username}, password: {password}"));
                 }
             }
         }
@@ -273,7 +352,10 @@ pub async fn get_extra_infos(
     Ok(result)
 }
 
-async fn get_minio_services(namespaced: bool) -> Result<Vec<InstalledProduct>, Box<dyn Error>> {
+async fn get_minio_services(
+    namespaced: bool,
+    hide_credentials: bool,
+) -> Result<Vec<InstalledProduct>, Box<dyn Error>> {
     let client = get_client().await?;
     let deployment_api: Api<Deployment> = match namespaced {
         true => Api::namespaced(client.clone(), NAMESPACE.lock().unwrap().as_str()),

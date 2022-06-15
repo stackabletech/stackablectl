@@ -1,18 +1,10 @@
-use crate::{
-    helpers,
-    services::{get_extra_infos, get_service_names, InstalledProduct, STACKABLE_PRODUCT_CRDS},
-    NAMESPACE,
-};
+use crate::{helpers, NAMESPACE};
 use cached::proc_macro::cached;
 use core::panic;
 use indexmap::IndexMap;
 use k8s_openapi::api::core::v1::{Endpoints, Node};
-use kube::{
-    api::{DynamicObject, ListParams},
-    core::ErrorResponse,
-    Api, Client, ResourceExt,
-};
-use log::{debug, warn};
+use kube::{api::ListParams, Api, Client, ResourceExt};
+use log::warn;
 use std::{collections::HashMap, error::Error, vec};
 
 /// This function currently uses `kubectl apply`.
@@ -23,68 +15,6 @@ pub fn deploy_manifest(yaml: &str) {
         vec!["kubectl", "apply", "-n", &namespace, "-f", "-"],
         yaml,
     );
-}
-
-pub async fn get_stackable_services(
-    namespaced: bool,
-) -> Result<IndexMap<String, Vec<InstalledProduct>>, Box<dyn Error>> {
-    let mut result = IndexMap::new();
-    let namespace = NAMESPACE.lock().unwrap().clone();
-
-    let client = get_client().await?;
-
-    for (product_name, product_gvk) in STACKABLE_PRODUCT_CRDS.iter() {
-        let api_resource = kube::core::discovery::ApiResource::from_gvk(product_gvk);
-        let api: Api<DynamicObject> = match namespaced {
-            true => Api::namespaced_with(client.clone(), &namespace, &api_resource),
-            false => Api::all_with(client.clone(), &api_resource),
-        };
-        let objects = api.list(&ListParams::default()).await;
-        match objects {
-            Ok(objects) => {
-                let mut installed_products = Vec::new();
-                for object in objects {
-                    let object_name = object.name();
-                    let object_namespace = object.namespace();
-
-                    let service_names = get_service_names(&object_name, product_name);
-                    let extra_infos = get_extra_infos(product_name, &object).await?;
-
-                    let mut endpoints = IndexMap::new();
-                    for service_name in service_names {
-                        let service_endpoint_urls =
-                            get_service_endpoint_urls(&service_name, &object_name, object_namespace
-                                .as_ref()
-                                .expect("Failed to get the namespace of object {object_name} besides it having an service")
-                            , client.clone())
-                                .await;
-                        match service_endpoint_urls {
-                            Ok(service_endpoint_urls) => endpoints.extend(service_endpoint_urls),
-                            Err(err) => warn!(
-                                "Failed to get endpoint_urls of service {service_name}: {err}"
-                            ),
-                        }
-                    }
-                    let product = InstalledProduct {
-                        name: object_name,
-                        namespace: object_namespace,
-                        endpoints,
-                        extra_infos,
-                    };
-                    installed_products.push(product);
-                }
-                result.insert(product_name.to_string(), installed_products);
-            }
-            Err(kube::Error::Api(ErrorResponse { code: 404, .. })) => {
-                debug!("ProductCRD for product {product_name} not installed");
-            }
-            Err(err) => {
-                return Err(Box::new(err));
-            }
-        }
-    }
-
-    Ok(result)
 }
 
 pub async fn get_service_endpoint_urls(
@@ -144,7 +74,7 @@ pub async fn get_service_endpoint_urls(
                 } else {
                     format!("{endpoint_name}-{port_name}")
                 };
-                let endpoint = match port_name.as_str()  {
+                let endpoint = match port_name.as_str() {
                     "http" => format!("http://{node_ip}:{node_port}"),
                     "https" => format!("https://{node_ip}:{node_port}"),
                     _ => format!("{node_ip}:{node_port}"),
