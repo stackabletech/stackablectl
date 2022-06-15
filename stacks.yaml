@@ -27,6 +27,9 @@ stacks:
             buckets:
               - name: druid
                 policy: public
+            resources:
+              requests:
+                memory: 2Gi
             service:
               type: NodePort
               nodePort: null

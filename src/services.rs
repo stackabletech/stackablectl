@@ -88,14 +88,6 @@ lazy_static! {
                 }
             ),
             (
-                "spark",
-                GroupVersionKind {
-                    group: "spark.stackable.tech".to_string(),
-                    version: "v1alpha1".to_string(),
-                    kind: "SparkCluster".to_string(),
-                }
-            ),
-            (
                 "superset",
                 GroupVersionKind {
                     group: "superset.stackable.tech".to_string(),
@@ -135,6 +127,10 @@ pub enum CliCommandServices {
         #[clap(short, long)]
         redact_credentials: bool,
 
+        /// Don't show the product versions in the output
+        #[clap(long)]
+        hide_versions: bool,
+
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
     },
@@ -147,7 +143,10 @@ impl CliCommandServices {
                 all_namespaces,
                 output,
                 redact_credentials,
-            } => list_services(*all_namespaces, *redact_credentials, output).await?,
+                hide_versions,
+            } => {
+                list_services(*all_namespaces, *redact_credentials, *hide_versions, output).await?
+            }
         }
         Ok(())
     }
@@ -165,9 +164,11 @@ pub struct InstalledProduct {
 async fn list_services(
     all_namespaces: bool,
     redact_credentials: bool,
+    hide_versions: bool,
     output_type: &OutputType,
 ) -> Result<(), Box<dyn Error>> {
-    let mut output = get_stackable_services(!all_namespaces, redact_credentials).await?;
+    let mut output =
+        get_stackable_services(!all_namespaces, redact_credentials, hide_versions).await?;
     output.insert(
         "minio".to_string(),
         get_minio_services(!all_namespaces, redact_credentials).await?,
@@ -235,6 +236,7 @@ async fn list_services(
 pub async fn get_stackable_services(
     namespaced: bool,
     redact_credentials: bool,
+    hide_versions: bool,
 ) -> Result<IndexMap<String, Vec<InstalledProduct>>, Box<dyn Error>> {
     let mut result = IndexMap::new();
     let namespace = NAMESPACE.lock().unwrap().clone();
@@ -257,7 +259,8 @@ pub async fn get_stackable_services(
 
                     let service_names = get_service_names(&object_name, product_name);
                     let extra_infos =
-                        get_extra_infos(product_name, &object, redact_credentials).await?;
+                        get_extra_infos(product_name, &object, redact_credentials, hide_versions)
+                            .await?;
 
                     let mut endpoints = IndexMap::new();
                     for service_name in service_names {
@@ -302,7 +305,8 @@ pub fn get_service_names(product_name: &str, product: &str) -> Vec<String> {
             format!("{product_name}-router"),
             format!("{product_name}-coordinator"),
         ],
-        "hive" => vec![],
+        "hive" => vec![product_name.to_string()],
+        "nifi" => vec![product_name.to_string()],
         "superset" => vec![format!("{product_name}-external")],
         "trino" => vec![format!("{product_name}-coordinator")],
         "zookeeper" => vec![product_name.to_string()],
@@ -317,10 +321,14 @@ pub async fn get_extra_infos(
     product: &str,
     product_crd: &DynamicObject,
     redact_credentials: bool,
+    hide_versions: bool,
 ) -> Result<Vec<String>, Box<dyn Error>> {
     let mut result = Vec::new();
 
     match product {
+        "nifi" => {
+            result.push("TODO: must implement reading admin user for nifi".to_string());
+        }
         "superset" => {
             if let Some(secret_name) = product_crd.data["spec"]["credentialsSecret"].as_str() {
                 let client = get_client().await?;
@@ -350,8 +358,10 @@ pub async fn get_extra_infos(
         _ => (),
     }
 
-    if let Some(version) = product_crd.data["spec"]["version"].as_str() {
-        result.push(format!("version {version}"));
+    if !hide_versions {
+        if let Some(version) = product_crd.data["spec"]["version"].as_str() {
+            result.push(format!("version {version}"));
+        }
     }
 
     Ok(result)
