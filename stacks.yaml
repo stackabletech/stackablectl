@@ -27,6 +27,12 @@ stacks:
             buckets:
               - name: druid
                 policy: public
+            service:
+              type: NodePort
+              nodePort: null
+            consoleService:
+              type: NodePort
+              nodePort: null
       - helmChart:
           releaseName: postgresql-superset
           name: postgresql

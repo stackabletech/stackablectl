@@ -25,7 +25,7 @@ pub fn deploy_manifest(yaml: &str) {
     );
 }
 
-pub async fn get_services(
+pub async fn get_stackable_services(
     namespaced: bool,
 ) -> Result<IndexMap<String, Vec<InstalledProduct>>, Box<dyn Error>> {
     let mut result = IndexMap::new();
@@ -53,7 +53,10 @@ pub async fn get_services(
                     let mut endpoints = IndexMap::new();
                     for service_name in service_names {
                         let service_endpoint_urls =
-                            get_service_endpoint_urls(&service_name, object_namespace.as_ref().expect("Failed to get Namespace of object {object_name} besides it having an service"), client.clone())
+                            get_service_endpoint_urls(&service_name, &object_name, object_namespace
+                                .as_ref()
+                                .expect("Failed to get the namespace of object {object_name} besides it having an service")
+                            , client.clone())
                                 .await;
                         match service_endpoint_urls {
                             Ok(service_endpoint_urls) => endpoints.extend(service_endpoint_urls),
@@ -86,6 +89,7 @@ pub async fn get_services(
 
 pub async fn get_service_endpoint_urls(
     service_name: &str,
+    object_name: &str,
     namespace: &str,
     client: Client,
 ) -> Result<IndexMap<String, String>, Box<dyn Error>> {
@@ -128,11 +132,24 @@ pub async fn get_service_endpoint_urls(
 
     let mut result = IndexMap::new();
     for service_port in service.spec.unwrap().ports.unwrap_or_default() {
-        let port_name = service_port.name.unwrap_or_else(|| "".to_string());
-        let port_number = service_port.port;
-        let node_port_number = service_port.node_port.unwrap_or(port_number); // TODO: Is this correct behavior?
+        match service_port.node_port {
+            Some(node_port) => {
+                let endpoint_name = service_name
+                    .trim_start_matches(object_name)
+                    .trim_start_matches('-');
 
-        result.insert(port_name, format!("http://{node_ip}:{node_port_number} "));
+                let port_name = service_port.name.unwrap_or_else(|| node_port.to_string());
+                result.insert(
+                    if endpoint_name.is_empty() {
+                        port_name
+                    } else {
+                        format!("{endpoint_name}-{port_name}")
+                    },
+                    format!("http://{node_ip}:{node_port} "),
+                );
+            }
+            None => warn!("Could not get endpoint_url as service {service_name} has no nodePort"),
+        }
     }
 
     Ok(result)

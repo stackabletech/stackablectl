@@ -1,19 +1,20 @@
 use std::error::Error;
 
 use ::kube::{
-    api::{DynamicObject, GroupVersionKind},
+    api::{DynamicObject, GroupVersionKind, ListParams},
     Api, ResourceExt,
 };
 use clap::Parser;
 use indexmap::IndexMap;
-use k8s_openapi::api::core::v1::Secret;
+use k8s_openapi::api::{apps::v1::Deployment, core::v1::Secret};
 use lazy_static::lazy_static;
 use log::warn;
 use serde::Serialize;
 
 use crate::{
     arguments::OutputType,
-    kube::{self, get_client},
+    kube::{self, get_client, get_service_endpoint_urls},
+    NAMESPACE,
 };
 
 // Additional services we need to think of in the future
@@ -158,15 +159,19 @@ async fn list_services(
     all_namespaces: bool,
     output_type: &OutputType,
 ) -> Result<(), Box<dyn Error>> {
-    let output = kube::get_services(!all_namespaces).await?;
+    let mut output = kube::get_stackable_services(!all_namespaces).await?;
+    output.insert(
+        "minio".to_string(),
+        get_minio_services(!all_namespaces).await?,
+    );
 
     match output_type {
         OutputType::Text => {
-            println!("PRODUCT      NAME                                     NAMESPACE                      ENDPOINTS                                EXTRA INFOS");
+            println!("PRODUCT      NAME                                     NAMESPACE                      ENDPOINTS                                          EXTRA INFOS");
             for (product_name, installed_products) in output.iter() {
                 for installed_product in installed_products {
                     println!(
-                        "{:12} {:40} {:30} {:40} {}",
+                        "{:12} {:40} {:30} {:50} {}",
                         product_name,
                         installed_product.name,
                         installed_product
@@ -177,7 +182,7 @@ async fn list_services(
                         installed_product
                             .endpoints
                             .first()
-                            .map(|(name, url)| { format!("{:10} {url}", format!("{name}:")) })
+                            .map(|(name, url)| { format!("{:20} {url}", format!("{name}:")) })
                             .unwrap_or_default(),
                         installed_product
                             .extra_infos
@@ -194,9 +199,9 @@ async fn list_services(
                         let extra_info = extra_infos.next();
 
                         println!(
-                            "                                                                                     {:40} {}",
+                            "                                                                                     {:50} {}",
                             endpoint
-                                .map(|(name, url)| { format!("{:10} {url}", format!("{name}:")) })
+                                .map(|(name, url)| { format!("{:20} {url}", format!("{name}:")) })
                                 .unwrap_or_default(),
                             extra_info.map(|s| s.to_string()).unwrap_or_default(),
                         );
@@ -221,11 +226,14 @@ async fn list_services(
 
 pub fn get_service_names(product_name: &str, product: &str) -> Vec<String> {
     match product {
-        "druid" => vec![format!("{product_name}-router")],
+        "druid" => vec![
+            format!("{product_name}-router"),
+            format!("{product_name}-coordinator"),
+        ],
         "hive" => vec![],
         "superset" => vec![format!("{product_name}-external")],
         "trino" => vec![format!("{product_name}-coordinator")],
-        "zookeeper" => vec![],
+        "zookeeper" => vec![product_name.to_string()],
         _ => {
             warn!("Cannot calculated exposed services names as product {product} is not known");
             vec![]
@@ -262,6 +270,55 @@ pub async fn get_extra_infos(
             }
         }
         _ => (),
+    }
+
+    Ok(result)
+}
+
+async fn get_minio_services(namespaced: bool) -> Result<Vec<InstalledProduct>, Box<dyn Error>> {
+    let client = get_client().await?;
+    let deployment_api: Api<Deployment> = match namespaced {
+        true => Api::namespaced(client.clone(), NAMESPACE.lock().unwrap().as_str()),
+        false => Api::all(client.clone()),
+    };
+    let list_params = ListParams::default().labels("app=minio");
+    let minio_deployments = deployment_api.list(&list_params).await?;
+
+    let mut result = Vec::new();
+    for minio_deployment in minio_deployments {
+        let deployment_name = minio_deployment.name();
+        let deployment_namespace = minio_deployment.namespace().unwrap();
+
+        let service_names = vec![
+            deployment_name.clone(),
+            format!("{deployment_name}-console"),
+        ];
+        let extra_infos = vec![
+            "This service is not part of the official Stackable Platform".to_string(),
+            "It is provided as a helper utility".to_string(),
+        ];
+
+        let mut endpoints = IndexMap::new();
+        for service_name in service_names {
+            let service_endpoint_urls = get_service_endpoint_urls(
+                &service_name,
+                &deployment_name,
+                &deployment_namespace,
+                client.clone(),
+            )
+            .await;
+            match service_endpoint_urls {
+                Ok(service_endpoint_urls) => endpoints.extend(service_endpoint_urls),
+                Err(err) => warn!("Failed to get endpoint_urls of service {service_name}: {err}"),
+            }
+        }
+        let product = InstalledProduct {
+            name: deployment_name,
+            namespace: Some(deployment_namespace),
+            endpoints,
+            extra_infos,
+        };
+        result.push(product);
     }
 
     Ok(result)

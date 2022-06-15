@@ -30,8 +30,6 @@ releases:
         operatorVersion: 0.8.0
       secret:
         operatorVersion: 0.4.0
-      spark:
-        operatorVersion: 0.5.0
       spark-k8s:
         operatorVersion: 0.1.0
       superset:
