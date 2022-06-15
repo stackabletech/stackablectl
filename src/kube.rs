@@ -185,8 +185,8 @@ async fn get_node_name_ip_mapping() -> HashMap<String, String> {
             .unwrap_or_else(|| panic!("Failed to get address of node {node_name}"))
             .iter()
             .filter(|address| address.type_ == "InternalIP" || address.type_ == "ExternalIP")
-            .max_by_key(|address| &address.type_)
-            .map(|address| address.address.clone()) // InternalIP is lower than ExternalIP
+            .min_by_key(|address| &address.type_) // ExternalIP (which we want) is lower than InternalIP
+            .map(|address| address.address.clone())
             .unwrap_or_else(|| {
                 panic!("Could not find a InternalIP or ExternalIP for node {node_name}")
             });
