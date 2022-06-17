@@ -127,7 +127,7 @@ pub enum CliCommandServices {
         #[clap(short, long)]
         redact_credentials: bool,
 
-        /// Don't show the product versions in the output
+        /// Show the product versions in the output
         #[clap(long)]
         show_versions: bool,
 
