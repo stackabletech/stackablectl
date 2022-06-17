@@ -345,7 +345,7 @@ pub async fn get_extra_infos(
                 .await?;
 
                 if let Some((username, password)) = credentials {
-                    result.push(format!("admin user: {username}, password: {password}"));
+                    result.push(format!("Admin user: {username}, password: {password}"));
                 }
             }
         }
@@ -483,7 +483,7 @@ async fn get_minio_services(
                                 .unwrap_or_default()
                         };
                         extra_infos.push(format!(
-                            "admin user: {admin_user}, password: {admin_password}"
+                            "Admin user: {admin_user}, password: {admin_password}"
                         ));
                     }
                 }
