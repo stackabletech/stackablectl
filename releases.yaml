@@ -11,27 +11,27 @@ releases:
     description: Non-official release from sbernauer to demonstrate stackablectl. It includes the latest stable versions.
     products:
       airflow:
-        operatorVersion: 0.3.0
+        operatorVersion: 0.4.0-nightly
       commons:
-        operatorVersion: 0.1.0
+        operatorVersion: 0.2.0-nightly
       druid:
         operatorVersion: 0.6.0-nightly
       hbase:
-        operatorVersion: 0.2.0
+        operatorVersion: 0.3.0-nightly
       hdfs:
-        operatorVersion: 0.3.0
+        operatorVersion: 0.4.0-nightly
       hive:
-        operatorVersion: 0.5.0
+        operatorVersion: 0.6.0-nightly
       kafka:
-        operatorVersion: 0.5.0
+        operatorVersion: 0.6.0-nightly
       nifi:
-        operatorVersion: 0.5.0
+        operatorVersion: 0.6.0-nightly
       opa:
-        operatorVersion: 0.8.0
+        operatorVersion: 0.9.0-nightly
       secret:
-        operatorVersion: 0.4.0
+        operatorVersion: 0.5.0-nightly
       spark-k8s:
-        operatorVersion: 0.1.0
+        operatorVersion: 0.2.0-nightly
       superset:
         operatorVersion: 0.5.0-nightly
       trino:
