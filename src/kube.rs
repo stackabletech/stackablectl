@@ -96,7 +96,8 @@ pub async fn get_service_endpoint_urls(
                     format!("{endpoint_name}-{port_name}")
                 };
                 let endpoint = match port_name.as_str() {
-                    "http" => format!("http://{node_ip}:{node_port}"),
+                    // TODO: Consolidate web-ui port names in operators
+                    "http" | "ui" | "airflow" | "superset" => format!("http://{node_ip}:{node_port}"),
                     "https" => format!("https://{node_ip}:{node_port}"),
                     _ => format!("{node_ip}:{node_port}"),
                 };

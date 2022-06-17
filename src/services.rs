@@ -129,7 +129,7 @@ pub enum CliCommandServices {
 
         /// Don't show the product versions in the output
         #[clap(long)]
-        hide_versions: bool,
+        show_versions: bool,
 
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
@@ -143,9 +143,9 @@ impl CliCommandServices {
                 all_namespaces,
                 output,
                 redact_credentials,
-                hide_versions,
+                show_versions,
             } => {
-                list_services(*all_namespaces, *redact_credentials, *hide_versions, output).await?
+                list_services(*all_namespaces, *redact_credentials, *show_versions, output).await?
             }
         }
         Ok(())
@@ -164,11 +164,11 @@ pub struct InstalledProduct {
 async fn list_services(
     all_namespaces: bool,
     redact_credentials: bool,
-    hide_versions: bool,
+    show_versions: bool,
     output_type: &OutputType,
 ) -> Result<(), Box<dyn Error>> {
     let mut output =
-        get_stackable_services(!all_namespaces, redact_credentials, hide_versions).await?;
+        get_stackable_services(!all_namespaces, redact_credentials, show_versions).await?;
     output.insert(
         "minio".to_string(),
         get_minio_services(!all_namespaces, redact_credentials).await?,
@@ -236,7 +236,7 @@ async fn list_services(
 pub async fn get_stackable_services(
     namespaced: bool,
     redact_credentials: bool,
-    hide_versions: bool,
+    show_versions: bool,
 ) -> Result<IndexMap<String, Vec<InstalledProduct>>, Box<dyn Error>> {
     let mut result = IndexMap::new();
     let namespace = NAMESPACE.lock().unwrap().clone();
@@ -259,7 +259,7 @@ pub async fn get_stackable_services(
 
                     let service_names = get_service_names(&object_name, product_name);
                     let extra_infos =
-                        get_extra_infos(product_name, &object, redact_credentials, hide_versions)
+                        get_extra_infos(product_name, &object, redact_credentials, show_versions)
                             .await?;
 
                     let mut endpoints = IndexMap::new();
@@ -301,9 +301,16 @@ pub async fn get_stackable_services(
 
 pub fn get_service_names(product_name: &str, product: &str) -> Vec<String> {
     match product {
+        "airflow" => vec![format!("{product_name}-webserver")],
         "druid" => vec![
             format!("{product_name}-router"),
             format!("{product_name}-coordinator"),
+        ],
+        "hbase" => vec![product_name.to_string()],
+        "hdfs" => vec![
+            format!("{product_name}-datanode-default-0"),
+            format!("{product_name}-namenode-default-0"),
+            format!("{product_name}-journalnode-default-0"),
         ],
         "hive" => vec![product_name.to_string()],
         "nifi" => vec![product_name.to_string()],
@@ -321,50 +328,64 @@ pub async fn get_extra_infos(
     product: &str,
     product_crd: &DynamicObject,
     redact_credentials: bool,
-    hide_versions: bool,
+    show_versions: bool,
 ) -> Result<Vec<String>, Box<dyn Error>> {
     let mut result = Vec::new();
 
     match product {
-        "nifi" => {
-            result.push("TODO: must implement reading admin user for nifi".to_string());
-        }
-        "superset" => {
+        "airflow" | "superset" => {
             if let Some(secret_name) = product_crd.data["spec"]["credentialsSecret"].as_str() {
-                let client = get_client().await?;
-                let secret_api: Api<Secret> =
-                    Api::namespaced(client, &product_crd.namespace().unwrap());
+                let credentials = get_credentials_from_secret(
+                    secret_name,
+                    product_crd.namespace().unwrap().as_str(),
+                    "adminUser.username",
+                    "adminUser.password",
+                    redact_credentials,
+                )
+                .await?;
 
-                if let Ok(Secret {
-                    data: Some(secret_data),
-                    ..
-                }) = secret_api.get(secret_name).await
-                {
-                    if let (Some(username), Some(password)) = (
-                        secret_data.get("adminUser.username"),
-                        secret_data.get("adminUser.password"),
-                    ) {
-                        let username = String::from_utf8(username.0.clone()).unwrap();
-                        let password = if redact_credentials {
-                            REDACTED_PASSWORD.to_string()
-                        } else {
-                            String::from_utf8(password.0.clone()).unwrap()
-                        };
-                        result.push(format!("admin user: {username}, password: {password}"));
-                    }
+                if let Some((username, password)) = credentials {
+                    result.push(format!("admin user: {username}, password: {password}"));
                 }
             }
         }
         _ => (),
     }
 
-    if !hide_versions {
+    if show_versions {
         if let Some(version) = product_crd.data["spec"]["version"].as_str() {
             result.push(format!("version {version}"));
         }
     }
 
     Ok(result)
+}
+
+async fn get_credentials_from_secret(
+    secret_name: &str,
+    secret_namespace: &str,
+    username_key: &str,
+    password_key: &str,
+    redact_credentials: bool,
+) -> Result<Option<(String, String)>, Box<dyn Error>> {
+    let client = get_client().await?;
+    let secret_api: Api<Secret> = Api::namespaced(client, secret_namespace);
+
+    let secret = secret_api.get(secret_name).await?;
+    let secret_data = secret.data.unwrap();
+
+    match (secret_data.get(username_key), secret_data.get(password_key)) {
+        (Some(username), Some(password)) => {
+            let username = String::from_utf8(username.0.clone()).unwrap();
+            let password = if redact_credentials {
+                REDACTED_PASSWORD.to_string()
+            } else {
+                String::from_utf8(password.0.clone()).unwrap()
+            };
+            Ok(Some((username, password)))
+        }
+        _ => Ok(None),
+    }
 }
 
 async fn get_minio_services(
