@@ -3,7 +3,7 @@ module go-helm-wrapper
 go 1.18
 
 require (
-	github.com/google/btree v1.0.1 // fix incompatibility of github.com/peterbourgon/diskv 2.0.1 and github.com/google/btree 1.1.1
+	github.com/google/btree v1.1.2 // fix incompatibility of github.com/peterbourgon/diskv 2.0.1 and github.com/google/btree 1.1.1
 	github.com/mittwald/go-helm-client v0.11.1
 	helm.sh/helm/v3 v3.9.0
 	k8s.io/client-go v0.24.1
