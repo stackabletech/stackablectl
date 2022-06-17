@@ -84,7 +84,7 @@ lazy_static! {
                 GroupVersionKind {
                     group: "opa.stackable.tech".to_string(),
                     version: "v1alpha1".to_string(),
-                    kind: "OpenPolicyAgent".to_string(),
+                    kind: "OpaCluster".to_string(),
                 }
             ),
             (
