@@ -2,7 +2,7 @@ use crate::NAMESPACE;
 use cached::proc_macro::cached;
 use core::panic;
 use indexmap::IndexMap;
-use k8s_openapi::api::core::v1::{Endpoints, Node};
+use k8s_openapi::api::core::v1::{Endpoints, Node, Service};
 use kube::{
     api::{DynamicObject, GroupVersionKind, ListParams, Patch, PatchParams, TypeMeta},
     discovery::Scope,
@@ -48,8 +48,7 @@ pub async fn get_service_endpoint_urls(
     namespace: &str,
     client: Client,
 ) -> Result<IndexMap<String, String>, Box<dyn Error>> {
-    let service_api: Api<k8s_openapi::api::core::v1::Service> =
-        Api::namespaced(client.clone(), namespace);
+    let service_api: Api<Service> = Api::namespaced(client.clone(), namespace);
     let service = service_api.get(service_name).await?;
 
     let endpoints_api: Api<Endpoints> = Api::namespaced(client.clone(), namespace);
