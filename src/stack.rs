@@ -5,7 +5,7 @@ use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
-use std::{ops::Deref, process::exit, sync::Mutex};
+use std::{error::Error, ops::Deref, process::exit, sync::Mutex};
 
 lazy_static! {
     pub static ref STACK_FILES: Mutex<Vec<String>> = Mutex::new(vec![
@@ -55,7 +55,7 @@ pub enum CliCommandStack {
 }
 
 impl CliCommandStack {
-    pub async fn handle(&self) {
+    pub async fn handle(&self) -> Result<(), Box<dyn Error>> {
         match self {
             CliCommandStack::List { output } => list_stacks(output).await,
             CliCommandStack::Describe { stack, output } => describe_stack(stack, output).await,
@@ -65,9 +65,10 @@ impl CliCommandStack {
                 kind_cluster_name,
             } => {
                 kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
-                install_stack(stack).await;
+                install_stack(stack).await?;
             }
         }
+        Ok(())
     }
 }
 
@@ -167,7 +168,7 @@ async fn describe_stack(stack_name: &str, output_type: &OutputType) {
     }
 }
 
-async fn install_stack(stack_name: &str) {
+async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
     info!("Installing stack {stack_name}");
     let stack = get_stack(stack_name).await;
 
@@ -202,7 +203,7 @@ async fn install_stack(stack_name: &str) {
             StackManifest::PlainYaml(yaml_url_or_file) => {
                 debug!("Installing yaml manifest from {yaml_url_or_file}");
                 match helpers::read_from_url_or_file(&yaml_url_or_file).await {
-                    Ok(manifests) => kube::deploy_manifest(&manifests),
+                    Ok(manifests) => kube::deploy_manifests(&manifests).await?,
                     Err(err) => {
                         panic!(
                             "Could not read stack manifests from file \"{}\": {err}",
@@ -215,6 +216,7 @@ async fn install_stack(stack_name: &str) {
     }
 
     info!("Installed stack {stack_name}");
+    Ok(())
 }
 
 /// Cached because of potential slow network calls

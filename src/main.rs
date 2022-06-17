@@ -58,7 +58,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     match &args.cmd {
         CliCommand::Operator(command) => command.handle().await,
         CliCommand::Release(command) => command.handle().await,
-        CliCommand::Stack(command) => command.handle().await,
+        CliCommand::Stack(command) => command.handle().await?,
         CliCommand::Services(command) => command.handle().await?,
     }
 

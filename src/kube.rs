@@ -1,20 +1,45 @@
-use crate::{helpers, NAMESPACE};
+use crate::NAMESPACE;
 use cached::proc_macro::cached;
 use core::panic;
 use indexmap::IndexMap;
 use k8s_openapi::api::core::v1::{Endpoints, Node};
-use kube::{api::ListParams, Api, Client, ResourceExt};
+use kube::{
+    api::{DynamicObject, GroupVersionKind, ListParams, Patch, PatchParams, TypeMeta},
+    discovery::Scope,
+    Api, Client, Discovery, ResourceExt,
+};
 use log::warn;
-use std::{collections::HashMap, error::Error, vec};
+use serde::Deserialize;
+use std::{collections::HashMap, error::Error};
 
-/// This function currently uses `kubectl apply`.
-/// In the future we want to switch to kube-rs or something else to not require the user to install kubectl.
-pub fn deploy_manifest(yaml: &str) {
-    let namespace = NAMESPACE.lock().unwrap();
-    helpers::execute_command_with_stdin(
-        vec!["kubectl", "apply", "-n", &namespace, "-f", "-"],
-        yaml,
-    );
+pub async fn deploy_manifests(yaml: &str) -> Result<(), Box<dyn Error>> {
+    let namespace = NAMESPACE.lock().unwrap().clone();
+    let client = get_client().await?;
+    let discovery = Discovery::new(client.clone()).run().await?;
+
+    for manifest in serde_yaml::Deserializer::from_str(yaml) {
+        let mut object = DynamicObject::deserialize(manifest).unwrap();
+
+        let gvk = gvk_of_typemeta(object.types.as_ref().expect("Failed to get type of object"));
+        let (resource, capabilities) = discovery.resolve_gvk(&gvk).expect("Failed to resolve gvk");
+
+        let api: Api<DynamicObject> = match capabilities.scope {
+            Scope::Cluster => {
+                object.metadata.namespace = None;
+                Api::all_with(client.clone(), &resource)
+            }
+            Scope::Namespaced => Api::namespaced_with(client.clone(), &namespace, &resource),
+        };
+
+        api.patch(
+            &object.name(),
+            &PatchParams::apply("stackablectl"),
+            &Patch::Apply(object),
+        )
+        .await?;
+    }
+
+    Ok(())
 }
 
 pub async fn get_service_endpoint_urls(
@@ -128,4 +153,11 @@ async fn get_node_name_ip_mapping() -> HashMap<String, String> {
 
 pub async fn get_client() -> Result<Client, Box<dyn Error>> {
     Ok(Client::try_default().await?)
+}
+
+fn gvk_of_typemeta(type_meta: &TypeMeta) -> GroupVersionKind {
+    match type_meta.api_version.split_once('/') {
+        Some((group, version)) => GroupVersionKind::gvk(group, version, &type_meta.kind),
+        None => GroupVersionKind::gvk("", &type_meta.api_version, &type_meta.kind),
+    }
 }
