@@ -1,0 +1,5 @@
+= stackablectl
+
+The `stackablectl` command line tool is used to interact with Stackable operators. Either individually or whole data pipelines consisting of multiple operators and multiple deployments of tools.
+
+Go to xref:installation.adoc[] to install the tool and then consult the xref:quickstart.adoc[] page to get started.

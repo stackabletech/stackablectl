@@ -1,0 +1,85 @@
+= Quickstart
+
+`stackablectl` interacts with the Stackable platform at three abstraction levels: The <<Operator level>>, <<Release level>> and <<Stack level>>. These are to interact with individual operators, a whole release of the platform, or specific combinations of products that form a software stack for a specific use case.
+
+In general, use `stackablectl --help` to find out more about how to use the tool or how to use specific options. This also works with subcommands i.e.: `stackablectl release install --help` will show the help for installing a release.
+
+A running Kubernetes cluster is required to use the tool. All operators and products run on Kubernetes.
+
+== Operator level
+
+Using the `stackablectl operator` command, available operators can be listed, installed and uninstalled.
+
+For example, `stackablectl operator list` shows output similar to:
+
+----
+OPERATOR           STABLE VERSIONS
+airflow            0.3.0, 0.2.0, 0.1.0
+commons            0.1.0
+druid              0.5.0, 0.4.0, 0.3.0, 0.2.0, 0.1.0
+hbase              0.2.0
+hdfs               0.3.0
+hive               0.5.0, 0.3.0
+kafka              0.5.0, 0.4.0
+nifi               0.5.0, 0.4.0
+opa                0.8.0, 0.7.0, 0.6.0
+secret             0.4.0, 0.3.0, 0.2.0, 0.1.0
+spark              0.5.0, 0.4.0
+spark-k8s          0.1.0
+superset           0.4.0, 0.3.0, 0.2.0, 0.1.0
+trino              0.3.1, 0.3.0, 0.2.0
+zookeeper          0.9.0, 0.8.0, 0.7.0, 0.6.0
+----
+
+You can then use this list to install an operator, for example:
+
+[shell]
+----
+stackablectl operator install zookeeper
+----
+Which will print
+----
+[INFO ] Installing zookeeper operator
+----
+
+== Release level
+
+Using the `stackablectl release` command, available releases can be listed, installed and uninstalled. A release is a collection of operator versions that work well together.
+
+
+The list command:
+----
+stackablectl release list
+----
+shows output similar to:
+----
+RELEASE            RELEASE DATE   DESCRIPTION
+alpha-3            2022-02-14     Second release which added Airflow, Druid and Superset
+alpha-2            2021-10-29     First release of the Stackable Data Platform
+----
+You can then install a release:
+----
+stackablectl release install alpha-3
+----
+Which will install all the operators in that release at the version for that release:
+----
+[INFO ] Installing release alpha-3
+[INFO ] Installing airflow operator in version 0.2.0
+[INFO ] Installing druid operator in version 0.4.0
+[INFO ] Installing hbase operator in version 0.2.0
+[INFO ] Installing hdfs operator in version 0.3.0
+[INFO ] Installing hive operator in version 0.5.0
+[INFO ] Installing kafka operator in version 0.5.0
+[INFO ] Installing nifi operator in version 0.5.0
+[INFO ] Installing opa operator in version 0.8.0
+[INFO ] Installing regorule operator in version 0.6.0
+[INFO ] Installing secret operator in version 0.2.0
+[INFO ] Installing spark operator in version 0.5.0
+[INFO ] Installing superset operator in version 0.3.0
+[INFO ] Installing trino operator in version 0.3.1
+[INFO ] Installing zookeeper operator in version 0.9.0
+----
+
+== Stack level
+
+Coming soon!

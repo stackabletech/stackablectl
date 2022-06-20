@@ -32,7 +32,7 @@ We separate the deployed services into 3 layers:
 | **Stack**     | The data products                                           | `Trino`, `Apache Superset`                    |
 | **Demo**      | The demos that prepare data and run the applications        | Demo loading and analyzing New York taxi data |
 
-![](docs/images/layers.png)
+![](docs/readme/images/layers.png)
 
 Each layer gets deployed via its dedicated `stackablectl` command
 
