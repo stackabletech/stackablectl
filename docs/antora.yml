@@ -1,0 +1,6 @@
+name: stackablectl
+version: nightly
+title: stackablectl
+nav:
+  - modules/ROOT/nav.adoc
+prerelease: true
