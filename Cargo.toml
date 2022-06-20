@@ -9,7 +9,7 @@ repository = "https://github.com/stackabletech/stackablectl"
 
 [dependencies]
 cached = "0.34"
-clap = { version = "3.1", features = ["derive", "cargo"] }
+clap = { version = "3.2", features = ["derive", "cargo"] }
 env_logger = "0.9"
 indexmap = { version = "1.8", features = ["serde"] }
 lazy_static = "1.4"
