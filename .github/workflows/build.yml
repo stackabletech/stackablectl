@@ -169,16 +169,12 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-            rustFlags: "-C target-feature=+crt-static"
           - target: x86_64-pc-windows-gnu
             os: windows-latest
-            rustFlags: ""
           - target: x86_64-apple-darwin
             os: macos-latest
-            rustFlags: ""
           - target: aarch64-apple-darwin
             os: macos-latest
-            rustFlags: ""
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
@@ -197,5 +193,3 @@ jobs:
         with:
           command: build
           args: --target=${{ matrix.target }}
-        env:
-          RUSTFLAGS: "${{ matrix.rustFlags }}"

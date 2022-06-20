@@ -15,19 +15,15 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-            rustFlags: "-C target-feature=+crt-static"
             file-suffix: ""
           - target: x86_64-pc-windows-gnu
             os: windows-latest
-            rustFlags: ""
             file-suffix: ".exe"
           - target: x86_64-apple-darwin
             os: macos-latest
-            rustFlags: ""
             file-suffix: ""
           - target: aarch64-apple-darwin
             os: macos-latest
-            rustFlags: ""
             file-suffix: ""
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
@@ -44,8 +40,6 @@ jobs:
         with:
           command: build
           args: --release --target=${{ matrix.target }}
-        env:
-          RUSTFLAGS: "${{ matrix.rustFlags }}"
       - name: Rename binary file
         run: mv target/${{ matrix.target }}/release/stackablectl${{ matrix.file-suffix }} stackablectl-${{ matrix.target }}${{ matrix.file-suffix }}
       - name: Upload Release binaries
