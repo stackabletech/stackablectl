@@ -4,6 +4,8 @@ targets = [
     { triple = "x86_64-unknown-linux-musl" },
     { triple = "aarch64-apple-darwin" },
     { triple = "x86_64-apple-darwin" },
+    { triple = "x86_64-pc-windows-gnu" },
+    { triple = "x86_64-pc-windows-msvc" },
 ]
 
 [advisories]
@@ -33,7 +35,14 @@ allow = [
     "Zlib"
 ]
 exceptions = [
-    { name = "stackablectl", allow = ["OSL-3.0"] }
+    { name = "stackablectl", allow = ["OSL-3.0"] },
+]
+
+[[licenses.clarify]]
+name = "ring"
+expression = "LicenseRef-ring"
+license-files = [
+    { path = "LICENSE", hash = 0xbd0eed23 },
 ]
 
 [sources]
