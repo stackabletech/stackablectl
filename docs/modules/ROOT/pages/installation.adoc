@@ -1,0 +1,59 @@
+= Installation
+
+The `stackablectl` commandline tool does not require a runtime; it is a binary that can be executed on it's own. Below are the installation instructions for <<Linux>>, <<MacOS>> and <<Windows>>.
+
+== Linux
+
+Download the `stackablectl-x86_64-unknown-linux-gnu` binary file from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release], then rename the file to `stackabelctl`:
+
+[source,shell]
+----
+mv stackablectl-x86_64-unknown-linux-gnu stackablectl
+----
+
+and mark it as executable:
+
+[source,shell]
+----
+chmod +x stackabelctl
+----
+
+You can now invoke it with:
+
+[source,shell]
+----
+./stackablectl
+----
+
+== MacOS
+
+// TODO someone with a mac should verify this
+
+Download the `stackablectl-x86_64-apple-darwin` binary file for Intel based Macs or  `stackablectl-aarch64-apple-darwin` binary file for M1 based Macs  from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release]. Then rename the file to `stackabelctl`:
+
+[source,shell]
+----
+mv stackablectl-x86_64-apple-darwin stackablectl
+# or
+mv stackablectl-aarch64-apple-darwin stackablectl
+----
+
+and mark it as executable:
+
+[source,shell]
+----
+chmod +x stackabelctl
+----
+
+You can now invoke it with:
+
+[source,shell]
+----
+./stackablectl
+----
+
+
+
+== Windows
+
+Download `stackablectl-x86_64-pc-windows-gnu.exe` from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release]. You can simply execute it.
