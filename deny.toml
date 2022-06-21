@@ -36,7 +36,6 @@ allow = [
 ]
 exceptions = [
     { name = "stackablectl", allow = ["OSL-3.0"] },
-    { name = "webpki-roots", allow = ["MPL-2.0"] },
 ]
 
 [[licenses.clarify]]
