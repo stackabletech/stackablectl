@@ -175,8 +175,6 @@ jobs:
             os: windows-latest
           - target: x86_64-apple-darwin
             os: macos-latest
-          - target: aarch64-apple-darwin
-            os: macos-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
@@ -196,8 +194,8 @@ jobs:
           if [ "$RUNNER_OS" == "Linux" ]; then
             echo "openssl should be already installed"
           elif [ "$RUNNER_OS" == "Windows" ]; then
-            export VCPKG_ROOT="$VCPKG_INSTALLATION_ROOT"
             vcpkg install openssl:x64-windows
+            vcpkg integrate install
           fi
         shell: bash
       - uses: actions-rs/cargo@v1
