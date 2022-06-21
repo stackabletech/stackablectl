@@ -191,6 +191,15 @@ jobs:
       - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
         with:
           key: build-${{ matrix.target }}
+      - name: Install openssl
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            echo "openssl should be already installed"
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            export VCPKG_ROOT="$VCPKG_INSTALLATION_ROOT"
+            vcpkg install openssl:x64-windows
+          fi
+        shell: bash
       - uses: actions-rs/cargo@v1
         with:
           command: build

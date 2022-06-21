@@ -39,6 +39,14 @@ jobs:
           toolchain: stable
           target: ${{ matrix.target }}
           override: true
+      - name: Install openssl
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            echo "openssl should be already installed"
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            vcpkg install openssl:x64-windows
+          fi
+        shell: bash
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # tag=v1
         with:
           command: build
