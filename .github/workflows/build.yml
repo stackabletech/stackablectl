@@ -194,8 +194,8 @@ jobs:
           if [ "$RUNNER_OS" == "Linux" ]; then
             echo "openssl should be already installed"
           elif [ "$RUNNER_OS" == "Windows" ]; then
-            vcpkg install openssl:x64-windows
             vcpkg integrate install
+            vcpkg install openssl:x64-windows-static-md
           fi
         shell: bash
       - uses: actions-rs/cargo@v1
