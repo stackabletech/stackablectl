@@ -64,7 +64,7 @@ pub async fn get_service_endpoint_urls(
                 }
             },
             None => {
-                warn!("Could not determine the node the endpoint {service_name} is running on because subset had no addresses");
+                warn!("Could not determine the node the endpoint {service_name} is running on because subset had no addresses. Is the service {service_name} up and running?");
                 return Ok(IndexMap::new());
             }
         },
