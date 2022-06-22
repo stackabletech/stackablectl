@@ -73,7 +73,7 @@ pub async fn get_service_endpoint_urls(
             return Ok(IndexMap::new());
         }
         None => {
-            warn!("Could not determine the node the endpoint {service_name} is running on because the endpoint has no subset");
+            warn!("Could not determine the node the endpoint {service_name} is running on because the endpoint has no subset. Is the service {service_name} up and running?");
             return Ok(IndexMap::new());
         }
     };
