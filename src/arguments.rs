@@ -73,7 +73,7 @@ pub enum CliCommand {
     Stack(CliCommandStack),
 
     /// This subcommand interacts with deployed services of products.
-    #[clap(subcommand, alias("se"))]
+    #[clap(subcommand, alias("svc"))]
     Services(CliCommandServices),
 }
 
