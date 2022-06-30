@@ -68,7 +68,7 @@ pub enum CliCommand {
     #[clap(subcommand, alias("r"), alias("re"))]
     Release(CliCommandRelease),
 
-    /// This subcommand interacts with stacks, which are ready-to-use combinations of products.
+    /// This EXPERIMENTAL subcommand interacts with stacks, which are ready-to-use combinations of products.
     #[clap(subcommand, alias("s"), alias("st"))]
     Stack(CliCommandStack),
 
