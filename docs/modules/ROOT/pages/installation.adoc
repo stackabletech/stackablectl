@@ -15,7 +15,7 @@ and mark it as executable:
 
 [source,shell]
 ----
-chmod +x stackabelctl
+chmod +x stackablectl
 ----
 
 You can now invoke it with:
@@ -29,7 +29,7 @@ You can now invoke it with:
 
 // TODO someone with a mac should verify this
 
-Download the `stackablectl-x86_64-apple-darwin` binary file for Intel based Macs or  `stackablectl-aarch64-apple-darwin` binary file for M1 based Macs  from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release]. Then rename the file to `stackabelctl`:
+Download the `stackablectl-x86_64-apple-darwin` binary file for Intel based Macs or  `stackablectl-aarch64-apple-darwin` binary file for M1 based Macs  from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release]. Then rename the file to `stackablectl`:
 
 [source,shell]
 ----
@@ -42,7 +42,7 @@ and mark it as executable:
 
 [source,shell]
 ----
-chmod +x stackabelctl
+chmod +x stackablectl
 ----
 
 You can now invoke it with:
@@ -52,6 +52,7 @@ You can now invoke it with:
 ./stackablectl
 ----
 
+ If MacOs denies the execution of stackablectl go to Settings --> Security & Privacy --> General. Here you will see a pop up asking if you want to allow access for ‘stackablectl’. Now allow access.
 
 
 == Windows
