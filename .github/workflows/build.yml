@@ -163,6 +163,8 @@ jobs:
   run_build:
     name: Build for ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
+    env:
+      VCPKGRS_DYNAMIC: 1
     strategy:
       fail-fast: false
       matrix:
@@ -195,7 +197,7 @@ jobs:
             echo "openssl should be already installed"
           elif [ "$RUNNER_OS" == "Windows" ]; then
             vcpkg integrate install
-            vcpkg install openssl:x64-windows-static-md
+            vcpkg install openssl:x64-windows
           fi
         shell: bash
       - uses: actions-rs/cargo@v1
