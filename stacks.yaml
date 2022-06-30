@@ -2,7 +2,7 @@
 stacks:
   druid-superset-s3:
     description: Stack containing MinIO, Druid and Superset for data visualization
-    stackableRelease: 22.06-sbernauer
+    stackableRelease: 22.06
     labels:
       - druid
       - superset
@@ -48,6 +48,6 @@ stacks:
               username: superset
               password: superset
               database: superset
-      - plainYaml: stacks/druid-superset/zookeeper.yaml
-      - plainYaml: stacks/druid-superset/druid.yaml
-      - plainYaml: stacks/druid-superset/superset.yaml
+      - plainYaml: stacks/druid-superset-s3/zookeeper.yaml
+      - plainYaml: stacks/druid-superset-s3/druid.yaml
+      - plainYaml: stacks/druid-superset-s3/superset.yaml
