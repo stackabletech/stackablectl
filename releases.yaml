@@ -6,93 +6,35 @@ releases:
     products:
       commons:
         operatorVersion: 0.1.0
-  22.06-sbernauer:
-    releaseDate: 2022-06-08
-    description: Non-official release from sbernauer to demonstrate stackablectl. It includes the latest stable versions.
+  22.06:
+    releaseDate: 2022-06-30
+    description: First official release of the Stackable Data Platform
     products:
       airflow:
-        operatorVersion: 0.4.0-nightly
-      commons:
-        operatorVersion: 0.2.0-nightly
-      druid:
-        operatorVersion: 0.6.0-nightly
-      hbase:
-        operatorVersion: 0.3.0-nightly
-      hdfs:
-        operatorVersion: 0.4.0-nightly
-      hive:
-        operatorVersion: 0.6.0-nightly
-      kafka:
-        operatorVersion: 0.6.0-nightly
-      nifi:
-        operatorVersion: 0.6.0-nightly
-      opa:
-        operatorVersion: 0.9.0-nightly
-      secret:
-        operatorVersion: 0.5.0-nightly
-      spark-k8s:
-        operatorVersion: 0.2.0-nightly
-      superset:
-        operatorVersion: 0.5.0-nightly
-      trino:
-        operatorVersion: 0.3.2-nightly
-      zookeeper:
-        operatorVersion: 0.10.0-nightly
-  alpha-3:
-    releaseDate: 2022-02-14
-    description: Second release which added Airflow, Druid and Superset
-    products:
-      airflow:
-        operatorVersion: 0.2.0
-      druid:
         operatorVersion: 0.4.0
-      hbase:
+      commons:
         operatorVersion: 0.2.0
-      hdfs:
-        operatorVersion: 0.3.0
-      hive:
-        operatorVersion: 0.5.0
-      kafka:
-        operatorVersion: 0.5.0
-      nifi:
-        operatorVersion: 0.5.0
-      opa:
-        operatorVersion: 0.8.0
-      regorule:
+      druid:
         operatorVersion: 0.6.0
-      secret:
-        operatorVersion: 0.2.0
-      spark:
-        operatorVersion: 0.5.0
-      superset:
-        operatorVersion: 0.3.0
-      trino:
-        operatorVersion: 0.3.1
-      zookeeper:
-        operatorVersion: 0.9.0
-  alpha-2:
-    releaseDate: 2021-10-29
-    description: First release of the Stackable Data Platform
-    products:
       hbase:
-        operatorVersion: 0.1.0
+        operatorVersion: 0.3.0
       hdfs:
-        operatorVersion: 0.1.0
+        operatorVersion: 0.4.0
       hive:
-        operatorVersion: 0.1.0
+        operatorVersion: 0.6.0
       kafka:
-        operatorVersion: 0.3.0
-      monitoring:
-        operatorVersion: 0.3.0
+        operatorVersion: 0.6.0
       nifi:
-        operatorVersion: 0.3.0
+        operatorVersion: 0.6.0
       opa:
-        operatorVersion: 0.4.1
-      regorule:
-        operatorVersion: 0.2.0
-      spark:
+        operatorVersion: 0.9.0
+      secret:
+        operatorVersion: 0.5.0
+      spark-k8s:
         operatorVersion: 0.3.0
+      superset:
+        operatorVersion: 0.5.0
       trino:
-        operatorVersion: 0.1.0
+        operatorVersion: 0.4.0
       zookeeper:
-        operatorVersion: 0.4.1
+        operatorVersion: 0.10.0
