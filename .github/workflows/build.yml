@@ -174,7 +174,7 @@ jobs:
             perl: ""
           - target: x86_64-pc-windows-gnu
             os: windows-latest
-            perl: ""
+            perl: "C:\\strawberry\\perl\\bin"
           - target: x86_64-pc-windows-msvc
             os: windows-latest
             perl: "C:\\strawberry\\perl\\bin"
