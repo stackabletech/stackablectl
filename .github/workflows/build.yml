@@ -205,6 +205,7 @@ jobs:
         run: |
           echo 'Running in MSYS2!'
           cargo build --target=${{ matrix.target }}
+        shell: msys2 {0}
       - name: Build for non Windows
         if: matrix.os != 'windows-latest'
         uses: actions-rs/cargo@v1
