@@ -191,6 +191,9 @@ jobs:
       - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
         with:
           key: build-${{ matrix.target }}
+      - name: Prepare Ubuntu env
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt install -y musl-tools
       - name: Prepare Windows env
         if: matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
@@ -198,15 +201,15 @@ jobs:
           msystem: MINGW64
           update: true
           install: base-devel mingw-w64-x86_64-go mingw-w64-x86_64-rust
-      - name: Build for Windows
-        if: matrix.os == 'windows-latest'
-        run: |
-          echo 'Running in MSYS2!'
-          cargo build --target=${{ matrix.target }}
-        shell: msys2 {0}
       - name: Build for non-Windows
         if: matrix.os != 'windows-latest'
         uses: actions-rs/cargo@v1
         with:
           command: build
           args: --target=${{ matrix.target }}
+      - name: Build for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          echo 'Running in MSYS2!'
+          cargo build --target=${{ matrix.target }}
+        shell: msys2 {0}
