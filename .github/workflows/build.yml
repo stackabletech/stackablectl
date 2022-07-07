@@ -177,7 +177,13 @@ jobs:
             perl: ""
           - target: x86_64-pc-windows-msvc
             os: windows-latest
-            perl: "C:\\Strawberry\\perl.exe"
+            perl: "C:\\strawberry\\perl\\bin"
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            perl: "C:\\strawberry\\perl\\bin\\perl"
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            perl: "C:\\strawberry\\perl\\bin\\perl.exe"
           - target: x86_64-apple-darwin
             os: macos-latest
             perl: ""
