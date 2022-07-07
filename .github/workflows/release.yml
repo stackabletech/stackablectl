@@ -25,6 +25,9 @@ jobs:
           - target: x86_64-apple-darwin
             os: macos-latest
             file-suffix: ""
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            file-suffix: ""
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
       - uses: actions/setup-go@b22fbbc2921299758641fab08929b4ac52b32923 # tag=v3
@@ -36,14 +39,6 @@ jobs:
           toolchain: stable
           target: ${{ matrix.target }}
           override: true
-      - name: Install openssl
-        run: |
-          if [ "$RUNNER_OS" == "Linux" ]; then
-            echo "openssl should be already installed"
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-            vcpkg install openssl:x64-windows
-          fi
-        shell: bash
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # tag=v1
         with:
           command: build
