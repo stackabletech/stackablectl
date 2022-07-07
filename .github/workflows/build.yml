@@ -171,25 +171,14 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-            perl: ""
           - target: x86_64-pc-windows-gnu
             os: windows-latest
-            perl: "C:\\strawberry\\perl\\bin\\perl.exe"
           - target: x86_64-pc-windows-msvc
             os: windows-latest
-            perl: "C:\\strawberry\\perl\\bin"
-          - target: x86_64-pc-windows-msvc
-            os: windows-latest
-            perl: "C:\\strawberry\\perl\\bin\\perl"
-          - target: x86_64-pc-windows-msvc
-            os: windows-latest
-            perl: "C:\\strawberry\\perl\\bin\\perl.exe"
           - target: x86_64-apple-darwin
             os: macos-latest
-            perl: ""
           - target: aarch64-apple-darwin
             os: macos-latest
-            perl: ""
     steps:
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
@@ -202,8 +191,6 @@ jobs:
         with:
           key: build-${{ matrix.target }}
       - uses: actions-rs/cargo@v1
-        env:
-          OPENSSL_SRC_PERL: ${{ matrix.perl }}
         with:
           command: build
           args: --target=${{ matrix.target }}
