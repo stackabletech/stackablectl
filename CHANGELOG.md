@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Update Rust and Go libs ([#46](https://github.com/stackabletech/stackablectl/pull/46))
+
 ## [0.2.0] - 2022-05-17
 
 ### Added
