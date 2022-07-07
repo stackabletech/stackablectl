@@ -16,10 +16,10 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             file-suffix: ""
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+            file-suffix: ""
           - target: x86_64-pc-windows-gnu
-            os: windows-latest
-            file-suffix: ".exe"
-          - target: x86_64-pc-windows-msvc
             os: windows-latest
             file-suffix: ".exe"
           - target: x86_64-apple-darwin
@@ -29,23 +29,41 @@ jobs:
             os: macos-latest
             file-suffix: ""
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
-      - uses: actions/setup-go@b22fbbc2921299758641fab08929b4ac52b32923 # tag=v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
         with:
-          go-version: '^1.18.1'
-      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # tag=v1
+          go-version: '^1.18.3'
+      - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
           target: ${{ matrix.target }}
           override: true
-      - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # tag=v1
+      - name: Prepare Ubuntu env
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt install -y musl-tools
+      - name: Prepare Windows env
+        if: matrix.os == 'windows-latest'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: base-devel mingw-w64-x86_64-go mingw-w64-x86_64-rust
+      - name: Build for non-Windows
+        if: matrix.os != 'windows-latest'
+        uses: actions-rs/cargo@v1
         with:
           command: build
           args: --release --target=${{ matrix.target }}
+      - name: Build for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          echo 'Running in MSYS2!'
+          cargo build --release --target=${{ matrix.target }}
+        shell: msys2 {0}
       - name: Rename binary file
         run: mv target/${{ matrix.target }}/release/stackablectl${{ matrix.file-suffix }} stackablectl-${{ matrix.target }}${{ matrix.file-suffix }}
       - name: Upload Release binaries
-        uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5 # tag=v1
+        uses: softprops/action-gh-release@v1
         with:
           files: stackablectl-${{ matrix.target }}${{ matrix.file-suffix }}

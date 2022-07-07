@@ -188,7 +188,7 @@ jobs:
           toolchain: stable
           target: ${{ matrix.target }}
           override: true
-      - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
+      - uses: Swatinem/rust-cache@v1
         with:
           key: build-${{ matrix.target }}
       - name: Prepare Ubuntu env
