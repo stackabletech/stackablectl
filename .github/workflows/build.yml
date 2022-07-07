@@ -190,6 +190,12 @@ jobs:
       - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
         with:
           key: build-${{ matrix.target }}
+      - name: Install strawberryperl on Windows
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            choco install strawberryperl
+          fi
+        shell: bash
       - uses: actions-rs/cargo@v1
         with:
           command: build
