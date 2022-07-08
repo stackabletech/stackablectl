@@ -16,9 +16,6 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             file-suffix: ""
-          - target: x86_64-unknown-linux-musl
-            os: ubuntu-latest
-            file-suffix: ""
           - target: x86_64-pc-windows-gnu
             os: windows-latest
             file-suffix: ".exe"
