@@ -1,13 +1,8 @@
 # stackablectl
 
 # Installing
-## Linux
-Download `stackablectl-x86_64-unknown-linux-gnu` from the [latest release](https://github.com/stackabletech/stackablectl/releases/latest).
-Run `mv stackablectl-x86_64-unknown-linux-gnu stackablectl` and `chmod +x stackablectl`.
-You than can invoke stackablectl via `./stackablectl`.
-## Windows
-Download `stackablectl-x86_64-pc-windows-gnu.exe` from the [latest release](https://github.com/stackabletech/stackablectl/releases/latest).
-You can simply execute it.
+
+See the [docs](https://docs.stackable.tech/stackablectl/stable/installation.html) for detailed instructions.
 
 # Usage
 ## List available releases

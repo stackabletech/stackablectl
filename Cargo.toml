@@ -8,7 +8,7 @@ license = "OSL-3.0"
 repository = "https://github.com/stackabletech/stackablectl"
 
 [dependencies]
-cached = "0.34"
+cached = "0.36"
 clap = { version = "3.2", features = ["derive", "cargo"] }
 env_logger = "0.9"
 indexmap = { version = "1.9", features = ["serde"] }
