@@ -23,7 +23,7 @@ spec:
               accessStyle: Path
               credentials:
                 secretClass: druid-s3-credentials
-      baseKey: data # TODO Rename to prefix or so
+      baseKey: data
   brokers:
     roleGroups:
       default:
