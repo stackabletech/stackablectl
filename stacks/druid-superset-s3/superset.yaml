@@ -34,7 +34,5 @@ metadata:
 spec:
   superset:
     name: superset
-    namespace: default # TODO this brakes the demo in non-default namespace. Why do i need to specify this? Why not search in the Namespace of the DruidConnection?
   druid:
     name: druid
-    namespace: default # TODO this brakes the demo in non-default namespace. Why do i need to specify this? Why not search in the Namespace of the DruidConnection?

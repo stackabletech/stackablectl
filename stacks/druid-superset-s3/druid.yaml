@@ -4,13 +4,13 @@ kind: DruidCluster
 metadata:
   name: druid
 spec:
-  version: 0.22.1-authorizer0.1.0-stackable0.2.0
+  version: 0.23.0-stackable0.1.0
   zookeeperConfigMapName: druid-znode
   metadataStorageDatabase:
     dbType: derby
     connString: jdbc:derby://localhost:1527/var/druid/metadata.db;create=true
-    host: localhost # TODO why do i need to specify this?
-    port: 1527 # TODO why do i need to specify this?
+    host: localhost
+    port: 1527
   deepStorage:
     s3:
       bucket:
@@ -27,41 +27,26 @@ spec:
   brokers:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         config: {}
         replicas: 1
   coordinators:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         config: {}
         replicas: 1
   historicals:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         config: {}
         replicas: 1
   middleManagers:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         config: {}
         replicas: 1
   routers:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         config: {}
         replicas: 1
 ---
