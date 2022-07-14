@@ -51,3 +51,32 @@ stacks:
       - plainYaml: stacks/druid-superset-s3/zookeeper.yaml
       - plainYaml: stacks/druid-superset-s3/druid.yaml
       - plainYaml: stacks/druid-superset-s3/superset.yaml
+  airflow:
+    description: Stack containing Airflow scheduling platform
+    stackableRelease: 22.06
+    labels:
+      - airflow
+    manifests:
+      - helmChart:
+          releaseName: postgresql-airflow
+          name: postgresql
+          repo:
+            name: bitnami
+            url: https://charts.bitnami.com/bitnami/
+          version: 11.0.0
+          options:
+            auth:
+              username: airflow
+              password: airflow
+              database: airflow
+      - helmChart:
+          releaseName: redis-airflow
+          name: redis
+          repo:
+            name: bitnami
+            url: https://charts.bitnami.com/bitnami/
+          version: 16.13.2
+          options:
+            auth:
+              password: airflow
+      - plainYaml: stacks/airflow/airflow.yaml
