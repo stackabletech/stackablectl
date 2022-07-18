@@ -1,0 +1,97 @@
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  version: 387-stackable0.1.0
+  hiveConfigMapName: hive
+  opa:
+    configMapName: opa
+    package: trino
+  s3:
+    inline:
+      host: minio-trino
+      port: 9000
+      accessStyle: Path
+      credentials:
+        secretClass: trino-s3-credentials
+  authentication:
+    method:
+      multiUser:
+        userCredentialsSecret:
+          name: trino-users
+  coordinators:
+    roleGroups:
+      default:
+        replicas: 1
+        config: {}
+  workers:
+    roleGroups:
+      default:
+        replicas: 1
+        config: {}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trino-users
+type: kubernetes.io/opaque
+stringData:
+  # admin:admin
+  admin: $2y$10$89xReovvDLacVzRGpjOyAOONnayOgDAyIS2nW9bs5DJT98q17Dy5i
+  # demo:demo
+  demo: $2y$10$mMRoIKfWtAuycEQnKiDCeOlCSYiWkvbs0WsMFLkaSnNO0ZnFKVRXm
+---
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: trino-s3-credentials
+spec:
+  backend:
+    k8sSearch:
+      searchNamespace:
+        pod: {}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trino-s3-credentials
+  labels:
+    secrets.stackable.tech/class: trino-s3-credentials
+stringData:
+  accessKey: trino
+  secretKey: trinotrino
+---
+apiVersion: opa.stackable.tech/v1alpha1
+kind: OpaCluster
+metadata:
+  name: opa
+spec:
+  version: 0.41.0-stackable0.1.0
+  servers:
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trino-opa-bundle
+  labels:
+    opa.stackable.tech/bundle: "trino"
+data:
+  trino.rego: |
+    package trino
+
+    default allow = false
+
+    allow {
+      input.context.identity.user == "admin"
+    }
+
+    allow {
+      input.context.identity.user == "demo"
+    }
