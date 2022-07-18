@@ -1,0 +1,52 @@
+= Troubleshooting
+
+== No internet connectivity
+`stackablectl` uses a Internet connection to always know of all the available versions, releases, stacks and demos.
+To achieve this the following online services will be contacted:
+
+[%autowidth.stretch]
+|===
+| URL | Purpose 
+
+| https://repo.stackable.tech/repository/helm-stable/index.yaml
+| Retrieve the list of current operator stable versions
+
+| https://repo.stackable.tech/repository/helm-dev/index.yaml
+| Retrieve the list of current operator development versions
+
+| https://repo.stackable.tech/repository/helm-test/index.yaml
+| Retrieve the list of current operator test versions
+
+| https://raw.githubusercontent.com/stackabletech/release/main/releases.yaml
+| List of releases provided by Stackable
+
+| https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks.yaml
+| List of stacks provided by Stackable
+
+| https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos.yaml
+| List of demos provided by Stackable
+
+|===
+
+=== Mirror helm-charts
+To allow stackablectl to retrieve the current list of operators you must mirror the `https://repo.stackable.tech/repository/helm-.*/index.yaml` files to some local URL.
+If the file is mirrored to e.g. `https://my.corp/stackable/repository/helm-stable/index.yaml` you need to specify the following arguments to `stackablectl`
+
+[source,console]
+----
+$ stackablectl --helm-repo-stackable-stable https://my.corp/stackable/repository/helm-stable operator list
+----
+
+=== Mirror releases/stacks/demos files
+You need to mirror the URL to either a URL or a file on disk.
+You can than specify the mirrored file to be included via `--additional-release-files`, `--additional-stack-files` or `--additional-demo-files`, e.g.
+
+[source,console]
+----
+$ stackablectl --additional-release-files=/home/sbernauer/Downloads/releases.yaml release list
+----
+
+== `panic: open /tmp/.helmcache/stackable-stable-index.yaml: permission denied`
+or `panic: open /tmp/.helmrepo: permission denied`.
+
+See https://github.com/stackabletech/stackablectl/issues/39

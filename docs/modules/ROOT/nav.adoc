@@ -1,3 +1,10 @@
-* xref:index.adoc[]
-** xref:installation.adoc[]
-** xref:quickstart.adoc[]
+* xref:installation.adoc[]
+* xref:quickstart.adoc[]
+* Commands
+** xref:commands/demo.adoc[]
+** xref:commands/operator.adoc[]
+** xref:commands/release.adoc[]
+** xref:commands/services.adoc[]
+** xref:commands/stack.adoc[]
+* xref:customizability.adoc[]
+* xref:troubleshooting.adoc[]

@@ -1,60 +1,99 @@
 = Installation
 
-The `stackablectl` commandline tool does not require a runtime; it is a binary that can be executed on it's own. Below are the installation instructions for <<Linux>>, <<MacOS>> and <<Windows>>.
+== Pre-compiled binary
+We ship pre-compiled binaries of `stackablectl` which should work on most environments such as Windows, macOS, and Linux distros like Ubuntu and Arch.
 
-== Linux
+Below are the installation instructions for <<Linux>>, <<macOS>> and <<Windows>>.
+If the binary does not work for you you can always <<_build_stackablectl_from_source>>
+
+=== Linux
 
 Download the `stackablectl-x86_64-unknown-linux-gnu` binary file from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release], then rename the file to `stackabelctl`:
 
-[source,shell]
+[source,console]
 ----
-mv stackablectl-x86_64-unknown-linux-gnu stackablectl
+$ mv stackablectl-x86_64-unknown-linux-gnu stackablectl
 ----
 
 and mark it as executable:
 
-[source,shell]
+[source,console]
 ----
-chmod +x stackablectl
+$ chmod +x stackablectl
 ----
 
 You can now invoke it with:
 
-[source,shell]
+[source,console]
 ----
-./stackablectl
+$ ./stackablectl
 ----
 
-== MacOS
+If you want to be able to call it from everywhere (not only the directory you downloaded it to) you can add it to you system with the following command
 
-// TODO someone with a mac should verify this
-
-Download the `stackablectl-x86_64-apple-darwin` binary file for Intel based Macs or  `stackablectl-aarch64-apple-darwin` binary file for M1 based Macs  from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release]. Then rename the file to `stackablectl`:
-
-[source,shell]
+[source,console]
 ----
-mv stackablectl-x86_64-apple-darwin stackablectl
+$ sudo mv stackablectl /usr/bin/stackablectl
+----
+
+=== Windows
+
+Download `stackablectl-x86_64-pc-windows-gnu.exe` from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release].
+You can simply execute it.
+If you want to execute it from anywhere in your system you need to add it to the system `PATH``.
+
+=== macOS
+Download the `stackablectl-x86_64-apple-darwin` binary file for Intel based Macs or  `stackablectl-aarch64-apple-darwin` binary file for ARM based Macs from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release].
+Then rename the file to `stackablectl`:
+
+[source,console]
+----
+$ mv stackablectl-x86_64-apple-darwin stackablectl
 # or
-mv stackablectl-aarch64-apple-darwin stackablectl
+$ mv stackablectl-aarch64-apple-darwin stackablectl
 ----
 
 and mark it as executable:
 
-[source,shell]
+[source,console]
 ----
-chmod +x stackablectl
+$ chmod +x stackablectl
 ----
 
 You can now invoke it with:
 
-[source,shell]
+[source,console]
 ----
-./stackablectl
+$ ./stackablectl
 ----
 
- If MacOs denies the execution of stackablectl go to Settings --> Security & Privacy --> General. Here you will see a pop up asking if you want to allow access for ‘stackablectl’. Now allow access.
+If macOS denies the execution of stackablectl go to `Settings` -> `Security & Privacy` -> `General`. Here you will see a pop up asking if you want to allow access for `stackablectl`. You must allow access.
 
+== Build stackablectl from source
+To build `stackablectl` from source you need to have the following tools installed:
 
-== Windows
+* Rust compiler
+** Needed for compiling source code of `stackablectl` itself
+* Go compiler
+** Needed for compiling a wrapper around the Go lib `go-helm-client`
+* C compiler
+** As we use the vendored feature of the https://crates.io/crates/openssl[openssl crate] a C compiler is needed to compile openssl from source
+* Perl
+** As we use the vendored feature of the https://crates.io/crates/openssl[openssl crate] perl is needed to compile openssl from source
+* Make
+** As we use the vendored feature of the https://crates.io/crates/openssl[openssl crate] Make is needed to compile openssl from source
 
-Download `stackablectl-x86_64-pc-windows-gnu.exe` from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release]. You can simply execute it.
+If you have the required tools available you need to clone the `stackablectl` repo https://github.com/stackabletech/stackablectl and invoke the build with
+
+[source,console]
+----
+$ cargo build --release
+----
+
+After a successful build the binary will be placed in `target/release/stackablectl`.
+Copy it to you systems path to access it from anywhere if you like
+
+[source,console]
+----
+$ sudo cp target/release/stackablectl /usr/bin/stackablectl 
+----

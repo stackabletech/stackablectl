@@ -1,0 +1,151 @@
+= Release
+
+A release is a well-playing bundle of operators that get released approximately every 2 months.
+If you want to install an single individual operator have a look at the xref:commands/operator.adoc[] command.
+
+== Browse available releases
+To list the available Stackable releases run the following command
+
+[source,console]
+----
+$ stackablectl release list
+RELEASE            RELEASE DATE   DESCRIPTION
+22.06              2022-06-30     First official release of the Stackable Data Platform
+----
+
+To show details run
+
+[source,console]
+----
+$ stackablectl release describe 22.06
+Release:            22.06
+Release date:       2022-06-30
+Description:        First official release of the Stackable Data Platform
+Included products:
+
+PRODUCT             OPERATOR VERSION
+airflow             0.4.0
+commons             0.2.0
+druid               0.6.0
+hbase               0.3.0
+hdfs                0.4.0
+hive                0.6.0
+kafka               0.6.0
+nifi                0.6.0
+opa                 0.9.0
+secret              0.5.0
+spark-k8s           0.3.0
+superset            0.5.0
+trino               0.4.0
+zookeeper           0.10.0
+----
+
+In the output you can see which product operators are included in the specific release
+
+== Install release
+If you access to an Kubernetes cluster make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
+After that run the following command
+
+[source,console]
+----
+$ stackablectl release install 22.06
+[INFO ] Installing release 22.06
+[INFO ] Installing airflow operator in version 0.4.0
+[INFO ] Installing commons operator in version 0.2.0
+[INFO ] Installing druid operator in version 0.6.0
+[INFO ] Installing hbase operator in version 0.3.0
+[INFO ] Installing hdfs operator in version 0.4.0
+[INFO ] Installing hive operator in version 0.6.0
+[INFO ] Installing kafka operator in version 0.6.0
+[INFO ] Installing nifi operator in version 0.6.0
+[INFO ] Installing opa operator in version 0.9.0
+[INFO ] Installing secret operator in version 0.5.0
+[INFO ] Installing spark-k8s operator in version 0.3.0
+[INFO ] Installing superset operator in version 0.5.0
+[INFO ] Installing trino operator in version 0.4.0
+[INFO ] Installing zookeeper operator in version 0.10.0
+----
+
+If you don't have an Kubernetes cluster available `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
+Make sure you have https://kind.sigs.k8s.io/[kind] installed and run the following command
+
+[source,console]
+----
+$ stackablectl release install 22.06 --kind-cluster
+[INFO ] Creating kind cluster stackable-data-platform
+Creating cluster "stackable-data-platform" ...
+ ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
+ ✓ Preparing nodes 📦 📦 📦 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+ ✓ Joining worker nodes 🚜 
+Set kubectl context to "kind-stackable-data-platform"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-stackable-data-platform
+
+Have a nice day! 👋
+[INFO ] Installing release 22.06
+[INFO ] Installing airflow operator in version 0.4.0
+[INFO ] Installing commons operator in version 0.2.0
+[INFO ] Installing druid operator in version 0.6.0
+[INFO ] Installing hbase operator in version 0.3.0
+[INFO ] Installing hdfs operator in version 0.4.0
+[INFO ] Installing hive operator in version 0.6.0
+[INFO ] Installing kafka operator in version 0.6.0
+[INFO ] Installing nifi operator in version 0.6.0
+[INFO ] Installing opa operator in version 0.9.0
+[INFO ] Installing secret operator in version 0.5.0
+[INFO ] Installing spark-k8s operator in version 0.3.0
+[INFO ] Installing superset operator in version 0.5.0
+[INFO ] Installing trino operator in version 0.4.0
+[INFO ] Installing zookeeper operator in version 0.10.0
+----
+
+After installing the release we can list the running operators with the xref:commands/operator.adoc[] command.
+
+[source,console]
+----
+$ stackablectl operator installed
+OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED
+airflow               0.4.0           default                        deployed         2022-07-15 10:00:25.499615024 +0200 CEST
+commons               0.2.0           default                        deployed         2022-07-15 10:00:27.868162264 +0200 CEST
+druid                 0.6.0           default                        deployed         2022-07-15 10:00:38.219966654 +0200 CEST
+hbase                 0.3.0           default                        deployed         2022-07-15 10:00:46.581528077 +0200 CEST
+hdfs                  0.4.0           default                        deployed         2022-07-15 10:00:56.949394849 +0200 CEST
+hive                  0.6.0           default                        deployed         2022-07-15 10:01:07.314849464 +0200 CEST
+kafka                 0.6.0           default                        deployed         2022-07-15 10:01:09.702246063 +0200 CEST
+nifi                  0.6.0           default                        deployed         2022-07-15 10:01:12.059869868 +0200 CEST
+opa                   0.9.0           default                        deployed         2022-07-15 10:01:14.413966761 +0200 CEST
+secret                0.5.0           default                        deployed         2022-07-15 10:01:16.759818535 +0200 CEST
+spark-k8s             0.3.0           default                        deployed         2022-07-15 10:01:17.149187107 +0200 CEST
+superset              0.5.0           default                        deployed         2022-07-15 10:01:19.529351352 +0200 CEST
+trino                 0.4.0           default                        deployed         2022-07-15 10:01:29.867283641 +0200 CEST
+zookeeper             0.10.0          default                        deployed         2022-07-15 10:01:40.24662955 +0200 CEST
+----
+
+
+== Uninstall release
+To uninstall the release again you can use the uninstall command
+
+[source,console]
+----
+$ stackablectl release uninstall 22.06
+[INFO ] Uninstalling release 22.06
+[INFO ] Uninstalling airflow operator
+[INFO ] Uninstalling commons operator
+[INFO ] Uninstalling druid operator
+[INFO ] Uninstalling hbase operator
+[INFO ] Uninstalling hdfs operator
+[INFO ] Uninstalling hive operator
+[INFO ] Uninstalling kafka operator
+[INFO ] Uninstalling nifi operator
+[INFO ] Uninstalling opa operator
+[INFO ] Uninstalling secret operator
+[INFO ] Uninstalling spark-k8s operator
+[INFO ] Uninstalling superset operator
+[INFO ] Uninstalling trino operator
+[INFO ] Uninstalling zookeeper operator
+----

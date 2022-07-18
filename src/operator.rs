@@ -28,6 +28,7 @@ pub enum CliCommandOperator {
     Install {
         /// Space separated list of operators to install.
         /// Must have the form `name[=version]` e.g. `superset`, `superset=0.3.0`, `superset=0.3.0-nightly` or `superset=0.3.0-pr123`.
+        /// If no version is specified the latest nightly version - build from the main branch - will be used.
         /// You can get the available versions with `stackablectl operator list` or `stackablectl operator describe superset`
         #[clap(multiple_occurrences(true), required = true)]
         operators: Vec<Operator>,

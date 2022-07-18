@@ -1,0 +1,124 @@
+= Operator
+
+The `stackable operator` command allows to list, install and uninstall Stackable operators.
+Operators manage the individual data products the Stackable Data Platform consists of.
+
+This command manages individual operators.
+It is mainly intended for persons already having experience or working on the Stackable Data Platform.
+If you just wan't an easy way to get started or don't know which products and/or which version to install it is recommended to use the xref:commands/release.adoc[] command.
+This command will install a bundle of operators from a official Stackable Release.
+
+== Browse available operators
+To list the operators that are part of the Stackable Data Platform as well as their stable versions run the following command
+
+[source,console]
+----
+$ stackablectl operator list
+OPERATOR           STABLE VERSIONS
+airflow            0.4.0, 0.3.0, 0.2.0, 0.1.0
+commons            0.2.0, 0.1.0
+druid              0.6.0, 0.5.0, 0.4.0, 0.3.0, 0.2.0, 0.1.0
+hbase              0.3.0, 0.2.0
+hdfs               0.4.0, 0.3.0
+hive               0.6.0, 0.5.0, 0.3.0
+kafka              0.6.0, 0.5.0, 0.4.0
+nifi               0.6.0, 0.5.0, 0.4.0
+opa                0.9.0, 0.8.0, 0.7.0, 0.6.0
+secret             0.5.0, 0.4.0, 0.3.0, 0.2.0, 0.1.0
+spark              0.5.0, 0.4.0
+spark-k8s          0.3.0, 0.2.0, 0.1.0
+superset           0.5.0, 0.4.0, 0.3.0, 0.2.0, 0.1.0
+trino              0.4.0, 0.3.1, 0.3.0, 0.2.0
+zookeeper          0.9.0, 0.8.0, 0.7.0, 0.6.0, 0.10.0
+----
+
+This command only includes the stable versions for every operator to not mess up the whole screen.
+If you're interested in a special version of an operator you can use the describe command to get more details for an specific operator as follows
+
+[source,console]
+----
+$ stackablectl operator describe airflow
+Operator:           airflow
+Stable versions:    0.4.0, 0.3.0, 0.2.0, 0.1.0
+Test versions:      0.5.0-pr135, 0.5.0-pr134, 0.5.0-pr133, 0.5.0-pr132, 0.5.0-pr131, 0.5.0-pr130, 0.5.0-pr129, 0.5.0-pr128, 0.5.0-pr127, 0.5.0-pr126, 0.5.0-pr125, 0.5.0-pr122, 0.4.0-pr123, 0.4.0-pr122, 0.4.0-pr121, 0.4.0-pr120, 0.4.0-pr119, 0.4.0-pr118, 0.4.0-pr117
+Dev versions:       0.5.0-nightly, 0.4.0-nightly, 0.3.0-nightly, 0.2.0-nightly, 0.1.0-nightly
+----
+
+== Install operator
+If you access to an Kubernetes cluster make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
+After that run the following command
+
+[source,console]
+----
+$ stackablectl operator install airflow commons secret
+[INFO ] Installing airflow operator
+[INFO ] Installing commons operator
+[INFO ] Installing secret operator
+----
+
+If you don't have an Kubernetes cluster available `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
+Make sure you have https://kind.sigs.k8s.io/[kind] installed and run the following command
+
+[source,console]
+----
+$ stackablectl operator install airflow commons secret --kind-cluster
+[INFO ] Creating kind cluster stackable-data-platform
+Creating cluster "stackable-data-platform" ...
+ ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
+ ✓ Preparing nodes 📦 📦 📦 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+ ✓ Joining worker nodes 🚜 
+Set kubectl context to "kind-stackable-data-platform"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-stackable-data-platform
+
+Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
+[INFO ] Installing airflow operator
+[INFO ] Installing commons operator
+[INFO ] Installing secret operator
+----
+
+With this command we installed the operator for Apache Airflow as well as two operators needed internally by the Stackable Data Platform (commons and secret).
+
+As we didn't specify a specific version to install the operators were installed in the latest nightly version - build from the main branch of the operator.
+
+If you want to install a specific version you can add the version to each operator to install as follows
+
+[source,console]
+----
+$ stackablectl operator install airflow=0.4.0 commons=0.2.0 secret=0.5.0
+[INFO ] Installing airflow operator in version 0.4.0
+[INFO ] Installing commons operator in version 0.2.0
+[INFO ] Installing secret operator in version 0.5.0
+----
+
+As you can see the three operators where installed in the requested version.
+
+Remember: If you want to install a recommended and tested set of operator versions have a look at the xref:commands/release.adoc[] command.
+
+== List installed operators
+After installing some operators you can list which operators are installed in you Kubernetes cluster.
+
+[source,console]
+----
+$ stackablectl operator installed
+OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED
+airflow               0.5.0-nightly   default                        deployed         2022-07-15 09:44:00.86514992 +0200 CEST
+commons               0.3.0-nightly   default                        deployed         2022-07-15 09:44:03.215214235 +0200 CEST
+secret                0.6.0-nightly   default                        deployed         2022-07-15 09:44:13.526843785 +0200 CEST
+----
+
+== Uninstall operator
+To uninstall the operators again you can use the `uninstall` command
+
+[source,console]
+----
+$ stackablectl operator uninstall airflow commons secret
+[INFO ] Uninstalling airflow operator
+[INFO ] Uninstalling commons operator
+[INFO ] Uninstalling secret operator
+----

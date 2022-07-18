@@ -1,0 +1,44 @@
+= Services
+
+== List running services
+
+The `stackable services` command allows to inspect the running services of the Stackable Data Platform.
+Currently you can only get a read-only view of the running services, future versions may allow to e.g. uninstall running services.
+
+An example invocation looks as follows
+
+[source,console]
+----
+$ stackablectl services list
+PRODUCT      NAME                                     NAMESPACE                      ENDPOINTS                                          EXTRA INFOS
+airflow      airflow                                  default                        webserver-airflow:   http://172.18.0.5:32290       Admin user: airflow, password: airflow
+druid        druid                                    default                        router-http:         http://172.18.0.2:30245       
+                                                                                     coordinator-http:    http://172.18.0.4:30506       
+superset     superset                                 default                        external-superset:   http://172.18.0.2:31891       Admin user: admin, password: admin
+zookeeper    druid-zookeeper                          default                        zk:                  172.18.0.5:30890              
+minio        minio-druid                              default                        http:                http://172.18.0.4:32173       Third party service
+                                                                                     console-http:        http://172.18.0.4:30982       Admin user: root, password: rootroot
+----
+
+You can also
+
+- Show services in all namespaces
+- Redact the passwords from the output in case you want to share the list of services without giving out the admin credentials
+- Print the installed product versions
+
+To achieve this you can use the following command
+
+[source,console]
+----
+$ stackablectl services list --all-namespaces --redact-credentials --show-versions
+PRODUCT      NAME                                     NAMESPACE                      ENDPOINTS                                          EXTRA INFOS
+airflow      airflow                                  default                        webserver-airflow:   http://172.18.0.5:32290       Admin user: airflow, password: <redacted>
+                                                                                                                                        version 2.2.5-python39-stackable0.3.0
+druid        druid                                    default                        router-http:         http://172.18.0.2:30245       version 0.23.0-stackable0.1.0
+                                                                                     coordinator-http:    http://172.18.0.4:30506       
+superset     superset                                 default                        external-superset:   http://172.18.0.2:31891       Admin user: admin, password: <redacted>
+                                                                                                                                        version 1.5.1-stackable0.2.0
+zookeeper    druid-zookeeper                          default                        zk:                  172.18.0.5:30890              version 3.8.0-stackable0.7.1
+minio        minio-druid                              default                        http:                http://172.18.0.4:32173       Third party service
+                                                                                     console-http:        http://172.18.0.4:30982       Admin user: root, password: <redacted>
+----
