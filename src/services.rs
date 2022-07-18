@@ -314,6 +314,7 @@ pub fn get_service_names(product_name: &str, product: &str) -> Vec<String> {
         ],
         "hive" => vec![product_name.to_string()],
         "nifi" => vec![product_name.to_string()],
+        "opa" => vec![product_name.to_string()],
         "superset" => vec![format!("{product_name}-external")],
         "trino" => vec![format!("{product_name}-coordinator")],
         "zookeeper" => vec![product_name.to_string()],
