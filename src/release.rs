@@ -1,6 +1,6 @@
 use crate::{arguments::OutputType, helpers, kind, operator, operator::Operator, CliArgs};
 use cached::proc_macro::cached;
-use clap::{ArgGroup, Parser};
+use clap::{ArgGroup, Parser, ValueHint};
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{error, info, warn};
@@ -24,6 +24,7 @@ pub enum CliCommandRelease {
     /// Show details of a specific release
     #[clap(alias("desc"))]
     Describe {
+        #[clap(value_hint = ValueHint::Other)]
         release: String,
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
@@ -37,17 +38,17 @@ pub enum CliCommandRelease {
     ))]
     Install {
         /// Name of the release to install
-        #[clap(required = true)]
+        #[clap(required = true, value_hint = ValueHint::Other)]
         release: String,
 
         /// Whitelist of product operators to install.
         /// Mutually exclusive with `--exclude-products`
-        #[clap(short, long)]
+        #[clap(short, long, value_hint = ValueHint::Other)]
         include_products: Vec<String>,
 
         /// Blacklist of product operators to install.
         /// Mutually exclusive with `--include-products`
-        #[clap(short, long)]
+        #[clap(short, long, value_hint = ValueHint::Other)]
         exclude_products: Vec<String>,
 
         /// If specified a local kubernetes cluster consisting of 4 nodes for testing purposes will be created.
@@ -60,7 +61,8 @@ pub enum CliCommandRelease {
         #[clap(
             long,
             default_value = "stackable-data-platform",
-            requires = "kind-cluster"
+            requires = "kind-cluster",
+            value_hint = ValueHint::Other,
         )]
         kind_cluster_name: String,
     },
@@ -68,7 +70,7 @@ pub enum CliCommandRelease {
     #[clap(alias("un"))]
     Uninstall {
         /// Name of the release to uninstall
-        #[clap(required = true)]
+        #[clap(required = true, value_hint = ValueHint::Other)]
         release: String,
     },
 }
