@@ -1,6 +1,6 @@
 use crate::arguments::CliCommand;
 use arguments::CliArgs;
-use clap::Parser;
+use clap::{IntoApp, Parser};
 
 mod arguments;
 mod helm;
@@ -47,5 +47,9 @@ fn main() {
         CliCommand::Operator(command) => command.handle(),
         CliCommand::Release(command) => command.handle(),
         CliCommand::Stack(command) => command.handle(),
+        CliCommand::Completion(command) => {
+            let mut cmd = CliArgs::command();
+            arguments::print_completions(command.shell, &mut cmd);
+        }
     }
 }

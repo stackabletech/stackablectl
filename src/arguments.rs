@@ -1,6 +1,8 @@
 use crate::{operator::CliCommandOperator, release::CliCommandRelease, stack::CliCommandStack};
-use clap::{ArgEnum, Parser};
+use clap::{ArgEnum, Command, Parser};
+use clap_complete::{generate, Generator, Shell};
 use log::LevelFilter;
+use std::io;
 
 #[derive(Parser)]
 #[clap(author, version, about)]
@@ -68,6 +70,9 @@ pub enum CliCommand {
     /// This subcommand interacts with stacks, which are ready-to-use combinations of products.
     #[clap(subcommand, alias("s"), alias("st"))]
     Stack(CliCommandStack),
+
+    /// Output shell completion code for the specified shell.
+    Completion(CliCommandCompletion),
 }
 
 #[derive(Clone, Parser, ArgEnum)]
@@ -75,4 +80,15 @@ pub enum OutputType {
     Text,
     Json,
     Yaml,
+}
+
+#[derive(Parser)]
+pub struct CliCommandCompletion {
+    // Shell to generate the completions for
+    #[clap(arg_enum, value_parser)]
+    pub shell: Shell,
+}
+
+pub fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
+    generate(gen, cmd, cmd.get_name().to_string(), &mut io::stdout());
 }
