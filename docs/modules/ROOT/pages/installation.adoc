@@ -97,3 +97,59 @@ Copy it to you systems path to access it from anywhere if you like
 ----
 $ sudo cp target/release/stackablectl /usr/bin/stackablectl 
 ----
+
+== Configure auto-completion
+`stackablectl` provides completion scripts for the major Shells out there.
+It uses the same mechanism as `kubectl` does, so if you have any problems following this steps looking at https://kubernetes.io/docs/tasks/tools/included/[their installation documentation] may help you out.
+
+All of the https://docs.rs/clap_complete/3.2.3/clap_complete/shells/enum.Shell.html[supported shells of] https://crates.io/crates/clap_complete[`clap_complete`] are supported.
+As of `07/2022` this includes the following shells:
+
+* <<Bash>>
+* Elvish
+* <<Fish>>
+* <<PowerShell>>
+* <<Zsh>>
+
+=== Bash
+The stackablectl completion script for Bash can be generated with the command `stackablectl completion bash`. Sourcing the completion script in your shell enables stackablectl autocompletion.
+
+Install the package `bash-completion` e.g. via `apt install bash-completion`.
+
+After that run the following command to source the completion script and tell bash to source it every time you start a new shell.
+
+[source,console]
+----
+$ source <(stackablectl completion bash)
+$ echo 'source <(stackablectl completion bash)' >> ~/.bashrc
+----
+
+=== Fish
+The stackablectl completion script for Fish can be generated with the command `stackablectl completion fish`. Sourcing the completion script in your shell enables stackablectl autocompletion.
+
+[source,console]
+----
+$ stackablectl completion fish | source
+$ echo 'stackablectl completion fish | source' >> ~/.config/fish/config.fish
+----
+
+=== PowerShell
+The stackablectl completion script for PowerShell can be generated with the command `stackablectl completion powershell`.
+
+To do so in all your shell sessions, add the following line to your `$PROFILE` file:
+
+[source,console]
+----
+kubectl completion powershell | Out-String | Invoke-Expression
+----
+
+This command will regenerate the auto-completion script on every PowerShell start up.
+
+=== Zsh
+The stackablectl completion script for Zsh can be generated with the command `stackablectl completion zsh`. Sourcing the completion script in your shell enables stackablectl autocompletion.
+
+[source,console]
+----
+$ source <(stackablectl completion zsh)
+$ echo 'source <(stackablectl completion zsh)' >> ~/.zshrc
+----
