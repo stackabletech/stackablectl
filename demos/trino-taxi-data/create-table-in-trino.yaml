@@ -18,6 +18,8 @@ spec:
       - name: script
         configMap:
           name: create-ny-taxi-data-table-in-trino-script
+      restartPolicy: Never
+  backoffLimit: 20 # It can take some time until Trino is ready
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -53,7 +55,7 @@ data:
 
     assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS hive.demo WITH (location = 's3a://demo/')")[0][0] is True
     assert run_query(connection, """
-    CREATE TABLE IF NOT EXISTS hive.demo.ny_taxi_data_raw14 (
+    CREATE TABLE IF NOT EXISTS hive.demo.ny_taxi_data_raw (
         VendorID BIGINT,
         tpep_pickup_datetime TIMESTAMP,
         tpep_dropoff_datetime TIMESTAMP,
