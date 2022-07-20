@@ -44,21 +44,21 @@ pub struct CliArgs {
     pub helm_repo_stackable_dev: String,
 
     /// If you don't have access to the Stackable GitHub repos or you want to maintain your own releases you can specify additional YAML files containing release information.
-    /// Have a look at https://raw.githubusercontent.com/stackabletech/release/main/releases.yaml for the structure.
+    /// Have a look at <https://raw.githubusercontent.com/stackabletech/release/main/releases.yaml> for the structure.
     /// Can either be an URL or a path to a file e.g. `https://my.server/my-releases.yaml`, '/etc/my-releases.yaml' or `C:\Users\Sebastian\my-releases.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true))]
     pub additional_release_files: Vec<String>,
 
     /// If you don't have access to the Stackable GitHub repos or you want to maintain your own stacks you can specify additional YAML files containing stack information.
-    /// Have a look at https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks.yaml for the structure.
+    /// Have a look at <https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks.yaml> for the structure.
     /// Can either be an URL or a path to a file e.g. `https://my.server/my-stacks.yaml`, '/etc/my-stacks.yaml' or `C:\Users\Sebastian\my-stacks.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true))]
     pub additional_stack_files: Vec<String>,
 
     /// If you don't have access to the Stackable GitHub repos or you want to maintain your own demos you can specify additional YAML files containing demo information.
-    /// Have a look at https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos.yaml for the structure.
+    /// Have a look at <https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos.yaml> for the structure.
     /// Can either be an URL or a path to a file e.g. `https://my.server/my-demos.yaml`, '/etc/my-demos.yaml' or `C:\Users\Sebastian\my-demos.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true))]
