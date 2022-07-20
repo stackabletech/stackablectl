@@ -1,9 +1,8 @@
 ---
-stacks: # As their is no demo command implemented yet we provide the following demos as a stack.
-        # They will be converted to demos when the demos feature is available
+demos:
   trino-taxi-data:
     description: WIP Demo loading NY taxi-data into S3 bucket, creating Trino table and Superset dashboard
-    stackableRelease: 22.06 # Later on: stackableStack: trino-superset-s3
+    stackableStack: trino-superset-s3
     labels:
       - trino
       - superset
@@ -15,7 +14,7 @@ stacks: # As their is no demo command implemented yet we provide the following d
       - plainYaml: demos/trino-taxi-data/create-table-in-trino.yaml
   trino-wine-reviews:
     description: WIP Demo loading wine review data into S3 bucket, creating Trino table and Superset dashboard
-    stackableRelease: 22.06 # Later on: stackableStack: trino-superset-s3
+    stackableStack: trino-superset-s3
     labels:
       - trino
       - superset
