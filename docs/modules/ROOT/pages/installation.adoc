@@ -40,7 +40,7 @@ $ sudo mv stackablectl /usr/bin/stackablectl
 
 Download `stackablectl-x86_64-pc-windows-gnu.exe` from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release].
 You can simply execute it.
-If you want to execute it from anywhere in your system you need to add it to the system `PATH``.
+If you want to execute it from anywhere in your system, you need to add it to the system `PATH`.
 
 === macOS
 Download the `stackablectl-x86_64-apple-darwin` binary file for Intel based Macs or  `stackablectl-aarch64-apple-darwin` binary file for ARM based Macs from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release].
