@@ -2,7 +2,7 @@ use crate::{operator::CliCommandOperator, release::CliCommandRelease, stack::Cli
 use clap::{ArgEnum, Command, Parser, ValueHint};
 use clap_complete::{generate, Generator, Shell};
 use log::LevelFilter;
-use std::{io};
+use std::io;
 
 #[derive(Parser)]
 #[clap(author, version, about)]
