@@ -40,7 +40,8 @@ pub enum CliCommandStack {
 
         /// If specified a local kubernetes cluster consisting of 4 nodes for testing purposes will be created.
         /// Kind is a tool to spin up a local kubernetes cluster running on docker on your machine.
-        /// You need to have `docker` and `kind` installed. Have a look at the README at <https://github.com/stackabletech/stackablectl> on how to install them.
+        /// You need to have `docker` and `kind` installed.
+        /// Have a look at our documentation on how to install `kind` at <https://docs.stackable.tech/home/getting_started.html#_installing_kubernetes_using_kind>
         #[clap(short, long)]
         kind_cluster: bool,
 

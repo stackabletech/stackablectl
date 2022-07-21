@@ -6,7 +6,7 @@ use cached::proc_macro::cached;
 use lazy_static::lazy_static;
 use log::{debug, error, info, warn, LevelFilter};
 use serde::Deserialize;
-use std::{collections::HashMap, os::raw::c_char, process::exit, sync::Mutex, io::Error};
+use std::{collections::HashMap, os::raw::c_char, process::exit, sync::Mutex};
 
 lazy_static! {
     pub static ref HELM_REPOS: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new());
