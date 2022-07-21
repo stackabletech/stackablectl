@@ -12,7 +12,7 @@ druid-superset-s3                   22.06              Stack containing MinIO, D
 airflow                             22.06              Stack containing Airflow scheduling platform
 ----
 
-To show details run
+Detailed information of a stack can queried with the `describe` command:
 
 [source,console]
 ----
@@ -26,7 +26,7 @@ Labels:             druid, superset, minio, s3
 Future version of `stackablectl` will allow to search for stacks based on the labels.
 
 == Install stack
-If you access to an Kubernetes cluster make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
+If you want to access a Kubernetes cluster, make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
 After that run the following command
 
 [source,console]
@@ -51,8 +51,8 @@ $ stackablectl stack install druid-superset-s3
 [INFO ] Installed stack druid-superset-s3
 ----
 
-If you don't have an Kubernetes cluster available `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
-Make sure you have https://kind.sigs.k8s.io/[kind] installed and run the following command
+If you don't have a Kubernetes cluster available, `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
+Make sure you have `kind` installed and run the following command:
 
 [source,console]
 ----
