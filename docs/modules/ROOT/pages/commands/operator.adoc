@@ -46,7 +46,7 @@ Dev versions:       0.5.0-nightly, 0.4.0-nightly, 0.3.0-nightly, 0.2.0-nightly, 
 
 == Install operator
 If you want to access a Kubernetes cluster, make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
-After that run the following command:
+After that run the following command, which will install the operators in their latest version.
 
 [source,console]
 ----
@@ -111,6 +111,8 @@ airflow               0.5.0-nightly   default                        deployed   
 commons               0.3.0-nightly   default                        deployed         2022-07-15 09:44:03.215214235 +0200 CEST
 secret                0.6.0-nightly   default                        deployed         2022-07-15 09:44:13.526843785 +0200 CEST
 ----
+
+In case you have installed the operators in a specific version, the specific versions will be shown instead of the `*-nightly` versions.
 
 == Uninstall operator
 To uninstall the operators again you can use the `uninstall` command
