@@ -30,7 +30,7 @@ To achieve this the following online services will be contacted:
 
 === Mirror helm-charts
 To allow stackablectl to retrieve the current list of operators you must mirror the `https://repo.stackable.tech/repository/helm-.*/index.yaml` files to some local URL.
-If the file is mirrored to e.g. `https://my.corp/stackable/repository/helm-stable/index.yaml` you need to specify the following arguments to `stackablectl`
+If the file is mirrored e.g. to `https://my.corp/stackable/repository/helm-stable/index.yaml`, you need to specify the following arguments to `stackablectl`:
 
 [source,console]
 ----
@@ -39,7 +39,7 @@ $ stackablectl --helm-repo-stackable-stable https://my.corp/stackable/repository
 
 === Mirror releases/stacks/demos files
 You need to mirror the URL to either a URL or a file on disk.
-You can than specify the mirrored file to be included via `--additional-release-files`, `--additional-stack-files` or `--additional-demo-files`, e.g.
+You can then specify the mirrored file to be included via `--additional-release-files`, `--additional-stack-files`, or `--additional-demo-files`, e.g.
 
 [source,console]
 ----

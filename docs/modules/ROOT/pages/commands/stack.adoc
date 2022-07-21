@@ -2,7 +2,7 @@
 A stack is a collection of ready-to-use Stackable data products as well as needed third-party services like Postgresql or MinIO.
 
 == Browse available stacks
-To list the available stacks run the following command
+To list the available stacks, run the following command:
 
 [source,console]
 ----
@@ -91,7 +91,7 @@ Have a nice day! 👋
 [INFO ] Installed stack druid-superset-s3
 ----
 
-After installing the stack we can access the running services using the xref:commands/operator.adoc[] command
+After installing the stack, we can access the running services using the xref:commands/operator.adoc[] command:
 
 [source,console]
 ----

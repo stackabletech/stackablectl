@@ -2,19 +2,19 @@
 
 The `stackablectl` command line tool is used to interact with the Stackable Data Platform.
 It can install individual operators as well as Platform releases.
-It also ships with a set of pre-build demos that utilize different data products of the Platform to get e.g. an end-to-end data pipeline.
+It also ships with a set of pre-built demos that utilize different data products of the Platform to get e.g. an end-to-end data pipeline.
 
 The installation of `stackablectl` is described in xref:installation.adoc[].
 
 To just get a Quickstart please follow xref:quickstart.adoc[].
 
 In general, use `stackablectl --help` to find out more about how to use the tool or how to use specific options.
-This also works with subcommands i.e.: `stackablectl release install --help` will show the help for installing a release.
-Often you can also use a abbreviation instead of typing out all of the commands.
+This also works with subcommands, i.e. `stackablectl release install --help` will show the help for installing a release.
+Often you can also use an abbreviation instead of typing out all of the commands.
 E.g. `stackablectl operator list` can be also written as `stackablectl op ls`
 
 A Kubernetes cluster is required to use the Stackable Data Platform as all products and operators run on Kubernetes.
-If you don't have a Kubernetes cluster `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes Cluster for you.
+If you don't have a Kubernetes cluster, `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes Cluster for you.
 
 The deployed services are separated into three different layers as illustrated below:
 
@@ -33,7 +33,7 @@ A stack needs a release (of Stackable operators) to run on.
 To achieve this a stacks has a dependency on a release which get's automatically installed when a stack is installed.
 
 == Demos
-A demo is a end-to-end demonstration of the usage of the Stackable Data Platform.
+A demo is an end-to-end demonstration of the usage of the Stackable Data Platform.
 It contains
 
 . Installing a Stackable release

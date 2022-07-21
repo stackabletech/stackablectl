@@ -4,7 +4,7 @@
 We ship pre-compiled binaries of `stackablectl` which should work on most environments such as Windows, macOS, and Linux distros like Ubuntu and Arch.
 
 Below are the installation instructions for <<Linux>>, <<macOS>> and <<Windows>>.
-If the binary does not work for you you can always <<_build_stackablectl_from_source>>
+If the binary does not work for you, you can always <<_build_stackablectl_from_source>>
 
 === Linux
 
@@ -29,7 +29,7 @@ You can now invoke it with:
 $ ./stackablectl
 ----
 
-If you want to be able to call it from everywhere (not only the directory you downloaded it to) you can add it to you system with the following command
+If you want to be able to call it from everywhere (not only the directory you downloaded it to) you can add it to your system with the following command:
 
 [source,console]
 ----
@@ -91,7 +91,7 @@ $ cargo build --release
 ----
 
 After a successful build the binary will be placed in `target/release/stackablectl`.
-Copy it to you systems path to access it from anywhere if you like
+Copy it to your systems path to access it from anywhere if you like.
 
 [source,console]
 ----
