@@ -1,0 +1,13 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load-ny-taxi-data
+spec:
+  template:
+    spec:
+      containers:
+        - name: load-ny-taxi-data
+          image: "bitnami/minio:2022-debian-10"
+          command: ["bash", "-c", "cd /tmp && curl -O https://repo.stackable.tech/repository/misc/ny-taxi-data/yellow_tripdata_2022-04.parquet && mc --insecure alias set minio http://minio-trino:9000/ demo demodemo && mc cp yellow_tripdata_2022-04.parquet minio/demo/ny-taxi-data/raw/"]
+      restartPolicy: OnFailure

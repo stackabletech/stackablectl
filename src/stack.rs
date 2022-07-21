@@ -15,7 +15,7 @@ lazy_static! {
 
 #[derive(Parser)]
 pub enum CliCommandStack {
-    /// List all the available stack
+    /// List all the available stacks
     #[clap(alias("ls"))]
     List {
         #[clap(short, long, arg_enum, default_value = "text")]
@@ -94,7 +94,7 @@ struct Stack {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-enum StackManifest {
+pub enum StackManifest {
     #[serde(rename_all = "camelCase")]
     HelmChart {
         release_name: String,
@@ -108,7 +108,7 @@ enum StackManifest {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-struct HelmChartRepo {
+pub struct HelmChartRepo {
     name: String,
     url: String,
 }
@@ -168,14 +168,21 @@ async fn describe_stack(stack_name: &str, output_type: &OutputType) {
     }
 }
 
-async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
+pub async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
     info!("Installing stack {stack_name}");
     let stack = get_stack(stack_name).await;
 
     release::install_release(&stack.stackable_release, &[], &[]).await;
 
     info!("Installing components of stack {stack_name}");
-    for manifest in stack.manifests {
+    install_manifests(&stack.manifests).await?;
+
+    info!("Installed stack {stack_name}");
+    Ok(())
+}
+
+pub async fn install_manifests(manifests: &[StackManifest]) -> Result<(), Box<dyn Error>> {
+    for manifest in manifests {
         match manifest {
             StackManifest::HelmChart {
                 release_name,
@@ -188,21 +195,21 @@ async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
                 HELM_REPOS
                     .lock()
                     .unwrap()
-                    .insert(repo.name.clone(), repo.url);
+                    .insert(repo.name.clone(), repo.url.clone());
 
                 let values_yaml = serde_yaml::to_string(&options).unwrap();
                 helm::install_helm_release_from_repo(
-                    &release_name,
-                    &release_name,
+                    release_name,
+                    release_name,
                     &repo.name,
-                    &name,
-                    Some(&version),
+                    name,
+                    Some(version),
                     Some(&values_yaml),
                 )
             }
             StackManifest::PlainYaml(yaml_url_or_file) => {
                 debug!("Installing yaml manifest from {yaml_url_or_file}");
-                match helpers::read_from_url_or_file(&yaml_url_or_file).await {
+                match helpers::read_from_url_or_file(yaml_url_or_file).await {
                     Ok(manifests) => kube::deploy_manifests(&manifests).await?,
                     Err(err) => {
                         panic!(
@@ -215,7 +222,6 @@ async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
         }
     }
 
-    info!("Installed stack {stack_name}");
     Ok(())
 }
 

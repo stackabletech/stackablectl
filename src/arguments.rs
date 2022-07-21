@@ -1,6 +1,6 @@
 use crate::{
-    operator::CliCommandOperator, release::CliCommandRelease, services::CliCommandServices,
-    stack::CliCommandStack,
+    demo::CliCommandDemo, operator::CliCommandOperator, release::CliCommandRelease,
+    services::CliCommandServices, stack::CliCommandStack,
 };
 use clap::{ArgEnum, Parser};
 use log::LevelFilter;
@@ -44,35 +44,46 @@ pub struct CliArgs {
     pub helm_repo_stackable_dev: String,
 
     /// If you don't have access to the Stackable GitHub repos or you want to maintain your own releases you can specify additional YAML files containing release information.
-    /// Have a look [here](https://raw.githubusercontent.com/stackabletech/stackablectl/main/releases.yaml) for the structure.
-    /// Can either be an URL or a path to a file e.g. `https://my.server/my-releases.yaml` or '/etc/my-releases.yaml' or `C:\Users\Sebastian\my-releases.yaml`.
+    /// Have a look at <https://raw.githubusercontent.com/stackabletech/release/main/releases.yaml> for the structure.
+    /// Can either be an URL or a path to a file e.g. `https://my.server/my-releases.yaml`, '/etc/my-releases.yaml' or `C:\Users\Sebastian\my-releases.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true))]
     pub additional_release_files: Vec<String>,
 
     /// If you don't have access to the Stackable GitHub repos or you want to maintain your own stacks you can specify additional YAML files containing stack information.
-    /// Have a look [here](https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks.yaml) for the structure.
-    /// Can either be an URL or a path to a file e.g. `https://my.server/my-stacks.yaml` or '/etc/my-stacks.yaml' or `C:\Users\Sebastian\my-stacks.yaml`.
+    /// Have a look at <https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks.yaml> for the structure.
+    /// Can either be an URL or a path to a file e.g. `https://my.server/my-stacks.yaml`, '/etc/my-stacks.yaml' or `C:\Users\Sebastian\my-stacks.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true))]
     pub additional_stack_files: Vec<String>,
+
+    /// If you don't have access to the Stackable GitHub repos or you want to maintain your own demos you can specify additional YAML files containing demo information.
+    /// Have a look at <https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos.yaml> for the structure.
+    /// Can either be an URL or a path to a file e.g. `https://my.server/my-demos.yaml`, '/etc/my-demos.yaml' or `C:\Users\Sebastian\my-demos.yaml`.
+    /// Can be specified multiple times.
+    #[clap(long, multiple_occurrences(true))]
+    pub additional_demo_files: Vec<String>,
 }
 
 #[derive(Parser)]
 pub enum CliCommand {
-    /// This subcommand interacts with single operators if you don’t want to install the full platform.
+    /// This command interacts with demos, which are end-to-end demonstrations of the usage of the Stackable Data Platform.
+    #[clap(subcommand, alias("d"), alias("de"))]
+    Demo(CliCommandDemo),
+
+    /// This command interacts with single operators if you don’t want to install the full platform.
     #[clap(subcommand, alias("o"), alias("op"))]
     Operator(CliCommandOperator),
 
-    /// This subcommand interacts with all operators of the platform that are released together.
+    /// This command interacts with all operators of the platform that are released together.
     #[clap(subcommand, alias("r"), alias("re"))]
     Release(CliCommandRelease),
 
-    /// This EXPERIMENTAL subcommand interacts with stacks, which are ready-to-use combinations of products.
+    /// This command interacts with stacks, which are ready-to-use combinations of products.
     #[clap(subcommand, alias("s"), alias("st"))]
     Stack(CliCommandStack),
 
-    /// This subcommand interacts with deployed services of products.
+    /// This command interacts with deployed services of products.
     #[clap(subcommand, alias("svc"))]
     Services(CliCommandServices),
 }

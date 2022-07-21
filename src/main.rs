@@ -5,6 +5,7 @@ use lazy_static::lazy_static;
 use std::{error::Error, sync::Mutex};
 
 mod arguments;
+mod demo;
 mod helm;
 mod helpers;
 mod kind;
@@ -51,8 +52,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
     helm::handle_common_cli_args(&args);
     release::handle_common_cli_args(&args);
     stack::handle_common_cli_args(&args);
+    demo::handle_common_cli_args(&args);
 
     match &args.cmd {
+        CliCommand::Demo(command) => command.handle().await?,
         CliCommand::Operator(command) => command.handle().await,
         CliCommand::Release(command) => command.handle().await,
         CliCommand::Stack(command) => command.handle().await?,
