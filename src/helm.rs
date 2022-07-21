@@ -6,7 +6,7 @@ use cached::proc_macro::cached;
 use lazy_static::lazy_static;
 use log::{debug, error, info, warn, LevelFilter};
 use serde::Deserialize;
-use std::{collections::HashMap, os::raw::c_char, process::exit, sync::Mutex};
+use std::{collections::HashMap, os::raw::c_char, process::exit, sync::Mutex, io::Error};
 
 lazy_static! {
     pub static ref HELM_REPOS: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new());
@@ -113,7 +113,8 @@ pub fn install_helm_release_from_repo(
 }
 
 /// Cached because of slow network calls
-/// Not returning an Result<HelmRepo, Error> because i couldn't get it to work with #[cached]
+/// Returning a Result<HelmRepo, Error> would be better but in combination with #[cached] the following error comes up:
+/// the trait `Deserialize<'_>` is not implemented for `std::io::Error`
 #[cached]
 pub async fn get_repo_index(repo_url: String) -> HelmRepo {
     let index_url = format!("{repo_url}/index.yaml");
