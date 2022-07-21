@@ -2,7 +2,7 @@ use crate::{operator::CliCommandOperator, release::CliCommandRelease, stack::Cli
 use clap::{ArgEnum, Command, Parser, ValueHint};
 use clap_complete::{generate, Generator, Shell};
 use log::LevelFilter;
-use std::io;
+use std::{io};
 
 #[derive(Parser)]
 #[clap(author, version, about)]
@@ -10,9 +10,9 @@ pub struct CliArgs {
     #[clap(subcommand)]
     pub cmd: CliCommand,
 
-    /// Log level. One of error, warn, info, debug or trace
-    #[clap(short, long, default_value = "info", value_hint = ValueHint::Other)]
-    pub log_level: LevelFilter,
+    /// Log level.
+    #[clap(short, long, arg_enum, default_value = "info")]
+    pub log_level: LogLevel,
 
     /// Namespace where to deploy the products and operators
     #[clap(short, long, default_value = "default", value_hint = ValueHint::Other)]
@@ -83,6 +83,27 @@ pub enum OutputType {
     Text,
     Json,
     Yaml,
+}
+
+#[derive(Clone, Parser, Debug, ArgEnum)]
+pub enum LogLevel {
+    Error,
+    Warn,
+    Info,
+    Debug,
+    Trace,
+}
+
+impl From<&LogLevel> for LevelFilter {
+    fn from(val: &LogLevel) -> Self {
+        match val {
+            LogLevel::Error => LevelFilter::Error,
+            LogLevel::Warn => LevelFilter::Warn,
+            LogLevel::Info => LevelFilter::Info,
+            LogLevel::Debug => LevelFilter::Debug,
+            LogLevel::Trace => LevelFilter::Trace,
+        }
+    }
 }
 
 #[derive(Parser)]
