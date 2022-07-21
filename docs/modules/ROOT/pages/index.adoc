@@ -11,7 +11,7 @@ To just get a Quickstart please follow xref:quickstart.adoc[].
 In general, use `stackablectl --help` to find out more about how to use the tool or how to use specific options.
 This also works with subcommands, i.e. `stackablectl release install --help` will show the help for installing a release.
 Often you can also use an abbreviation instead of typing out all of the commands.
-E.g. `stackablectl operator list` can be also written as `stackablectl op ls`
+E.g. `stackablectl operator list` can also be written as `stackablectl op ls`
 
 A Kubernetes cluster is required to use the Stackable Data Platform as all products and operators run on Kubernetes.
 If you don't have a Kubernetes cluster, `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes Cluster for you.
