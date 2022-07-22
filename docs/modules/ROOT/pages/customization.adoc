@@ -6,13 +6,12 @@ This way it is possible to cover the following use-cases.
 
 Any additional demos/stacks/releases you specify, will be added to the already existing provided by Stackable.
 
-== How to add a new
-=== Demo
-==== Benefits
+== Add a new demo
+=== Benefits
 When you have developed a new data pipeline or data product you often want to show it in action to other colleagues or potential clients.
 To easily achieve this you can create your own demo so that it can easily be reproduced and/or shared with other people.
 
-==== Adding a new demo
+=== Adding a new demo
 First you must create a `mycorp-demos.yaml` containing demos according to the format defined by https://github.com/stackabletech/stackablectl/blob/main/demos.yaml[the Stackable provided demos].
 
 After creating the `mycorp-demos.yaml` file it can be added to the available demos in `stackablectl` via the CLI argument `--additional-demo-files mycorp-demos.yaml`.
@@ -21,27 +20,27 @@ By using a URL the demos file can be put into to a central Git repository and re
 Multiple `--additional-demo-files` flags can be specified to include multiple demo files.
 Every additional demo will we added to the already existing demos in `stackablectl`, so all the available demo files will be merged.
 
-=== Stack
-==== Benefits
+== Add a new stack
+=== Benefits
 If your company or clients have multiple similar setups or reference architectures it could make sense to make them easily available to all employees or clients.
 In the custom defined Stack all Product versions are pinned as well, so you can easily spin up a Stack containing the exact same versions as your production setup.
 You can use your defined Stack to give it to colleagues or potential customers to show the overall architecture of the Data platform you're going to build.
 
-==== Adding a new stack
+=== Adding a new stack
 For the overall procedure have a look at <<_adding_a_new_demo>> on how to add a new stack.
 For a custom stack you need to create a `mycorp-stacks.yaml` containing stacks according to the format defined by https://github.com/stackabletech/stackablectl/blob/main/stacks.yaml[the Stackable provided stacks].
 You can than add it to `stackablectl` with the flag `--additional-stack-files`.
 
 
-=== Release
-==== Benefits
+== Add a new release
+=== Benefits
 If advanced users of the Stackable Platform want to define their own internal Release within their company they can easily add their own release.
 This has the following benefits:
 
 - Same operator versions across the whole company. This produces more uniform environments and makes debugging and helping other teams easier.
 - If the company is only interested in a subset of the available operators you can only add your relevant operators into your release and not install all the other operators.
 
-==== Adding a new release
+=== Adding a new release
 For the overall procedure have a look at <<_adding_a_new_demo>> on how to add a new release.
 For a custom release you need to create a `mycorp-releases.yaml` containing releases according to the format defined by https://github.com/stackabletech/release/blob/main/releases.yaml[the Stackable provided releases].
 You can than add it to `stackablectl` with the flag `--additional-release-files`.
