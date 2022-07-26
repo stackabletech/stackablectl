@@ -1,0 +1,24 @@
+---
+demos:
+  trino-taxi-data:
+    description: WIP Demo loading NY taxi-data into S3 bucket, creating Trino table and Superset dashboard
+    stackableStack: trino-superset-s3
+    labels:
+      - trino
+      - superset
+      - minio
+      - s3
+      - ny-taxi-data
+    manifests:
+      - plainYaml: demos/trino-taxi-data/load-test-data.yaml
+      - plainYaml: demos/trino-taxi-data/create-table-in-trino.yaml
+  trino-wine-reviews:
+    description: WIP Demo loading wine review data into S3 bucket, creating Trino table and Superset dashboard
+    stackableStack: trino-superset-s3
+    labels:
+      - trino
+      - superset
+      - minio
+      - s3
+      - ny-taxi-data
+    manifests: []
