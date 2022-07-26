@@ -85,7 +85,7 @@ pub enum OutputType {
     Yaml,
 }
 
-#[derive(Clone, Parser, Debug, ArgEnum)]
+#[derive(Clone, Copy, Parser, Debug, ArgEnum)]
 pub enum LogLevel {
     Error,
     Warn,
@@ -94,8 +94,8 @@ pub enum LogLevel {
     Trace,
 }
 
-impl From<&LogLevel> for LevelFilter {
-    fn from(val: &LogLevel) -> Self {
+impl From<LogLevel> for LevelFilter {
+    fn from(val: LogLevel) -> Self {
         match val {
             LogLevel::Error => LevelFilter::Error,
             LogLevel::Warn => LevelFilter::Warn,
