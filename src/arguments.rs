@@ -18,6 +18,8 @@ pub struct CliArgs {
     #[clap(short, long, default_value = "default", value_hint = ValueHint::Other)]
     pub namespace: String,
 
+    /// Overwrite the URL of the stable helm repo
+    ///
     /// If you don't have access to the Stackable Helm repos you can mirror the repo and provide the URL here
     /// (e.g. <https://my.repo/repository/stackable-stable/>).
     #[clap(
@@ -27,6 +29,8 @@ pub struct CliArgs {
     )]
     pub helm_repo_stackable_stable: String,
 
+    /// Overwrite the URL of the test helm repo
+    ///
     /// If you don't have access to the Stackable Helm repos you can mirror the repo and provide the URL here
     /// (e.g. <https://my.repo/repository/stackable-test/>).
     #[clap(
@@ -36,6 +40,8 @@ pub struct CliArgs {
     )]
     pub helm_repo_stackable_test: String,
 
+    /// Overwrite the URL of the dev helm repo
+    ///
     /// If you don't have access to the Stackable Helm repos you can mirror the repo and provide the URL here
     /// (e.g. <https://my.repo/repository/stackable-dev/>).
     #[clap(
@@ -45,6 +51,8 @@ pub struct CliArgs {
     )]
     pub helm_repo_stackable_dev: String,
 
+    /// Adds a YAML file containing custom releases
+    ///
     /// If you don't have access to the Stackable GitHub repos or you want to maintain your own releases you can specify additional YAML files containing release information.
     /// Have a look [here](https://raw.githubusercontent.com/stackabletech/stackablectl/main/releases.yaml) for the structure.
     /// Can either be an URL or a path to a file e.g. `https://my.server/my-releases.yaml` or '/etc/my-releases.yaml' or `C:\Users\Sebastian\my-releases.yaml`.
@@ -52,6 +60,8 @@ pub struct CliArgs {
     #[clap(long, multiple_occurrences(true), value_hint = ValueHint::FilePath)]
     pub additional_release_files: Vec<String>,
 
+    /// Adds a YAML file containing custom stacks
+    ///
     /// If you don't have access to the Stackable GitHub repos or you want to maintain your own stacks you can specify additional YAML files containing stack information.
     /// Have a look [here](https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks.yaml) for the structure.
     /// Can either be an URL or a path to a file e.g. `https://my.server/my-stacks.yaml` or '/etc/my-stacks.yaml' or `C:\Users\Sebastian\my-stacks.yaml`.
