@@ -1,6 +1,6 @@
 use crate::arguments::CliCommand;
 use arguments::CliArgs;
-use clap::Parser;
+use clap::{IntoApp, Parser};
 use lazy_static::lazy_static;
 use std::{error::Error, sync::Mutex};
 
@@ -42,7 +42,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     env_logger::builder()
         .format_timestamp(None)
         .format_target(false)
-        .filter_level(args.log_level)
+        .filter_level(args.log_level.into())
         .init();
 
     let namespace = &args.namespace;
@@ -57,6 +57,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
         CliCommand::Release(command) => command.handle().await,
         CliCommand::Stack(command) => command.handle().await?,
         CliCommand::Services(command) => command.handle().await?,
+        CliCommand::Completion(command) => {
+            let mut cmd = CliArgs::command();
+            arguments::print_completions(command.shell, &mut cmd);
+        }
     }
 
     Ok(())

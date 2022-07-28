@@ -1,5 +1,5 @@
 use crate::{arguments::OutputType, helm, helm::HELM_REPOS, kind, AVAILABLE_OPERATORS};
-use clap::Parser;
+use clap::{Parser, ValueHint};
 use indexmap::IndexMap;
 use log::{info, warn};
 use serde::Serialize;
@@ -17,7 +17,7 @@ pub enum CliCommandOperator {
     #[clap(alias("desc"))]
     Describe {
         /// Name of the operator to describe
-        #[clap(required = true)]
+        #[clap(required = true, value_hint = ValueHint::Other)]
         operator: String,
 
         #[clap(short, long, arg_enum, default_value = "text")]
@@ -30,7 +30,7 @@ pub enum CliCommandOperator {
         /// Must have the form `name[=version]` e.g. `superset`, `superset=0.3.0`, `superset=0.3.0-nightly` or `superset=0.3.0-pr123`.
         /// If no version is specified the latest nightly version - build from the main branch - will be used.
         /// You can get the available versions with `stackablectl operator list` or `stackablectl operator describe superset`
-        #[clap(multiple_occurrences(true), required = true)]
+        #[clap(multiple_occurrences(true), required = true, value_hint = ValueHint::Other)]
         operators: Vec<Operator>,
 
         /// If specified a local kubernetes cluster consisting of 4 nodes for testing purposes will be created.
@@ -44,7 +44,8 @@ pub enum CliCommandOperator {
         #[clap(
             long,
             default_value = "stackable-data-platform",
-            requires = "kind-cluster"
+            requires = "kind-cluster",
+            value_hint = ValueHint::Other,
         )]
         kind_cluster_name: String,
     },
@@ -52,7 +53,7 @@ pub enum CliCommandOperator {
     #[clap(alias("un"))]
     Uninstall {
         /// Space separated list of operators to uninstall.
-        #[clap(multiple_occurrences(true), required = true)]
+        #[clap(multiple_occurrences(true), required = true, value_hint = ValueHint::Other)]
         operators: Vec<String>,
     },
     /// List installed operators
