@@ -128,7 +128,7 @@ zookeeper             0.10.0          default                        deployed   
 
 
 == Uninstall release
-To uninstall the release again you can use the uninstall command
+To uninstall all operators contained in a release regardless of their actual installed versions, you can use the uninstall command:
 
 [source,console]
 ----
