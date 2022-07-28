@@ -1,6 +1,6 @@
 use crate::{arguments::OutputType, helm, helm::HELM_REPOS, helpers, kind, kube, release, CliArgs};
 use cached::proc_macro::cached;
-use clap::Parser;
+use clap::{Parser, ValueHint};
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{debug, error, info, warn};
@@ -25,7 +25,7 @@ pub enum CliCommandStack {
     #[clap(alias("desc"))]
     Describe {
         /// Name of the stack to describe
-        #[clap(required = true)]
+        #[clap(required = true, value_hint = ValueHint::Other)]
         stack: String,
 
         #[clap(short, long, arg_enum, default_value = "text")]
@@ -35,7 +35,7 @@ pub enum CliCommandStack {
     #[clap(alias("in"))]
     Install {
         /// Name of the stack to install
-        #[clap(required = true)]
+        #[clap(required = true, value_hint = ValueHint::Other)]
         stack: String,
 
         /// If specified a local kubernetes cluster consisting of 4 nodes for testing purposes will be created.
@@ -49,7 +49,8 @@ pub enum CliCommandStack {
         #[clap(
             long,
             default_value = "stackable-data-platform",
-            requires = "kind-cluster"
+            requires = "kind-cluster",
+            value_hint = ValueHint::Other,
         )]
         kind_cluster_name: String,
     },
