@@ -1,6 +1,5 @@
-use std::error::Error;
-
 use clap::Parser;
+use cli_table::{Cell, Table};
 use indexmap::IndexMap;
 use k8s_openapi::api::{apps::v1::Deployment, core::v1::Secret};
 use kube::{
@@ -11,6 +10,7 @@ use kube::{
 use lazy_static::lazy_static;
 use log::{debug, warn};
 use serde::Serialize;
+use std::{error::Error, vec};
 
 use crate::{
     arguments::OutputType,
@@ -176,51 +176,54 @@ async fn list_services(
 
     match output_type {
         OutputType::Text => {
-            println!("PRODUCT      NAME                                     NAMESPACE                      ENDPOINTS                                          EXTRA INFOS");
+            let mut table = vec![];
+
+            let max_endpoint_name_length = output
+                .values()
+                .flatten()
+                .flat_map(|p| &p.endpoints)
+                .map(|e| e.0.len())
+                .max()
+                .unwrap_or_default();
+
             for (product_name, installed_products) in output.iter() {
                 for installed_product in installed_products {
-                    println!(
-                        "{:12} {:40} {:30} {:50} {}",
-                        product_name,
-                        installed_product.name,
+                    let mut endpoints = vec![];
+                    for endpoint in &installed_product.endpoints {
+                        endpoints.push(vec![endpoint.0.as_str(), endpoint.1.as_str()]);
+                    }
+
+                    let endpoints = installed_product
+                        .endpoints
+                        .iter()
+                        .map(|(name, url)| {
+                            format!("{name:width$}{url}", width = max_endpoint_name_length + 1)
+                        })
+                        .collect::<Vec<_>>()
+                        .join("\n");
+
+                    table.push(vec![
+                        product_name.cell(),
+                        installed_product.name.as_str().cell(),
                         installed_product
                             .namespace
-                            .as_ref()
-                            .map(|s| s.to_string())
-                            .unwrap_or_default(),
-                        installed_product
-                            .endpoints
-                            .first()
-                            .map(|(name, url)| { format!("{:20} {url}", format!("{name}:")) })
-                            .unwrap_or_default(),
-                        installed_product
-                            .extra_infos
-                            .first()
-                            .map(|s| s.to_string())
-                            .unwrap_or_default(),
-                    );
-
-                    let mut endpoints = installed_product.endpoints.iter().skip(1);
-                    let mut extra_infos = installed_product.extra_infos.iter().skip(1);
-
-                    loop {
-                        let endpoint = endpoints.next();
-                        let extra_info = extra_infos.next();
-
-                        if endpoint.is_none() && extra_info.is_none() {
-                            break;
-                        }
-
-                        println!(
-                            "                                                                                     {:50} {}",
-                            endpoint
-                                .map(|(name, url)| { format!("{:20} {url}", format!("{name}:")) })
-                                .unwrap_or_default(),
-                            extra_info.map(|s| s.to_string()).unwrap_or_default(),
-                        );
-                    }
+                            .clone()
+                            .unwrap_or_default()
+                            .cell(),
+                        endpoints.cell(),
+                        installed_product.extra_infos.join("\n").cell(),
+                    ]);
                 }
             }
+            let table = table.table().title(vec![
+                "PRODUCT".cell(),
+                "NAME".cell(),
+                "NAMESPACE".cell(),
+                "ENDPOINTS".cell(),
+                "EXTRA INFOS".cell(),
+            ]);
+
+            println!("{}", table.display()?);
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output).unwrap());
