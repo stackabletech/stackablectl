@@ -61,7 +61,7 @@ pub struct CliArgs {
     /// Can either be an URL or a path to a file e.g. `https://my.server/my-releases.yaml` or '/etc/my-releases.yaml' or `C:\Users\Sebastian\my-releases.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true), value_hint = ValueHint::FilePath)]
-    pub additional_release_files: Vec<String>,
+    pub additional_releases_file: Vec<String>,
 
     /// Adds a YAML file containing custom stacks
     ///
@@ -70,7 +70,7 @@ pub struct CliArgs {
     /// Can either be an URL or a path to a file e.g. `https://my.server/my-stacks.yaml` or '/etc/my-stacks.yaml' or `C:\Users\Sebastian\my-stacks.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true), value_hint = ValueHint::FilePath)]
-    pub additional_stack_files: Vec<String>,
+    pub additional_stacks_file: Vec<String>,
 }
 
 #[derive(Parser)]

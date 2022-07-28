@@ -102,7 +102,7 @@ impl CliCommandRelease {
 
 pub fn handle_common_cli_args(args: &CliArgs) {
     let mut release_files = RELEASE_FILES.lock().unwrap();
-    release_files.append(&mut args.additional_release_files.clone());
+    release_files.append(&mut args.additional_releases_file.clone());
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]

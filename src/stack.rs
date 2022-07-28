@@ -76,7 +76,7 @@ impl CliCommandStack {
 
 pub fn handle_common_cli_args(args: &CliArgs) {
     let mut stack_files = STACK_FILES.lock().unwrap();
-    stack_files.append(&mut args.additional_stack_files.clone());
+    stack_files.append(&mut args.additional_stacks_file.clone());
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
