@@ -1,6 +1,6 @@
 use crate::arguments::CliCommand;
 use arguments::CliArgs;
-use clap::Parser;
+use clap::{IntoApp, Parser};
 
 mod arguments;
 mod helm;
@@ -37,7 +37,7 @@ fn main() {
     env_logger::builder()
         .format_timestamp(None)
         .format_target(false)
-        .filter_level(args.log_level)
+        .filter_level(args.log_level.into())
         .init();
     helm::handle_common_cli_args(&args);
     release::handle_common_cli_args(&args);
@@ -47,5 +47,9 @@ fn main() {
         CliCommand::Operator(command) => command.handle(),
         CliCommand::Release(command) => command.handle(),
         CliCommand::Stack(command) => command.handle(),
+        CliCommand::Completion(command) => {
+            let mut cmd = CliArgs::command();
+            arguments::print_completions(command.shell, &mut cmd);
+        }
     }
 }

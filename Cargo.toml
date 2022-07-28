@@ -10,6 +10,7 @@ repository = "https://github.com/stackabletech/stackablectl"
 [dependencies]
 cached = "0.37"
 clap = { version = "3.2", features = ["derive", "cargo"] }
+clap_complete = "3.2"
 env_logger = "0.9"
 indexmap = { version = "1.9", features = ["serde"] }
 lazy_static = "1.4"

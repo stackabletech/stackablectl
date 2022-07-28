@@ -47,7 +47,7 @@ pub fn handle_common_cli_args(args: &CliArgs) {
         args.helm_repo_stackable_dev.clone(),
     );
 
-    *(LOG_LEVEL.lock().unwrap()) = args.log_level;
+    *(LOG_LEVEL.lock().unwrap()) = args.log_level.into();
 
     let namespace = &args.namespace;
     if namespace != "default" {
