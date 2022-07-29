@@ -2,7 +2,8 @@ use crate::arguments::CliCommand;
 use arguments::CliArgs;
 use clap::{IntoApp, Parser};
 use lazy_static::lazy_static;
-use std::{error::Error, sync::Mutex};
+use log::error;
+use std::{error::Error, process::exit, sync::Mutex};
 
 mod arguments;
 mod helm;
@@ -52,16 +53,22 @@ async fn main() -> Result<(), Box<dyn Error>> {
     release::handle_common_cli_args(&args);
     stack::handle_common_cli_args(&args);
 
-    match &args.cmd {
+    let result = match &args.cmd {
         CliCommand::Operator(command) => command.handle().await,
         CliCommand::Release(command) => command.handle().await,
-        CliCommand::Stack(command) => command.handle().await?,
-        CliCommand::Services(command) => command.handle().await?,
+        CliCommand::Stack(command) => command.handle().await,
+        CliCommand::Services(command) => command.handle().await,
         CliCommand::Completion(command) => {
             let mut cmd = CliArgs::command();
             arguments::print_completions(command.shell, &mut cmd);
+            Ok(())
         }
+    };
+
+    if let Err(err) = &result {
+        error!("{err}");
+        exit(-1);
     }
 
-    Ok(())
+    result
 }

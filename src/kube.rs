@@ -1,6 +1,5 @@
 use crate::NAMESPACE;
 use cached::proc_macro::cached;
-use core::panic;
 use indexmap::IndexMap;
 use k8s_openapi::api::core::v1::{Endpoints, Node, Service};
 use kube::{
@@ -78,7 +77,7 @@ pub async fn get_service_endpoint_urls(
         }
     };
 
-    let node_ip = get_node_ip(node_name).await;
+    let node_ip = get_node_ip(node_name).await?;
 
     let mut result = IndexMap::new();
     for service_port in service.spec.unwrap().ports.unwrap_or_default() {
@@ -112,45 +111,45 @@ pub async fn get_service_endpoint_urls(
     Ok(result)
 }
 
-async fn get_node_ip(node_name: &str) -> String {
-    let node_name_ip_mapping = get_node_name_ip_mapping().await;
+async fn get_node_ip(node_name: &str) -> Result<String, Box<dyn Error>> {
+    let node_name_ip_mapping = get_node_name_ip_mapping().await?;
+
     match node_name_ip_mapping.get(node_name) {
-        Some(node_ip) => node_ip.to_string(),
-        None => panic!("Failed to find node {node_name} in node_name_ip_mapping"),
+        Some(node_ip) => Ok(node_ip.to_string()),
+        None => Err(format!("Failed to find node {node_name} in node_name_ip_mapping").into()),
     }
 }
 
-/// Not returning an Result<HashMap<String, String>, Error> because i couldn't get it to work with #[cached]
 #[cached]
-async fn get_node_name_ip_mapping() -> HashMap<String, String> {
+async fn get_node_name_ip_mapping() -> Result<HashMap<String, String>, String> {
     let client = get_client()
         .await
-        .expect("Failed to create kubernetes client");
+        .map_err(|err| format!("Failed to create kubernetes client: {err}"))?;
     let node_api: Api<Node> = Api::all(client);
     let nodes = node_api
         .list(&ListParams::default())
         .await
-        .expect("Failed to list kubernetes nodes");
+        .map_err(|err| format!("Failed to list kubernetes nodes: {err}"))?;
 
     let mut result = HashMap::new();
     for node in nodes {
         let node_name = node.name();
         let preferred_node_ip = node
             .status
-            .unwrap()
+            .ok_or(format!("Failed to get status of node {node_name}"))?
             .addresses
-            .unwrap_or_else(|| panic!("Failed to get address of node {node_name}"))
+            .ok_or(format!("Failed to get address of node {node_name}"))?
             .iter()
             .filter(|address| address.type_ == "InternalIP" || address.type_ == "ExternalIP")
             .min_by_key(|address| &address.type_) // ExternalIP (which we want) is lower than InternalIP
             .map(|address| address.address.clone())
-            .unwrap_or_else(|| {
-                panic!("Could not find a InternalIP or ExternalIP for node {node_name}")
-            });
+            .ok_or(format!(
+                "Could not find a InternalIP or ExternalIP for node {node_name}"
+            ))?;
         result.insert(node_name, preferred_node_ip);
     }
 
-    result
+    Ok(result)
 }
 
 pub async fn get_client() -> Result<Client, Box<dyn Error>> {

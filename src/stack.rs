@@ -66,7 +66,7 @@ impl CliCommandStack {
                 kind_cluster,
                 kind_cluster_name,
             } => {
-                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
+                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name)?;
                 install_stack(stack).await?;
             }
         }
@@ -176,7 +176,7 @@ async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
     info!("Installing stack {stack_name}");
     let stack = get_stack(stack_name).await?;
 
-    release::install_release(&stack.stackable_release, &[], &[]).await;
+    release::install_release(&stack.stackable_release, &[], &[]).await?;
 
     info!("Installing components of stack {stack_name}");
     for manifest in stack.manifests {
@@ -202,19 +202,18 @@ async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
                     &name,
                     Some(&version),
                     Some(&values_yaml),
-                )
+                )?
             }
             StackManifest::PlainYaml(yaml_url_or_file) => {
                 debug!("Installing yaml manifest from {yaml_url_or_file}");
-                match helpers::read_from_url_or_file(&yaml_url_or_file).await {
-                    Ok(manifests) => kube::deploy_manifests(&manifests).await?,
-                    Err(err) => {
-                        panic!(
-                            "Could not read stack manifests from file \"{}\": {err}",
-                            &yaml_url_or_file
-                        );
-                    }
-                }
+                let manifests = helpers::read_from_url_or_file(&yaml_url_or_file)
+                    .await
+                    .map_err(|err| {
+                        format!(
+                            "Could not read stack manifests from file \"{yaml_url_or_file}\": {err}"
+                        )
+                    })?;
+                kube::deploy_manifests(&manifests).await?;
             }
         }
     }

@@ -148,10 +148,19 @@ impl CliCommandServices {
                 redact_credentials,
                 show_versions,
             } => {
-                list_services(*all_namespaces, *redact_credentials, *show_versions, output).await?
+                match list_services(*all_namespaces, *redact_credentials, *show_versions, output)
+                    .await
+                {
+                    Ok(()) => Ok(()),
+                    Err(err) => {
+                        // match err.as_ref() {
+
+                        // }
+                        Err(err)
+                    }
+                }
             }
         }
-        Ok(())
     }
 }
 

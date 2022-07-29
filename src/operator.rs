@@ -3,7 +3,7 @@ use clap::{Parser, ValueHint};
 use indexmap::IndexMap;
 use log::{info, warn};
 use serde::Serialize;
-use std::str::FromStr;
+use std::{error::Error, str::FromStr};
 
 #[derive(Parser)]
 pub enum CliCommandOperator {
@@ -64,29 +64,31 @@ pub enum CliCommandOperator {
 }
 
 impl CliCommandOperator {
-    pub async fn handle(&self) {
+    pub async fn handle(&self) -> Result<(), Box<dyn Error>> {
         match self {
-            CliCommandOperator::List { output } => list_operators(output).await,
+            CliCommandOperator::List { output } => list_operators(output).await?,
             CliCommandOperator::Describe { operator, output } => {
-                describe_operator(operator, output).await
+                describe_operator(operator, output).await?
             }
             CliCommandOperator::Install {
                 operators,
                 kind_cluster,
                 kind_cluster_name,
             } => {
-                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
+                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name)?;
                 for operator in operators {
-                    operator.install();
+                    operator.install()?;
                 }
             }
             CliCommandOperator::Uninstall { operators } => uninstall_operators(operators),
-            CliCommandOperator::Installed { output } => list_installed_operators(output),
+            CliCommandOperator::Installed { output } => list_installed_operators(output)?,
         }
+
+        Ok(())
     }
 }
 
-async fn list_operators(output_type: &OutputType) {
+async fn list_operators(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     type Output = IndexMap<String, OutputOperatorEntry>;
 
     #[derive(Serialize)]
@@ -102,9 +104,9 @@ async fn list_operators(output_type: &OutputType) {
         output.insert(
             operator.to_string(),
             OutputOperatorEntry {
-                stable_versions: get_versions_from_repo(operator, "stackable-stable").await,
-                test_versions: get_versions_from_repo(operator, "stackable-test").await,
-                dev_versions: get_versions_from_repo(operator, "stackable-dev").await,
+                stable_versions: get_versions_from_repo(operator, "stackable-stable").await?,
+                test_versions: get_versions_from_repo(operator, "stackable-test").await?,
+                dev_versions: get_versions_from_repo(operator, "stackable-dev").await?,
             },
         );
     }
@@ -127,9 +129,11 @@ async fn list_operators(output_type: &OutputType) {
             println!("{}", serde_yaml::to_string(&output).unwrap());
         }
     }
+
+    Ok(())
 }
 
-async fn describe_operator(operator: &str, output_type: &OutputType) {
+async fn describe_operator(operator: &str, output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
     struct Output {
@@ -140,9 +144,9 @@ async fn describe_operator(operator: &str, output_type: &OutputType) {
     }
     let output = Output {
         operator: operator.to_string(),
-        stable_versions: get_versions_from_repo(operator, "stackable-stable").await,
-        test_versions: get_versions_from_repo(operator, "stackable-test").await,
-        dev_versions: get_versions_from_repo(operator, "stackable-dev").await,
+        stable_versions: get_versions_from_repo(operator, "stackable-stable").await?,
+        test_versions: get_versions_from_repo(operator, "stackable-test").await?,
+        dev_versions: get_versions_from_repo(operator, "stackable-dev").await?,
     };
 
     match output_type {
@@ -159,30 +163,37 @@ async fn describe_operator(operator: &str, output_type: &OutputType) {
             println!("{}", serde_yaml::to_string(&output).unwrap());
         }
     }
+
+    Ok(())
 }
 
-async fn get_versions_from_repo(operator: &str, helm_repo_name: &str) -> Vec<String> {
+async fn get_versions_from_repo(
+    operator: &str,
+    helm_repo_name: &str,
+) -> Result<Vec<String>, Box<dyn Error>> {
     let chart_name = format!("{operator}-operator");
 
     let helm_repo_url = HELM_REPOS
         .lock()
         .unwrap()
         .get(helm_repo_name)
-        .unwrap_or_else(|| panic!("Could not find a helm repo with the name {helm_repo_name}"))
+        .ok_or(format!(
+            "Could not find a helm repo with the name {helm_repo_name}"
+        ))?
         .to_string();
 
-    let repo = helm::get_repo_index(helm_repo_url).await;
+    let repo = helm::get_repo_index(helm_repo_url).await?;
 
     match repo.entries.get(&chart_name) {
         None => {
             warn!("Could not find {operator} operator (chart name {chart_name}) in helm repo {helm_repo_name}");
-            vec![]
+            Ok(vec![])
         }
-        Some(versions) => versions
+        Some(versions) => Ok(versions
             .iter()
             .map(|entry| entry.version.clone())
             .rev()
-            .collect(),
+            .collect()),
     }
 }
 
@@ -194,7 +205,7 @@ pub fn uninstall_operators(operators: &Vec<String>) {
     }
 }
 
-fn list_installed_operators(output_type: &OutputType) {
+fn list_installed_operators(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     type Output = IndexMap<String, OutputInstalledOperatorEntry>;
 
     #[derive(Serialize)]
@@ -206,7 +217,7 @@ fn list_installed_operators(output_type: &OutputType) {
         last_updated: String,
     }
 
-    let output: Output = helm::helm_list_releases()
+    let output: Output = helm::helm_list_releases()?
         .into_iter()
         .filter(|release| {
             AVAILABLE_OPERATORS
@@ -247,6 +258,8 @@ fn list_installed_operators(output_type: &OutputType) {
             println!("{}", serde_yaml::to_string(&output).unwrap());
         }
     }
+
+    Ok(())
 }
 
 #[derive(Debug)]
@@ -266,7 +279,7 @@ impl Operator {
         }
     }
 
-    pub fn install(&self) {
+    pub fn install(&self) -> Result<(), Box<dyn Error>> {
         info!(
             "Installing {} operator{}",
             self.name,
@@ -291,7 +304,9 @@ impl Operator {
             &helm_release_name,
             self.version.as_deref(),
             None,
-        );
+        )?;
+
+        Ok(())
     }
 }
 

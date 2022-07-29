@@ -5,7 +5,7 @@ use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
-use std::{ops::Deref, process::exit, sync::Mutex};
+use std::{error::Error, ops::Deref, process::exit, sync::Mutex};
 
 lazy_static! {
     pub static ref RELEASE_FILES: Mutex<Vec<String>> = Mutex::new(vec![
@@ -79,7 +79,7 @@ pub enum CliCommandRelease {
 }
 
 impl CliCommandRelease {
-    pub async fn handle(&self) {
+    pub async fn handle(&self) -> Result<(), Box<dyn Error>> {
         match self {
             CliCommandRelease::List { output } => list_releases(output).await,
             CliCommandRelease::Describe { release, output } => {
@@ -92,11 +92,13 @@ impl CliCommandRelease {
                 kind_cluster,
                 kind_cluster_name,
             } => {
-                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
-                install_release(release, include_products, exclude_products).await;
+                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name)?;
+                install_release(release, include_products, exclude_products).await?;
             }
             CliCommandRelease::Uninstall { release } => uninstall_release(release).await,
         }
+
+        Ok(())
     }
 }
 
@@ -191,7 +193,7 @@ pub async fn install_release(
     release_name: &str,
     include_products: &[String],
     exclude_products: &[String],
-) {
+) -> Result<(), Box<dyn Error>> {
     info!("Installing release {release_name}");
     let release = get_release(release_name).await;
 
@@ -202,9 +204,11 @@ pub async fn install_release(
         if included && !excluded {
             Operator::new(product_name, Some(product.operator_version))
                 .expect("Failed to construct operator definition")
-                .install();
+                .install()?;
         }
     }
+
+    Ok(())
 }
 
 async fn uninstall_release(release_name: &str) {
