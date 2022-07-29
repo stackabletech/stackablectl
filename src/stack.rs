@@ -3,9 +3,9 @@ use cached::proc_macro::cached;
 use clap::{Parser, ValueHint};
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
-use log::{debug, error, info, warn};
+use log::{debug, info, warn};
 use serde::{Deserialize, Serialize};
-use std::{error::Error, ops::Deref, process::exit, sync::Mutex};
+use std::{error::Error, ops::Deref, sync::Mutex};
 
 lazy_static! {
     pub static ref STACK_FILES: Mutex<Vec<String>> = Mutex::new(vec![
@@ -60,7 +60,7 @@ impl CliCommandStack {
     pub async fn handle(&self) -> Result<(), Box<dyn Error>> {
         match self {
             CliCommandStack::List { output } => list_stacks(output).await,
-            CliCommandStack::Describe { stack, output } => describe_stack(stack, output).await,
+            CliCommandStack::Describe { stack, output } => describe_stack(stack, output).await?,
             CliCommandStack::Install {
                 stack,
                 kind_cluster,
@@ -136,7 +136,7 @@ async fn list_stacks(output_type: &OutputType) {
     }
 }
 
-async fn describe_stack(stack_name: &str, output_type: &OutputType) {
+async fn describe_stack(stack_name: &str, output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
     struct Output {
@@ -146,7 +146,7 @@ async fn describe_stack(stack_name: &str, output_type: &OutputType) {
         labels: Vec<String>,
     }
 
-    let stack = get_stack(stack_name).await;
+    let stack = get_stack(stack_name).await?;
     let output = Output {
         stack: stack_name.to_string(),
         description: stack.description,
@@ -168,11 +168,13 @@ async fn describe_stack(stack_name: &str, output_type: &OutputType) {
             println!("{}", serde_yaml::to_string(&output).unwrap());
         }
     }
+
+    Ok(())
 }
 
 async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
     info!("Installing stack {stack_name}");
-    let stack = get_stack(stack_name).await;
+    let stack = get_stack(stack_name).await?;
 
     release::install_release(&stack.stackable_release, &[], &[]).await;
 
@@ -242,13 +244,10 @@ async fn get_stacks() -> Stacks {
     Stacks { stacks: all_stacks }
 }
 
-async fn get_stack(stack_name: &str) -> Stack {
+async fn get_stack(stack_name: &str) -> Result<Stack, Box<dyn Error>> {
     get_stacks()
     .await
         .stacks
         .remove(stack_name) // We need to remove to take ownership
-        .unwrap_or_else(|| {
-            error!("Stack {stack_name} not found. Use `stackablectl stack list` to list the available stacks.");
-            exit(1);
-        })
+        .ok_or_else(|| format!("Stack {stack_name} not found. Use `stackablectl stack list` to list the available stacks.").into())
 }
