@@ -1,5 +1,8 @@
 use clap::Parser;
-use cli_table::{Cell, Table};
+use cli_table::{
+    format::{Border, HorizontalLine, Separator},
+    Cell, Table,
+};
 use indexmap::IndexMap;
 use k8s_openapi::api::{apps::v1::Deployment, core::v1::Secret};
 use kube::{
@@ -215,15 +218,23 @@ async fn list_services(
                     ]);
                 }
             }
-            let table = table.table().title(vec![
-                "PRODUCT".cell(),
-                "NAME".cell(),
-                "NAMESPACE".cell(),
-                "ENDPOINTS".cell(),
-                "EXTRA INFOS".cell(),
-            ]);
+            let table = table
+                .table()
+                .title(vec![
+                    "PRODUCT".cell(),
+                    "NAME".cell(),
+                    "NAMESPACE".cell(),
+                    "ENDPOINTS".cell(),
+                    "EXTRA INFOS".cell(),
+                ])
+                .border(Border::builder().build())
+                .separator(
+                    Separator::builder()
+                        .row(Some(HorizontalLine::new(' ', ' ', ' ', ' ')))
+                        .build(),
+                );
 
-            println!("{}", table.display()?);
+            print!("{}", table.display()?);
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output).unwrap());
