@@ -7,7 +7,7 @@ use kube::{
     discovery::Scope,
     Api, Client, Discovery, ResourceExt,
 };
-use log::{warn, debug};
+use log::{debug, warn};
 use serde::Deserialize;
 use std::{collections::HashMap, error::Error};
 
