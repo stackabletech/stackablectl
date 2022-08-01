@@ -148,4 +148,6 @@ stacks:
           options:
             auth:
               password: airflow
+            replica:
+              replicaCount: 1
       - plainYaml: stacks/airflow/airflow.yaml
