@@ -158,7 +158,9 @@ async fn get_node_name_ip_mapping() -> Result<HashMap<String, String>, String> {
 }
 
 pub async fn get_client() -> Result<Client, Box<dyn Error>> {
-    Ok(Client::try_default().await?)
+    Client::try_default()
+        .await
+        .map_err(|err| format! {"Failed to construct kubernetes client: {err}"}.into())
 }
 
 fn gvk_of_typemeta(type_meta: &TypeMeta) -> GroupVersionKind {
