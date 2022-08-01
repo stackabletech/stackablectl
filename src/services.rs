@@ -4,7 +4,10 @@ use cli_table::{
     Cell, Table,
 };
 use indexmap::IndexMap;
-use k8s_openapi::api::{apps::v1::Deployment, core::v1::Secret};
+use k8s_openapi::api::{
+    apps::v1::Deployment,
+    core::v1::{Secret, Service},
+};
 use kube::{
     api::{DynamicObject, GroupVersionKind, ListParams},
     core::ErrorResponse,
@@ -259,42 +262,50 @@ pub async fn get_stackable_services(
     let client = get_client().await?;
 
     for (product_name, product_gvk) in STACKABLE_PRODUCT_CRDS.iter() {
-        let api_resource = kube::core::discovery::ApiResource::from_gvk(product_gvk);
-        let api: Api<DynamicObject> = match namespaced {
-            true => Api::namespaced_with(client.clone(), &namespace, &api_resource),
-            false => Api::all_with(client.clone(), &api_resource),
+        let object_api_resource = kube::core::discovery::ApiResource::from_gvk(product_gvk);
+        let object_api: Api<DynamicObject> = match namespaced {
+            true => Api::namespaced_with(client.clone(), &namespace, &object_api_resource),
+            false => Api::all_with(client.clone(), &object_api_resource),
         };
-        let objects = api.list(&ListParams::default()).await;
+
+        let objects = object_api.list(&ListParams::default()).await;
         match objects {
             Ok(objects) => {
                 let mut installed_products = Vec::new();
                 for object in objects {
                     let object_name = object.name();
-                    let object_namespace = object.namespace();
+                    let object_namespace = match object.namespace() {
+                        Some(namespace) => namespace,
+                        // If the custom resource does not have a namespace set it can't expose a service
+                        None => continue,
+                    };
 
-                    let service_names = get_service_names(&object_name, product_name);
+                    let service_api: Api<Service> =
+                        Api::namespaced(client.clone(), object_namespace.as_str());
+                    let service_list_params = ListParams::default()
+                        .labels(format!("app.kubernetes.io/instance={product_name}").as_str())
+                        .labels(format!("app.kubernetes.io/name={object_name}").as_str());
+                    let services = service_api.list(&service_list_params).await?;
+
                     let extra_infos =
                         get_extra_infos(product_name, &object, redact_credentials, show_versions)
                             .await?;
 
                     let mut endpoints = IndexMap::new();
-                    for service_name in service_names {
+                    for service in services {
                         let service_endpoint_urls =
-                            get_service_endpoint_urls(&service_name, &object_name, object_namespace
-                                .as_ref()
-                                .expect("Failed to get the namespace of object {object_name} besides it having an service")
-                            , client.clone())
-                                .await;
+                            get_service_endpoint_urls(&service, &object_name, client.clone()).await;
                         match service_endpoint_urls {
                             Ok(service_endpoint_urls) => endpoints.extend(service_endpoint_urls),
                             Err(err) => warn!(
-                                "Failed to get endpoint_urls of service {service_name}: {err}"
+                                "Failed to get endpoint_urls of service {service_name}: {err}",
+                                service_name = service.name(),
                             ),
                         }
                     }
                     let product = InstalledProduct {
                         name: object_name,
-                        namespace: object_namespace,
+                        namespace: Some(object_namespace),
                         endpoints,
                         extra_infos,
                     };
@@ -306,38 +317,12 @@ pub async fn get_stackable_services(
                 debug!("ProductCRD for product {product_name} not installed");
             }
             Err(err) => {
-                return Err(Box::new(err));
+                return Err(err.into());
             }
         }
     }
 
     Ok(result)
-}
-
-pub fn get_service_names(product_name: &str, product: &str) -> Vec<String> {
-    match product {
-        "airflow" => vec![format!("{product_name}-webserver")],
-        "druid" => vec![
-            format!("{product_name}-router"),
-            format!("{product_name}-coordinator"),
-        ],
-        "hbase" => vec![product_name.to_string()],
-        "hdfs" => vec![
-            format!("{product_name}-datanode-default-0"),
-            format!("{product_name}-namenode-default-0"),
-            format!("{product_name}-journalnode-default-0"),
-        ],
-        "hive" => vec![product_name.to_string()],
-        "nifi" => vec![product_name.to_string()],
-        "opa" => vec![product_name.to_string()],
-        "superset" => vec![format!("{product_name}-external")],
-        "trino" => vec![format!("{product_name}-coordinator")],
-        "zookeeper" => vec![product_name.to_string()],
-        _ => {
-            warn!("Cannot calculated exposed services names as product {product} is not known");
-            vec![]
-        }
-    }
 }
 
 pub async fn get_extra_infos(
@@ -430,6 +415,7 @@ async fn get_minio_services(
             "MinIO deployment {deployment_name} had no namespace"
         ))?;
 
+        let service_api = Api::namespaced(client.clone(), &deployment_namespace);
         let service_names = vec![
             deployment_name.clone(),
             format!("{deployment_name}-console"),
@@ -437,17 +423,10 @@ async fn get_minio_services(
 
         let mut endpoints = IndexMap::new();
         for service_name in service_names {
-            let service_endpoint_urls = get_service_endpoint_urls(
-                &service_name,
-                &deployment_name,
-                &deployment_namespace,
-                client.clone(),
-            )
-            .await;
-            match service_endpoint_urls {
-                Ok(service_endpoint_urls) => endpoints.extend(service_endpoint_urls),
-                Err(err) => warn!("Failed to get endpoint_urls of service {service_name}: {err}"),
-            }
+            let service = service_api.get(&service_name).await?;
+            let service_endpoint_urls =
+                get_service_endpoint_urls(&service, &deployment_name, client.clone()).await?;
+            endpoints.extend(service_endpoint_urls);
         }
 
         let mut extra_infos = vec!["Third party service".to_string()];

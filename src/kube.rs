@@ -7,7 +7,7 @@ use kube::{
     discovery::Scope,
     Api, Client, Discovery, ResourceExt,
 };
-use log::warn;
+use log::{warn, debug};
 use serde::Deserialize;
 use std::{collections::HashMap, error::Error};
 
@@ -42,16 +42,17 @@ pub async fn deploy_manifests(yaml: &str) -> Result<(), Box<dyn Error>> {
 }
 
 pub async fn get_service_endpoint_urls(
-    service_name: &str,
-    object_name: &str,
-    namespace: &str,
+    service: &Service,
+    referenced_object_name: &str,
     client: Client,
 ) -> Result<IndexMap<String, String>, Box<dyn Error>> {
-    let service_api: Api<Service> = Api::namespaced(client.clone(), namespace);
-    let service = service_api.get(service_name).await?;
+    let namespace = service
+        .namespace()
+        .ok_or(format!("Service {service:?} must have a namespace"))?;
+    let service_name = service.name();
 
-    let endpoints_api: Api<Endpoints> = Api::namespaced(client.clone(), namespace);
-    let endpoints = endpoints_api.get(service_name).await?;
+    let endpoints_api: Api<Endpoints> = Api::namespaced(client.clone(), &namespace);
+    let endpoints = endpoints_api.get(&service_name).await?;
 
     let node_name = match &endpoints.subsets {
         Some(subsets) if subsets.len() == 1 => match &subsets[0].addresses {
@@ -82,17 +83,22 @@ pub async fn get_service_endpoint_urls(
     let mut result = IndexMap::new();
     for service_port in service
         .spec
+        .as_ref()
         .ok_or(format!("Service {service_name} had no spec"))?
         .ports
-        .unwrap_or_default()
+        .iter()
+        .flatten()
     {
         match service_port.node_port {
             Some(node_port) => {
                 let endpoint_name = service_name
-                    .trim_start_matches(object_name)
+                    .trim_start_matches(referenced_object_name)
                     .trim_start_matches('-');
 
-                let port_name = service_port.name.unwrap_or_else(|| node_port.to_string());
+                let port_name = service_port
+                    .name
+                    .clone()
+                    .unwrap_or_else(|| service_port.port.to_string());
                 let endpoint_name = if endpoint_name.is_empty() {
                     port_name.clone()
                 } else {
@@ -109,7 +115,7 @@ pub async fn get_service_endpoint_urls(
 
                 result.insert(endpoint_name, endpoint);
             }
-            None => warn!("Could not get endpoint_url as service {service_name} has no nodePort"),
+            None => debug!("Could not get endpoint_url as service {service_name} has no nodePort"),
         }
     }
 
