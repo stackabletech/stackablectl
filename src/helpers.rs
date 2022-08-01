@@ -36,7 +36,8 @@ pub async fn read_from_url_or_file(url_or_file: &str) -> Result<String, String> 
     }
 
     match reqwest::get(url_or_file).await {
-        Ok(response) => Ok(response.text().await.unwrap()),
+        Ok(response) => response.text().await
+            .map_err(|err| format!("Failed to read from the response of the file or a URL with the name \"{url_or_file}\": {err}")),
         Err(err) => Err(format!(
             "Couldn't read a file or a URL with the name \"{url_or_file}\": {err}"
         )),
@@ -93,7 +94,11 @@ pub fn execute_command_with_stdin(mut args: Vec<&str>, stdin: &str) -> Result<()
         .spawn()
         .map_err(|err| format!("Failed to spawn the command \"{args_string}\": {err}"))?;
 
-    child.stdin.as_ref().unwrap().write_all(stdin.as_bytes())?;
+    child
+        .stdin
+        .as_ref()
+        .ok_or(format!("Failed to get stdin of command \"{args_string}\""))?
+        .write_all(stdin.as_bytes())?;
 
     if child.wait_with_output()?.status.success() {
         Ok(())

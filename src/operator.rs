@@ -123,10 +123,10 @@ async fn list_operators(output_type: &OutputType) -> Result<(), Box<dyn Error>> 
             }
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output).unwrap());
+            println!("{}", serde_json::to_string_pretty(&output)?);
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output).unwrap());
+            println!("{}", serde_yaml::to_string(&output)?);
         }
     }
 
@@ -157,10 +157,10 @@ async fn describe_operator(operator: &str, output_type: &OutputType) -> Result<(
             println!("Dev versions:       {}", output.dev_versions.join(", "));
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output).unwrap());
+            println!("{}", serde_json::to_string_pretty(&output)?);
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output).unwrap());
+            println!("{}", serde_yaml::to_string(&output)?);
         }
     }
 
@@ -174,8 +174,7 @@ async fn get_versions_from_repo(
     let chart_name = format!("{operator}-operator");
 
     let helm_repo_url = HELM_REPOS
-        .lock()
-        .unwrap()
+        .lock()?
         .get(helm_repo_name)
         .ok_or(format!(
             "Could not find a helm repo with the name {helm_repo_name}"
@@ -252,10 +251,10 @@ fn list_installed_operators(output_type: &OutputType) -> Result<(), Box<dyn Erro
             }
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output).unwrap());
+            println!("{}", serde_json::to_string_pretty(&output)?);
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output).unwrap());
+            println!("{}", serde_yaml::to_string(&output)?);
         }
     }
 

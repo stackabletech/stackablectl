@@ -47,7 +47,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .init();
 
     let namespace = &args.namespace;
-    *(NAMESPACE.lock().unwrap()) = namespace.to_string();
+    *(NAMESPACE.lock()?) = namespace.to_string();
 
     helm::handle_common_cli_args(&args);
     release::handle_common_cli_args(&args);

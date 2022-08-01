@@ -81,9 +81,9 @@ pub enum CliCommandRelease {
 impl CliCommandRelease {
     pub async fn handle(&self) -> Result<(), Box<dyn Error>> {
         match self {
-            CliCommandRelease::List { output } => list_releases(output).await,
+            CliCommandRelease::List { output } => list_releases(output).await?,
             CliCommandRelease::Describe { release, output } => {
-                describe_release(release, output).await
+                describe_release(release, output).await?
             }
             CliCommandRelease::Install {
                 release,
@@ -127,7 +127,7 @@ struct ReleaseProduct {
     operator_version: String,
 }
 
-async fn list_releases(output_type: &OutputType) {
+async fn list_releases(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     let output = get_releases().await;
     match output_type {
         OutputType::Text => {
@@ -140,15 +140,20 @@ async fn list_releases(output_type: &OutputType) {
             }
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output).unwrap());
+            println!("{}", serde_json::to_string_pretty(&output)?);
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output).unwrap());
+            println!("{}", serde_yaml::to_string(&output)?);
         }
     }
+
+    Ok(())
 }
 
-async fn describe_release(release_name: &str, output_type: &OutputType) {
+async fn describe_release(
+    release_name: &str,
+    output_type: &OutputType,
+) -> Result<(), Box<dyn Error>> {
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
     struct Output {
@@ -179,12 +184,14 @@ async fn describe_release(release_name: &str, output_type: &OutputType) {
             }
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output).unwrap());
+            println!("{}", serde_json::to_string_pretty(&output)?);
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output).unwrap());
+            println!("{}", serde_yaml::to_string(&output)?);
         }
     }
+
+    Ok(())
 }
 
 /// If include_operators is an non-empty list only the whitelisted product operators will be installed.

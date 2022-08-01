@@ -12,12 +12,12 @@ use serde::Deserialize;
 use std::{collections::HashMap, error::Error};
 
 pub async fn deploy_manifests(yaml: &str) -> Result<(), Box<dyn Error>> {
-    let namespace = NAMESPACE.lock().unwrap().clone();
+    let namespace = NAMESPACE.lock()?.clone();
     let client = get_client().await?;
     let discovery = Discovery::new(client.clone()).run().await?;
 
     for manifest in serde_yaml::Deserializer::from_str(yaml) {
-        let mut object = DynamicObject::deserialize(manifest).unwrap();
+        let mut object = DynamicObject::deserialize(manifest)?;
 
         let gvk = gvk_of_typemeta(object.types.as_ref().expect("Failed to get type of object"));
         let (resource, capabilities) = discovery.resolve_gvk(&gvk).expect("Failed to resolve gvk");
@@ -80,7 +80,12 @@ pub async fn get_service_endpoint_urls(
     let node_ip = get_node_ip(node_name).await?;
 
     let mut result = IndexMap::new();
-    for service_port in service.spec.unwrap().ports.unwrap_or_default() {
+    for service_port in service
+        .spec
+        .ok_or(format!("Service {service_name} had no spec"))?
+        .ports
+        .unwrap_or_default()
+    {
         match service_port.node_port {
             Some(node_port) => {
                 let endpoint_name = service_name

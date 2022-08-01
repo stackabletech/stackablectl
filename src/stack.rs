@@ -59,7 +59,7 @@ pub enum CliCommandStack {
 impl CliCommandStack {
     pub async fn handle(&self) -> Result<(), Box<dyn Error>> {
         match self {
-            CliCommandStack::List { output } => list_stacks(output).await,
+            CliCommandStack::List { output } => list_stacks(output).await?,
             CliCommandStack::Describe { stack, output } => describe_stack(stack, output).await?,
             CliCommandStack::Install {
                 stack,
@@ -115,7 +115,7 @@ struct HelmChartRepo {
     url: String,
 }
 
-async fn list_stacks(output_type: &OutputType) {
+async fn list_stacks(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     let output = get_stacks().await;
     match output_type {
         OutputType::Text => {
@@ -128,12 +128,14 @@ async fn list_stacks(output_type: &OutputType) {
             }
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output).unwrap());
+            println!("{}", serde_json::to_string_pretty(&output)?);
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output).unwrap());
+            println!("{}", serde_yaml::to_string(&output)?);
         }
     }
+
+    Ok(())
 }
 
 async fn describe_stack(stack_name: &str, output_type: &OutputType) -> Result<(), Box<dyn Error>> {
@@ -162,10 +164,10 @@ async fn describe_stack(stack_name: &str, output_type: &OutputType) -> Result<()
             println!("Labels:             {}", output.labels.join(", "));
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output).unwrap());
+            println!("{}", serde_json::to_string_pretty(&output)?);
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output).unwrap());
+            println!("{}", serde_yaml::to_string(&output)?);
         }
     }
 
@@ -189,12 +191,9 @@ async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
                 options,
             } => {
                 debug!("Installing helm chart {name} as {release_name}");
-                HELM_REPOS
-                    .lock()
-                    .unwrap()
-                    .insert(repo.name.clone(), repo.url);
+                HELM_REPOS.lock()?.insert(repo.name.clone(), repo.url);
 
-                let values_yaml = serde_yaml::to_string(&options).unwrap();
+                let values_yaml = serde_yaml::to_string(&options)?;
                 helm::install_helm_release_from_repo(
                     &release_name,
                     &release_name,

@@ -246,10 +246,10 @@ async fn list_services(
             print!("{}", table.display()?);
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output).unwrap());
+            println!("{}", serde_json::to_string_pretty(&output)?);
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output).unwrap());
+            println!("{}", serde_yaml::to_string(&output)?);
         }
     }
 
@@ -262,7 +262,7 @@ pub async fn get_stackable_services(
     show_versions: bool,
 ) -> Result<IndexMap<String, Vec<InstalledProduct>>, Box<dyn Error>> {
     let mut result = IndexMap::new();
-    let namespace = NAMESPACE.lock().unwrap().clone();
+    let namespace = NAMESPACE.lock()?.clone();
 
     let client = get_client().await?;
 
@@ -361,7 +361,12 @@ pub async fn get_extra_infos(
             if let Some(secret_name) = product_crd.data["spec"]["credentialsSecret"].as_str() {
                 let credentials = get_credentials_from_secret(
                     secret_name,
-                    product_crd.namespace().unwrap().as_str(),
+                    product_crd
+                        .namespace()
+                        .ok_or(format!(
+                            "The custom resource {product_crd:?} had no namespace set"
+                        ))?
+                        .as_str(),
                     "adminUser.username",
                     "adminUser.password",
                     redact_credentials,
@@ -396,15 +401,17 @@ async fn get_credentials_from_secret(
     let secret_api: Api<Secret> = Api::namespaced(client, secret_namespace);
 
     let secret = secret_api.get(secret_name).await?;
-    let secret_data = secret.data.unwrap();
+    let secret_data = secret
+        .data
+        .ok_or(format!("Secret {secret_name} had no data"))?;
 
     match (secret_data.get(username_key), secret_data.get(password_key)) {
         (Some(username), Some(password)) => {
-            let username = String::from_utf8(username.0.clone()).unwrap();
+            let username = String::from_utf8(username.0.clone())?;
             let password = if redact_credentials {
                 REDACTED_PASSWORD.to_string()
             } else {
-                String::from_utf8(password.0.clone()).unwrap()
+                String::from_utf8(password.0.clone())?
             };
             Ok(Some((username, password)))
         }
@@ -418,7 +425,7 @@ async fn get_minio_services(
 ) -> Result<Vec<InstalledProduct>, Box<dyn Error>> {
     let client = get_client().await?;
     let deployment_api: Api<Deployment> = match namespaced {
-        true => Api::namespaced(client.clone(), NAMESPACE.lock().unwrap().as_str()),
+        true => Api::namespaced(client.clone(), NAMESPACE.lock()?.as_str()),
         false => Api::all(client.clone()),
     };
     let list_params = ListParams::default().labels("app=minio");
@@ -427,7 +434,9 @@ async fn get_minio_services(
     let mut result = Vec::new();
     for minio_deployment in minio_deployments {
         let deployment_name = minio_deployment.name();
-        let deployment_namespace = minio_deployment.namespace().unwrap();
+        let deployment_namespace = minio_deployment.namespace().ok_or(format!(
+            "MinIO deployment {deployment_name} had no namespace"
+        ))?;
 
         let service_names = vec![
             deployment_name.clone(),

@@ -92,7 +92,7 @@ pub fn install_helm_release_from_repo(
         }
     }
 
-    match HELM_REPOS.lock().unwrap().get(repo_name) {
+    match HELM_REPOS.lock()?.get(repo_name) {
         None => {
             error!("I don't know about the helm repo {repo_name}");
             exit(1);
