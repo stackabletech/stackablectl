@@ -33,7 +33,7 @@ pub enum CliCommandOperator {
         #[clap(multiple_occurrences(true), required = true, value_hint = ValueHint::Other)]
         operators: Vec<Operator>,
 
-        /// If specified a local Kubernetes cluster consisting of 4 nodes for testing purposes will be created.
+        /// If specified, a local Kubernetes cluster consisting of 4 nodes for testing purposes will be created.
         /// Kind is a tool to spin up a local Kubernetes cluster running on docker on your machine.
         /// You need to have `docker` and `kind` installed.
         /// Have a look at our documentation on how to install `kind` at <https://docs.stackable.tech/home/getting_started.html#_installing_kubernetes_using_kind>
