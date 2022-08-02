@@ -1,6 +1,9 @@
 use crate::arguments::CliCommand;
 use arguments::CliArgs;
 use clap::{IntoApp, Parser};
+use lazy_static::lazy_static;
+use log::error;
+use std::{error::Error, process::exit, sync::Mutex};
 
 mod arguments;
 mod helm;
@@ -9,6 +12,7 @@ mod kind;
 mod kube;
 mod operator;
 mod release;
+mod services;
 mod stack;
 
 const AVAILABLE_OPERATORS: &[&str] = &[
@@ -27,29 +31,44 @@ const AVAILABLE_OPERATORS: &[&str] = &[
     "superset",
     "trino",
     "zookeeper",
-    // Deprecated
-    "regorule",
-    "monitoring",
 ];
 
-fn main() {
+lazy_static! {
+    pub static ref NAMESPACE: Mutex<String> = Mutex::new(String::new());
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
     let args = CliArgs::parse();
     env_logger::builder()
         .format_timestamp(None)
         .format_target(false)
         .filter_level(args.log_level.into())
         .init();
+
+    let namespace = &args.namespace;
+    *(NAMESPACE.lock()?) = namespace.to_string();
+
     helm::handle_common_cli_args(&args);
     release::handle_common_cli_args(&args);
     stack::handle_common_cli_args(&args);
 
-    match &args.cmd {
-        CliCommand::Operator(command) => command.handle(),
-        CliCommand::Release(command) => command.handle(),
-        CliCommand::Stack(command) => command.handle(),
+    let result = match &args.cmd {
+        CliCommand::Operator(command) => command.handle().await,
+        CliCommand::Release(command) => command.handle().await,
+        CliCommand::Stack(command) => command.handle().await,
+        CliCommand::Services(command) => command.handle().await,
         CliCommand::Completion(command) => {
             let mut cmd = CliArgs::command();
             arguments::print_completions(command.shell, &mut cmd);
+            Ok(())
         }
+    };
+
+    if let Err(err) = &result {
+        error!("{err}");
+        exit(-1);
     }
+
+    result
 }

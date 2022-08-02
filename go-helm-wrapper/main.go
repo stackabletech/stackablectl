@@ -19,7 +19,7 @@ func main() {
 }
 
 //export go_install_helm_release
-func go_install_helm_release(releaseName string, chartName string, chartVersion string, namespace string, suppressOutput bool) {
+func go_install_helm_release(releaseName string, chartName string, chartVersion string, valuesYaml string, namespace string, suppressOutput bool) {
     helmClient := getHelmClient(namespace, suppressOutput)
 
     timeout, _ := time.ParseDuration("10m")
@@ -27,6 +27,7 @@ func go_install_helm_release(releaseName string, chartName string, chartVersion 
         ReleaseName: releaseName,
         ChartName:   chartName,
         Version:     chartVersion,
+        ValuesYaml:  valuesYaml,
         Namespace:   namespace,
         UpgradeCRDs: true,
         Wait:        true,
