@@ -135,12 +135,12 @@ async fn get_node_ip(node_name: &str) -> Result<String, Box<dyn Error>> {
 async fn get_node_name_ip_mapping() -> Result<HashMap<String, String>, String> {
     let client = get_client()
         .await
-        .map_err(|err| format!("Failed to create kubernetes client: {err}"))?;
+        .map_err(|err| format!("Failed to create Kubernetes client: {err}"))?;
     let node_api: Api<Node> = Api::all(client);
     let nodes = node_api
         .list(&ListParams::default())
         .await
-        .map_err(|err| format!("Failed to list kubernetes nodes: {err}"))?;
+        .map_err(|err| format!("Failed to list Kubernetes nodes: {err}"))?;
 
     let mut result = HashMap::new();
     for node in nodes {
@@ -166,7 +166,7 @@ async fn get_node_name_ip_mapping() -> Result<HashMap<String, String>, String> {
 pub async fn get_client() -> Result<Client, Box<dyn Error>> {
     Client::try_default()
         .await
-        .map_err(|err| format! {"Failed to construct kubernetes client: {err}"}.into())
+        .map_err(|err| format! {"Failed to construct Kubernetes client: {err}"}.into())
 }
 
 fn gvk_of_typemeta(type_meta: &TypeMeta) -> GroupVersionKind {
