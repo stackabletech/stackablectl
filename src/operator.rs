@@ -114,7 +114,7 @@ async fn list_operators(output_type: &OutputType) -> Result<(), Box<dyn Error>> 
     match output_type {
         OutputType::Text => {
             println!("OPERATOR           STABLE VERSIONS");
-            for (operator, operator_entry) in output.iter() {
+            for (operator, operator_entry) in output {
                 println!(
                     "{:18} {}",
                     operator,
@@ -239,7 +239,7 @@ fn list_installed_operators(output_type: &OutputType) -> Result<(), Box<dyn Erro
     match output_type {
         OutputType::Text => {
             println!("OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED");
-            for (operator, operator_entry) in output.iter() {
+            for (operator, operator_entry) in output {
                 println!(
                     "{:21} {:15} {:30} {:16} {}",
                     operator,

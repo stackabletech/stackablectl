@@ -120,7 +120,7 @@ async fn list_stacks(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     match output_type {
         OutputType::Text => {
             println!("STACK                               STACKABLE RELEASE  DESCRIPTION");
-            for (stack_name, stack) in output.stacks.iter() {
+            for (stack_name, stack) in output.stacks {
                 println!(
                     "{:35} {:18} {}",
                     stack_name, stack.stackable_release, stack.description,

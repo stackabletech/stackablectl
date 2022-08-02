@@ -193,7 +193,7 @@ async fn list_services(
                 .max()
                 .unwrap_or_default();
 
-            for (product_name, installed_products) in output.iter() {
+            for (product_name, installed_products) in output {
                 for installed_product in installed_products {
                     let mut endpoints = vec![];
                     for endpoint in &installed_product.endpoints {
@@ -210,7 +210,7 @@ async fn list_services(
                         .join("\n");
 
                     table.push(vec![
-                        product_name.cell(),
+                        (&product_name).cell(),
                         installed_product.name.as_str().cell(),
                         installed_product
                             .namespace

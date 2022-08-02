@@ -132,7 +132,7 @@ async fn list_releases(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     match output_type {
         OutputType::Text => {
             println!("RELEASE            RELEASE DATE   DESCRIPTION");
-            for (release_name, release_entry) in output.releases.iter() {
+            for (release_name, release_entry) in output.releases {
                 println!(
                     "{:18} {:14} {}",
                     release_name, release_entry.release_date, release_entry.description,
@@ -179,7 +179,7 @@ async fn describe_release(
             println!("Included products:");
             println!();
             println!("PRODUCT             OPERATOR VERSION");
-            for (product_name, product) in output.products.iter() {
+            for (product_name, product) in output.products {
                 println!("{:19} {}", product_name, product.operator_version);
             }
         }
@@ -204,7 +204,7 @@ pub async fn install_release(
     info!("Installing release {release_name}");
     let release = get_release(release_name).await;
 
-    for (product_name, product) in release.products.into_iter() {
+    for (product_name, product) in release.products {
         let included = include_products.is_empty() || include_products.contains(&product_name);
         let excluded = exclude_products.contains(&product_name);
 
