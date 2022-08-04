@@ -283,8 +283,8 @@ pub async fn get_stackable_services(
                     let service_api: Api<Service> =
                         Api::namespaced(client.clone(), object_namespace.as_str());
                     let service_list_params = ListParams::default()
-                        .labels(format!("app.kubernetes.io/instance={product_name}").as_str())
-                        .labels(format!("app.kubernetes.io/name={object_name}").as_str());
+                        .labels(format!("app.kubernetes.io/name={product_name}").as_str())
+                        .labels(format!("app.kubernetes.io/instance={object_name}").as_str());
                     let services = service_api.list(&service_list_params).await?;
 
                     let extra_infos =
