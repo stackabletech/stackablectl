@@ -101,7 +101,7 @@ As you can see, the three operators where installed in the requested version.
 Remember: If you want to install a recommended and tested set of operator versions, have a look at the xref:commands/release.adoc[] command.
 
 == List installed operators
-After installing some operators, you can list which operators are installed in you Kubernetes cluster.
+After installing some operators, you can list which operators are installed in your Kubernetes cluster.
 
 [source,console]
 ----
