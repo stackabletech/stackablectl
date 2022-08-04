@@ -39,7 +39,7 @@ $ stackablectl --helm-repo-stackable-stable https://my.corp/stackable/repository
 
 === Mirror releases/stacks/demos files
 You need to mirror the URL to either a URL or a file on disk.
-You can then specify the mirrored file to be included via `--additional-release-files`, `--additional-stack-files`, or `--additional-demo-files`, e.g.
+You can then specify the mirrored file to be included via `--additional-releases-file`, `--additional-stacks-file`, or `--additional-demos-file`, e.g.
 
 [source,console]
 ----
