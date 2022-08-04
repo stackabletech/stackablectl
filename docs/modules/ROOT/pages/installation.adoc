@@ -83,7 +83,7 @@ To build `stackablectl` from source you need to have the following tools install
 * Make
 ** As we use the vendored feature of the https://crates.io/crates/openssl[openssl crate] Make is needed to compile openssl from source
 
-If you have the required tools available you need to clone the `stackablectl` repo https://github.com/stackabletech/stackablectl and invoke the build with
+If you have the required tools available, you need to clone the `stackablectl` repo https://github.com/stackabletech/stackablectl and invoke the build with
 
 [source,console]
 ----
