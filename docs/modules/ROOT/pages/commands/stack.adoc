@@ -13,7 +13,7 @@ druid-superset-s3                   22.06              Stack containing MinIO, D
 airflow                             22.06              Stack containing Airflow scheduling platform
 ----
 
-Detailed information of a stack can queried with the `describe` command:
+Detailed information of a stack can be queried with the `describe` command:
 
 [source,console]
 ----
