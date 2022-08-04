@@ -45,5 +45,5 @@ It contains
 
 Demos are installed with the command `stackablectl demo`.
 A demo needs a stack to run on.
-To achieve this a demo has a dependency on a stack which get's automatically installed when a demo is installed.
+To achieve this a demo has a dependency on a stack which gets automatically installed when a demo is installed.
 The stack in turn will install the needed Stackable release.
