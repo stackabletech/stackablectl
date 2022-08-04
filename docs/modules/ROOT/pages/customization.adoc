@@ -16,7 +16,7 @@ First you must create a `mycorp-demos.yaml` containing demos according to the fo
 
 After creating the `mycorp-demos.yaml` file it can be added to the available demos in `stackablectl` via the CLI argument `--additional-demos-file mycorp-demos.yaml`.
 The `<ADDITIONAL_DEMO_FILES>` can be either a path to a file on the local filesystem or a URL.
-By using a URL the demos file can be put into to a central Git repository and referenced by all teams or clients.
+By using a URL the demos file can be put into a central Git repository and referenced by all teams or clients.
 Multiple `--additional-demo-files` flags can be specified to include multiple demo files.
 Every additional demo will we added to the already existing demos in `stackablectl`, so all the available demo files will be merged.
 
