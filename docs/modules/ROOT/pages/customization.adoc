@@ -34,7 +34,7 @@ You can then add it to `stackablectl` with the flag `--additional-stacks-file`.
 
 == Add a new release
 === Benefits
-If advanced users of the Stackable Platform want to define their own internal Release within their company they can easily add their own release.
+If advanced users of the Stackable Platform want to define their own internal Release within their company, they can easily add their own release.
 This has the following benefits:
 
 - Same operator versions across the whole company. This produces more uniform environments and makes debugging and helping other teams easier.
