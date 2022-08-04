@@ -162,7 +162,7 @@ async fn get_node_name_ip_mapping() -> Result<HashMap<String, String>, String> {
             .min_by_key(|address| &address.type_) // ExternalIP (which we want) is lower than InternalIP
             .map(|address| address.address.clone())
             .ok_or(format!(
-                "Could not find a InternalIP or ExternalIP for node {node_name}"
+                "Could not find an ExternalIP or InternalIP for node {node_name}"
             ))?;
         result.insert(node_name, preferred_node_ip);
     }
