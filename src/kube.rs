@@ -19,15 +19,12 @@ pub async fn deploy_manifests(yaml: &str) -> Result<(), Box<dyn Error>> {
     for manifest in serde_yaml::Deserializer::from_str(yaml) {
         let mut object = DynamicObject::deserialize(manifest)?;
 
-        let gvk = gvk_of_typemeta(
-            object
-                .types
-                .as_ref()
-                .ok_or(format!("Failed to deploy manifest because type of object {object:?} is not set"))?,
-        );
-        let (resource, capabilities) = discovery
-            .resolve_gvk(&gvk)
-            .ok_or(format!("Failed to deploy manifest because the gvk {gvk:?} can not be resolved"))?;
+        let gvk = gvk_of_typemeta(object.types.as_ref().ok_or(format!(
+            "Failed to deploy manifest because type of object {object:?} is not set"
+        ))?);
+        let (resource, capabilities) = discovery.resolve_gvk(&gvk).ok_or(format!(
+            "Failed to deploy manifest because the gvk {gvk:?} can not be resolved"
+        ))?;
 
         let api: Api<DynamicObject> = match capabilities.scope {
             Scope::Cluster => {
@@ -63,20 +60,24 @@ pub async fn get_service_endpoint_urls(
 
     let node_name = match &endpoints.subsets {
         Some(subsets) if subsets.len() == 1 => match &subsets[0].addresses {
-            Some(addresses) => match &addresses[0].node_name {
+            Some(addresses) if !addresses.is_empty() => match &addresses[0].node_name {
                 Some(node_name) => node_name,
                 None => {
                     warn!("Could not determine the node the endpoint {service_name} is running on because the address of the subset didn't had a node name");
                     return Ok(IndexMap::new());
                 }
             },
+            Some(_) => {
+                warn!("Could not determine the node the endpoint {service_name} is running on because the subset had no addresses");
+                return Ok(IndexMap::new());
+            }
             None => {
                 warn!("Could not determine the node the endpoint {service_name} is running on because subset had no addresses. Is the service {service_name} up and running?");
                 return Ok(IndexMap::new());
             }
         },
-        Some(_) => {
-            warn!("Could not determine the node the endpoint {service_name} is running on because endpoints consists of none or multiple subsets");
+        Some(subsets) => {
+            warn!("Could not determine the node the endpoint {service_name} is running on because endpoints consists of {num_subsets} subsets", num_subsets=subsets.len());
             return Ok(IndexMap::new());
         }
         None => {
