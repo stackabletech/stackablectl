@@ -6,7 +6,7 @@ Operators manage the individual data products the Stackable Data Platform consis
 This command manages individual operators.
 It is mainly intended for persons already having experience or working on the Stackable Data Platform.
 If you just want an easy way to get started or don't know which products and/or which version to install it is recommended to use the xref:commands/release.adoc[] command.
-This command will install a bundle of operators from an official Stackable Release.
+This command will install a bundle of operators from an official Stackable release.
 
 == Browse available operators
 To list the operators that are part of the Stackable Data Platform as well as their stable versions run the following command:

@@ -23,8 +23,8 @@ Every additional demo will we added to the already existing demos in `stackablec
 == Add a new stack
 === Benefits
 If your company or clients have multiple similar setups or reference architectures, it could make sense to make them easily available to all employees or clients.
-In the custom defined Stack all Product versions are pinned as well, so you can easily spin up a Stack containing the exact same versions as your production setup.
-You can use your defined Stack to give it to colleagues or potential customers to show the overall architecture of the Data platform you're going to build.
+In the custom defined stack all product versions are pinned as well, so you can easily spin up a stack containing the exact same versions as your production setup.
+You can use your defined stack to give it to colleagues or potential customers to show the overall architecture of the Data Platform you're going to build.
 
 === Adding a new stack
 For the overall procedure have a look at <<_adding_a_new_demo>> on how to add a new stack.
@@ -34,7 +34,7 @@ You can then add it to `stackablectl` with the flag `--additional-stacks-file`.
 
 == Add a new release
 === Benefits
-If advanced users of the Stackable Platform want to define their own internal Release within their company, they can easily add their own release.
+If advanced users of the Stackable Platform want to define their own internal release within their company, they can easily add their own release.
 This has the following benefits:
 
 - Same operator versions across the whole company. This produces more uniform environments and makes debugging and helping other teams easier.
