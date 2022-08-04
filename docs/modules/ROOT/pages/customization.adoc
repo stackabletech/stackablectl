@@ -22,7 +22,7 @@ Every additional demo will we added to the already existing demos in `stackablec
 
 == Add a new stack
 === Benefits
-If your company or clients have multiple similar setups or reference architectures it could make sense to make them easily available to all employees or clients.
+If your company or clients have multiple similar setups or reference architectures, it could make sense to make them easily available to all employees or clients.
 In the custom defined Stack all Product versions are pinned as well, so you can easily spin up a Stack containing the exact same versions as your production setup.
 You can use your defined Stack to give it to colleagues or potential customers to show the overall architecture of the Data platform you're going to build.
 
