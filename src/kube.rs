@@ -19,8 +19,15 @@ pub async fn deploy_manifests(yaml: &str) -> Result<(), Box<dyn Error>> {
     for manifest in serde_yaml::Deserializer::from_str(yaml) {
         let mut object = DynamicObject::deserialize(manifest)?;
 
-        let gvk = gvk_of_typemeta(object.types.as_ref().expect("Failed to get type of object"));
-        let (resource, capabilities) = discovery.resolve_gvk(&gvk).expect("Failed to resolve gvk");
+        let gvk = gvk_of_typemeta(
+            object
+                .types
+                .as_ref()
+                .ok_or(format!("Failed to deploy manifest because type of object {object:?} is not set"))?,
+        );
+        let (resource, capabilities) = discovery
+            .resolve_gvk(&gvk)
+            .ok_or(format!("Failed to deploy manifest because the gvk {gvk:?} can not be resolved"))?;
 
         let api: Api<DynamicObject> = match capabilities.scope {
             Scope::Cluster => {
