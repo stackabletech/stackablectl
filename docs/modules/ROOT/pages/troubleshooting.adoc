@@ -43,7 +43,7 @@ You can then specify the mirrored file to be included via `--additional-releases
 
 [source,console]
 ----
-$ stackablectl --additional-release-files=/home/sbernauer/Downloads/releases.yaml release list
+$ stackablectl --additional-releases-file=/home/sbernauer/Downloads/releases.yaml release list
 ----
 
 == `panic: open /tmp/.helmcache/stackable-stable-index.yaml: permission denied`
