@@ -92,7 +92,7 @@ Have a nice day! 👋
 [INFO ] Installed stack druid-superset-s3
 ----
 
-After installing the stack, we can access the running services using the xref:commands/operator.adoc[] command:
+After installing the stack, we can access the running services using the xref:commands/services.adoc[] command:
 
 [source,console]
 ----
