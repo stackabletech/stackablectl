@@ -76,7 +76,7 @@ pub async fn get_service_endpoint_urls(
             }
         },
         Some(_) => {
-            warn!("Could not determine the node the endpoint {service_name} is running on because endpoints consists of multiple subsets");
+            warn!("Could not determine the node the endpoint {service_name} is running on because endpoints consists of none or multiple subsets");
             return Ok(IndexMap::new());
         }
         None => {
