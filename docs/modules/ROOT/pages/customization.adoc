@@ -43,4 +43,4 @@ This has the following benefits:
 === Adding a new release
 For the overall procedure have a look at <<_adding_a_new_demo>> on how to add a new release.
 For a custom release you need to create a `mycorp-releases.yaml` containing releases according to the format defined by https://github.com/stackabletech/release/blob/main/releases.yaml[the Stackable provided releases].
-You can than add it to `stackablectl` with the flag `--additional-release-files`.
+You can then add it to `stackablectl` with the flag `--additional-releases-file`.
