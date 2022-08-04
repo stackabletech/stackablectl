@@ -84,7 +84,7 @@ Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/qui
 
 With this command we installed the operator for Apache Airflow as well as two operators needed internally by the Stackable Data Platform (commons and secret).
 
-As we didn't specify a specific version to install the operators were installed in the latest nightly version - build from the main branch of the operator.
+As we didn't specify a specific version to install, the operators were installed in the latest nightly version - built from the main branch of the operators.
 
 If you want to install a specific version you can add the version to each operator to install as follows
 
