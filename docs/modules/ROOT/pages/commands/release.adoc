@@ -1,7 +1,7 @@
 = Release
 
 A release is a well-playing bundle of operators.
-If you want to install an single individual operator have a look at the xref:commands/operator.adoc[] command.
+If you want to install a single individual operator, have a look at the xref:commands/operator.adoc[] command.
 
 == Browse available releases
 To list the available Stackable releases run the following command:
