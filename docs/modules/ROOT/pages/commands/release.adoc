@@ -13,7 +13,7 @@ RELEASE            RELEASE DATE   DESCRIPTION
 22.06              2022-06-30     First official release of the Stackable Data Platform
 ----
 
-Detailed information of a release can queried with the `describe` command:
+Detailed information of a release can be queried with the `describe` command:
 
 [source,console]
 ----
