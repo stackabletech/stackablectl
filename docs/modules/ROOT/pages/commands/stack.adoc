@@ -1,5 +1,5 @@
 = Stack
-A stack is a collection of ready-to-use Stackable data products as well as needed third-party services like Postgresql or MinIO.
+A stack is a collection of ready-to-use Stackable data products as well as required third-party services like Postgresql or MinIO.
 It is tied to a specific release of the Stackable Data Platform, which will provide the needed operators for the Stack.
 
 == Browse available stacks
