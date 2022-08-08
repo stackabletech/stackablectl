@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: create-ny-taxi-data-table-in-trino
-          image: "python:3.10-slim"
+          image: python:3.10-slim
           command: ["bash", "-c", "pip install trino==0.314.0 && python /tmp/script/script.py"]
           volumeMounts:
             - name: script
@@ -55,20 +55,39 @@ data:
 
     assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS hive.demo WITH (location = 's3a://demo/')")[0][0] is True
     assert run_query(connection, """
-    CREATE TABLE IF NOT EXISTS hive.demo.ny_taxi_data_raw (
-        VendorID BIGINT,
-        tpep_pickup_datetime TIMESTAMP,
-        tpep_dropoff_datetime TIMESTAMP,
-        passenger_count DOUBLE,
-        trip_distance DOUBLE,
-        payment_type BIGINT,
-        Fare_amount DOUBLE,
-        Tip_amount DOUBLE,
-        Total_amount DOUBLE
-    ) WITH (
-        external_location = 's3a://demo/ny-taxi-data/raw/',
-        format = 'parquet'
-    )
+        CREATE TABLE IF NOT EXISTS hive.demo.ny_taxi_data_raw (
+            VendorID BIGINT,
+            tpep_pickup_datetime TIMESTAMP,
+            tpep_dropoff_datetime TIMESTAMP,
+            passenger_count DOUBLE,
+            trip_distance DOUBLE,
+            payment_type BIGINT,
+            Fare_amount DOUBLE,
+            Tip_amount DOUBLE,
+            Total_amount DOUBLE
+        ) WITH (
+            external_location = 's3a://demo/ny-taxi-data/raw/',
+            format = 'parquet'
+        )
     """)[0][0] is True
 
     assert run_query(connection, "SELECT COUNT(*) FROM hive.demo.ny_taxi_data_raw")[0][0] == 3_599_920
+
+    assert run_query(connection, """
+        create or replace view hive.demo.ny_taxi_data as
+        select
+          vendorid,
+          tpep_pickup_datetime,
+          tpep_dropoff_datetime,
+          date_diff('minute', tpep_pickup_datetime, tpep_dropoff_datetime) as duration_min,
+          passenger_count,
+          trip_distance,
+          case payment_type when 1 then 'Credit card' when 2 then 'Cash' when 3 then 'No charge' when 4 then 'Dispute' when 6 then 'Voided trino' else 'Unknown' end as payment_type,
+          fare_amount,
+          tip_amount,
+          total_amount
+        from hive.demo.ny_taxi_data_raw
+        where tpep_pickup_datetime >= from_iso8601_timestamp('2021-08-08T00:00:00')
+    """)[0][0] is True
+
+    assert run_query(connection, "SELECT COUNT(*) FROM hive.demo.ny_taxi_data")[0][0] == 3_599_913

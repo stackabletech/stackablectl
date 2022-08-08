@@ -12,6 +12,7 @@ demos:
     manifests:
       - plainYaml: demos/trino-taxi-data/load-test-data.yaml
       - plainYaml: demos/trino-taxi-data/create-table-in-trino.yaml
+      - plainYaml: demos/trino-taxi-data/setup-superset.yaml
   trino-wine-reviews:
     description: WIP Demo loading wine review data into S3 bucket, creating Trino table and Superset dashboard
     stackableStack: trino-superset-s3

@@ -1,0 +1,88 @@
+# In case you want to use the webinterface to add database:
+# Type: Trino
+# SQLALCHEMY URI: trino://admin:admin@trino-coordinator:8443/hive
+# Engine parameters: {"connect_args": {"verify": false}}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: setup-superset
+spec:
+  template:
+    spec:
+      containers:
+        - name: setup-superset
+          image: python:3.10-slim
+          command: ["bash", "-c", " apt update && apt install -y curl && curl -o superset-assets.zip https://repo.stackable.tech/repository/misc/ny-taxi-data/superset-assets.zip && pip install requests==2.22.0 && python /tmp/script/script.py"]
+          volumeMounts:
+            - name: script
+              mountPath: /tmp/script
+      restartPolicy: OnFailure
+      volumes:
+      - name: script
+        configMap:
+          name: setup-superset-script
+      restartPolicy: Never
+  backoffLimit: 20 # It can take some time until Superset is ready
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: setup-superset-script
+data:
+  script.py: |
+    import logging
+    import requests
+
+    base_url = "http://superset-external:8088"
+    # base_url = "http://172.18.0.4:31024"
+    username = "admin"
+    password = "admin"
+
+    logging.basicConfig(level=logging.INFO)
+    logging.info("Starting setup of Superset")
+
+    logging.info("Getting access token from /api/v1/security/login")
+    session = requests.session()
+    access_token = session.post(f"{base_url}/api/v1/security/login", json={"username": username, "password": password, "provider": "db", "refresh": True}).json()['access_token']
+    # print(f"access_token: {access_token}")
+
+    logging.info("Getting csrf token from /api/v1/security/csrf_token")
+    csrf_token = session.get(f"{base_url}/api/v1/security/csrf_token", headers={"Authorization": f"Bearer {access_token}"}).json()["result"]
+    # print(f"csrf_token: {csrf_token}")
+
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {access_token}",
+        "X-CSRFToken": csrf_token,
+    }
+
+    # logging.info("Exporting all assets")
+    # result = session.get(f"{base_url}/api/v1/assets/export", headers=headers)
+    # assert result.status_code == 200
+    # with open("superset-assets.zip", "wb") as f:
+    #     f.write(result.content)
+
+
+    #########################
+    # IMPORTANT
+    #########################
+    # The exported file had to be modified, otherwise we get:
+    # <Response [422]>
+    # {"errors": [{"message": "Error importing assets", "error_type": "GENERIC_COMMAND_ERROR", "level": "warning", "extra": {"databases/Trino.yaml": {"extra": {"disable_data_preview": ["Unknown field."]}}, "issue_codes": [{"code": 1010, "message": "Issue 1010 - Superset encountered an error while running a command."}]}}]}
+    #
+    # The file databases/Trino.yaml was modified and the attribute "extra.disable_data_preview" was removed
+    #########################
+    logging.info("Importing all assets")
+    files = {
+        "bundle": ("superset-assets.zip", open("superset-assets.zip", "rb")),
+    }
+    data = {
+        "passwords": '{"databases/Trino.yaml": "demo"}'
+    }
+    result = session.post(f"{base_url}/api/v1/assets/import", headers=headers, files=files, data=data)
+    print(result)
+    print(result.text)
+    assert result.status_code == 200
+
+    logging.info("Finished setup of Superset")
