@@ -1,6 +1,6 @@
 = Release
 
-A release is a well-playing bundle of operators.
+A release is a bundle of operators of a specific stable version. The stable versions of the operators are tested and proven to work hand in hand.
 If you want to install a single individual operator, have a look at the xref:commands/operator.adoc[] command.
 
 == Browse available releases
