@@ -4,7 +4,7 @@ A single team can also operate multiple Stackable Data Platforms.
 `stackablectl` is build in a way customers or even single developers can define their own release, stack and even demo!
 This way it is possible to cover the following use-cases.
 
-Any additional demos/stacks/releases you specify, will be added to the already existing provided by Stackable.
+Any additional demos/stacks/releases you specify, will be added to the already existing ones provided by Stackable.
 
 == Add a new demo
 === Benefits
