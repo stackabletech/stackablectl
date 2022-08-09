@@ -28,7 +28,7 @@ You can use your defined stack to give it to colleagues or potential customers t
 
 === Adding a new stack
 For the overall procedure have a look at <<_adding_a_new_demo>> on how to add a new stack.
-For a custom stack you need to create a `mycorp-stacks.yaml` containing stacks according to the format defined by https://github.com/stackabletech/stackablectl/blob/main/stacks.yaml[the Stackable provided stacks].
+For a custom stack you need to create a `mycorp-stacks.yaml` containing stacks according to the format defined by https://github.com/stackabletech/stackablectl/blob/main/stacks/stacks-v1.yaml[the Stackable provided stacks].
 You can then add it to `stackablectl` with the flag `--additional-stacks-file`.
 
 

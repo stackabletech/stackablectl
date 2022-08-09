@@ -66,7 +66,7 @@ pub struct CliArgs {
     /// Adds a YAML file containing custom stacks
     ///
     /// If you do not have access to the Stackable repositories on GitHub or if you want to maintain your own stacks, you can specify additional YAML files containing stack information.
-    /// Have a look at <https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks.yaml> for the structure.
+    /// Have a look at <https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/stacks-v1.yaml> for the structure.
     /// Can either be a URL or a path to a file, e.g. `https://my.server/my-stacks.yaml`, '/etc/my-stacks.yaml' or `C:\Users\Bob\my-stacks.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true), value_hint = ValueHint::FilePath)]

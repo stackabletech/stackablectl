@@ -20,10 +20,10 @@ To achieve this the following online services will be contacted:
 | https://raw.githubusercontent.com/stackabletech/release/main/releases.yaml
 | List of releases provided by Stackable
 
-| https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks.yaml
+| https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/stacks-v1.yaml
 | List of stacks provided by Stackable
 
-| https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos.yaml
+| https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/demos-v1.yaml
 | List of demos provided by Stackable
 
 |===
