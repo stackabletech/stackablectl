@@ -4,6 +4,7 @@
 
 ### Added
 
+- Support stacks, which are a collection of ready-to-use Stackable data products as well as required third-party services like Postgresql or MinIO ([#36](https://github.com/stackabletech/stackablectl/pull/36))
 - Support generation of shell completions ([#54](https://github.com/stackabletech/stackablectl/pull/54))
 
 ### Changed
