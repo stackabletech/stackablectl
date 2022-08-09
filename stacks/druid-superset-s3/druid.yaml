@@ -1,0 +1,79 @@
+---
+apiVersion: druid.stackable.tech/v1alpha1
+kind: DruidCluster
+metadata:
+  name: druid
+spec:
+  version: 0.23.0-stackable0.1.0
+  zookeeperConfigMapName: druid-znode
+  metadataStorageDatabase:
+    dbType: derby
+    connString: jdbc:derby://localhost:1527/var/druid/metadata.db;create=true
+    host: localhost
+    port: 1527
+  deepStorage:
+    s3:
+      bucket:
+        inline:
+          bucketName: druid
+          connection:
+            inline:
+              host: minio-druid
+              port: 9000
+              accessStyle: Path
+              credentials:
+                secretClass: druid-s3-credentials
+      baseKey: data
+  brokers:
+    roleGroups:
+      default:
+        config: {}
+        replicas: 1
+  coordinators:
+    roleGroups:
+      default:
+        config: {}
+        replicas: 1
+  historicals:
+    roleGroups:
+      default:
+        config: {}
+        replicas: 1
+  middleManagers:
+    roleGroups:
+      default:
+        config: {}
+        replicas: 1
+  routers:
+    roleGroups:
+      default:
+        config: {}
+        replicas: 1
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperZnode
+metadata:
+  name: druid-znode
+spec:
+  clusterRef:
+    name: druid-zookeeper
+---
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: druid-s3-credentials
+spec:
+  backend:
+    k8sSearch:
+      searchNamespace:
+        pod: {}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: druid-s3-credentials
+  labels:
+    secrets.stackable.tech/class: druid-s3-credentials
+stringData:
+  accessKey: druid
+  secretKey: druiddruid

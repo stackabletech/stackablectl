@@ -1,0 +1,111 @@
+= Stack
+A stack is a collection of ready-to-use Stackable data products as well as required third-party services like Postgresql or MinIO.
+It is tied to a specific release of the Stackable Data Platform, which will provide the required operators for the Stack.
+
+== Browse available stacks
+To list the available stacks, run the following command:
+
+[source,console]
+----
+$ stackablectl stack list
+STACK                               STACKABLE RELEASE  DESCRIPTION
+druid-superset-s3                   22.06              Stack containing MinIO, Druid and Superset for data visualization
+airflow                             22.06              Stack containing Airflow scheduling platform
+----
+
+Detailed information of a stack can be queried with the `describe` command:
+
+[source,console]
+----
+$ stackablectl stack describe druid-superset-s3
+Stack:              druid-superset-s3
+Description:        Stack containing MinIO, Druid and Superset for data visualization
+Stackable release:  22.06
+Labels:             druid, superset, minio, s3
+----
+
+Future version of `stackablectl` will allow to search for stacks based on the labels.
+
+== Install stack
+If you want to access a Kubernetes cluster, make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
+After that run the following command
+
+[source,console]
+----
+$ stackablectl stack install druid-superset-s3
+[INFO ] Installing release 22.06
+[INFO ] Installing airflow operator in version 0.4.0
+[INFO ] Installing commons operator in version 0.2.0
+[INFO ] Installing druid operator in version 0.6.0
+[INFO ] Installing hbase operator in version 0.3.0
+[INFO ] Installing hdfs operator in version 0.4.0
+[INFO ] Installing hive operator in version 0.6.0
+[INFO ] Installing kafka operator in version 0.6.0
+[INFO ] Installing nifi operator in version 0.6.0
+[INFO ] Installing opa operator in version 0.9.0
+[INFO ] Installing secret operator in version 0.5.0
+[INFO ] Installing spark-k8s operator in version 0.3.0
+[INFO ] Installing superset operator in version 0.5.0
+[INFO ] Installing trino operator in version 0.4.0
+[INFO ] Installing zookeeper operator in version 0.10.0
+[INFO ] Installing components of stack druid-superset-s3
+[INFO ] Installed stack druid-superset-s3
+----
+
+If you don't have a Kubernetes cluster available, `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
+Make sure you have `kind` installed and run the following command:
+
+[source,console]
+----
+$ stackablectl stack install druid-superset-s3 --kind-cluster
+[INFO ] Creating kind cluster stackable-data-platform
+Creating cluster "stackable-data-platform" ...
+ ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
+ ✓ Preparing nodes 📦 📦 📦 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+ ✓ Joining worker nodes 🚜 
+Set kubectl context to "kind-stackable-data-platform"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-stackable-data-platform
+
+Have a nice day! 👋
+[INFO ] Installing release 22.06
+[INFO ] Installing airflow operator in version 0.4.0
+[INFO ] Installing commons operator in version 0.2.0
+[INFO ] Installing druid operator in version 0.6.0
+[INFO ] Installing hbase operator in version 0.3.0
+[INFO ] Installing hdfs operator in version 0.4.0
+[INFO ] Installing hive operator in version 0.6.0
+[INFO ] Installing kafka operator in version 0.6.0
+[INFO ] Installing nifi operator in version 0.6.0
+[INFO ] Installing opa operator in version 0.9.0
+[INFO ] Installing secret operator in version 0.5.0
+[INFO ] Installing spark-k8s operator in version 0.3.0
+[INFO ] Installing superset operator in version 0.5.0
+[INFO ] Installing trino operator in version 0.4.0
+[INFO ] Installing zookeeper operator in version 0.10.0
+[INFO ] Installing components of stack druid-superset-s3
+[INFO ] Installed stack druid-superset-s3
+----
+
+After installing the stack, we can access the running services using the xref:commands/services.adoc[] command:
+
+[source,console]
+----
+$ stackablectl services list
+PRODUCT      NAME                                     NAMESPACE                      ENDPOINTS                                          EXTRA INFOS
+druid        druid                                    default                        router-http:         http://172.18.0.2:30245       
+                                                                                     coordinator-http:    http://172.18.0.4:30506       
+superset     superset                                 default                        external-superset:   http://172.18.0.2:31891       Admin user: admin, password: admin
+zookeeper    druid-zookeeper                          default                        zk:                  172.18.0.5:30890              
+minio        minio-druid                              default                        http:                http://172.18.0.4:32173       Third party service
+                                                                                     console-http:        http://172.18.0.4:30982       Admin user: root, password: rootroot
+----
+
+== Uninstall stack
+Currently there is no support for uninstalling a stack again.
+Maybe a solution would be to uninstall the components of the stack but leave the release running.

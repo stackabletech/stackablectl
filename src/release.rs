@@ -5,7 +5,7 @@ use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
-use std::{ops::Deref, process::exit, sync::Mutex};
+use std::{error::Error, ops::Deref, process::exit, sync::Mutex};
 
 lazy_static! {
     pub static ref RELEASE_FILES: Mutex<Vec<String>> = Mutex::new(vec![
@@ -24,8 +24,10 @@ pub enum CliCommandRelease {
     /// Show details of a specific release
     #[clap(alias("desc"))]
     Describe {
-        #[clap(value_hint = ValueHint::Other)]
+        /// Name of the release to describe
+        #[clap(required = true, value_hint = ValueHint::Other)]
         release: String,
+
         #[clap(short, long, arg_enum, default_value = "text")]
         output: OutputType,
     },
@@ -51,9 +53,10 @@ pub enum CliCommandRelease {
         #[clap(short, long, value_hint = ValueHint::Other)]
         exclude_products: Vec<String>,
 
-        /// If specified a local kubernetes cluster consisting of 4 nodes for testing purposes will be created.
-        /// Kind is a tool to spin up a local kubernetes cluster running on docker on your machine.
-        /// You need to have `docker` and `kind` installed. Have a look at the README at <https://github.com/stackabletech/stackablectl> on how to install them.
+        /// If specified, a local Kubernetes cluster consisting of 4 nodes (1 for control-plane and 3 workers) for testing purposes will be created.
+        /// Kind is a tool to spin up a local Kubernetes cluster running on Docker on your machine.
+        /// You need to have `docker` and `kind` installed.
+        /// Have a look at our documentation on how to install `kind` at <https://docs.stackable.tech/home/getting_started.html#_installing_kubernetes_using_kind>
         #[clap(short, long)]
         kind_cluster: bool,
 
@@ -76,10 +79,12 @@ pub enum CliCommandRelease {
 }
 
 impl CliCommandRelease {
-    pub fn handle(&self) {
+    pub async fn handle(&self) -> Result<(), Box<dyn Error>> {
         match self {
-            CliCommandRelease::List { output } => list_releases(output),
-            CliCommandRelease::Describe { release, output } => describe_release(release, output),
+            CliCommandRelease::List { output } => list_releases(output).await?,
+            CliCommandRelease::Describe { release, output } => {
+                describe_release(release, output).await?
+            }
             CliCommandRelease::Install {
                 release,
                 include_products,
@@ -87,17 +92,19 @@ impl CliCommandRelease {
                 kind_cluster,
                 kind_cluster_name,
             } => {
-                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
-                install_release(release, include_products, exclude_products);
+                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name)?;
+                install_release(release, include_products, exclude_products).await?;
             }
-            CliCommandRelease::Uninstall { release } => uninstall_release(release),
+            CliCommandRelease::Uninstall { release } => uninstall_release(release).await,
         }
+
+        Ok(())
     }
 }
 
 pub fn handle_common_cli_args(args: &CliArgs) {
     let mut release_files = RELEASE_FILES.lock().unwrap();
-    release_files.append(&mut args.additional_release_files.clone());
+    release_files.extend_from_slice(&args.additional_releases_file);
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -120,12 +127,12 @@ struct ReleaseProduct {
     operator_version: String,
 }
 
-fn list_releases(output_type: &OutputType) {
-    let output = get_releases();
+async fn list_releases(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
+    let output = get_releases().await;
     match output_type {
         OutputType::Text => {
             println!("RELEASE            RELEASE DATE   DESCRIPTION");
-            for (release_name, release_entry) in output.releases.iter() {
+            for (release_name, release_entry) in output.releases {
                 println!(
                     "{:18} {:14} {}",
                     release_name, release_entry.release_date, release_entry.description,
@@ -133,15 +140,20 @@ fn list_releases(output_type: &OutputType) {
             }
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output).unwrap());
+            println!("{}", serde_json::to_string_pretty(&output)?);
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output).unwrap());
+            println!("{}", serde_yaml::to_string(&output)?);
         }
     }
+
+    Ok(())
 }
 
-fn describe_release(release_name: &str, output_type: &OutputType) {
+async fn describe_release(
+    release_name: &str,
+    output_type: &OutputType,
+) -> Result<(), Box<dyn Error>> {
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
     struct Output {
@@ -151,7 +163,7 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
         products: IndexMap<String, ReleaseProduct>,
     }
 
-    let release = get_release(release_name);
+    let release = get_release(release_name).await;
     let output = Output {
         release: release_name.to_string(),
         release_date: release.release_date,
@@ -167,57 +179,64 @@ fn describe_release(release_name: &str, output_type: &OutputType) {
             println!("Included products:");
             println!();
             println!("PRODUCT             OPERATOR VERSION");
-            for (product_name, product) in output.products.iter() {
+            for (product_name, product) in output.products {
                 println!("{:19} {}", product_name, product.operator_version);
             }
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output).unwrap());
+            println!("{}", serde_json::to_string_pretty(&output)?);
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output).unwrap());
+            println!("{}", serde_yaml::to_string(&output)?);
         }
     }
+
+    Ok(())
 }
 
 /// If include_operators is an non-empty list only the whitelisted product operators will be installed.
 /// If exclude_operators is an non-empty list the blacklisted product operators will be skipped.
-fn install_release(release_name: &str, include_products: &[String], exclude_products: &[String]) {
+pub async fn install_release(
+    release_name: &str,
+    include_products: &[String],
+    exclude_products: &[String],
+) -> Result<(), Box<dyn Error>> {
     info!("Installing release {release_name}");
-    let release = get_release(release_name);
+    let release = get_release(release_name).await;
 
-    for (product_name, product) in release.products.into_iter() {
+    for (product_name, product) in release.products {
         let included = include_products.is_empty() || include_products.contains(&product_name);
         let excluded = exclude_products.contains(&product_name);
 
         if included && !excluded {
             Operator::new(product_name, Some(product.operator_version))
                 .expect("Failed to construct operator definition")
-                .install();
+                .install()?;
         }
     }
+
+    Ok(())
 }
 
-fn uninstall_release(release_name: &str) {
+async fn uninstall_release(release_name: &str) {
     info!("Uninstalling release {release_name}");
-    let release = get_release(release_name);
+    let release = get_release(release_name).await;
 
     operator::uninstall_operators(&release.products.into_keys().collect());
 }
 
 /// Cached because of potential slow network calls
 #[cached]
-fn get_releases() -> Releases {
+async fn get_releases() -> Releases {
     let mut all_releases: IndexMap<String, Release> = IndexMap::new();
-    for release_file in RELEASE_FILES.lock().unwrap().deref() {
-        let yaml = helpers::read_from_url_or_file(release_file);
+    let release_files = RELEASE_FILES.lock().unwrap().deref().clone();
+    for release_file in release_files {
+        let yaml = helpers::read_from_url_or_file(&release_file).await;
         match yaml {
-            Ok(yaml) => {
-                let releases: Releases = serde_yaml::from_str(&yaml).unwrap_or_else(|err| {
-                    panic!("Failed to parse release list from {release_file}: {err}")
-                });
-                all_releases.extend(releases.releases.clone());
-            }
+            Ok(yaml) => match serde_yaml::from_str::<Releases>(&yaml) {
+                Ok(releases) => all_releases.extend(releases.releases),
+                Err(err) => warn!("Failed to parse release list from {release_file}: {err}"),
+            },
             Err(err) => {
                 warn!("Could not read from releases file \"{release_file}\": {err}");
             }
@@ -229,8 +248,9 @@ fn get_releases() -> Releases {
     }
 }
 
-fn get_release(release_name: &str) -> Release {
+async fn get_release(release_name: &str) -> Release {
     get_releases()
+    .await
         .releases
         .remove(release_name) // We need to remove to take ownership
         .unwrap_or_else(|| {

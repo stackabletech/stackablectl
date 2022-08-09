@@ -179,17 +179,35 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
-          go-version: '^1.18.1'
+          go-version: '^1.18.3'
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
           target: ${{ matrix.target }}
           override: true
-      - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
+      - uses: Swatinem/rust-cache@v1
         with:
           key: build-${{ matrix.target }}
-      - uses: actions-rs/cargo@v1
+      - name: Prepare Ubuntu env
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt install -y musl-tools
+      - name: Prepare Windows env
+        if: matrix.os == 'windows-latest'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: base-devel mingw-w64-x86_64-go mingw-w64-x86_64-rust
+      - name: Build for non-Windows
+        if: matrix.os != 'windows-latest'
+        uses: actions-rs/cargo@v1
         with:
           command: build
           args: --target=${{ matrix.target }}
+      - name: Build for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          echo 'Running in MSYS2!'
+          cargo build --target=${{ matrix.target }}
+        shell: msys2 {0}

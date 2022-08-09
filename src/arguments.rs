@@ -1,4 +1,7 @@
-use crate::{operator::CliCommandOperator, release::CliCommandRelease, stack::CliCommandStack};
+use crate::{
+    operator::CliCommandOperator, release::CliCommandRelease, services::CliCommandServices,
+    stack::CliCommandStack,
+};
 use clap::{ArgEnum, Command, Parser, ValueHint};
 use clap_complete::{generate, Generator, Shell};
 use log::LevelFilter;
@@ -53,21 +56,21 @@ pub struct CliArgs {
 
     /// Adds a YAML file containing custom releases
     ///
-    /// If you don't have access to the Stackable GitHub repos or you want to maintain your own releases you can specify additional YAML files containing release information.
-    /// Have a look [here](https://raw.githubusercontent.com/stackabletech/stackablectl/main/releases.yaml) for the structure.
-    /// Can either be an URL or a path to a file e.g. `https://my.server/my-releases.yaml` or '/etc/my-releases.yaml' or `C:\Users\Sebastian\my-releases.yaml`.
+    /// If you do not have access to the Stackable repositories on GitHub or if you want to maintain your own releases, you can specify additional YAML files containing release information.
+    /// Have a look at <https://raw.githubusercontent.com/stackabletech/release/main/releases.yaml> for the structure.
+    /// Can either be a URL or a path to a file, e.g. `https://my.server/my-releases.yaml`, '/etc/my-releases.yaml' or `C:\Users\Bob\my-releases.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true), value_hint = ValueHint::FilePath)]
-    pub additional_release_files: Vec<String>,
+    pub additional_releases_file: Vec<String>,
 
     /// Adds a YAML file containing custom stacks
     ///
-    /// If you don't have access to the Stackable GitHub repos or you want to maintain your own stacks you can specify additional YAML files containing stack information.
-    /// Have a look [here](https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks.yaml) for the structure.
-    /// Can either be an URL or a path to a file e.g. `https://my.server/my-stacks.yaml` or '/etc/my-stacks.yaml' or `C:\Users\Sebastian\my-stacks.yaml`.
+    /// If you do not have access to the Stackable repositories on GitHub or if you want to maintain your own stacks, you can specify additional YAML files containing stack information.
+    /// Have a look at <https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/stacks-v1.yaml> for the structure.
+    /// Can either be a URL or a path to a file, e.g. `https://my.server/my-stacks.yaml`, '/etc/my-stacks.yaml' or `C:\Users\Bob\my-stacks.yaml`.
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true), value_hint = ValueHint::FilePath)]
-    pub additional_stack_files: Vec<String>,
+    pub additional_stacks_file: Vec<String>,
 }
 
 #[derive(Parser)]
@@ -80,9 +83,13 @@ pub enum CliCommand {
     #[clap(subcommand, alias("r"), alias("re"))]
     Release(CliCommandRelease),
 
-    /// This subcommand interacts with stacks, which are ready-to-use combinations of products.
+    /// This subcommand interacts with stacks which are ready-to-use combinations of products.
     #[clap(subcommand, alias("s"), alias("st"))]
     Stack(CliCommandStack),
+
+    /// This subcommand interacts with deployed services of products.
+    #[clap(subcommand, alias("svc"))]
+    Services(CliCommandServices),
 
     /// Output shell completion code for the specified shell.
     Completion(CliCommandCompletion),

@@ -1,5 +1,49 @@
 = stackablectl
 
-The `stackablectl` command line tool is used to interact with Stackable operators. Either individually or whole data pipelines consisting of multiple operators and multiple deployments of tools.
+The `stackablectl` command line tool is used to interact with the Stackable Data Platform.
+It can install individual operators as well as Platform releases.
+It also ships with a set of pre-built demos that utilize different data products of the Platform to get e.g. an end-to-end data pipeline.
 
-Go to xref:installation.adoc[] to install the tool and then consult the xref:quickstart.adoc[] page to get started.
+The installation of `stackablectl` is described in xref:installation.adoc[].
+
+To just get a Quickstart please follow xref:quickstart.adoc[].
+
+In general, use `stackablectl --help` to find out more about how to use the tool or how to use specific options.
+This also works with subcommands, i.e. `stackablectl release install --help` will show the help for installing a release.
+Often you can also use an abbreviation instead of typing out all of the commands.
+E.g. `stackablectl operator list` can also be written as `stackablectl op ls`
+
+A Kubernetes cluster is required in order to use the Stackable Data Platform as all products and operators run on Kubernetes.
+If you don't have a Kubernetes cluster, `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes Cluster for you.
+
+The deployed services are separated into three different layers as illustrated below:
+
+image::layers.png[Layers of the deployed services]
+
+== Operators
+This layer consists of Stackable operators managing the individual data products.
+They can either be installed one by one with the command `stackablectl operator` or from a release with `stackablectl release` which is preferred.
+A release is a well-playing bundle of operators that get released approximately every 2 months.
+
+== Stacks
+A stack is a collection of ready-to-use Stackable data products as well as needed third-party services like Postgresql or MinIO.
+
+Stacks are installed with the command `stackablectl stack`.
+A stack needs a release (of Stackable operators) to run on.
+To achieve this a stacks has a dependency on a release which gets automatically installed when a stack is installed.
+
+== Demos
+A demo is an end-to-end demonstration of the usage of the Stackable Data Platform.
+It contains
+
+. Installing a Stackable release
+. Spinning up a stack
+. Performing the actual demo
+.. Prepare some test data
+.. Process test data
+.. Visualize results (optional)
+
+Demos are installed with the command `stackablectl demo`.
+A demo needs a stack to run on.
+To achieve this a demo has a dependency on a stack which gets automatically installed when a demo is installed.
+The stack in turn will install the needed Stackable release.
