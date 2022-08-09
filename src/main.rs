@@ -6,6 +6,7 @@ use log::error;
 use std::{error::Error, process::exit, sync::Mutex};
 
 mod arguments;
+mod demo;
 mod helm;
 mod helpers;
 mod kind;
@@ -52,11 +53,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
     helm::handle_common_cli_args(&args);
     release::handle_common_cli_args(&args);
     stack::handle_common_cli_args(&args);
+    demo::handle_common_cli_args(&args);
 
     let result = match &args.cmd {
         CliCommand::Operator(command) => command.handle().await,
         CliCommand::Release(command) => command.handle().await,
         CliCommand::Stack(command) => command.handle().await,
+        CliCommand::Demo(command) => command.handle().await,
         CliCommand::Services(command) => command.handle().await,
         CliCommand::Completion(command) => {
             let mut cmd = CliArgs::command();
