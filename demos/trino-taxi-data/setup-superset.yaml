@@ -9,7 +9,7 @@ spec:
       containers:
         - name: setup-superset
           image: python:3.10-slim
-          command: ["bash", "-c", " apt update && apt install -y curl && curl -o superset-assets.zip https://github.com/stackabletech/stackablectl/raw/demos/demos/trino-taxi-data/superset-assets.zip && pip install requests==2.22.0 && python /tmp/script/script.py"]
+          command: ["bash", "-c", " apt update && apt install -y curl && curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/demos/demos/trino-taxi-data/superset-assets.zip && pip install requests==2.22.0 && python /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
