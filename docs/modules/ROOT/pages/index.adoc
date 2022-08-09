@@ -13,7 +13,7 @@ This also works with subcommands, i.e. `stackablectl release install --help` wil
 Often you can also use an abbreviation instead of typing out all of the commands.
 E.g. `stackablectl operator list` can also be written as `stackablectl op ls`
 
-A Kubernetes cluster is required to use the Stackable Data Platform as all products and operators run on Kubernetes.
+A Kubernetes cluster is required in order to use the Stackable Data Platform as all products and operators run on Kubernetes.
 If you don't have a Kubernetes cluster, `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes Cluster for you.
 
 The deployed services are separated into three different layers as illustrated below:
