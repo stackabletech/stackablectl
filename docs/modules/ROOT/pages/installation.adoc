@@ -1,7 +1,7 @@
 = Installation
 
 == Pre-compiled binary
-We ship pre-compiled binaries of `stackablectl` which should work on most environments such as Windows, macOS, and Linux distros like Ubuntu and Arch.
+Stackable ships pre-compiled binaries of `stackablectl` which should work on most environments such as Windows, macOS, and Linux distros like Ubuntu and Arch.
 
 Below are the installation instructions for <<Linux>>, <<macOS>> and <<Windows>>.
 If the binary does not work for you, you can always <<_build_stackablectl_from_source>>
@@ -100,7 +100,7 @@ $ sudo cp target/release/stackablectl /usr/bin/stackablectl
 
 == Configure auto-completion
 `stackablectl` provides completion scripts for the major shells out there.
-It uses the same mechanism as `kubectl` does, so if you have any problems following this steps looking at https://kubernetes.io/docs/tasks/tools/included/[their installation documentation] may help you out.
+It uses the same mechanism as `kubectl` does, so if you have any problems following this steps, looking at https://kubernetes.io/docs/tasks/tools/included/[their installation documentation] may help you out.
 
 All of the https://docs.rs/clap_complete/3.2.3/clap_complete/shells/enum.Shell.html[supported shells of] https://crates.io/crates/clap_complete[`clap_complete`] are supported.
 As of `07/2022` this includes the following shells:

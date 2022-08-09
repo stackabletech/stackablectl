@@ -41,7 +41,7 @@ It contains
 . Performing the actual demo
 .. Prepare some test data
 .. Process test data
-.. visualize results (optional)
+.. Visualize results (optional)
 
 Demos are installed with the command `stackablectl demo`.
 A demo needs a stack to run on.
