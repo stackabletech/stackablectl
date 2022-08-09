@@ -1,0 +1,125 @@
+table_name: ny_taxi_data_raw
+main_dttm_col: tpep_pickup_datetime
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+schema: demo
+sql: null
+params: null
+template_params: null
+filter_select_enabled: false
+fetch_values_predicate: null
+extra: null
+uuid: 6ab2bb0c-e8a4-46fd-8690-d5c93466a364
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  extra: null
+  warning_text: null
+columns:
+- column_name: tpep_pickup_datetime
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: TIMESTAMP(3)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: tpep_dropoff_datetime
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: TIMESTAMP(3)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: fare_amount
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DOUBLE
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: total_amount
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DOUBLE
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: trip_distance
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DOUBLE
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: passenger_count
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DOUBLE
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: tip_amount
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DOUBLE
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: payment_type
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: BIGINT
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: vendorid
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: BIGINT
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+version: 1.0.0
+database_uuid: 3dbf65a2-24d8-477f-8a26-14b45ffea214

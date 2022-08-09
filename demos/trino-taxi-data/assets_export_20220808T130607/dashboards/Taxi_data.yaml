@@ -1,0 +1,139 @@
+dashboard_title: Taxi data
+description: null
+css: ''
+slug: null
+uuid: bf510653-d7a8-427c-9339-4af93facf9f9
+position:
+  CHART-U_CW3gyJhx:
+    children: []
+    id: CHART-U_CW3gyJhx
+    meta:
+      chartId: 140
+      height: 26
+      sliceName: Total trips
+      uuid: 95136b8e-084e-46b5-b223-cd4a5879584b
+      width: 3
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-Vv8MAQytk_
+    type: CHART
+  CHART-Vx2efXVypw:
+    children: []
+    id: CHART-Vx2efXVypw
+    meta:
+      chartId: 136
+      height: 44
+      sliceName: Payment types
+      uuid: b90ad164-9cee-4151-83dd-ea5756a759e1
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-rj_mE1OZm
+    type: CHART
+  CHART-kDGYtmfNzz:
+    children: []
+    id: CHART-kDGYtmfNzz
+    meta:
+      chartId: 138
+      height: 31
+      sliceName: Average trip duration
+      uuid: 17a65a0a-9d82-4596-9823-b5ed56854299
+      width: 8
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-rj_mE1OZm
+    type: CHART
+  CHART-lD7AleJ0fL:
+    children: []
+    id: CHART-lD7AleJ0fL
+    meta:
+      chartId: 139
+      height: 26
+      sliceName: Total income
+      uuid: 7bb34e00-b66f-4bd7-b4c9-181a4a747762
+      width: 3
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-Vv8MAQytk_
+    type: CHART
+  CHART-mWq6G6dTKX:
+    children: []
+    id: CHART-mWq6G6dTKX
+    meta:
+      chartId: 137
+      height: 37
+      sliceName: Trips income
+      uuid: 95c0cfcc-e688-426d-8976-61386083761a
+      width: 12
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-RCpJgstvqs
+    type: CHART
+  DASHBOARD_VERSION_KEY: v2
+  GRID_ID:
+    children:
+    - ROW-Vv8MAQytk_
+    - ROW-RCpJgstvqs
+    - ROW-rj_mE1OZm
+    id: GRID_ID
+    parents:
+    - ROOT_ID
+    type: GRID
+  HEADER_ID:
+    id: HEADER_ID
+    meta:
+      text: Taxi data
+    type: HEADER
+  ROOT_ID:
+    children:
+    - GRID_ID
+    id: ROOT_ID
+    type: ROOT
+  ROW-RCpJgstvqs:
+    children:
+    - CHART-mWq6G6dTKX
+    id: ROW-RCpJgstvqs
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  ROW-Vv8MAQytk_:
+    children:
+    - CHART-U_CW3gyJhx
+    - CHART-lD7AleJ0fL
+    id: ROW-Vv8MAQytk_
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  ROW-rj_mE1OZm:
+    children:
+    - CHART-Vx2efXVypw
+    - CHART-kDGYtmfNzz
+    id: ROW-rj_mE1OZm
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+metadata:
+  show_native_filters: true
+  shared_label_colors: {}
+  color_scheme: ''
+  refresh_frequency: 0
+  expanded_slices: {}
+  label_colors: {}
+  timed_refresh_immune_slices: []
+  default_filters: '{}'
+  chart_configuration: {}
+version: 1.0.0
