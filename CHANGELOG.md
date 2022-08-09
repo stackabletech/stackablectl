@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2022-08-09
+
 ### Added
 
 - Support stacks, which are a collection of ready-to-use Stackable data products as well as required third-party services like Postgresql or MinIO ([#36](https://github.com/stackabletech/stackablectl/pull/36))
