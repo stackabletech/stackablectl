@@ -1,7 +1,7 @@
 = Installation
 
 == Pre-compiled binary
-We ship pre-compiled binaries of `stackablectl` which should work on most environments such as Windows, macOS, and Linux distros like Ubuntu and Arch.
+Stackable ships pre-compiled binaries of `stackablectl` which should work on most environments such as Windows, macOS, and Linux distros like Ubuntu and Arch.
 
 Below are the installation instructions for <<Linux>>, <<macOS>> and <<Windows>>.
 If the binary does not work for you, you can always <<_build_stackablectl_from_source>>
