@@ -48,9 +48,9 @@ stacks:
               username: superset
               password: superset
               database: superset
-      - plainYaml: stacks/druid-superset-s3/zookeeper.yaml
-      - plainYaml: stacks/druid-superset-s3/druid.yaml
-      - plainYaml: stacks/druid-superset-s3/superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/druid-superset-s3/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/druid-superset-s3/druid.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/druid-superset-s3/superset.yaml
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
     stackableRelease: 22.06
@@ -117,9 +117,9 @@ stacks:
               username: superset
               password: superset
               database: superset
-      - plainYaml: stacks/trino-superset-s3/hive-metastore.yaml
-      - plainYaml: stacks/trino-superset-s3/trino.yaml
-      - plainYaml: stacks/trino-superset-s3/superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
   airflow:
     description: Stack containing Airflow scheduling platform
     stackableRelease: 22.06
@@ -150,4 +150,4 @@ stacks:
               password: airflow
             replica:
               replicaCount: 1
-      - plainYaml: stacks/airflow/airflow.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
