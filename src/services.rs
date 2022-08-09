@@ -446,17 +446,17 @@ async fn get_minio_services(
                     let admin_user = admin_user
                         .value_from
                         .as_ref()
-                        .unwrap()
+                        .ok_or("MinIO admin user env var needs to have an valueFrom entry")?
                         .secret_key_ref
                         .as_ref()
-                        .unwrap();
+                        .ok_or("MinIO admin user env var needs to have an secretKeyRef in the valueFrom entry")?;
                     let admin_password = admin_password
                         .value_from
                         .as_ref()
-                        .unwrap()
+                        .ok_or("MinIO admin password env var needs to have an valueFrom entry")?
                         .secret_key_ref
                         .as_ref()
-                        .unwrap();
+                        .ok_or("MinIO admin password env var needs to have an secretKeyRef in the valueFrom entry")?;
 
                     let api: Api<Secret> = Api::namespaced(client.clone(), &deployment_namespace);
                     let admin_user_secret = api.get(admin_user.name.as_ref().unwrap()).await;
