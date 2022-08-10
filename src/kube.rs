@@ -122,7 +122,7 @@ pub async fn get_service_endpoint_urls(
                     "http" | "http-ui" | "ui" | "airflow" | "superset" => {
                         format!("http://{node_ip}:{node_port}")
                     }
-                    "https" => format!("https://{node_ip}:{node_port}"),
+                    "https" | "https-ui" => format!("https://{node_ip}:{node_port}"),
                     _ => format!("{node_ip}:{node_port}"),
                 };
 
