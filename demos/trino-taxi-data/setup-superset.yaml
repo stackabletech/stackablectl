@@ -19,7 +19,7 @@ spec:
         configMap:
           name: setup-superset-script
       restartPolicy: Never
-  backoffLimit: 20 # It can take some time until Superset is ready
+  backoffLimit: 50 # It can take some time until Superset is ready
 ---
 apiVersion: v1
 kind: ConfigMap
