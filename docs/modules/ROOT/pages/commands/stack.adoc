@@ -25,7 +25,7 @@ Stackable release:  22.06
 Labels:             druid, superset, minio, s3
 ----
 
-Future version of `stackablectl` will also allow to search for stacks based on the labels.
+Future versions of `stackablectl` will also allow to search for stacks based on the labels.
 
 == Install stack
 === Using existing Kubernetes cluster
