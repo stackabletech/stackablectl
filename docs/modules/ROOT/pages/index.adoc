@@ -33,7 +33,7 @@ A stack needs a release (of Stackable operators) to run on.
 To achieve this a stacks has a dependency on a release which gets automatically installed when a stack is installed.
 
 == Demos
-A demo is an end-to-end demonstration of the usage of the Stackable Data Platform.
+A demo is an end-to-end demonstration of the usage of the Stackable data platform.
 It contains
 
 . Installing a Stackable release
