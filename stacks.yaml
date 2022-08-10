@@ -149,3 +149,28 @@ stacks:
             auth:
               password: airflow
       - plainYaml: stacks/airflow/airflow.yaml
+  hdfs-hbase-trino:
+    description: Stack containing HDFS, hbase, zookeeper and trino for querying distributed data
+    stackableRelease: 22.06-nightly
+    labels:
+      - hbase
+      - hdfs
+      - zookeeper
+    manifests:
+      - helmChart:
+          releaseName: postgresql-hive
+          name: postgresql
+          repo:
+            name: bitnami
+            url: https://charts.bitnami.com/bitnami/
+          version: 10.16.2
+          options:
+            # Old version (10) of helm-charts has old way of setting credentials
+            postgresqlUsername: hive
+            postgresqlPassword: hive
+            postgresqlDatabase: hive
+      - plainYaml: stacks/hdfs-hbase-trino/zookeeper.yaml
+      - plainYaml: stacks/hdfs-hbase-trino/hbase.yaml
+      - plainYaml: stacks/hdfs-hbase-trino/hdfs.yaml
+      - plainYaml: stacks/hdfs-hbase-trino/trino.yaml
+      - plainYaml: stacks/hdfs-hbase-trino/hive-metastore.yaml
