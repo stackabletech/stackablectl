@@ -1,4 +1,5 @@
 = Services
+
 In this context a (Stackable) service is a running instance of a data product. This is different from the meaning of a Kubernetes service which is an abstract way to expose an application running on a set of pods as a network service.
 
 == List running services
