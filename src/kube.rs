@@ -114,7 +114,9 @@ pub async fn get_service_endpoint_urls(
                 };
                 let endpoint = match port_name.as_str() {
                     // TODO: Consolidate web-ui port names in operators
-                    "http" | "ui" | "airflow" | "superset" => {
+                    // For Superset: https://github.com/stackabletech/superset-operator/issues/248
+                    // For Airflow: https://github.com/stackabletech/airflow-operator/issues/146
+                    "http" | "http-ui" | "ui" | "airflow" | "superset" => {
                         format!("http://{node_ip}:{node_port}")
                     }
                     "https" => format!("https://{node_ip}:{node_port}"),
