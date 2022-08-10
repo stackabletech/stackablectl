@@ -1,10 +1,10 @@
 = Release
 
-A release is a bundle of operators of a specific stable version. The stable versions of the operators are tested and proven to work hand in hand.
-If you want to install a single individual operator, have a look at the xref:commands/operator.adoc[] command.
+A release is a well-playing bundle of operators that get released approximately every 2 months.
+If you want to install an single individual operator have a look at the xref:commands/operator.adoc[] command.
 
 == Browse available releases
-To list the available Stackable releases run the following command:
+To list the available Stackable releases run the following command
 
 [source,console]
 ----
@@ -13,7 +13,7 @@ RELEASE            RELEASE DATE   DESCRIPTION
 22.06              2022-06-30     First official release of the Stackable Data Platform
 ----
 
-Detailed information of a release can be queried with the `describe` command:
+To show details run
 
 [source,console]
 ----
@@ -40,11 +40,11 @@ trino               0.4.0
 zookeeper           0.10.0
 ----
 
-In the output you can see which product operators are included in the specific release.
+In the output you can see which product operators are included in the specific release
 
 == Install release
-If you want to access a Kubernetes cluster, make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
-After that run the following command:
+If you access to an Kubernetes cluster make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
+After that run the following command
 
 [source,console]
 ----
@@ -66,8 +66,8 @@ $ stackablectl release install 22.06
 [INFO ] Installing zookeeper operator in version 0.10.0
 ----
 
-If you don't have a Kubernetes cluster available, `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
-Make sure you have `kind` installed and run the following command:
+If you don't have an Kubernetes cluster available `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
+Make sure you have https://kind.sigs.k8s.io/[kind] installed and run the following command
 
 [source,console]
 ----
@@ -128,7 +128,7 @@ zookeeper             0.10.0          default                        deployed   
 
 
 == Uninstall release
-To uninstall all operators contained in a release regardless of their actual installed versions, you can use the uninstall command:
+To uninstall the release again you can use the uninstall command
 
 [source,console]
 ----

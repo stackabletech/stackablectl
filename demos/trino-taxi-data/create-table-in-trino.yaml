@@ -1,0 +1,74 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-ny-taxi-data-table-in-trino
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-ny-taxi-data-table-in-trino
+          image: "python:3.10-slim"
+          command: ["bash", "-c", "pip install trino==0.314.0 && python /tmp/script/script.py"]
+          volumeMounts:
+            - name: script
+              mountPath: /tmp/script
+      restartPolicy: OnFailure
+      volumes:
+      - name: script
+        configMap:
+          name: create-ny-taxi-data-table-in-trino-script
+      restartPolicy: Never
+  backoffLimit: 20 # It can take some time until Trino is ready
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-ny-taxi-data-table-in-trino-script
+data:
+  script.py: |
+    import sys
+    import trino
+
+    if not sys.warnoptions:
+        import warnings
+    warnings.simplefilter("ignore")
+
+    def get_connection():
+        connection = trino.dbapi.connect(
+            host="trino-coordinator",
+            port=8443,
+            user="demo",
+            http_scheme='https',
+            auth=trino.auth.BasicAuthentication("demo", "demo"),
+        )
+        connection._http_session.verify = False
+        return connection
+
+    def run_query(connection, query):
+        print(f"[DEBUG] Executing query {query}")
+        cursor = connection.cursor()
+        cursor.execute(query)
+        return cursor.fetchall()
+
+    connection = get_connection()
+
+    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS hive.demo WITH (location = 's3a://demo/')")[0][0] is True
+    assert run_query(connection, """
+    CREATE TABLE IF NOT EXISTS hive.demo.ny_taxi_data_raw (
+        VendorID BIGINT,
+        tpep_pickup_datetime TIMESTAMP,
+        tpep_dropoff_datetime TIMESTAMP,
+        passenger_count DOUBLE,
+        trip_distance DOUBLE,
+        payment_type BIGINT,
+        Fare_amount DOUBLE,
+        Tip_amount DOUBLE,
+        Total_amount DOUBLE
+    ) WITH (
+        external_location = 's3a://demo/ny-taxi-data/raw/',
+        format = 'parquet'
+    )
+    """)[0][0] is True
+
+    assert run_query(connection, "SELECT COUNT(*) FROM hive.demo.ny_taxi_data_raw")[0][0] == 3_599_920

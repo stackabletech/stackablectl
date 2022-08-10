@@ -1,9 +1,8 @@
 = Stack
-A stack is a collection of ready-to-use Stackable data products as well as required third-party services like Postgresql or MinIO.
-It is tied to a specific release of the Stackable Data Platform, which will provide the required operators for the Stack.
+A stack is a collection of ready-to-use Stackable data products as well as needed third-party services like Postgresql or MinIO.
 
 == Browse available stacks
-To list the available stacks, run the following command:
+To list the available stacks run the following command
 
 [source,console]
 ----
@@ -13,7 +12,7 @@ druid-superset-s3                   22.06              Stack containing MinIO, D
 airflow                             22.06              Stack containing Airflow scheduling platform
 ----
 
-Detailed information of a stack can be queried with the `describe` command:
+To show details run
 
 [source,console]
 ----
@@ -27,7 +26,7 @@ Labels:             druid, superset, minio, s3
 Future version of `stackablectl` will allow to search for stacks based on the labels.
 
 == Install stack
-If you want to access a Kubernetes cluster, make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
+If you access to an Kubernetes cluster make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
 After that run the following command
 
 [source,console]
@@ -52,8 +51,8 @@ $ stackablectl stack install druid-superset-s3
 [INFO ] Installed stack druid-superset-s3
 ----
 
-If you don't have a Kubernetes cluster available, `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
-Make sure you have `kind` installed and run the following command:
+If you don't have an Kubernetes cluster available `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
+Make sure you have https://kind.sigs.k8s.io/[kind] installed and run the following command
 
 [source,console]
 ----
@@ -92,7 +91,7 @@ Have a nice day! 👋
 [INFO ] Installed stack druid-superset-s3
 ----
 
-After installing the stack, we can access the running services using the xref:commands/services.adoc[] command:
+After installing the stack we can access the running services using the xref:commands/operator.adoc[] command
 
 [source,console]
 ----

@@ -6,7 +6,7 @@ use cached::proc_macro::cached;
 use lazy_static::lazy_static;
 use log::{debug, error, info, warn, LevelFilter};
 use serde::Deserialize;
-use std::{collections::HashMap, error::Error, os::raw::c_char, process::exit, sync::Mutex};
+use std::{collections::HashMap, os::raw::c_char, process::exit, sync::Mutex};
 
 lazy_static! {
     pub static ref HELM_REPOS: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new());
@@ -47,7 +47,7 @@ pub fn handle_common_cli_args(args: &CliArgs) {
         args.helm_repo_stackable_dev.clone(),
     );
 
-    *(LOG_LEVEL.lock().unwrap()) = args.log_level.into();
+    *(LOG_LEVEL.lock().unwrap()) = args.log_level;
 
     let namespace = &args.namespace;
     if namespace != "default" {
@@ -68,31 +68,34 @@ pub fn install_helm_release_from_repo(
     chart_name: &str,
     chart_version: Option<&str>,
     values_yaml: Option<&str>,
-) -> Result<(), Box<dyn Error>> {
+) {
     if helm_release_exists(release_name) {
-        let helm_release = get_helm_release(release_name)?.ok_or(format!(
-            "Failed to find helm release {release_name} besides helm saying it should be there"
-        ))?;
+        let helm_release = get_helm_release(release_name).unwrap_or_else(|| {
+            panic!(
+                "Failed to find helm release {release_name} besides helm saying it should be there"
+            )
+        });
         let current_version = helm_release.version;
 
         match chart_version {
             None => {
                 warn!("The release {release_name} in version {current_version} is already installed and you have not requested a specific version, not re-installing it");
-                return Ok(());
+                return;
             }
             Some(chart_version) => {
                 if chart_version == current_version {
                     info!("The release {release_name} in version {current_version} is already installed, not installing it");
-                    return Ok(());
+                    return;
                 } else {
-                    return Err(format!("The helm release {release_name} is already installed in version {current_version} but you requested to install it in version {chart_version}. \
-                    Use \"stackablectl operator uninstall {operator_name}\" to uninstall it.").into());
+                    error!("The helm release {release_name} is already installed in version {current_version} but you requested to install it in version {chart_version}. \
+                    Use \"stackablectl operator uninstall {operator_name}\" to uninstall it.");
+                    exit(1);
                 }
             }
         }
     }
 
-    match HELM_REPOS.lock()?.get(repo_name) {
+    match HELM_REPOS.lock().unwrap().get(repo_name) {
         None => {
             error!("I don't know about the helm repo {repo_name}");
             exit(1);
@@ -107,25 +110,24 @@ pub fn install_helm_release_from_repo(
     let chart_version = chart_version.unwrap_or(">0.0.0-0");
     debug!("Installing helm release {repo_name} from chart {full_chart_name} in version {chart_version}");
     install_helm_release(release_name, &full_chart_name, chart_version, values_yaml);
-
-    Ok(())
 }
 
 /// Cached because of slow network calls
+/// Not returning an Result<HelmRepo, Error> because i couldn't get it to work with #[cached]
 #[cached]
-pub async fn get_repo_index(repo_url: String) -> Result<HelmRepo, String> {
+pub async fn get_repo_index(repo_url: String) -> HelmRepo {
     let index_url = format!("{repo_url}/index.yaml");
     debug!("Fetching helm repo index from {index_url}");
 
-    let index = reqwest::get(&index_url)
+    let resp = reqwest::get(&index_url)
         .await
-        .map_err(|err| format!("Failed to download helm repo index from {index_url}: {err}"))?
+        .unwrap_or_else(|_| panic!("Failed to download helm repo index from {index_url}"))
         .text()
         .await
-        .map_err(|err| format!("Failed to get text from {index_url}: {err}"))?;
+        .unwrap_or_else(|_| panic!("Failed to get text from {index_url}"));
 
-    serde_yaml::from_str(&index)
-        .map_err(|err| format!("Failed to parse helm repo index from {index_url}: {err}"))
+    serde_yaml::from_str(&resp)
+        .unwrap_or_else(|_| panic!("Failed to parse helm repo index from {index_url}"))
 }
 
 pub fn uninstall_helm_release(release_name: &str) {
@@ -179,20 +181,20 @@ pub struct Release {
     pub last_updated: String,
 }
 
-pub fn helm_list_releases() -> Result<Vec<Release>, Box<dyn Error>> {
+pub fn helm_list_releases() -> Vec<Release> {
     let releases_json = c_str_ptr_to_str(unsafe {
         go_helm_list_releases(GoString::from(NAMESPACE.lock().unwrap().as_str()))
     });
 
-    serde_json::from_str(releases_json).map_err(|err| {
-        format!("Failed to parse helm releases JSON from go wrapper {releases_json}: {err}").into()
+    serde_json::from_str(releases_json).unwrap_or_else(|_| {
+        panic!("Failed to parse helm releases JSON from go wrapper {releases_json}")
     })
 }
 
-pub fn get_helm_release(release_name: &str) -> Result<Option<Release>, Box<dyn Error>> {
-    Ok(helm_list_releases()?
+pub fn get_helm_release(release_name: &str) -> Option<Release> {
+    helm_list_releases()
         .into_iter()
-        .find(|release| release.name == release_name))
+        .find(|release| release.name == release_name)
 }
 
 pub fn add_helm_repo(name: &str, url: &str) {

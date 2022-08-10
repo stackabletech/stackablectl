@@ -1,11 +1,11 @@
 = Services
-In this context a (Stackable) service is a running instance of a data product. This is different from the meaning of a Kubernetes service which is an abstract way to expose an application running on a set of pods as a network service.
 
 == List running services
-The `stackablectl services` command allows to inspect the running services of the Stackable Data Platform.
+
+The `stackable services` command allows to inspect the running services of the Stackable Data Platform.
 Currently you can only get a read-only view of the running services, future versions may allow to e.g. uninstall running services.
 
-An example invocation looks as follows:
+An example invocation looks as follows
 
 [source,console]
 ----
@@ -26,7 +26,7 @@ You can also
 - Redact the passwords from the output in case you want to share the list of services without giving out the admin credentials
 - Print the installed product versions
 
-To achieve this you can use the following command:
+To achieve this you can use the following command
 
 [source,console]
 ----

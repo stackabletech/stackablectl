@@ -6,5 +6,5 @@
 ** xref:commands/release.adoc[]
 ** xref:commands/services.adoc[]
 ** xref:commands/stack.adoc[]
-* xref:customization.adoc[]
+* xref:customizability.adoc[]
 * xref:troubleshooting.adoc[]
