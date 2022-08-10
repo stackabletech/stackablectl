@@ -39,4 +39,20 @@ To achieve this you can use the following command:
 [source,console]
 ----
 $ stackablectl services list --all-namespaces --redact-credentials --show-versions
+ PRODUCT   NAME         NAMESPACE  ENDPOINTS                                     EXTRA INFOS                             
+                                                                                                                         
+ hive      hive         default    hive                172.18.0.5:30298          version 2.3.9-stackable0.4.0            
+                                   metrics             172.18.0.5:31633                                                  
+                                                                                                                         
+ opa       opa          default    http                http://172.18.0.5:30316   version 0.41.0-stackable0.1.0           
+                                                                                                                         
+ superset  superset     default    external-superset   http://172.18.0.4:32295   Admin user: admin, password: <redacted> 
+                                                                                 version 1.5.1-stackable0.2.0            
+                                                                                                                         
+ trino     trino        default    coordinator-http    http://172.18.0.3:30167   version 387-stackable0.1.0              
+                                   coordinator-metrics 172.18.0.3:31818                                                  
+                                   coordinator-https   https://172.18.0.3:30141                                          
+                                                                                                                         
+ minio     minio-trino  default    http                http://172.18.0.3:31062   Third party service                     
+                                   console-http        http://172.18.0.3:30503   Admin user: root, password: <redacted> 
 ----
