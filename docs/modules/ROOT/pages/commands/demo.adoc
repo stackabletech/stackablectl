@@ -63,7 +63,7 @@ Make sure you have `kind` installed and run the following command:
 
 [source,console]
 ----
-$ stackablectl stack install druid-superset-s3 --kind-cluster
+$ stackablectl demo install trino-taxi-data --kind-cluster
 [INFO ] Creating kind cluster stackable-data-platform
 Creating cluster "stackable-data-platform" ...
  ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
