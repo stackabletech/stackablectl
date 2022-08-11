@@ -1,24 +1,39 @@
 = Services
 
-== List running services
+In this context a (Stackable) service is a running instance of a data product. This is different from the meaning of a Kubernetes service which is an abstract way to expose an application running on a set of pods as a network service.
 
-The `stackable services` command allows to inspect the running services of the Stackable Data Platform.
+== List running services
+The `stackablectl services` command allows to inspect the running services of the Stackable data platform.
 Currently you can only get a read-only view of the running services, future versions may allow to e.g. uninstall running services.
 
-An example invocation looks as follows
+An example invocation looks as follows:
 
 [source,console]
 ----
-$ stackablectl services list
-PRODUCT      NAME                                     NAMESPACE                      ENDPOINTS                                          EXTRA INFOS
-airflow      airflow                                  default                        webserver-airflow:   http://172.18.0.5:32290       Admin user: airflow, password: airflow
-druid        druid                                    default                        router-http:         http://172.18.0.2:30245       
-                                                                                     coordinator-http:    http://172.18.0.4:30506       
-superset     superset                                 default                        external-superset:   http://172.18.0.2:31891       Admin user: admin, password: admin
-zookeeper    druid-zookeeper                          default                        zk:                  172.18.0.5:30890              
-minio        minio-druid                              default                        http:                http://172.18.0.4:32173       Third party service
-                                                                                     console-http:        http://172.18.0.4:30982       Admin user: root, password: rootroot
+$ stackablectl services list --all-namespaces
+ PRODUCT   NAME         NAMESPACE  ENDPOINTS                                     EXTRA INFOS                          
+                                                                                                                      
+ hive      hive         default    hive                172.18.0.4:32658                                               
+                                   metrics             172.18.0.4:30745                                               
+                                                                                                                      
+ opa       opa          default    http                http://172.18.0.2:31324                                        
+                                                                                                                      
+ superset  superset     default    external-superset   http://172.18.0.2:32716   Admin user: admin, password: admin   
+                                                                                                                      
+ trino     trino        default    coordinator-http    http://172.18.0.5:32128                                        
+                                   coordinator-metrics 172.18.0.5:31199                                               
+                                   coordinator-https   https://172.18.0.5:32721                                       
+                                                                                                                      
+ minio     minio-trino  default    http                http://172.18.0.4:31026   Third party service                  
+                                   console-http        http://172.18.0.4:30354   Admin user: root, password: rootroot
 ----
+
+[NOTE]
+====
+When a product instance has not finished starting yet, the service will have no endpoint.
+Starting all of the product instances might take an considerable amount of time depending on your internet connectivity.
+In case the product is not ready yet a warning might be shown.
+====
 
 You can also
 
@@ -26,19 +41,25 @@ You can also
 - Redact the passwords from the output in case you want to share the list of services without giving out the admin credentials
 - Print the installed product versions
 
-To achieve this you can use the following command
+To achieve this you can use the following command:
 
 [source,console]
 ----
 $ stackablectl services list --all-namespaces --redact-credentials --show-versions
-PRODUCT      NAME                                     NAMESPACE                      ENDPOINTS                                          EXTRA INFOS
-airflow      airflow                                  default                        webserver-airflow:   http://172.18.0.5:32290       Admin user: airflow, password: <redacted>
-                                                                                                                                        version 2.2.5-python39-stackable0.3.0
-druid        druid                                    default                        router-http:         http://172.18.0.2:30245       version 0.23.0-stackable0.1.0
-                                                                                     coordinator-http:    http://172.18.0.4:30506       
-superset     superset                                 default                        external-superset:   http://172.18.0.2:31891       Admin user: admin, password: <redacted>
-                                                                                                                                        version 1.5.1-stackable0.2.0
-zookeeper    druid-zookeeper                          default                        zk:                  172.18.0.5:30890              version 3.8.0-stackable0.7.1
-minio        minio-druid                              default                        http:                http://172.18.0.4:32173       Third party service
-                                                                                     console-http:        http://172.18.0.4:30982       Admin user: root, password: <redacted>
+ PRODUCT   NAME         NAMESPACE  ENDPOINTS                                     EXTRA INFOS                             
+                                                                                                                         
+ hive      hive         default    hive                172.18.0.5:30298          version 2.3.9-stackable0.4.0            
+                                   metrics             172.18.0.5:31633                                                  
+                                                                                                                         
+ opa       opa          default    http                http://172.18.0.5:30316   version 0.41.0-stackable0.1.0           
+                                                                                                                         
+ superset  superset     default    external-superset   http://172.18.0.4:32295   Admin user: admin, password: <redacted> 
+                                                                                 version 1.5.1-stackable0.2.0            
+                                                                                                                         
+ trino     trino        default    coordinator-http    http://172.18.0.3:30167   version 387-stackable0.1.0              
+                                   coordinator-metrics 172.18.0.3:31818                                                  
+                                   coordinator-https   https://172.18.0.3:30141                                          
+                                                                                                                         
+ minio     minio-trino  default    http                http://172.18.0.3:31062   Third party service                     
+                                   console-http        http://172.18.0.3:30503   Admin user: root, password: <redacted> 
 ----

@@ -1,8 +1,9 @@
 use crate::arguments::CliCommand;
 use arguments::CliArgs;
-use clap::Parser;
+use clap::{IntoApp, Parser};
 use lazy_static::lazy_static;
-use std::{error::Error, sync::Mutex};
+use log::error;
+use std::{error::Error, process::exit, sync::Mutex};
 
 mod arguments;
 mod demo;
@@ -43,24 +44,34 @@ async fn main() -> Result<(), Box<dyn Error>> {
     env_logger::builder()
         .format_timestamp(None)
         .format_target(false)
-        .filter_level(args.log_level)
+        .filter_level(args.log_level.into())
         .init();
 
     let namespace = &args.namespace;
-    *(NAMESPACE.lock().unwrap()) = namespace.to_string();
+    *(NAMESPACE.lock()?) = namespace.to_string();
 
     helm::handle_common_cli_args(&args);
     release::handle_common_cli_args(&args);
     stack::handle_common_cli_args(&args);
     demo::handle_common_cli_args(&args);
 
-    match &args.cmd {
-        CliCommand::Demo(command) => command.handle().await?,
+    let result = match &args.cmd {
         CliCommand::Operator(command) => command.handle().await,
         CliCommand::Release(command) => command.handle().await,
-        CliCommand::Stack(command) => command.handle().await?,
-        CliCommand::Services(command) => command.handle().await?,
+        CliCommand::Stack(command) => command.handle().await,
+        CliCommand::Demo(command) => command.handle().await,
+        CliCommand::Services(command) => command.handle().await,
+        CliCommand::Completion(command) => {
+            let mut cmd = CliArgs::command();
+            arguments::print_completions(command.shell, &mut cmd);
+            Ok(())
+        }
+    };
+
+    if let Err(err) = &result {
+        error!("{err}");
+        exit(-1);
     }
 
-    Ok(())
+    result
 }

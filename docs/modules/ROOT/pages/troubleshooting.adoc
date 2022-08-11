@@ -1,7 +1,7 @@
 = Troubleshooting
 
 == No internet connectivity
-`stackablectl` uses a Internet connection to always know of all the available versions, releases, stacks and demos.
+`stackablectl` uses an internet connection to always know of all the available versions, releases, stacks and demos.
 To achieve this the following online services will be contacted:
 
 [%autowidth.stretch]
@@ -20,17 +20,17 @@ To achieve this the following online services will be contacted:
 | https://raw.githubusercontent.com/stackabletech/release/main/releases.yaml
 | List of releases provided by Stackable
 
-| https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks.yaml
+| https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/stacks-v1.yaml
 | List of stacks provided by Stackable
 
-| https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos.yaml
+| https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/demos-v1.yaml
 | List of demos provided by Stackable
 
 |===
 
 === Mirror helm-charts
 To allow stackablectl to retrieve the current list of operators you must mirror the `https://repo.stackable.tech/repository/helm-.*/index.yaml` files to some local URL.
-If the file is mirrored to e.g. `https://my.corp/stackable/repository/helm-stable/index.yaml` you need to specify the following arguments to `stackablectl`
+If the file is mirrored e.g. to `https://my.corp/stackable/repository/helm-stable/index.yaml`, you need to specify the following arguments to `stackablectl`:
 
 [source,console]
 ----
@@ -39,11 +39,11 @@ $ stackablectl --helm-repo-stackable-stable https://my.corp/stackable/repository
 
 === Mirror releases/stacks/demos files
 You need to mirror the URL to either a URL or a file on disk.
-You can than specify the mirrored file to be included via `--additional-release-files`, `--additional-stack-files` or `--additional-demo-files`, e.g.
+You can then specify the mirrored file to be included via `--additional-releases-file`, `--additional-stacks-file`, or `--additional-demos-file`, e.g.
 
 [source,console]
 ----
-$ stackablectl --additional-release-files=/home/sbernauer/Downloads/releases.yaml release list
+$ stackablectl --additional-releases-file=/home/sbernauer/Downloads/releases.yaml release list
 ----
 
 == `panic: open /tmp/.helmcache/stackable-stable-index.yaml: permission denied`
