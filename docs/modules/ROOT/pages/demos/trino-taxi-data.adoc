@@ -8,7 +8,7 @@ This demo will
 ** Trino: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
 ** MinIO: A S3 compatible object store. This demo uses it as long-term storage.
 ** Hive metastore: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino
-* Load testdata into S3. It contains 2 and a half years of New York City taxi trips.
+* Load testdata into S3. It contains 2.5 years of New York City taxi trips.
 * Make data accessible via SQL in Trino
 * Create Superset dashboards for visualization
 
