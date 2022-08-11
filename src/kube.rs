@@ -114,8 +114,6 @@ pub async fn get_service_endpoint_urls(
                 };
                 let endpoint = match port_name.as_str() {
                     // TODO: Consolidate web-ui port names in operators based on decision in arch meeting from 2022/08/10
-                    // * In case a single http port call it http
-                    // * If you have multiple http ports call it http-ui
                     // For Superset: https://github.com/stackabletech/superset-operator/issues/248
                     // For Airflow: https://github.com/stackabletech/airflow-operator/issues/146
                     // As we still support older operator versions we need to also include the "old" way of naming
