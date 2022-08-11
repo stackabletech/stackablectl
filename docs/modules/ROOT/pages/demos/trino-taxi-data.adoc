@@ -204,7 +204,7 @@ returns
         2 | 2021-08-03 11:51:58.000 | 2021-08-03 12:09:29.000 |           17 |            96.0 |          1.56 | Credit card  |        11.5 |       2.22 |        17.02 
 ----
 Pretty cheap for that amount of persons!
-This probably is a invalid record.
+This probably is an invalid record.
 ====
 
 What was the highest tip (measured in percentage of the original fee) ever given?
