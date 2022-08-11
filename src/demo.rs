@@ -95,6 +95,7 @@ struct Demos {
 #[serde(rename_all = "camelCase")]
 struct Demo {
     description: String,
+    documentation: Option<String>,
     stackable_stack: String,
     labels: Vec<String>,
     manifests: Vec<StackManifest>,
@@ -129,6 +130,7 @@ async fn describe_demo(demo_name: &str, output_type: &OutputType) -> Result<(), 
     struct Output {
         demo: String,
         description: String,
+        documentation: Option<String>,
         stackable_stack: String,
         labels: Vec<String>,
     }
@@ -137,6 +139,7 @@ async fn describe_demo(demo_name: &str, output_type: &OutputType) -> Result<(), 
     let output = Output {
         demo: demo_name.to_string(),
         description: demo.description,
+        documentation: demo.documentation,
         stackable_stack: demo.stackable_stack,
         labels: demo.labels,
     };
@@ -145,6 +148,9 @@ async fn describe_demo(demo_name: &str, output_type: &OutputType) -> Result<(), 
         OutputType::Text => {
             println!("Demo:               {}", output.demo);
             println!("Description:        {}", output.description);
+            if let Some(documentation) = output.documentation {
+                println!("Documentation:      {}", documentation);
+            }
             println!("Stackable stack:    {}", output.stackable_stack);
             println!("Labels:             {}", output.labels.join(", "));
         }
