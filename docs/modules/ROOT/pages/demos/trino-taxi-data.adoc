@@ -1,5 +1,12 @@
 = trino-taxi-data
 
+[NOTE]
+====
+This guide assumes you already have the demo `trino-taxi-data` installed.
+If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you have to run `stackablectl demo install trino-taxi-data`.
+====
+
 This demo will
 
 * Install the required Stackable operators
@@ -15,6 +22,36 @@ This demo will
 You can see the deployed products as well as their relationship in the following diagram:
 
 image::demo-trino-taxi-data/overview.png[]
+
+== List deployed Stackable services
+To list the installed installed Stackable service run the following command:
+
+[source,console]
+----
+$ stackablectl services list --all-namespaces
+ PRODUCT   NAME         NAMESPACE  ENDPOINTS                                     EXTRA INFOS                          
+                                                                                                                      
+ hive      hive         default    hive                172.18.0.5:30298                                               
+                                   metrics             172.18.0.5:31633                                               
+                                                                                                                      
+ opa       opa          default    http                http://172.18.0.5:30316                                        
+                                                                                                                      
+ superset  superset     default    external-superset   http://172.18.0.4:32295   Admin user: admin, password: admin   
+                                                                                                                      
+ trino     trino        default    coordinator-http    http://172.18.0.3:30167                                        
+                                   coordinator-metrics 172.18.0.3:31818                                               
+                                   coordinator-https   https://172.18.0.3:30141                                       
+                                                                                                                      
+ minio     minio-trino  default    http                http://172.18.0.3:31062   Third party service                  
+                                   console-http        http://172.18.0.3:30503   Admin user: root, password: rootroot
+----
+
+[NOTE]
+====
+When a product instance has not finished starting yet, the service will have no endpoint.
+Starting all of the product instances might take an considerable amount of time depending on your internet connectivity.
+In case the product is not ready yet a warning might be shown.
+====
 
 == Inspect data in S3
 The S3 provided by MinIO is used as a persistent storage to store all the data used

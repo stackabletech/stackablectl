@@ -3,7 +3,7 @@
 In this context a (Stackable) service is a running instance of a data product. This is different from the meaning of a Kubernetes service which is an abstract way to expose an application running on a set of pods as a network service.
 
 == List running services
-The `stackablectl services` command allows to inspect the running services of the Stackable Data Platform.
+The `stackablectl services` command allows to inspect the running services of the Stackable data platform.
 Currently you can only get a read-only view of the running services, future versions may allow to e.g. uninstall running services.
 
 An example invocation looks as follows:
@@ -27,6 +27,13 @@ $ stackablectl services list --all-namespaces
  minio     minio-trino  default    http                http://172.18.0.4:31026   Third party service                  
                                    console-http        http://172.18.0.4:30354   Admin user: root, password: rootroot
 ----
+
+[NOTE]
+====
+When a product instance has not finished starting yet, the service will have no endpoint.
+Starting all of the product instances might take an considerable amount of time depending on your internet connectivity.
+In case the product is not ready yet a warning might be shown.
+====
 
 You can also
 
