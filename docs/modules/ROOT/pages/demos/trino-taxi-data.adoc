@@ -100,7 +100,7 @@ order by 1
 image::demo-trino-taxi-data/superset_7.png[]
 
 == Summary
-The demo loaded 2 and a half years of taxi trip data from New York City with 68 million records and a total size of 1GB in parquet files.
+The demo loaded 2.5 years of taxi trip data from New York City with 68 million records and a total size of 1GB in parquet files.
 The data was put into the S3 storage.
 Trino enables you to query the data via SQL.
 Superset was used as a web-based frontend to execute SQL statements and build dashboards.
