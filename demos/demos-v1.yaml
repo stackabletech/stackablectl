@@ -28,3 +28,4 @@ demos:
     manifests:
       - plainYaml: demos/kafka-druid-earthquake-data/ingest-test-data.yaml # TODO
       - plainYaml: demos/kafka-druid-earthquake-data/create-druid-ingestion-job.yaml # TODO
+      - plainYaml: demos/kafka-druid-earthquake-data/setup-superset.yaml # TODO
