@@ -22,7 +22,7 @@ image::layers.png[Layers of the deployed services]
 
 == Operators
 This layer consists of Stackable operators managing the individual data products.
-They can either be installed one by one with the command `stackablectl operator` or from a release with `stackablectl release` which is preferred.
+They can either be installed one by one with the command `stackablectl operator` or from a release with `stackablectl release` which is recommended.
 A release is a well-playing bundle of operators that get released approximately every 2 months.
 
 == Stacks
