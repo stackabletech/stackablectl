@@ -1,0 +1,30 @@
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperZnode
+metadata:
+  name: kafka-znode
+spec:
+  clusterRef:
+    name: zookeeper
+---
+apiVersion: kafka.stackable.tech/v1alpha1
+kind: KafkaCluster
+metadata:
+  name: kafka
+spec:
+  version: 3.2.0-stackable0.1.0
+  zookeeperConfigMapName: kafka-znode
+  brokers:
+    config:
+      resources:
+        storage:
+          logDirs:
+            capacity: 2Gi
+        cpu:
+          max: 500m
+          min: 250m
+        memory:
+          limit: 2Gi
+    roleGroups:
+      default:
+        replicas: 1

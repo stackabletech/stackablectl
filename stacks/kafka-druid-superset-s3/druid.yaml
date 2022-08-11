@@ -56,7 +56,7 @@ metadata:
   name: druid-znode
 spec:
   clusterRef:
-    name: druid-zookeeper
+    name: zookeeper
 ---
 apiVersion: secrets.stackable.tech/v1alpha1
 kind: SecretClass
