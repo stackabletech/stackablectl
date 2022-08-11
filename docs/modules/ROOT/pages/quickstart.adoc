@@ -107,38 +107,5 @@ Have a nice day! 👋
 [INFO ] Installed demo trino-taxi-data. Use "stackablectl services list" to list the installed services
 ----
 
-== List deploy Stackable services
-The `stackablectl demo install` command installed all the needed bits and pieces to make the demo work.
-Depending on your Internet connectivity it can take quite some time to download all the needed Software (in form of docker images).
-So it might be the case that you have installed the data products but they aren't ready yet.
-
-To list the installed installed Stackable service run the following command:
-
-[source,console]
-----
-stackablectl services list --all-namespaces
- PRODUCT   NAME         NAMESPACE  ENDPOINTS                                     EXTRA INFOS                          
-                                                                                                                      
- hive      hive         default    hive                172.18.0.5:30298                                               
-                                   metrics             172.18.0.5:31633                                               
-                                                                                                                      
- opa       opa          default    http                http://172.18.0.5:30316                                        
-                                                                                                                      
- superset  superset     default    external-superset   http://172.18.0.4:32295   Admin user: admin, password: admin   
-                                                                                                                      
- trino     trino        default    coordinator-http    http://172.18.0.3:30167                                        
-                                   coordinator-metrics 172.18.0.3:31818                                               
-                                   coordinator-https   https://172.18.0.3:30141                                       
-                                                                                                                      
- minio     minio-trino  default    http                http://172.18.0.3:31062   Third party service                  
-                                   console-http        http://172.18.0.3:30503   Admin user: root, password: rootroot
-----
-[NOTE]
-====
-When a product doesn't have an endpoint yet the product has not started yet.
-Starting all of the products might take an considerable amount of time.
-In case the product is not ready yet a warning might be shown.
-====
-
 == Proceed with the demo
 Please read the documentation on the demo xref:demos/trino-taxi-data.adoc[] on how to proceed with the demo
