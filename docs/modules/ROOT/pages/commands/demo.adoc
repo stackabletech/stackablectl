@@ -20,6 +20,7 @@ Detailed information of a demo can be queried with the `describe` command:
 $ stackablectl demo describe trino-taxi-data
 Demo:               trino-taxi-data
 Description:        Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
+Documentation:      https://docs.stackable.tech/stackablectl/stable/demos/trino-taxi-data.html
 Stackable stack:    trino-superset-s3
 Labels:             trino, superset, minio, s3, ny-taxi-data
 ----
