@@ -1,0 +1,311 @@
+= trino-taxi-data
+
+This demo will
+
+* Install the required Stackable operators
+* Spin up the follow data products
+** Superset: A modern data exploration and visualization platform. This demo uses it to execute SQL queries and build dashboards
+** Trino: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
+** MinIO: A S3 compatible object store. This demo uses it as persistent storage to store all the data used
+** Hive metastore: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino
+* Load testdata into S3. It contains 2.5 years of New York City taxi trips
+* Make data accessible via SQL in Trino
+* Create Superset dashboards for visualization
+
+You can see the deployed products as well as their relationship in the following diagram:
+
+image::demo-trino-taxi-data/overview.png[]
+
+== Inspect data in S3
+The S3 provided by MinIO is used as a persistent storage to store all the data used
+You can have a look at the testdata within the MinIO Webinterface by opening the given `minio` endpoint `console-http` from the `stackablectl services list` command.
+You have to use the endpoint from your command output, in this case it is http://172.18.0.3:30503.
+Open it with your favorite browser.
+
+image::demo-trino-taxi-data/minio_1.png[]
+
+Log in with the credentials username `root`, password `rootroot`.
+
+image::demo-trino-taxi-data/minio_2.png[]
+
+Click on the blue button `Browse` on the bucket `demo` and open the folders `ny-taxi-data` -> `raw`.
+
+image::demo-trino-taxi-data/minio_3.png[]
+
+As you can see the demo uploaded 1GB of parquet files, one file per month.
+The data contain taxi rides in New York City.
+You can see the file size (and therefore the number of rides) decrease drastically because of the Covid-19 pandemic starting from `2020-03`.
+https://parquet.apache.org/[Parquet] is an open source, column-oriented data file format designed for efficient data storage and retrieval.
+
+== Use Trino webinterface
+Trino offers SQL access to the data within S3.
+Open the `trino` endpoint `coordinator-https` in your browser (`https://172.18.0.3:30141` in this case).
+If you get a warning regarding the self signed certificate (e.g. `Warning: Potential Security Risk Ahead`) you have to tell your browser to trust the website and continue.
+
+image::demo-trino-taxi-data/trino_1.png[]
+
+Log in with the credentials username `admin`, password `admin`.
+
+image::demo-trino-taxi-data/trino_2.png[]
+
+When you start executing SQL queries you will see the queries getting processed here.
+
+== Use Superset webinterface
+Superset gives the ability to execute SQL queries and build dashboards.
+Open the `superset` endpoint `external-superset` in your browser (`http://172.18.0.4:32295` in this case).
+
+image::demo-trino-taxi-data/superset_1.png[]
+
+Log in with the credentials username `admin`, password `admin`.
+
+image::demo-trino-taxi-data/superset_2.png[]
+
+=== Inspect dashboard
+On the top click on the tab `Dashboards`.
+
+image::demo-trino-taxi-data/superset_3.png[]
+
+Click on the dashboard called `Taxi data`.
+It might take some time until the dashboards renders all the included charts.
+
+image::demo-trino-taxi-data/superset_4.png[]
+
+You can clearly see the impact of Covid-19 on the taxi business.
+
+=== Execute arbitrary SQL statements
+Within Superset you can not only create dashboards but also run arbitrary SQL statements.
+On the top click on the tab `SQL Lab` -> `SQL Editor`.
+
+image::demo-trino-taxi-data/superset_5.png[]
+
+On the left select the database `Trino`, the schema `demo` and set `See table schema` to `ny_taxi_data`.
+
+image::demo-trino-taxi-data/superset_6.png[]
+
+On the right textbox enter the desired SQL statement.
+If you do not want to make on up you can use the following:
+
+[source,sql]
+----
+select
+  format_datetime(tpep_pickup_datetime, 'YYYY/MM') as month,
+  count(*) as trips,
+  sum(total_amount) as sales,
+  avg(date_diff('minute', tpep_pickup_datetime, tpep_dropoff_datetime)) as avg_duration_min
+from ny_taxi_data
+group by 1
+order by 1
+----
+
+image::demo-trino-taxi-data/superset_7.png[]
+
+== Summary
+The demo loaded 2.5 years of taxi trip data from New York City with 68 million records and a total size of 1GB in parquet files.
+The data was put into the S3 storage.
+Trino enables you to query the data via SQL.
+Superset was used as a web-based frontend to execute SQL statements and build dashboards.
+
+== Where to go from here
+There are multiple paths to go from here.
+The following sections can give you some ideas on what to explore next.
+You can find the description of the taxi data https://www1.nyc.gov/assets/tlc/downloads/pdf/data_dictionary_trip_records_yellow.pdf[on the New York City website].
+
+=== Execute arbitrary SQL statements
+Within Superset you can execute arbitrary SQL statements to explore the taxi data.
+Can you answer the following questions by executing SQL statements?
+The https://trino.io/docs/current/language.html[Trino documentation on their SQL language] might help you.
+
+How many taxi trips there where in the year 2021?
+
+.See the answer
+[%collapsible]
+====
+
+[source,sql]
+----
+select
+  count(*) as trips
+from ny_taxi_data
+where year(tpep_pickup_datetime) = 2021
+----
+
+returns 30.903.982 trips.
+====
+
+What was the maximum amount of passengers?
+
+.See the answer
+[%collapsible]
+====
+
+[source,sql]
+----
+select
+  max(passenger_count) as max_passenger_count
+from ny_taxi_data;
+----
+
+returns 112 passengers.
+
+Well that's weird.
+Lets examine the passengers distribution.
+
+[source,sql]
+----
+select
+  passenger_count,
+  count(*) as frequency
+from ny_taxi_data
+group by 1
+order by 1 desc
+limit 100
+----
+
+returns
+
+[source]
+----
+ passenger_count | frequency 
+-----------------+-----------
+           112.0 |         1 
+            96.0 |         1 
+             9.0 |        98 
+             8.0 |       156 
+             7.0 |       229 
+             6.0 |   1089568 
+             5.0 |   1715439 
+             4.0 |   1052834 
+             3.0 |   2504112 
+             2.0 |   9575299 
+             1.0 |  48133494 
+             0.0 |   1454268 
+            NULL |   2698591 
+----
+
+We can see that one trip had 112 and another one 96 passengers.
+All the other trips start with a more "realistic" number of 9 passengers.
+
+As a bonus question: What *exactly* did the large passenger do?
+
+[source,sql]
+----
+select *
+from ny_taxi_data
+where passenger_count > 50
+----
+
+returns
+
+[source]
+----
+ vendorid |  tpep_pickup_datetime   |  tpep_dropoff_datetime  | duration_min | passenger_count | trip_distance | payment_type | fare_amount | tip_amount | total_amount 
+----------+-------------------------+-------------------------+--------------+-----------------+---------------+--------------+-------------+------------+--------------
+        2 | 2021-08-01 19:47:43.000 | 2021-08-01 19:57:54.000 |           10 |           112.0 |           1.8 | Credit card  |         9.0 |       2.46 |        14.76 
+        2 | 2021-08-03 11:51:58.000 | 2021-08-03 12:09:29.000 |           17 |            96.0 |          1.56 | Credit card  |        11.5 |       2.22 |        17.02 
+----
+Pretty cheap for that amount of persons!
+This probably is an invalid record.
+====
+
+What was the highest tip (measured in percentage of the original fee) ever given?
+
+.See the answer
+[%collapsible]
+====
+
+[source,sql]
+----
+select
+  total_amount as fee,
+  tip_amount as tip,
+  tip_amount / total_amount * 100 as tip_percentage
+from ny_taxi_data
+where total_amount > 0
+order by 3 desc
+limit 5
+----
+
+returns
+
+[source]
+----
+ fee  | tip  |   tip_percentage   
+------+------+--------------------
+  4.2 | 10.0 |  238.0952380952381 
+ 18.2 | 25.0 | 137.36263736263737 
+ 8.24 | 9.24 | 112.13592233009709 
+ 0.66 | 0.66 |              100.0 
+ 0.01 | 0.01 |              100.0 
+----
+====
+
+=== Create additional dashboards
+You also have the possibility to create additional Charts and bundle them together in a Dashboard.
+Have a look at https://superset.apache.org/docs/creating-charts-dashboards/creating-your-first-dashboard#creating-charts-in-explore-view[the Superset documentation] on how to do that.
+
+=== Load additional data
+You can use the MinIO Webinterface to upload any data.
+As an alternative you can use the S3 API with an S3 client e.g. https://s3tools.org/s3cmd[s3cmd].
+It is recommended to put the data into a folder (prefix) in the `demo` bucket.
+
+Have a look at the defined tables inside the `hive`.`demo` schema on how to inform Trino about the newly available data.
+
+.Table definitions
+[%collapsible]
+====
+
+[source,sql]
+----
+show create table hive.demo.ny_taxi_data_raw
+----
+
+produces something like
+
+[source,sql]
+----
+CREATE TABLE IF NOT EXISTS hive.demo.ny_taxi_data_raw (
+  VendorID BIGINT,
+  tpep_pickup_datetime TIMESTAMP,
+  tpep_dropoff_datetime TIMESTAMP,
+  passenger_count DOUBLE,
+  trip_distance DOUBLE,
+  payment_type BIGINT,
+  Fare_amount DOUBLE,
+  Tip_amount DOUBLE,
+  Total_amount DOUBLE
+) WITH (
+  external_location = 's3a://demo/ny-taxi-data/raw/',
+  format = 'parquet'
+)
+----
+
+If you want to transform or filter your data in any way before using it e.g. in Superset you can create a view as follows:
+[source,sql]
+----
+show create view hive.demo.ny_taxi_data
+----
+
+produces something like
+
+[source,sql]
+----
+create or replace view hive.demo.ny_taxi_data as
+select
+  vendorid,
+  tpep_pickup_datetime,
+  tpep_dropoff_datetime,
+  date_diff('minute', tpep_pickup_datetime, tpep_dropoff_datetime) as duration_min,
+  passenger_count,
+  trip_distance,
+  case payment_type when 1 then 'Credit card' when 2 then 'Cash' when 3 then 'No charge' when 4 then 'Dispute' when 6 then 'Voided trino' else 'Unknown' end as payment_type,
+  fare_amount,
+  tip_amount,
+  total_amount
+from hive.demo.ny_taxi_data_raw
+where tpep_pickup_datetime >= from_iso8601_timestamp('2019-12-01T00:00:00')
+and tpep_pickup_datetime <= from_iso8601_timestamp('2022-05-31T00:00:00')
+----
+====
+
+=== Connect to Trino via CLI, Python or DBeaver
+If you prefer running your SQL statements via command-line, a Python script or a graphical Database manager like DBeaver please have a look at the https://trino.io/docs/current/client.html[the Trino documentation] on how to do that.

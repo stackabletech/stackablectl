@@ -6,5 +6,7 @@
 ** xref:commands/release.adoc[]
 ** xref:commands/services.adoc[]
 ** xref:commands/stack.adoc[]
+* Demos
+** xref:demos/trino-taxi-data.adoc[]
 * xref:customization.adoc[]
 * xref:troubleshooting.adoc[]

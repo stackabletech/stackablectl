@@ -16,7 +16,7 @@ lazy_static! {
 
 #[derive(Parser)]
 pub enum CliCommandStack {
-    /// List all the available stack
+    /// List all the available stacks
     #[clap(alias("ls"))]
     List {
         #[clap(short, long, arg_enum, default_value = "text")]
@@ -97,7 +97,7 @@ struct Stack {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-enum StackManifest {
+pub enum StackManifest {
     #[serde(rename_all = "camelCase")]
     HelmChart {
         release_name: String,
@@ -111,7 +111,7 @@ enum StackManifest {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-struct HelmChartRepo {
+pub struct HelmChartRepo {
     name: String,
     url: String,
 }
@@ -175,14 +175,21 @@ async fn describe_stack(stack_name: &str, output_type: &OutputType) -> Result<()
     Ok(())
 }
 
-async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
+pub async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
     info!("Installing stack {stack_name}");
     let stack = get_stack(stack_name).await?;
 
     release::install_release(&stack.stackable_release, &[], &[]).await?;
 
     info!("Installing components of stack {stack_name}");
-    for manifest in stack.manifests {
+    install_manifests(&stack.manifests).await?;
+
+    info!("Installed stack {stack_name}");
+    Ok(())
+}
+
+pub async fn install_manifests(manifests: &[StackManifest]) -> Result<(), Box<dyn Error>> {
+    for manifest in manifests {
         match manifest {
             StackManifest::HelmChart {
                 release_name,
@@ -192,21 +199,23 @@ async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
                 options,
             } => {
                 debug!("Installing helm chart {name} as {release_name}");
-                HELM_REPOS.lock()?.insert(repo.name.clone(), repo.url);
+                HELM_REPOS
+                    .lock()?
+                    .insert(repo.name.clone(), repo.url.clone());
 
                 let values_yaml = serde_yaml::to_string(&options)?;
                 helm::install_helm_release_from_repo(
-                    &release_name,
-                    &release_name,
+                    release_name,
+                    release_name,
                     &repo.name,
-                    &name,
-                    Some(&version),
+                    name,
+                    Some(version),
                     Some(&values_yaml),
                 )?
             }
             StackManifest::PlainYaml(yaml_url_or_file) => {
                 debug!("Installing yaml manifest from {yaml_url_or_file}");
-                let manifests = helpers::read_from_url_or_file(&yaml_url_or_file)
+                let manifests = helpers::read_from_url_or_file(yaml_url_or_file)
                     .await
                     .map_err(|err| {
                         format!(
@@ -218,14 +227,13 @@ async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
         }
     }
 
-    info!("Installed stack {stack_name}");
     Ok(())
 }
 
 /// Cached because of potential slow network calls
 #[cached]
 async fn get_stacks() -> Stacks {
-    let mut all_stacks: IndexMap<String, Stack> = IndexMap::new();
+    let mut all_stacks = IndexMap::new();
     let stack_files = STACK_FILES.lock().unwrap().deref().clone();
     for stack_file in stack_files {
         let yaml = helpers::read_from_url_or_file(&stack_file).await;

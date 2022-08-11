@@ -1,6 +1,6 @@
 use crate::{
-    operator::CliCommandOperator, release::CliCommandRelease, services::CliCommandServices,
-    stack::CliCommandStack,
+    demo::CliCommandDemo, operator::CliCommandOperator, release::CliCommandRelease,
+    services::CliCommandServices, stack::CliCommandStack,
 };
 use clap::{ArgEnum, Command, Parser, ValueHint};
 use clap_complete::{generate, Generator, Shell};
@@ -71,6 +71,15 @@ pub struct CliArgs {
     /// Can be specified multiple times.
     #[clap(long, multiple_occurrences(true), value_hint = ValueHint::FilePath)]
     pub additional_stacks_file: Vec<String>,
+
+    /// Adds a YAML file containing custom demos
+    ///
+    /// If you do not have access to the Stackable repositories on GitHub or if you want to maintain your own demos, you can specify additional YAML files containing demo information.
+    /// Have a look at <https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/demos-v1.yaml> for the structure.
+    /// Can either be a URL or a path to a file, e.g. `https://my.server/my-demos.yaml`, '/etc/my-demos.yaml' or `C:\Users\Bob\my-demos.yaml`.
+    /// Can be specified multiple times.
+    #[clap(long, multiple_occurrences(true), value_hint = ValueHint::FilePath)]
+    pub additional_demos_file: Vec<String>,
 }
 
 #[derive(Parser)]
@@ -83,13 +92,17 @@ pub enum CliCommand {
     #[clap(subcommand, alias("r"), alias("re"))]
     Release(CliCommandRelease),
 
-    /// This subcommand interacts with stacks which are ready-to-use combinations of products.
+    /// This subcommand interacts with stacks, which are ready-to-use combinations of products.
     #[clap(subcommand, alias("s"), alias("st"))]
     Stack(CliCommandStack),
 
     /// This subcommand interacts with deployed services of products.
     #[clap(subcommand, alias("svc"))]
     Services(CliCommandServices),
+
+    /// This command interacts with demos, which are end-to-end demonstrations of the usage of the Stackable data platform.
+    #[clap(subcommand, alias("d"), alias("de"))]
+    Demo(CliCommandDemo),
 
     /// Output shell completion code for the specified shell.
     Completion(CliCommandCompletion),
