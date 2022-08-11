@@ -117,10 +117,10 @@ pub async fn get_service_endpoint_urls(
                     // For Superset: https://github.com/stackabletech/superset-operator/issues/248
                     // For Airflow: https://github.com/stackabletech/airflow-operator/issues/146
                     // As we still support older operator versions we need to also include the "old" way of naming
-                    "http" | "http-ui" | "ui" | "airflow" | "superset" => {
+                    "http" | "http-ui" | "http-api" | "ui" | "airflow" | "superset" => {
                         format!("http://{node_ip}:{node_port}")
                     }
-                    "https" | "https-ui" => format!("https://{node_ip}:{node_port}"),
+                    "https" | "https-ui" | "https-api" => format!("https://{node_ip}:{node_port}"),
                     _ => format!("{node_ip}:{node_port}"),
                 };
 
