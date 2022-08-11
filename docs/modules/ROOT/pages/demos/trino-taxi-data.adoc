@@ -49,7 +49,7 @@ $ stackablectl services list --all-namespaces
 [NOTE]
 ====
 When a product instance has not finished starting yet, the service will have no endpoint.
-Starting all of the product instances might take an considerable amount of time depending on your Internet connectivity.
+Starting all of the product instances might take an considerable amount of time depending on your internet connectivity.
 In case the product is not ready yet a warning might be shown.
 ====
 

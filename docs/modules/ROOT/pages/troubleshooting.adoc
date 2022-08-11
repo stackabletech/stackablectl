@@ -1,7 +1,7 @@
 = Troubleshooting
 
 == No internet connectivity
-`stackablectl` uses an Internet connection to always know of all the available versions, releases, stacks and demos.
+`stackablectl` uses an internet connection to always know of all the available versions, releases, stacks and demos.
 To achieve this the following online services will be contacted:
 
 [%autowidth.stretch]

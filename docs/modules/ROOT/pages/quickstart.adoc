@@ -9,7 +9,7 @@ Please follow the xref:installation.adoc[Installation documentation] to install 
 == Browse available demos
 Stackable provides a set of ready-to-use demos.
 As of writing (2022/09/10) only a single demo is available, but further demos will be added in the future.
-They will automatically show up, as `stackablectl` fetches the available list of demos via the Internet.
+They will automatically show up, as `stackablectl` fetches the available list of demos via the internet.
 To list the available demos run the following command:
 
 [source,console]
