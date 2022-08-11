@@ -2,7 +2,7 @@
 
 This demo will
 
-* Install the needed Stackable operators
+* Install the required Stackable operators
 * Spin up the follow data products
 ** Superset: A modern data exploration and visualization platform. This demo uses it to execute SQL queries and build dashboards
 ** Trino: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
