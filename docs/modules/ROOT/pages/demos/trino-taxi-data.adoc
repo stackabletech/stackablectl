@@ -2,13 +2,13 @@
 
 This demo will
 
-* Install the needed Stackable operators
+* Install the required Stackable operators
 * Spin up the follow data products
 ** Superset: A modern data exploration and visualization platform. This demo uses it to execute SQL queries and build dashboards
 ** Trino: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
 ** MinIO: A S3 compatible object store. This demo uses it as long-term storage.
 ** Hive metastore: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino
-* Load testdata into S3. It contains 2 and a half years of New York City taxi trips.
+* Load testdata into S3. It contains 2.5 years of New York City taxi trips.
 * Make data accessible via SQL in Trino
 * Create Superset dashboards for visualization
 
@@ -100,7 +100,7 @@ order by 1
 image::demo-trino-taxi-data/superset_7.png[]
 
 == Summary
-The demo loaded 2 and a half years of taxi trip data from New York City with 68 million records and a total size of 1GB in parquet files.
+The demo loaded 2.5 years of taxi trip data from New York City with 68 million records and a total size of 1GB in parquet files.
 The data was put into the S3 storage.
 Trino enables you to query the data via SQL.
 Superset was used as a web-based frontend to execute SQL statements and build dashboards.
@@ -204,7 +204,7 @@ returns
         2 | 2021-08-03 11:51:58.000 | 2021-08-03 12:09:29.000 |           17 |            96.0 |          1.56 | Credit card  |        11.5 |       2.22 |        17.02 
 ----
 Pretty cheap for that amount of persons!
-This probably is a invalid record.
+This probably is an invalid record.
 ====
 
 What was the highest tip (measured in percentage of the original fee) ever given?
