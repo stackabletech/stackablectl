@@ -16,7 +16,7 @@ To list the available demos run the following command:
 ----
 $ stackablectl demos list
 DEMO                                STACKABLE STACK           DESCRIPTION
-trino-taxi-data                     trino-superset-s3         Demo loading 2 years of New York taxi data into S3 bucket, creating Trino table and Superset dashboard
+trino-taxi-data                     trino-superset-s3         Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
 ----
 
 [NOTE]

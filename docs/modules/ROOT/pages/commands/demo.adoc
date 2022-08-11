@@ -10,7 +10,7 @@ To list the available demos, run the following command:
 ----
 $ stackablectl demo list
 DEMO                                STACKABLE STACK           DESCRIPTION
-trino-taxi-data                     trino-superset-s3         Demo loading 2 years of New York taxi data into S3 bucket, creating Trino table and Superset dashboard
+trino-taxi-data                     trino-superset-s3         Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
 ----
 
 Detailed information of a demo can be queried with the `describe` command:
@@ -19,7 +19,7 @@ Detailed information of a demo can be queried with the `describe` command:
 ----
 $ stackablectl demo describe trino-taxi-data
 Demo:               trino-taxi-data
-Description:        Demo loading 2 years of New York taxi data into S3 bucket, creating Trino table and Superset dashboard
+Description:        Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
 Stackable stack:    trino-superset-s3
 Labels:             trino, superset, minio, s3, ny-taxi-data
 ----
