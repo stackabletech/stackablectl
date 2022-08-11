@@ -3,7 +3,9 @@ use cached::proc_macro::cached;
 use indexmap::IndexMap;
 use k8s_openapi::api::core::v1::{Endpoints, Node, Service};
 use kube::{
-    api::{DynamicObject, GroupVersionKind, ListParams, Patch, PatchParams, TypeMeta},
+    api::{
+        DeleteParams, DynamicObject, GroupVersionKind, ListParams, Patch, PatchParams, TypeMeta,
+    },
     discovery::Scope,
     Api, Client, Discovery, ResourceExt,
 };
@@ -11,7 +13,7 @@ use log::{debug, warn};
 use serde::Deserialize;
 use std::{collections::HashMap, error::Error};
 
-pub async fn deploy_manifests(yaml: &str) -> Result<(), Box<dyn Error>> {
+pub async fn install_manifests(yaml: &str) -> Result<(), Box<dyn Error>> {
     let namespace = NAMESPACE.lock()?.clone();
     let client = get_client().await?;
     let discovery = Discovery::new(client.clone()).run().await?;
@@ -40,6 +42,35 @@ pub async fn deploy_manifests(yaml: &str) -> Result<(), Box<dyn Error>> {
             &Patch::Apply(object),
         )
         .await?;
+    }
+
+    Ok(())
+}
+
+pub async fn uninstall_manifests(yaml: &str) -> Result<(), Box<dyn Error>> {
+    let namespace = NAMESPACE.lock()?.clone();
+    let client = get_client().await?;
+    let discovery = Discovery::new(client.clone()).run().await?;
+
+    for manifest in serde_yaml::Deserializer::from_str(yaml) {
+        let mut object = DynamicObject::deserialize(manifest)?;
+
+        let gvk = gvk_of_typemeta(object.types.as_ref().ok_or(format!(
+            "Failed to deploy manifest because type of object {object:?} is not set"
+        ))?);
+        let (resource, capabilities) = discovery.resolve_gvk(&gvk).ok_or(format!(
+            "Failed to deploy manifest because the gvk {gvk:?} can not be resolved"
+        ))?;
+
+        let api: Api<DynamicObject> = match capabilities.scope {
+            Scope::Cluster => {
+                object.metadata.namespace = None;
+                Api::all_with(client.clone(), &resource)
+            }
+            Scope::Namespaced => Api::namespaced_with(client.clone(), &namespace, &resource),
+        };
+
+        api.delete(&object.name(), &DeleteParams::default()).await?;
     }
 
     Ok(())

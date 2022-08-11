@@ -218,7 +218,7 @@ pub async fn install_release(
     Ok(())
 }
 
-async fn uninstall_release(release_name: &str) {
+pub async fn uninstall_release(release_name: &str) {
     info!("Uninstalling release {release_name}");
     let release = get_release(release_name).await;
 

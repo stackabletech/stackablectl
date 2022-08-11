@@ -55,6 +55,14 @@ pub enum CliCommandStack {
         )]
         kind_cluster_name: String,
     },
+    /// Uninstall a stack
+    /// This will uninstall the stack as well as the underlying release
+    #[clap(alias("un"))]
+    Uninstall {
+        /// Name of the stack to uninstall
+        #[clap(required = true, value_hint = ValueHint::Other)]
+        stack: String,
+    },
 }
 
 impl CliCommandStack {
@@ -70,6 +78,7 @@ impl CliCommandStack {
                 kind::handle_cli_arguments(*kind_cluster, kind_cluster_name)?;
                 install_stack(stack).await?;
             }
+            CliCommandStack::Uninstall { stack } => uninstall_stack(stack).await?,
         }
         Ok(())
     }
@@ -185,6 +194,7 @@ pub async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
     install_manifests(&stack.manifests).await?;
 
     info!("Installed stack {stack_name}");
+
     Ok(())
 }
 
@@ -222,7 +232,46 @@ pub async fn install_manifests(manifests: &[StackManifest]) -> Result<(), Box<dy
                             "Could not read stack manifests from file \"{yaml_url_or_file}\": {err}"
                         )
                     })?;
-                kube::deploy_manifests(&manifests).await?;
+                kube::install_manifests(&manifests).await?;
+            }
+        }
+    }
+
+    Ok(())
+}
+
+pub async fn uninstall_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
+    info!("Uninstalling stack {stack_name}");
+    let stack = get_stack(stack_name).await?;
+    info!("Uninstalling components of stack {stack_name}");
+    uninstall_manifests(&stack.manifests).await?;
+
+    release::uninstall_release(&stack.stackable_release).await;
+
+    info!("Uninstalled stack {stack_name}");
+
+    Ok(())
+}
+
+pub async fn uninstall_manifests(manifests: &[StackManifest]) -> Result<(), Box<dyn Error>> {
+    for manifest in manifests {
+        match manifest {
+            StackManifest::HelmChart {
+                release_name, name, ..
+            } => {
+                debug!("Uninstalling helm chart {name} named {release_name}");
+                helm::uninstall_helm_release(release_name);
+            }
+            StackManifest::PlainYaml(yaml_url_or_file) => {
+                debug!("Uninstalling yaml manifest from {yaml_url_or_file}");
+                let manifests = helpers::read_from_url_or_file(yaml_url_or_file)
+                    .await
+                    .map_err(|err| {
+                        format!(
+                            "Could not read stack manifests from file \"{yaml_url_or_file}\": {err}"
+                        )
+                    })?;
+                kube::uninstall_manifests(&manifests).await?;
             }
         }
     }

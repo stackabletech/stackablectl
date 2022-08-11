@@ -60,6 +60,14 @@ pub enum CliCommandDemo {
         )]
         kind_cluster_name: String,
     },
+    /// Uninstall a demo.
+    /// This will uninstall the demo as well as the underlying stack and release
+    #[clap(alias("un"))]
+    Uninstall {
+        /// Name of the demo to uninstall
+        #[clap(required = true, value_hint = ValueHint::Other)]
+        demo: String,
+    },
 }
 
 impl CliCommandDemo {
@@ -75,6 +83,7 @@ impl CliCommandDemo {
                 kind::handle_cli_arguments(*kind_cluster, kind_cluster_name)?;
                 install_demo(demo).await?;
             }
+            CliCommandDemo::Uninstall { demo } => uninstall_demo(demo).await?,
         }
         Ok(())
     }
@@ -173,6 +182,16 @@ async fn install_demo(demo_name: &str) -> Result<(), Box<dyn Error>> {
     stack::install_manifests(&demo.manifests).await?;
 
     info!("Installed demo {demo_name}. Use \"stackablectl services list\" to list the installed services");
+    Ok(())
+}
+
+async fn uninstall_demo(demo_name: &str) -> Result<(), Box<dyn Error>> {
+    info!("Uninstalling demo {demo_name}");
+    let demo = get_demo(demo_name).await?;
+    info!("Uninstalling components of demo {demo_name}");
+    stack::uninstall_manifests(&demo.manifests).await?;
+    stack::uninstall_stack(&demo.stackable_stack).await?;
+    info!("Uninstalled demo {demo_name}");
     Ok(())
 }
 
