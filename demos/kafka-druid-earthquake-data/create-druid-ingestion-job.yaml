@@ -1,0 +1,121 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-druid-ingestion-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-druid-ingestion-job
+          image: python:3.10 # Using same image so caching can happen
+          command: ["bash", "-c", "curl -X POST -H 'Content-Type: application/json' -d @/tmp/ingestion-job-spec/ingestion-job-spec.json http://druid-coordinator:8081/druid/indexer/v1/supervisor"]
+          volumeMounts:
+            - name: ingestion-job-spec
+              mountPath: /tmp/ingestion-job-spec
+      restartPolicy: OnFailure
+      volumes:
+      - name: ingestion-job-spec
+        configMap:
+          name: create-druid-ingestion-job-spec
+      restartPolicy: Never
+  backoffLimit: 50 # It can take some time until Druid is ready
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-druid-ingestion-job-spec
+data:
+  ingestion-job-spec.json: |
+    {
+      "type": "kafka",
+      "spec": {
+        "ioConfig": {
+          "type": "kafka",
+          "consumerProperties": {
+            "bootstrap.servers": "kafka:9092"
+          },
+          "topic": "earthquakes",
+          "inputFormat": {
+            "type": "json"
+          },
+          "useEarliestOffset": true
+        },
+        "tuningConfig": {
+          "type": "kafka"
+        },
+        "dataSchema": {
+          "dataSource": "earthquakes",
+          "timestampSpec": {
+            "column": "time",
+            "format": "iso"
+          },
+          "dimensionsSpec": {
+            "dimensions": [
+              {
+                "type": "double",
+                "name": "latitude"
+              },
+              {
+                "type": "double",
+                "name": "longitude"
+              },
+              {
+                "type": "double",
+                "name": "depth"
+              },
+              {
+                "type": "double",
+                "name": "mag"
+              },
+              "magType",
+              {
+                "type": "long",
+                "name": "nst"
+              },
+              {
+                "type": "double",
+                "name": "gap"
+              },
+              {
+                "type": "double",
+                "name": "dmin"
+              },
+              {
+                "type": "double",
+                "name": "rms"
+              },
+              "net",
+              "id",
+              "updated",
+              "place",
+              "type",
+              {
+                "type": "double",
+                "name": "horizontalError"
+              },
+              {
+                "type": "double",
+                "name": "depthError"
+              },
+              {
+                "type": "double",
+                "name": "magError"
+              },
+              {
+                "type": "long",
+                "name": "magNst"
+              },
+              "status",
+              "locationSource",
+              "magSource"
+            ]
+          },
+          "granularitySpec": {
+            "queryGranularity": "none",
+            "rollup": false,
+            "segmentGranularity": "month"
+          }
+        }
+      }
+    }
