@@ -11,10 +11,10 @@ This demo will
 
 * Install the required Stackable operators
 * Spin up the follow data products
-** Superset: A modern data exploration and visualization platform. This demo uses it to execute SQL queries and build dashboards
-** Trino: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
-** MinIO: A S3 compatible object store. This demo uses it as persistent storage to store all the data used
-** Hive metastore: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino
+** *Superset*: A modern data exploration and visualization platform. This demo uses it to execute SQL queries and build dashboards
+** *Trino*: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
+** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage to store all the data used
+** *Hive metastore*: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino
 * Load testdata into S3. It contains 2.5 years of New York City taxi trips
 * Make data accessible via SQL in Trino
 * Create Superset dashboards for visualization
@@ -128,7 +128,7 @@ select
   format_datetime(tpep_pickup_datetime, 'YYYY/MM') as month,
   count(*) as trips,
   sum(total_amount) as sales,
-  avg(date_diff('minute', tpep_pickup_datetime, tpep_dropoff_datetime)) as avg_duration_min
+  avg(duration_min) as avg_duration_min
 from ny_taxi_data
 group by 1
 order by 1
@@ -222,7 +222,7 @@ returns
 We can see that one trip had 112 and another one 96 passengers.
 All the other trips start with a more "realistic" number of 9 passengers.
 
-As a bonus question: What *exactly* did the large passenger do?
+As a bonus question: What *exactly* did the large number of passenger do?
 
 [source,sql]
 ----
@@ -240,8 +240,8 @@ returns
         2 | 2021-08-01 19:47:43.000 | 2021-08-01 19:57:54.000 |           10 |           112.0 |           1.8 | Credit card  |         9.0 |       2.46 |        14.76 
         2 | 2021-08-03 11:51:58.000 | 2021-08-03 12:09:29.000 |           17 |            96.0 |          1.56 | Credit card  |        11.5 |       2.22 |        17.02 
 ----
-Pretty cheap for that amount of persons!
-This probably is an invalid record.
+Pretty cheap for that amount of people!
+This probably are invalid records.
 ====
 
 What was the highest tip (measured in percentage of the original fee) ever given?
@@ -277,12 +277,12 @@ returns
 ====
 
 === Create additional dashboards
-You also have the possibility to create additional Charts and bundle them together in a Dashboard.
+You also have the possibility to create additional charts and bundle them together in a Dashboard.
 Have a look at https://superset.apache.org/docs/creating-charts-dashboards/creating-your-first-dashboard#creating-charts-in-explore-view[the Superset documentation] on how to do that.
 
 === Load additional data
-You can use the MinIO Webinterface to upload any data.
-As an alternative you can use the S3 API with an S3 client e.g. https://s3tools.org/s3cmd[s3cmd].
+You can use the MinIO webinterface to upload additional data.
+As an alternative you can use the S3 API with an S3 client like https://s3tools.org/s3cmd[s3cmd].
 It is recommended to put the data into a folder (prefix) in the `demo` bucket.
 
 Have a look at the defined tables inside the `hive`.`demo` schema on how to inform Trino about the newly available data.
