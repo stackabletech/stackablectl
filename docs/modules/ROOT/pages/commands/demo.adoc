@@ -103,8 +103,13 @@ Have a nice day! 👋
 [INFO ] Installed demo trino-taxi-data. Use "stackablectl services list" to list the installed services
 ----
 
+The demos create Kubernetes jobs, that will populate testdata and talk to the installed products to process the data.
+Until the products are ready, it is completely normal that the Pods of these Jobs will fail with an Error.
+They will get retried with an exponentially growing backoff time.
+After the products being ready they should turn green and everything should settle down.
+
 === List deployed services
-After installing your demo you can use the xref:commands/services.adoc[] command to list the installed services as follows
+After installing your demo you can use the xref:commands/services.adoc[] command to list the installed services as follows:
 
 [source,console]
 ----
