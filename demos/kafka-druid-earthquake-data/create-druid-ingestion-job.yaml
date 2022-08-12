@@ -114,7 +114,7 @@ data:
           "granularitySpec": {
             "queryGranularity": "none",
             "rollup": false,
-            "segmentGranularity": "month"
+            "segmentGranularity": "year"
           }
         }
       }
