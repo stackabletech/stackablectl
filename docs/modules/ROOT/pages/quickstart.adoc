@@ -14,14 +14,14 @@ To list the available demos run the following command:
 
 [source,console]
 ----
-$ stackablectl demos list
+$ stackablectl demo list
 DEMO                                STACKABLE STACK           DESCRIPTION
 trino-taxi-data                     trino-superset-s3         Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
 ----
 
 [NOTE]
 ====
-When you are on a Windows system you have to replace the `stackablectl` command with `stackablectl.exe`, e.g. `stackablectl.exe demos list`.
+When you are on a Windows system you have to replace the `stackablectl` command with `stackablectl.exe`, e.g. `stackablectl.exe demo list`.
 This applies to all commands below.
 ====
 
