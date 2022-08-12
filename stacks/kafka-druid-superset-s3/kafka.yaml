@@ -19,7 +19,7 @@ spec:
       resources:
         storage:
           logDirs:
-            capacity: 2Gi
+            capacity: 5Gi
         cpu:
           max: 500m
           min: 250m
