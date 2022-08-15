@@ -8,7 +8,7 @@ Please follow the xref:installation.adoc[Installation documentation] to install 
 
 == Browse available demos
 Stackable provides a set of ready-to-use demos.
-As of writing (2022/08/10) only a single demo is available, but further demos will be added in the future.
+As of writing (2022/08/15) only two demos are available, but further demos will be added in the future.
 They will automatically show up, as `stackablectl` fetches the available list of demos via the internet.
 To list the available demos run the following command:
 
@@ -17,6 +17,7 @@ To list the available demos run the following command:
 $ stackablectl demo list
 DEMO                                STACKABLE STACK           DESCRIPTION
 trino-taxi-data                     trino-superset-s3         Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
+kafka-druid-earthquake-data         kafka-druid-superset-s3   Demo ingestion earthquake data into Kafka, streaming it into Druid and creating a Superset dashboard
 ----
 
 [NOTE]
