@@ -30,8 +30,8 @@ releases:
         operatorVersion: 0.10.0-nightly
       secret:
         operatorVersion: 0.6.0-nightly
-      #spark-k8s:
-        #operatorVersion: 0.4.0-nightly
+      spark-k8s:
+        operatorVersion: 0.4.0-nightly
       superset:
         operatorVersion: 0.6.0-nightly
       trino:

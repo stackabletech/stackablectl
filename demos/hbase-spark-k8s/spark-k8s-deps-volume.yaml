@@ -1,0 +1,110 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: spark-hbase-connections-private-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: spark-hbase-connections-deps-job
+spec:
+  template:
+    spec:
+      nodeSelector:
+        node: "1"
+      restartPolicy: Never
+      volumes:
+        - name: job-deps
+          persistentVolumeClaim:
+            claimName: spark-hbase-connections-private-pvc
+      containers:
+        - name: aws-deps
+          image: docker.stackable.tech/stackable/tools:0.2.0-stackable0
+          env:
+            - name: DEST_DIR
+              value: "/dependencies/jars"
+          command:
+            [
+              "bash",
+              "-x",
+              "-o",
+              "pipefail",
+              "-c",
+              "mkdir -p ${DEST_DIR} && curl -L https://repo.stackable.tech/repository/misc/hbase-spark-k8s/hbase-spark-1.0.1-SNAPSHOT.jar -o ${DEST_DIR}/hbase-spark-1.0.1-SNAPSHOT.jar && curl -L https://repo.stackable.tech/repository/misc/hbase-spark-k8s/hbase-spark-protocol-shaded-1.0.1-SNAPSHOT.jar -o ${DEST_DIR}/hbase-spark-protocol-shaded-1.0.1-SNAPSHOT.jar && curl -L https://repo.stackable.tech/repository/misc/hbase-spark-k8s/scala-library-2.12.14.jar -o ${DEST_DIR}/scala-library-2.12.14.jar && chown -R stackable:stackable ${DEST_DIR} && chmod -R a=,u=rwX ${DEST_DIR}",
+            ]
+          volumeMounts:
+            - name: job-deps
+              mountPath: /dependencies
+          securityContext:
+            runAsUser: 0
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: spark-hbase-connections-data-job
+spec:
+  template:
+    spec:
+      nodeSelector:
+        node: "1"
+      restartPolicy: Never
+      volumes:
+        - name: job-data
+          persistentVolumeClaim:
+            claimName: spark-hbase-connections-private-pvc
+      containers:
+        - name: load-ny-taxi-data
+          image: docker.stackable.tech/stackable/tools:0.2.0-stackable0
+          env:
+            - name: DEST_DIR
+              value: "/data"
+          command: ["bash", "-c", "cd ${DEST_DIR} && for month in 2020-01 2020-02 2020-03 2020-04 2020-05 2020-06 2020-07 2020-08 2020-09 2020-10 2020-11 2020-12 2021-01 2021-02 2021-03 2021-04 2021-05 2021-06 2021-07 2021-08 2021-09 2021-10 2021-11 2021-12 2022-01 2022-02 2022-03 2022-04; do curl -O https://repo.stackable.tech/repository/misc/ny-taxi-data/yellow_tripdata_$month.parquet; done && chown -R stackable:stackable ${DEST_DIR} && chmod -R a=,u=rwX ${DEST_DIR}"]
+          volumeMounts:
+            - name: job-data
+              mountPath: /dependencies
+          securityContext:
+            runAsUser: 0
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: spark-hbase-connections-hdfs-upload-job
+spec:
+  template:
+    spec:
+      nodeSelector:
+        node: "1"
+      restartPolicy: Never
+      volumes:
+        - name: job-data
+          persistentVolumeClaim:
+            claimName: spark-hbase-connections-private-pvc
+        - name: config-volume-hbase
+          configMap:
+            name: hbase-demo-master-default
+        - name: config-volume-hdfs
+          configMap:
+            name: hdfs
+      containers:
+        - name: load-ny-taxi-data
+          image: docker.stackable.tech/stackable/tools:0.2.0-stackable0
+          env:
+            - name: SOURCE_DIR
+              value: "/data"
+          command: ["bash", "-c", "cd ${SOURCE_DIR} && for month in 2020-01 2020-02 2020-03 2020-04 2020-05 2020-06 2020-07 2020-08 2020-09 2020-10 2020-11 2020-12 2021-01 2021-02 2021-03 2021-04 2021-05 2021-06 2021-07 2021-08 2021-09 2021-10 2021-11 2021-12 2022-01 2022-02 2022-03 2022-04; do bin/hdfs dfs -put /${SOURCE_DIR}/yellow_tripdata_$month.parquet /hbase; done"]
+          volumeMounts:
+            - name: job-data
+              mountPath: /data
+            - name: config-volume-hbase
+              mountPath: /stackable/conf/hbase
+            - name: config-volume-hdfs
+              mountPath: /stackable/conf/hdfs
+          securityContext:
+            runAsUser: 0
