@@ -11,20 +11,20 @@ This demo will
 
 * Install the required Stackable operators
 * Spin up the follow data products
-** *Superset*: A modern data exploration and visualization platform. This demo uses it to execute SQL queries and build dashboards
+** *Superset*: A modern data exploration and visualization platform. This demo uses it to execute SQL queries on Trino and build dashboards
 ** *Trino*: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage to store all the data used
 ** *Hive metastore*: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino
 * Load testdata into S3. It contains 2.5 years of New York City taxi trips
 * Make data accessible via SQL in Trino
-* Create Superset dashboards for visualization
+* Create Superset dashboards for visualization on the data
 
 You can see the deployed products as well as their relationship in the following diagram:
 
 image::demo-trino-taxi-data/overview.png[]
 
 == List deployed Stackable services
-To list the installed installed Stackable service run the following command:
+To list the installed installed Stackable services run the following command:
 
 [source,console]
 ----
@@ -54,8 +54,8 @@ In case the product is not ready yet a warning might be shown.
 ====
 
 == Inspect data in S3
-The S3 provided by MinIO is used as a persistent storage to store all the data used
-You can have a look at the testdata within the MinIO Webinterface by opening the given `minio` endpoint `console-http` from the `stackablectl services list` command.
+The S3 provided by MinIO is used as a persistent storage to store all the data used.
+You can have a look at the testdata within the MinIO Webinterface by opening the given `minio` endpoint `console-http` from your `stackablectl services list` command output.
 You have to use the endpoint from your command output, in this case it is http://172.18.0.3:30503.
 Open it with your favorite browser.
 
@@ -97,7 +97,7 @@ Log in with the credentials username `admin`, password `admin`.
 
 image::demo-trino-taxi-data/superset_2.png[]
 
-=== Inspect dashboard
+=== View dashboard
 On the top click on the tab `Dashboards`.
 
 image::demo-trino-taxi-data/superset_3.png[]

@@ -1,0 +1,224 @@
+= kafka-druid-earthquake-data
+
+[NOTE]
+====
+This guide assumes you already have the demo `kafka-druid-earthquake-data` installed.
+If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you have to run `stackablectl demo install kafka-druid-earthquake-data`.
+====
+
+This demo will
+
+* Install the required Stackable operators
+* Spin up the follow data products
+** *Superset*: A modern data exploration and visualization platform. This demo uses it to execute SQL queries on Druid and build dashboards
+** *Kafka*:  A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as a event streaming platform to stream the data in near-realtime
+** *Druid*: A real-time database to power modern analytics applications. This demo uses it to ingest the near-realtime data from Kafka, store it and enable SQL access to it
+** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage for Druid to store all the data used
+* Continuously emit approximately 500 records/s of Earthquake data into Kafka
+* Start a Druid ingestion job that ingests the data into the Druid instance
+* Create Superset dashboards for visualization on the data.
+
+The whole pipeline will have a very low latency from putting a record into kafka to it showing up in the Dashboard charts.
+
+You can see the deployed products as well as their relationship in the following diagram:
+
+image::demo-kafka-druid-earthquake-data/overview.png[]
+
+== List deployed Stackable services
+To list the installed installed Stackable services run the following command:
+
+[source,console]
+----
+$ stackablectl services list --all-namespaces
+ PRODUCT    NAME         NAMESPACE  ENDPOINTS                                   EXTRA INFOS                          
+                                                                                                                     
+ druid      druid        default    broker-http        http://172.18.0.4:30003                                       
+                                    coordinator-http   http://172.18.0.2:32030                                       
+                                    historical-http    http://172.18.0.2:30330                                       
+                                    middlemanager-http http://172.18.0.4:31808                                       
+                                    router-http        http://172.18.0.5:31052                                       
+                                                                                                                     
+ kafka      kafka        default    kafka              172.18.0.5:30078                                              
+                                                                                                                     
+ superset   superset     default    external-superset  http://172.18.0.4:30636  Admin user: admin, password: admin   
+                                                                                                                     
+ zookeeper  zookeeper    default    zk                 172.18.0.5:32066                                              
+                                                                                                                     
+ minio      minio-druid  default    http               http://172.18.0.5:32520  Third party service                  
+                                    console-http       http://172.18.0.5:31171  Admin user: root, password: rootroot 
+----
+
+[NOTE]
+====
+When a product instance has not finished starting yet, the service will have no endpoint.
+Starting all of the product instances might take an considerable amount of time depending on your internet connectivity.
+In case the product is not ready yet a warning might be shown.
+====
+
+== Inspect data in Kafka
+Kafka is used as an event streaming platform to stream the data in near-realtime.
+All the messages put in and read from Kafka are structured in dedicated queues called topics.
+The testdata will be put in a topic called `earthquakes`.
+The get produced (put in) by the testdata-generator and are consumed (read) by Druid afterwards in the same order they where produced.
+
+As Kafka itself has no webinterface you have to use a Kafka client like https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html[kafkacat].
+To endpoint where Kafka is reachable is given in the `kafka` endpoint from the `kafka` service in your `stackablectl services list` command output (`172.18.0.5:30078` in this case).
+
+If you have `kafkacat` installed you can see the available brokers and topics with the following command.
+If not, that's no big deal as you would see nearly the exact same output.
+You need to replace the `-b` parameter to match your Kafka endpoint.
+
+[source,console]
+----
+$ kafkacat -b 172.18.0.5:30078 -L
+Metadata for all topics (from broker -1: 172.18.0.5:30078/bootstrap):
+ 1 brokers:
+  broker 1001 at 172.18.0.5:30507 (controller)
+ 1 topics:
+  topic "earthquakes" with 1 partitions:
+    partition 0, leader 1001, replicas: 1001, isrs: 1001
+----
+
+To see some records that have been send to kafka run the following command.
+You can change the number of records to print via the `-c` parameter.
+
+[source,console]
+----
+$ kafkacat -b 172.18.0.5:30078 -C -t earthquakes -c 3
+{"time":"2000-01-01T00:03:53.650Z","latitude":37.4166667,"longitude":-121.7665,"depth":5.36,"mag":1.23,"magType":"md","nst":20.0,"gap":78.0,"dmin":0.04414,"rms":0.04,"net":"nc","id":"nc21075021","updated":"2016-12-31T03:48:51.007Z","place":"5 km NE of East Foothills, California","type":"earthquake","horizontalError":0.19,"depthError":0.36,"magError":0.03,"magNst":7.0,"status":"reviewed","locationSource":"nc","magSource":"nc"}
+{"time":"2000-01-01T00:04:49.400Z","latitude":-41.13,"longitude":174.76,"depth":27.0,"mag":1.9,"magType":"ml","nst":null,"gap":null,"dmin":null,"rms":null,"net":"us","id":"usp0009kjv","updated":"2014-11-07T01:09:13.881Z","place":"7 km W of Porirua, New Zealand","type":"earthquake","horizontalError":null,"depthError":null,"magError":null,"magNst":null,"status":"reviewed","locationSource":"wel","magSource":"wel"}
+{"time":"2000-01-01T00:20:00.020Z","latitude":32.179,"longitude":-115.073,"depth":5.933,"mag":2.48,"magType":"mc","nst":0.0,"gap":240.8,"dmin":0.5771,"rms":0.228,"net":"ci","id":"ci9131991","updated":"2016-02-16T06:54:25.259Z","place":"7km WSW of Estacion Coahuila, B.C., MX","type":"earthquake","horizontalError":null,"depthError":null,"magError":null,"magNst":7.0,"status":"reviewed","locationSource":"ci","magSource":"ci"}
+----
+
+If you are interested on how many records have been produced to the Kafka topic so far, use the following command.
+It will print the last record produced to the topic, which will be formatted with the pattern specified in the `-f` parameter.
+The given pattern will print some metadata of the record.
+
+[source,console]
+----
+$ kafkacat -b 172.18.0.5:30078 -C -t earthquakes -o -1 -c 1 \
+-f 'Topic %t / Partition %p / Offset: %o / Timestamp: %T\n'
+Topic earthquakes / Partition 0 / Offset: 1969458 / Timestamp: 1660301246853
+----
+
+From the output you can see, that the last record was produced at the timestamp `1660301246853` which translates to `Fr 12. Aug 12:47:26 CEST 2022` (using the command `date -d @1660301246`).
+You can also see that it was the record number `1969458` send to this topic, so ~2 million records have been produced so far.
+
+== Druid
+Druid is used to ingest the near-realtime data from Kafka, store it and enable SQL access to it.
+The demo has started a ingestion job reading earthquake records from the Kafka topic `earthquakes` and saving it into Druids storage.
+The Druid deep storage is based on the S3 store provided by MinIO.
+
+=== View ingestion job
+You can have a look at the ingestion job running in Druid by opening the given `druid` endpoint `router-http` from your `stackablectl services list` command output. You have to use the endpoint from your command output, in this case it is http://172.18.0.5:31052. Open it with your favorite browser.
+
+image::demo-kafka-druid-earthquake-data/druid_1.png[]
+
+By clicking on `Ingestion` at the top you can see the running ingestion jobs.
+
+image::demo-kafka-druid-earthquake-data/druid_2.png[]
+
+After clicking on the magnification glass to the right side of the `RUNNING` supervisor you can see additional information.
+On the tab `Statistics` on the left you can see the number of processed records as well as the number of errors.
+All records should be ingested successfully.
+
+image::demo-kafka-druid-earthquake-data/druid_3.png[]
+
+=== Query datasource
+The started ingestion job has automatically created the datasource `earthquakes`.
+You can see the available datasources by clicking on `Datasources` at the top.
+
+image::demo-kafka-druid-earthquake-data/druid_4.png[]
+
+By clicking on the `earthquakes` datasource you can see the segments the datasource consists of.
+In this case the `earthquakes` datasource is partitioned by the year of the earthquake, resulting in 24 segments.
+
+image::demo-kafka-druid-earthquake-data/druid_5.png[]
+
+Druid offers a web-based way of querying the datasources.
+To achieve this you first have to on `Query` at the top.
+
+image::demo-kafka-druid-earthquake-data/druid_6.png[]
+
+You can now enter any arbitrary SQL statement, e.g. to list 10 records run
+
+[source,sql]
+----
+select * from earthquakes limit 10
+----
+
+image::demo-kafka-druid-earthquake-data/druid_7.png[]
+
+To count the number of available records run
+
+[source,sql]
+----
+select count(*) from earthquakes
+----
+
+image::demo-kafka-druid-earthquake-data/druid_8.png[]
+
+== Superset
+Superset gives the ability to execute SQL queries and build dashboards.
+Open the `superset` endpoint `external-superset` in your browser (http://172.18.0.4:30636 in this case).
+
+image::demo-kafka-druid-earthquake-data/superset_1.png[]
+
+Log in with the credentials username `admin`, password `admin`.
+
+image::demo-kafka-druid-earthquake-data/superset_2.png[]
+
+=== View dashboard
+On the top click on the tab `Dashboards`.
+
+image::demo-kafka-druid-earthquake-data/superset_3.png[]
+
+Click on the dashboard called `Earthquakes`.
+It might take some time until the dashboards renders all the included charts.
+
+image::demo-kafka-druid-earthquake-data/superset_4.png[]
+
+TODO: Charts and zoom in on Germany
+
+=== Execute arbitrary SQL statements
+Within Superset you can not only create dashboards but also run arbitrary SQL statements.
+On the top click on the tab `SQL Lab` -> `SQL Editor`.
+
+image::demo-kafka-druid-earthquake-data/superset_5.png[]
+
+On the left select the database `druid`, the schema `druid` and set `See table schema` to `earthquakes`.
+
+image::demo-kafka-druid-earthquake-data/superset_6.png[]
+
+On the right textbox enter the desired SQL statement.
+If you do not want to make on up you can use the following:
+
+[source,sql]
+----
+select
+  time_format(__time, 'YYYY') as "year",
+  count(*)
+from earthquakes
+group by 1
+order by 1 desc
+----
+
+image::demo-kafka-druid-earthquake-data/superset_7.png[]
+
+== MinIO
+The S3 provided by MinIO is used as a persistent storage for Druid to store all the data used.
+Open the `minio` endpoint `console-http` in your browser (http://172.18.0.5:31171 in this case).
+
+image::demo-kafka-druid-earthquake-data/minio_1.png[]
+
+Log in with the credentials username `root`, password `rootroot`.
+
+image::demo-kafka-druid-earthquake-data/minio_2.png[]
+
+Click on the blue button `Browse` on the bucket `druid` and open the folders `data` -> `earthquakes`.
+
+image::demo-kafka-druid-earthquake-data/minio_3.png[]
+
+As you can see druid saved 130MB of data within 24 prefixes (folders).
+Ony prefix corresponds to on segment which corresponds to a year of data.
