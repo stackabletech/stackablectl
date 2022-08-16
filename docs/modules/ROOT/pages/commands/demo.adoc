@@ -107,7 +107,7 @@ Have a nice day! 👋
 The demos create Kubernetes jobs, that will populate test data and interact with the installed products to process the data.
 Until the products are ready, it is completely normal that the pods of these Jobs will fail with an error.
 They will get retried with an exponentially growing backoff time.
-After the products being ready they should turn green and everything should settle down.
+After the products are ready they should turn green and everything should settle down.
 
 === List deployed services
 After installing your demo you can use the xref:commands/services.adoc[] command to list the installed services as follows:
