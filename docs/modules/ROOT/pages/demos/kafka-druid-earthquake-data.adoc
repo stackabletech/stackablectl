@@ -127,9 +127,9 @@ All records have been ingested successfully, which is indicated by having no `pr
 
 image::demo-kafka-druid-earthquake-data/druid_3.png[]
 
-=== Query datasource
-The started ingestion job has automatically created the Druid datasource `earthquakes`.
-You can see the available datasources by clicking on `Datasources` at the top.
+=== Query the data source
+The started ingestion job has automatically created the Druid data source `earthquakes`.
+You can see the available data sources by clicking on `Datasources` at the top.
 
 image::demo-kafka-druid-earthquake-data/druid_4.png[]
 
