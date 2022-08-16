@@ -15,7 +15,7 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/create-table-in-trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
   kafka-druid-earthquake-data:
-    description:  Demo ingestion earthquake data into Kafka, streaming it into Druid and creating a Superset dashboard
+    description:  Demo ingesting earthquake data into Kafka, streaming it into Druid and creating a Superset dashboard
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/kafka-druid-earthquake-data.html
     stackableStack: kafka-druid-superset-s3
     labels:
