@@ -109,7 +109,7 @@ Have a nice day! 👋
 ----
 
 The demos create Kubernetes jobs, that will populate testdata and talk to the installed products to process the data.
-Until the products are ready, it is completely normal that the Pods of these Jobs will fail with an Error.
+Until the products are ready, it is completely normal that the pods of these Jobs will fail with an error.
 They will get retried with an exponentially growing backoff time.
 After the products being ready they should turn green and everything should settle down.
 
