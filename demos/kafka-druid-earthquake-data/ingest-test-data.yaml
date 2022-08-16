@@ -9,7 +9,7 @@ spec:
       containers:
         - name: ingest-test-data
           image: python:3.10
-          command: ["bash", "-c", "curl -o earthquake.csv https://repo.stackable.tech/repository/misc/earthquake-data/earthquakes_2000_to_2022.csv && pip install pandas==1.4.2 kafka-python3==3.0.0 && python /tmp/script/script.py"]
+          command: ["bash", "-c", "curl -o earthquake.csv https://repo.stackable.tech/repository/misc/earthquake-data/earthquakes_1950_to_2022.csv && pip install pandas==1.4.2 kafka-python3==3.0.0 && python /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
@@ -34,7 +34,7 @@ data:
     BOOTSTRAP_SERVERS = "kafka:9092"
     TOPIC = "earthquakes"
     CSV_FILE = "earthquake.csv"
-    TARGET_RECORDS_PER_SECOND = 500
+    TARGET_RECORDS_PER_SECOND = 1000
 
     print(f"Producing {TARGET_RECORDS_PER_SECOND} records/s from {CSV_FILE} to topic {TOPIC} with bootstrap servers {BOOTSTRAP_SERVERS}\n")
 
