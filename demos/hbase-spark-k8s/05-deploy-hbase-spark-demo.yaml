@@ -5,11 +5,11 @@ metadata:
   name: hbase-spark-demo
 spec:
   version: "1.0"
-  sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.1.0
+  sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.99.0
   sparkImagePullPolicy: IfNotPresent
   mode: cluster
   mainClass: com.stackable.demo.load
-  mainApplicationFile: tbd #s3a://my-bucket/spark-examples_2.12-{{ test_scenario['values']['spark'] }}.jar
+  mainApplicationFile:
   #  s3bucket:
   #    inline:
   #      bucketName: my-bucket
