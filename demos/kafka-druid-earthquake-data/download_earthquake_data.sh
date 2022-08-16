@@ -1,6 +1,7 @@
 # This script is not used for the demo
 # Its purpose is to document how to retrieve the used earthquake data
 
+# To delete the csv files downloaded
 # rm -f 19*.csv 20*.csv earthquakes.csv
 
 # We have to request small chunks otherwise the API will not return us any data
