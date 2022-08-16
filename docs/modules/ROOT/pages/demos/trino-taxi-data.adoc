@@ -17,7 +17,7 @@ This demo will
 ** *Hive metastore*: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino
 * Load testdata into S3. It contains 2.5 years of New York City taxi trips
 * Make data accessible via SQL in Trino
-* Create Superset dashboards for visualization on the data
+* Create Superset dashboards for visualization of the data
 
 You can see the deployed products as well as their relationship in the following diagram:
 

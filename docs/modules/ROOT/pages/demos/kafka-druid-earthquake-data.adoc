@@ -17,7 +17,7 @@ This demo will
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage for Druid to store all the data used
 * Continuously emit approximately 1000 records/s of Earthquake data into Kafka
 * Start a Druid ingestion job that ingests the data into the Druid instance
-* Create Superset dashboards for visualization on the data.
+* Create Superset dashboards for visualization of the data.
 
 The whole pipeline will have a very low latency from putting a record into kafka to it showing up in the Dashboard charts.
 
