@@ -111,7 +111,7 @@ Have a nice day! 👋
 The demos create Kubernetes jobs, that will populate test data and talk to the installed products to process the data.
 Until the products are ready, it is completely normal that the pods of these Jobs will fail with an error.
 They will get retried with an exponentially growing backoff time.
-After the products being ready they should turn green and everything should settle down.
+After the products are ready they should turn green and everything should settle down.
 
 == Proceed with the demo
 Please read the documentation on the demo xref:demos/trino-taxi-data.adoc[] on how to proceed with the demo
