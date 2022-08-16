@@ -11,7 +11,7 @@ This demo will
 
 * Install the required Stackable operators
 * Spin up the follow data products
-** *Superset*: A modern data exploration and visualization platform. This demo uses it to execute SQL queries on Trino and build dashboards
+** *Superset*: A modern data exploration and visualization platform. This demo utilizes Superset to retrieve data from Trino via SQL queries and build dashboards on top of that data
 ** *Trino*: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage to store all the data used
 ** *Hive metastore*: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino
@@ -56,7 +56,7 @@ In case the product is not ready yet a warning might be shown.
 
 == Inspect data in S3
 The S3 provided by MinIO is used as a persistent storage to store all the data used.
-You can have a look at the testdata within the MinIO Webinterface by opening the given `minio` endpoint `console-http` from your `stackablectl services list` command output.
+You can have a look at the testdata within the MinIO web interface by opening the given `minio` endpoint `console-http` from your `stackablectl services list` command output.
 You have to use the endpoint from your command output, in this case it is http://172.18.0.3:30503.
 Open it with your favorite browser.
 
