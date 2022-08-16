@@ -26,6 +26,6 @@ demos:
       - s3
       - earthquake
     manifests:
-      - plainYaml: demos/kafka-druid-earthquake-data/ingest-test-data.yaml # TODO
-      - plainYaml: demos/kafka-druid-earthquake-data/create-druid-ingestion-job.yaml # TODO
-      - plainYaml: demos/kafka-druid-earthquake-data/setup-superset.yaml # TODO
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-earthquake-data/ingest-test-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/demos/kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/demos/kafka-druid-earthquake-data/setup-superset.yaml

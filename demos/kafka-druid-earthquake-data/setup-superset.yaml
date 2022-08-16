@@ -9,7 +9,7 @@ spec:
       containers:
         - name: setup-superset
           image: python:3.10
-          command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/demo-kafa-druid-earthquake-data/demos/kafka-druid-earthquake-data/superset-assets.zip && pip install requests==2.22.0 && python /tmp/script/script.py"] # TODO
+          command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-earthquake-data/superset-assets.zip && pip install requests==2.22.0 && python /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
