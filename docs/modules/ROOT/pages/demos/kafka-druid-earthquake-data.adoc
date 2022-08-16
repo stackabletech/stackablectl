@@ -15,7 +15,7 @@ This demo will
 ** *Kafka*:  A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as a event streaming platform to stream the data in near-realtime
 ** *Druid*: A real-time database to power modern analytics applications. This demo uses it to ingest the near-realtime data from Kafka, store it and enable SQL access to it
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage for Druid to store all the data used
-* Continuously emit approximately 500 records/s of Earthquake data into Kafka
+* Continuously emit approximately 1000 records/s of Earthquake data into Kafka
 * Start a Druid ingestion job that ingests the data into the Druid instance
 * Create Superset dashboards for visualization on the data.
 
@@ -32,21 +32,21 @@ To list the installed installed Stackable services run the following command:
 ----
 $ stackablectl services list --all-namespaces
  PRODUCT    NAME         NAMESPACE  ENDPOINTS                                   EXTRA INFOS                          
+
+ druid      druid        default    broker-http        http://172.18.0.3:32670                                       
+                                    coordinator-http   http://172.18.0.3:30392                                       
+                                    historical-http    http://172.18.0.2:30831                                       
+                                    middlemanager-http http://172.18.0.4:30356                                       
+                                    router-http        http://172.18.0.4:30109                                       
                                                                                                                      
- druid      druid        default    broker-http        http://172.18.0.4:30003                                       
-                                    coordinator-http   http://172.18.0.2:32030                                       
-                                    historical-http    http://172.18.0.2:30330                                       
-                                    middlemanager-http http://172.18.0.4:31808                                       
-                                    router-http        http://172.18.0.5:31052                                       
+ kafka      kafka        default    kafka              172.18.0.4:30968                                              
                                                                                                                      
- kafka      kafka        default    kafka              172.18.0.5:30078                                              
+ superset   superset     default    external-superset  http://172.18.0.3:32108  Admin user: admin, password: admin   
                                                                                                                      
- superset   superset     default    external-superset  http://172.18.0.4:30636  Admin user: admin, password: admin   
+ zookeeper  zookeeper    default    zk                 172.18.0.2:32309                                              
                                                                                                                      
- zookeeper  zookeeper    default    zk                 172.18.0.5:32066                                              
-                                                                                                                     
- minio      minio-druid  default    http               http://172.18.0.5:32520  Third party service                  
-                                    console-http       http://172.18.0.5:31171  Admin user: root, password: rootroot 
+ minio      minio-druid  default    http               http://172.18.0.4:32306  Third party service                  
+                                    console-http       http://172.18.0.4:31664  Admin user: root, password: rootroot
 ----
 
 [NOTE]
@@ -60,35 +60,36 @@ In case the product is not ready yet a warning might be shown.
 Kafka is used as an event streaming platform to stream the data in near-realtime.
 All the messages put in and read from Kafka are structured in dedicated queues called topics.
 The testdata will be put in a topic called `earthquakes`.
-The get produced (put in) by the testdata-generator and are consumed (read) by Druid afterwards in the same order they where produced.
+The records get produced (put in) by the testdata-generator and are consumed (read) by Druid afterwards in the same order they where produced.
 
 As Kafka itself has no webinterface you have to use a Kafka client like https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html[kafkacat].
-To endpoint where Kafka is reachable is given in the `kafka` endpoint from the `kafka` service in your `stackablectl services list` command output (`172.18.0.5:30078` in this case).
+To endpoint where Kafka is reachable is given in the `kafka` endpoint from the `kafka` service in your `stackablectl services list` command output (`172.18.0.4:30968` in this case).
 
-If you have `kafkacat` installed you can see the available brokers and topics with the following command.
+If you have `kafkacat` installed, you can see the available brokers and topics with the following command.
 If not, that's no big deal as you would see nearly the exact same output.
 You need to replace the `-b` parameter to match your Kafka endpoint.
 
 [source,console]
 ----
-$ kafkacat -b 172.18.0.5:30078 -L
-Metadata for all topics (from broker -1: 172.18.0.5:30078/bootstrap):
+$ kafkacat -b 172.18.0.4:30968 -L
+Metadata for all topics (from broker -1: 172.18.0.4:30968/bootstrap):
  1 brokers:
-  broker 1001 at 172.18.0.5:30507 (controller)
+  broker 1001 at 172.18.0.4:30755 (controller)
  1 topics:
   topic "earthquakes" with 1 partitions:
     partition 0, leader 1001, replicas: 1001, isrs: 1001
 ----
 
+You can see the Kafka consists of one broker and the topic `earthquakes` has been created.
 To see some records that have been send to kafka run the following command.
 You can change the number of records to print via the `-c` parameter.
 
 [source,console]
 ----
-$ kafkacat -b 172.18.0.5:30078 -C -t earthquakes -c 3
-{"time":"2000-01-01T00:03:53.650Z","latitude":37.4166667,"longitude":-121.7665,"depth":5.36,"mag":1.23,"magType":"md","nst":20.0,"gap":78.0,"dmin":0.04414,"rms":0.04,"net":"nc","id":"nc21075021","updated":"2016-12-31T03:48:51.007Z","place":"5 km NE of East Foothills, California","type":"earthquake","horizontalError":0.19,"depthError":0.36,"magError":0.03,"magNst":7.0,"status":"reviewed","locationSource":"nc","magSource":"nc"}
-{"time":"2000-01-01T00:04:49.400Z","latitude":-41.13,"longitude":174.76,"depth":27.0,"mag":1.9,"magType":"ml","nst":null,"gap":null,"dmin":null,"rms":null,"net":"us","id":"usp0009kjv","updated":"2014-11-07T01:09:13.881Z","place":"7 km W of Porirua, New Zealand","type":"earthquake","horizontalError":null,"depthError":null,"magError":null,"magNst":null,"status":"reviewed","locationSource":"wel","magSource":"wel"}
-{"time":"2000-01-01T00:20:00.020Z","latitude":32.179,"longitude":-115.073,"depth":5.933,"mag":2.48,"magType":"mc","nst":0.0,"gap":240.8,"dmin":0.5771,"rms":0.228,"net":"ci","id":"ci9131991","updated":"2016-02-16T06:54:25.259Z","place":"7km WSW of Estacion Coahuila, B.C., MX","type":"earthquake","horizontalError":null,"depthError":null,"magError":null,"magNst":7.0,"status":"reviewed","locationSource":"ci","magSource":"ci"}
+$ kafkacat -b 172.18.0.4:30968 -C -t earthquakes -c 3
+{"time":"1950-01-02T15:14:37.960Z","latitude":-11.242,"longitude":165.006,"depth":15.0,"mag":6.12,"magType":"mw","nst":null,"gap":null,"dmin":null,"rms":null,"net":"iscgem","id":"iscgem895104","updated":"2022-04-26T18:23:01.545Z","place":"103 km WSW of Lata, Solomon Islands","type":"earthquake","horizontalError":null,"depthError":8.6,"magError":0.41,"magNst":null,"status":"reviewed","locationSource":"iscgem","magSource":"iscgem"}
+{"time":"1950-01-03T02:51:55.410Z","latitude":17.533,"longitude":121.447,"depth":30.0,"mag":6.5,"magType":"mw","nst":null,"gap":null,"dmin":null,"rms":null,"net":"iscgem","id":"iscgem895106","updated":"2022-04-26T18:23:07.394Z","place":"6 km NNW of Tabuk, Philippines","type":"earthquake","horizontalError":null,"depthError":3.8,"magError":0.34,"magNst":null,"status":"reviewed","locationSource":"iscgem","magSource":"iscgem"}
+{"time":"1950-01-03T11:06:28.640Z","latitude":-45.798,"longitude":-77.077,"depth":15.0,"mag":6.27,"magType":"mw","nst":null,"gap":null,"dmin":null,"rms":null,"net":"iscgem","id":"iscgem895109","updated":"2022-04-26T18:23:08.483Z","place":"Off the coast of Aisen, Chile","type":"earthquake","horizontalError":null,"depthError":25.0,"magError":0.2,"magNst":null,"status":"reviewed","locationSource":"iscgem","magSource":"iscgem"}
 ----
 
 If you are interested on how many records have been produced to the Kafka topic so far, use the following command.
@@ -97,13 +98,13 @@ The given pattern will print some metadata of the record.
 
 [source,console]
 ----
-$ kafkacat -b 172.18.0.5:30078 -C -t earthquakes -o -1 -c 1 \
--f 'Topic %t / Partition %p / Offset: %o / Timestamp: %T\n'
-Topic earthquakes / Partition 0 / Offset: 1969458 / Timestamp: 1660301246853
+$ kafkacat -b 172.18.0.4:30968 -C -t earthquakes -o -1 -c 1 \
+    -f 'Topic %t / Partition %p / Offset: %o / Timestamp: %T\n'
+Topic earthquakes / Partition 0 / Offset: 2670281 / Timestamp: 1660571644060
 ----
 
-From the output you can see, that the last record was produced at the timestamp `1660301246853` which translates to `Fr 12. Aug 12:47:26 CEST 2022` (using the command `date -d @1660301246`).
-You can also see that it was the record number `1969458` send to this topic, so ~2 million records have been produced so far.
+From the output you can see, that the last record was produced at the timestamp `1660571644060` which translates to `Mo 15. Aug 15:54:04 CEST 2022` (using the command `date -d @1660571644`).
+You can also see that it was the record number `2670281` send to this topic, so ~2.6 million million records have been produced so far.
 
 == Druid
 Druid is used to ingest the near-realtime data from Kafka, store it and enable SQL access to it.
@@ -111,7 +112,7 @@ The demo has started a ingestion job reading earthquake records from the Kafka t
 The Druid deep storage is based on the S3 store provided by MinIO.
 
 === View ingestion job
-You can have a look at the ingestion job running in Druid by opening the given `druid` endpoint `router-http` from your `stackablectl services list` command output. You have to use the endpoint from your command output, in this case it is http://172.18.0.5:31052. Open it with your favorite browser.
+You can have a look at the ingestion job running in Druid by opening the given `druid` endpoint `router-http` from your `stackablectl services list` command output. You have to use the endpoint from your command output, in this case it is http://172.18.0.4:30109. Open it with your favorite browser.
 
 image::demo-kafka-druid-earthquake-data/druid_1.png[]
 
@@ -121,27 +122,28 @@ image::demo-kafka-druid-earthquake-data/druid_2.png[]
 
 After clicking on the magnification glass to the right side of the `RUNNING` supervisor you can see additional information.
 On the tab `Statistics` on the left you can see the number of processed records as well as the number of errors.
-All records should be ingested successfully.
+The statistics show that Druid is currently ingesting 1251 records/s and has ingested 2,1 million records so far.
+All records have been ingested successfully, which is indicated by having no `processWithError`, `thrownAway` or `unparseable`.
 
 image::demo-kafka-druid-earthquake-data/druid_3.png[]
 
 === Query datasource
-The started ingestion job has automatically created the datasource `earthquakes`.
+The started ingestion job has automatically created the Druid datasource `earthquakes`.
 You can see the available datasources by clicking on `Datasources` at the top.
 
 image::demo-kafka-druid-earthquake-data/druid_4.png[]
 
 By clicking on the `earthquakes` datasource you can see the segments the datasource consists of.
-In this case the `earthquakes` datasource is partitioned by the year of the earthquake, resulting in 24 segments.
+In this case the `earthquakes` datasource is partitioned by the year of the earthquake, resulting in 73 segments.
 
 image::demo-kafka-druid-earthquake-data/druid_5.png[]
 
-Druid offers a web-based way of querying the datasources.
+Druid offers a web-based way of querying the datasources via SQL.
 To achieve this you first have to on `Query` at the top.
 
 image::demo-kafka-druid-earthquake-data/druid_6.png[]
 
-You can now enter any arbitrary SQL statement, e.g. to list 10 records run
+You can now enter any arbitrary SQL statement, to e.g. list 10 earthquakes run
 
 [source,sql]
 ----
@@ -150,18 +152,23 @@ select * from earthquakes limit 10
 
 image::demo-kafka-druid-earthquake-data/druid_7.png[]
 
-To count the number of available records run
+To count the number of earthquakes per year run
 
 [source,sql]
 ----
-select count(*) from earthquakes
+select
+  time_format(__time, 'YYYY') as "year",
+  count(*) as earthquakes
+from earthquakes
+group by 1
+order by 1 desc
 ----
 
 image::demo-kafka-druid-earthquake-data/druid_8.png[]
 
 == Superset
 Superset gives the ability to execute SQL queries and build dashboards.
-Open the `superset` endpoint `external-superset` in your browser (http://172.18.0.4:30636 in this case).
+Open the `superset` endpoint `external-superset` in your browser (http://172.18.0.3:32108 in this case).
 
 image::demo-kafka-druid-earthquake-data/superset_1.png[]
 
@@ -170,7 +177,8 @@ Log in with the credentials username `admin`, password `admin`.
 image::demo-kafka-druid-earthquake-data/superset_2.png[]
 
 === View dashboard
-On the top click on the tab `Dashboards`.
+The demo has created a Dashboard to visualize the earthquake data.
+To open it click on the tab `Dashboards` at the top.
 
 image::demo-kafka-druid-earthquake-data/superset_3.png[]
 
@@ -179,17 +187,48 @@ It might take some time until the dashboards renders all the included charts.
 
 image::demo-kafka-druid-earthquake-data/superset_4.png[]
 
-TODO: Charts and zoom in on Germany
+=== View charts
+
+The dashboard `Earthquakes` consists of multiple charts.
+To list the charts click on the tab `Charts` at the top.
+
+image::demo-kafka-druid-earthquake-data/superset_5.png[]
+
+// TODO: Fix typo in Chart name
+Click on the Chart `Number of earthquakes my magnitude`.
+On the left side you can modify the chart and click on `Run` to see the effect.
+
+image::demo-kafka-druid-earthquake-data/superset_6.png[]
+
+=== View distribution on world map
+
+To look at geographical distribution of the earthquakes you have to click on the tab `Charts` at the top again.
+Afterwards click on the chart `Earthquake distribution`.
+
+image::demo-kafka-druid-earthquake-data/superset_7.png[]
+
+The distribution of the earthquakes matches the continental plate margins.
+This is the expected distribution from the https://en.wikipedia.org/wiki/Earthquake[Wikipedia article on Earthquakes].
+
+You can move and zoom the map with your mouse to interactively explore the map.
+You can e.g. have a detailed look at the detected earthquakes in Germany.
+
+image::demo-kafka-druid-earthquake-data/superset_8.png[]
+
+You can also click on the magnitudes in the legend on the top right side to enable/disable printing the earthquakes of that magnitude.
+By only enabling magnitudes greater or equal to 8 you can only plot the most severe earthquakes.
+
+image::demo-kafka-druid-earthquake-data/superset_9.png[]
 
 === Execute arbitrary SQL statements
 Within Superset you can not only create dashboards but also run arbitrary SQL statements.
 On the top click on the tab `SQL Lab` -> `SQL Editor`.
 
-image::demo-kafka-druid-earthquake-data/superset_5.png[]
+image::demo-kafka-druid-earthquake-data/superset_10.png[]
 
 On the left select the database `druid`, the schema `druid` and set `See table schema` to `earthquakes`.
 
-image::demo-kafka-druid-earthquake-data/superset_6.png[]
+image::demo-kafka-druid-earthquake-data/superset_11.png[]
 
 On the right textbox enter the desired SQL statement.
 If you do not want to make on up you can use the following:
@@ -198,17 +237,17 @@ If you do not want to make on up you can use the following:
 ----
 select
   time_format(__time, 'YYYY') as "year",
-  count(*)
+  count(*) as earthquakes
 from earthquakes
 group by 1
 order by 1 desc
 ----
 
-image::demo-kafka-druid-earthquake-data/superset_7.png[]
+image::demo-kafka-druid-earthquake-data/superset_12.png[]
 
 == MinIO
 The S3 provided by MinIO is used as a persistent storage for Druid to store all the data used.
-Open the `minio` endpoint `console-http` in your browser (http://172.18.0.5:31171 in this case).
+Open the `minio` endpoint `console-http` in your browser (http://172.18.0.4:31664 in this case).
 
 image::demo-kafka-druid-earthquake-data/minio_1.png[]
 
@@ -220,12 +259,18 @@ Click on the blue button `Browse` on the bucket `druid` and open the folders `da
 
 image::demo-kafka-druid-earthquake-data/minio_3.png[]
 
-As you can see druid saved 130MB of data within 24 prefixes (folders).
-Ony prefix corresponds to on segment which corresponds to a year of data.
+As you can see druid saved 199MB of data within 73 prefixes (folders).
+On prefix corresponds to on segment which in turn contains all the data of a year.
+If you don't see any years or for files the reason is, that Druid has not saved it's data from memory to the deep storage (in this case S3).
+After waiting a bit the data should have been flushed to S3 and should show up.
+
+image::demo-kafka-druid-earthquake-data/minio_3.png[]
+
+If you open up a prefix for a specific year you can see that Druid has placed a file containing the data of this year there.
 
 == Summary
-The demo streamed 500 earthquake records/s into a Kafka steaming pipeline.
-Druid ingested the data near-realtime into it's internal database and enabled SQL access to it.
+The demo streamed 1000 earthquake records/s for a total of ~3 million earthquakes into a Kafka steaming pipeline.
+Druid ingested the data near-realtime into its datasource and enabled SQL access to it.
 Superset was used as a web-based frontend to execute SQL statements and build dashboards.
 
 == Where to go from here
