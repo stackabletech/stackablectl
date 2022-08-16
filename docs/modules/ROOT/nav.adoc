@@ -8,5 +8,6 @@
 ** xref:commands/stack.adoc[]
 * Demos
 ** xref:demos/trino-taxi-data.adoc[]
+** xref:demos/kafka-druid-earthquake-data.adoc[]
 * xref:customization.adoc[]
 * xref:troubleshooting.adoc[]

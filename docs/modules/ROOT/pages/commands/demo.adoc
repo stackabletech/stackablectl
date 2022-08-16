@@ -11,6 +11,7 @@ To list the available demos, run the following command:
 $ stackablectl demo list
 DEMO                                STACKABLE STACK           DESCRIPTION
 trino-taxi-data                     trino-superset-s3         Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
+kafka-druid-earthquake-data         kafka-druid-superset-s3   Demo ingesting earthquake data into Kafka, streaming it into Druid and creating a Superset dashboard
 ----
 
 Detailed information of a demo can be queried with the `describe` command:
@@ -103,8 +104,13 @@ Have a nice day! 👋
 [INFO ] Installed demo trino-taxi-data. Use "stackablectl services list" to list the installed services
 ----
 
+The demos create Kubernetes jobs, that will populate test data and interact with the installed products to process the data.
+Until the products are ready, it is completely normal that the pods of these Jobs will fail with an error.
+They will get retried with an exponentially growing backoff time.
+After the products are ready they should turn green and everything should settle down.
+
 === List deployed services
-After installing your demo you can use the xref:commands/services.adoc[] command to list the installed services as follows
+After installing your demo you can use the xref:commands/services.adoc[] command to list the installed services as follows:
 
 [source,console]
 ----

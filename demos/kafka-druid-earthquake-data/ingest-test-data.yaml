@@ -1,0 +1,49 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ingest-test-data
+spec:
+  template:
+    spec:
+      containers:
+        - name: ingest-test-data
+          image: python:3.10
+          command: ["bash", "-c", "curl -o earthquake.csv https://repo.stackable.tech/repository/misc/earthquake-data/earthquakes_1950_to_2022.csv && pip install pandas==1.4.2 kafka-python3==3.0.0 && python /tmp/script/script.py"]
+          volumeMounts:
+            - name: script
+              mountPath: /tmp/script
+      restartPolicy: OnFailure
+      volumes:
+      - name: script
+        configMap:
+          name: ingest-test-data-script
+      restartPolicy: Never
+  backoffLimit: 50 # It can take some time until Kafka is ready
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingest-test-data-script
+data:
+  script.py: |
+    import pandas as pd
+    from kafka3 import KafkaProducer
+    import time
+
+    BOOTSTRAP_SERVERS = "kafka:9092"
+    TOPIC = "earthquakes"
+    CSV_FILE = "earthquake.csv"
+    TARGET_RECORDS_PER_SECOND = 1000
+
+    print(f"Producing {TARGET_RECORDS_PER_SECOND} records/s from {CSV_FILE} to topic {TOPIC} with bootstrap servers {BOOTSTRAP_SERVERS}\n")
+
+    csv_file = pd.DataFrame(pd.read_csv(CSV_FILE, sep=","))
+
+    producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVERS)
+
+    for row in csv_file.index:
+      starttime = time.time()
+      row_json = csv_file.loc[row].to_json()
+      producer.send('earthquakes', str.encode(row_json))
+      time.sleep(max(0, (1 / TARGET_RECORDS_PER_SECOND) - (time.time() - starttime)))
