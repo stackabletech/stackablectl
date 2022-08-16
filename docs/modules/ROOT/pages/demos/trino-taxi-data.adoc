@@ -98,7 +98,7 @@ Log in with the credentials username `admin`, password `admin`.
 
 image::demo-trino-taxi-data/superset_2.png[]
 
-=== View dashboard
+=== View the dashboard
 On the top click on the tab `Dashboards`.
 
 image::demo-trino-taxi-data/superset_3.png[]
