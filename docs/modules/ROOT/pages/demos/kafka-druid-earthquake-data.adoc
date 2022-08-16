@@ -194,7 +194,6 @@ To list the charts click on the tab `Charts` at the top.
 
 image::demo-kafka-druid-earthquake-data/superset_5.png[]
 
-// TODO: Fix typo in Chart name
 Click on the Chart `Number of earthquakes my magnitude`.
 On the left side you can modify the chart and click on `Run` to see the effect.
 
