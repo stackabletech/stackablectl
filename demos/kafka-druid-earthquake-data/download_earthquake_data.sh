@@ -1,4 +1,4 @@
-# This scripts is not used for the demo
+# This script is not used for the demo
 # Its purpose is to document how to retrieve the used earthquake data
 
 # rm -f 19*.csv 20*.csv earthquakes.csv
