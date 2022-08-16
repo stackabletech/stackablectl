@@ -13,14 +13,8 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-common</artifactId>
-            <version>2.4.11</version>
-            <scope>compile</scope>
-        </dependency>
 
-        <dependency>
+         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.12</artifactId>
             <version>3.3.0</version>
@@ -38,6 +32,23 @@
             <version>3.3.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>2.4.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase</artifactId>
+            <version>2.4.11</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-common</artifactId>
+            <version>2.4.11</version>
+        </dependency>
+
 
     </dependencies>
 
@@ -64,7 +75,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.2</version>
                 <configuration>
-                    <outputDirectory></outputDirectory>
+                    <!-- outputDirectory>Put a specific target directory here</outputDirectory-->
                     <archive>
                         <index>true</index>
                         <manifest>
