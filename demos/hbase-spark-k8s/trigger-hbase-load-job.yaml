@@ -1,0 +1,19 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: trigger-hbase-load-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: trigger-hbase-load-job
+          image: docker.stackable.tech/stackable/tools:0.2.0-stackable0
+          command: [ "bash", "-c", "java -jar /tmp/hbase-1.0.jar \
+                    --targetTable ny-taxi-data \
+                    --input /hbase/*.parquet \
+                    --hbaseSite /stackable/conf/hbase/hbase-site.xml \
+                    --hdfsSite  /stackable/conf/hdfs/hdfs-site.xml \
+                    --coreSite /stackable/conf/hdfs/core-site.xml \
+                    &>> /tmp/hbase-log.txt" ]
+      restartPolicy: OnFailure
