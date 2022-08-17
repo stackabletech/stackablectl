@@ -9,7 +9,7 @@ spec:
       containers:
         - name: ingest-test-data
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
-          command: ["bash", "-c", "curl -o earthquake.csv https://repo.stackable.tech/repository/misc/earthquake-data/earthquakes_1950_to_2022.csv && python -u /tmp/script/script.py"]
+          command: ["bash", "-c", "python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
@@ -33,7 +33,7 @@ data:
 
     BOOTSTRAP_SERVERS = "kafka:9092"
     TOPIC = "earthquakes"
-    CSV_FILE = "earthquake.csv"
+    CSV_FILE = "https://repo.stackable.tech/repository/misc/earthquake-data/earthquakes_1950_to_2022.csv"
     TARGET_RECORDS_PER_SECOND = 1000
 
     print(f"Producing {TARGET_RECORDS_PER_SECOND} records/s from {CSV_FILE} to topic {TOPIC} with bootstrap servers {BOOTSTRAP_SERVERS}\n")
