@@ -6,7 +6,7 @@
 ** xref:commands/release.adoc[]
 ** xref:commands/services.adoc[]
 ** xref:commands/stack.adoc[]
-* Demos
+* xref:demos/index.adoc[]
 ** xref:demos/trino-taxi-data.adoc[]
 ** xref:demos/kafka-druid-earthquake-data.adoc[]
 * xref:customization.adoc[]
