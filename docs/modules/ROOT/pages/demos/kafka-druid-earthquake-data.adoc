@@ -15,7 +15,7 @@ This demo will
 ** *Kafka*:  A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as a event streaming platform to stream the data in near real-time
 ** *Druid*: A real-time database to power modern analytics applications. This demo uses it to ingest the near real-time data from Kafka, store it and enable to access the data via SQL
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage for Druid to store all the data used
-* Continuously emit approximately 1000 records/s of earthquake data into Kafka
+* Continuously emit approximately 1000 records/s of https://earthquake.usgs.gov/[earthquake data] into Kafka
 * Start a Druid ingestion job that ingests the data into the Druid instance
 * Create Superset dashboards for visualization of the data.
 
