@@ -46,7 +46,7 @@ data:
         station_json = stations.loc[station].to_json()
         producer.send(STATIONS_TOPIC, str.encode(station_json))
 
-    print(f"Producing measurement records to topic {MEASUREMENTS_TOPIC} with bootstrap servers {BOOTSTRAP_SERVERS}\n")
+    print(f"Producing measurement records of the last {HISTORY_DAYS} days to topic {MEASUREMENTS_TOPIC} with bootstrap servers {BOOTSTRAP_SERVERS}\n")
 
     # Using separate loop to first send stations and the measurements afterwards
     for station in stations.index:
@@ -56,11 +56,11 @@ data:
         try:
             measurements = pd.read_json(url)
         except Exception as err:
-            print(f"[WARN] Could not read measurements for station {station['shortname']} ({station_uuid}): {err}")
+            print(f"[WARN] Could not read measurements for station {station['longname']} ({station_uuid}): {err}")
             continue
         measurements['station_uuid'] = station_uuid
         for measurement in measurements.index:
             measurement_json = measurements.loc[measurement].to_json()
             producer.send(MEASUREMENTS_TOPIC, str.encode(measurement_json))
 
-        print(f"Send {len(measurements)} measurement for station {station['shortname']}")
+        print(f"Send {len(measurements)} measurements for station {station['longname']}")

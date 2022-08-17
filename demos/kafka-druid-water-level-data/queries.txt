@@ -28,11 +28,3 @@ select
 from measurements inner join stations on stations.uuid = measurements.station_uuid
 group by 1
 order by 2 desc
-
-
-select
-  stations.longname as station,
-  latest(measurements."value") as "current"
-from measurements inner join stations on stations.uuid = measurements.station_uuid
-group by 1
-order by 1 desc
