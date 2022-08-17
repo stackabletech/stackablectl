@@ -1,0 +1,141 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-druid-ingestion-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-druid-ingestion-job
+          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0 # Using same image so caching can happen
+          command: ["bash", "-c", "curl -X POST -H 'Content-Type: application/json' -d @/tmp/ingestion-job-spec/stations-ingestion-job-spec.json http://druid-coordinator:8081/druid/indexer/v1/supervisor && curl -X POST -H 'Content-Type: application/json' -d @/tmp/ingestion-job-spec/measurements-ingestion-job-spec.json http://druid-coordinator:8081/druid/indexer/v1/supervisor"]
+          volumeMounts:
+            - name: ingestion-job-spec
+              mountPath: /tmp/ingestion-job-spec
+      restartPolicy: OnFailure
+      volumes:
+      - name: ingestion-job-spec
+        configMap:
+          name: create-druid-ingestion-job-spec
+      restartPolicy: Never
+  backoffLimit: 50 # It can take some time until Druid is ready
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-druid-ingestion-job-spec
+data:
+  stations-ingestion-job-spec.json: |
+    {
+      "type": "kafka",
+      "spec": {
+        "ioConfig": {
+          "type": "kafka",
+          "consumerProperties": {
+            "bootstrap.servers": "kafka:9092"
+          },
+          "topic": "stations",
+          "inputFormat": {
+            "type": "json",
+            "flattenSpec": {
+              "fields": [
+                {
+                  "name": "water_longname",
+                  "type": "path",
+                  "expr": "$.water.longname"
+                },
+                {
+                  "name": "water_shortname",
+                  "type": "path",
+                  "expr": "$.water.shortname"
+                }
+              ]
+            }
+          },
+          "useEarliestOffset": true
+        },
+        "tuningConfig": {
+          "type": "kafka"
+        },
+        "dataSchema": {
+          "dataSource": "stations",
+          "timestampSpec": {
+            "column": "!!!_no_such_column_!!!",
+            "missingValue": "2000-01-01T00:00:00Z"
+          },
+          "dimensionsSpec": {
+            "dimensions": [
+              "water_longname",
+              "water_shortname",
+              "uuid",
+              {
+                "type": "long",
+                "name": "number"
+              },
+              "shortname",
+              "longname",
+              {
+                "type": "double",
+                "name": "km"
+              },
+              "agency",
+              {
+                "type": "double",
+                "name": "longitude"
+              },
+              {
+                "type": "double",
+                "name": "latitude"
+              }
+            ]
+          },
+          "granularitySpec": {
+            "queryGranularity": "none",
+            "rollup": false,
+            "segmentGranularity": "all"
+          }
+        }
+      }
+    }
+  measurements-ingestion-job-spec.json: |
+    {
+      "type": "kafka",
+      "spec": {
+        "ioConfig": {
+          "type": "kafka",
+          "consumerProperties": {
+            "bootstrap.servers": "kafka:9092"
+          },
+          "topic": "measurements",
+          "inputFormat": {
+            "type": "json"
+          },
+          "useEarliestOffset": true
+        },
+        "tuningConfig": {
+          "type": "kafka"
+        },
+        "dataSchema": {
+          "dataSource": "measurements",
+          "timestampSpec": {
+            "column": "timestamp",
+            "format": "millis"
+          },
+          "dimensionsSpec": {
+            "dimensions": [
+              {
+                "type": "long",
+                "name": "value"
+              },
+              "station_uuid"
+            ]
+          },
+          "granularitySpec": {
+            "queryGranularity": "none",
+            "rollup": false,
+            "segmentGranularity": "day"
+          }
+        }
+      }
+    }

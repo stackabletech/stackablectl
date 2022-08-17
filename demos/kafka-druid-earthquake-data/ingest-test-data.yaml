@@ -8,8 +8,8 @@ spec:
     spec:
       containers:
         - name: ingest-test-data
-          image: python:3.10
-          command: ["bash", "-c", "curl -o earthquake.csv https://repo.stackable.tech/repository/misc/earthquake-data/earthquakes_1950_to_2022.csv && pip install pandas==1.4.2 kafka-python3==3.0.0 && python /tmp/script/script.py"]
+          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
+          command: ["bash", "-c", "curl -o earthquake.csv https://repo.stackable.tech/repository/misc/earthquake-data/earthquakes_1950_to_2022.csv && python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
