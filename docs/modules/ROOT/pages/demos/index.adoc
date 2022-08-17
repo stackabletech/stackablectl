@@ -1,0 +1,5 @@
+= Demos
+
+The pages below this section guide you on how to use the demos provided by Stackable.
+
+To install a demo please follow the xref:quickstart.adoc[quickstart guide] or have a look at the xref:commands/demo.adoc[demo command].

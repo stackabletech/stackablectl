@@ -19,7 +19,7 @@ This demo will
 * Start a Druid ingestion job that ingests the data into the Druid instance
 * Create Superset dashboards for visualization of the data.
 
-The whole pipeline will have a very low latency from putting a record into kafka to it showing up in the Dashboard charts.
+The whole data pipeline will have a very low latency from putting a record into Kafka to it showing up in the dashboard charts.
 
 You can see the deployed products as well as their relationship in the following diagram:
 
@@ -81,7 +81,7 @@ Metadata for all topics (from broker -1: 172.18.0.4:30968/bootstrap):
 ----
 
 You can see that Kafka consists of one broker and the topic `earthquakes` has been created.
-To see some records that have been send to kafka run the following command.
+To see some records that have been send to Kafka run the following command.
 You can change the number of records to print via the `-c` parameter.
 
 [source,console]
@@ -104,7 +104,7 @@ Topic earthquakes / Partition 0 / Offset: 2670281 / Timestamp: 1660571644060
 ----
 
 From the output you can see, that the last record was produced at the timestamp `1660571644060` which translates to `Mo 15. Aug 15:54:04 CEST 2022` (using the command `date -d @1660571644`).
-You can also see that it was the record number `2670281` send to this topic, so ~2.6 million million records have been produced so far.
+You can also see that it was the record number `2670281` send to this topic, so ~2.6 million records have been produced so far.
 
 == Druid
 Druid is used to ingest the near real-time data from Kafka, store it and enable SQL access to it.
@@ -122,8 +122,8 @@ image::demo-kafka-druid-earthquake-data/druid_2.png[]
 
 After clicking on the magnification glass to the right side of the `RUNNING` supervisor you can see additional information.
 On the tab `Statistics` on the left you can see the number of processed records as well as the number of errors.
-The statistics show that Druid is currently ingesting 1251 records/s and has ingested 2,1 million records so far.
-All records have been ingested successfully, which is indicated by having no `processWithError`, `thrownAway` or `unparseable`.
+The statistics show that Druid is currently ingesting 1251 records/s and has ingested 2.1 million records so far.
+All records have been ingested successfully, which is indicated by having no `processWithError`, `thrownAway` or `unparseable` records.
 
 image::demo-kafka-druid-earthquake-data/druid_3.png[]
 
@@ -215,7 +215,7 @@ You can e.g. have a detailed look at the detected earthquakes in Germany.
 image::demo-kafka-druid-earthquake-data/superset_8.png[]
 
 You can also click on the magnitudes in the legend on the top right side to enable/disable printing the earthquakes of that magnitude.
-By only enabling magnitudes greater or equal to 8 you can only plot the most severe earthquakes.
+By only enabling magnitudes greater or equal to 8 you can plot only the most severe earthquakes.
 
 image::demo-kafka-druid-earthquake-data/superset_9.png[]
 
