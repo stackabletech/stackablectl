@@ -43,4 +43,4 @@ demos:
     manifests:
       - plainYaml: demos/kafka-druid-water-level-data/ingest-test-data.yaml # TODO
       - plainYaml: demos/kafka-druid-water-level-data/create-druid-ingestion-job.yaml # TODO
-      # - plainYaml: demos/kafka-druid-water-level-data/setup-superset.yaml # TODO
+      - plainYaml: demos/kafka-druid-water-level-data/setup-superset.yaml # TODO
