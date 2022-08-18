@@ -32,7 +32,7 @@ data:
     import pandas as pd
     import time
 
-    HISTORY_DAYS = 1
+    HISTORY_DAYS = 31
     # At a maximum scrape once every minute.
     # In practice it will take longer than a minute to scrape, so the loop will be busy.
     # This will result in a continuos stream of data.
