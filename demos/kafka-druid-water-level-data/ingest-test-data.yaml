@@ -39,7 +39,7 @@ data:
     LIVE_UPDATE_INTERVAL_S = 60
 
     BOOTSTRAP_SERVERS = "kafka:9092"
-    # BOOTSTRAP_SERVERS = "172.18.0.5:32602"
+    # BOOTSTRAP_SERVERS = "172.18.0.2:32316"
     STATIONS_TOPIC = "stations"
     MEASUREMENTS_TOPIC = "measurements"
 
@@ -47,7 +47,6 @@ data:
     producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVERS)
 
     stations = pd.read_json("https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json")
-    reachable_station_uuids = []
     print(f"Stations:\n{stations}")
     for station in stations.index:
         station_json = stations.loc[station].to_json()
@@ -62,7 +61,6 @@ data:
         url = f"https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/{station_uuid}/W/measurements.json?start=P{HISTORY_DAYS}D"
         try:
             measurements = pd.read_json(url)
-            reachable_station_uuids.append(station_uuid)
         except Exception as err:
             print(f"[WARN] Could not read measurements for station {station['longname']} ({station_uuid}): {err}")
             continue
@@ -78,12 +76,13 @@ data:
     while True:
         starttime = time.time()
         measurement_counter = 0
-        for station_uuid in reachable_station_uuids:
+        measurement_failed_counter = 0
+        for station_uuid in stations["uuid"]:
             url = f"https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/{station_uuid}/W/currentmeasurement.json"
             try:
                 measurement = pd.read_json(url, typ='series')
             except Exception as err:
-                print(f"[WARN] Could not read measurement for station {station_uuid}: {err}")
+                measurement_failed_counter += 1
                 continue
 
             measurement = {
@@ -94,5 +93,5 @@ data:
             measurement_json = json.dumps(measurement, separators=(',', ':'))
             producer.send(MEASUREMENTS_TOPIC, str.encode(measurement_json))
             measurement_counter += 1
-        print(f"Send {measurement_counter} measurements in {int(time.time() - starttime)}s")
+        print(f"Send {measurement_counter} measurements in {int(time.time() - starttime)}s ({measurement_failed_counter} failed)")
         time.sleep(max(0, LIVE_UPDATE_INTERVAL_S - ((time.time() - starttime))))
