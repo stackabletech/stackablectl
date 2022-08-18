@@ -38,9 +38,10 @@ data:
 
     print(f"Producing {TARGET_RECORDS_PER_SECOND} records/s from {CSV_FILE} to topic {TOPIC} with bootstrap servers {BOOTSTRAP_SERVERS}\n")
 
-    csv_file = pd.DataFrame(pd.read_csv(CSV_FILE, sep=","))
-
+    # Create producer first to early error out if Kafka is not ready yet to reduce unnecessary network usage
     producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVERS)
+
+    csv_file = pd.DataFrame(pd.read_csv(CSV_FILE, sep=","))
 
     for row in csv_file.index:
       starttime = time.time()
