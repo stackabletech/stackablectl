@@ -1,0 +1,206 @@
+= kafka-druid-water-level-data
+
+[NOTE]
+====
+This guide assumes you already have the demo `kafka-druid-water-level-data` installed.
+If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you have to run `stackablectl demo install kafka-druid-water-level-data`.
+====
+
+This demo will
+
+* Install the required Stackable operators
+* Spin up the follow data products
+** *Superset*: A modern data exploration and visualization platform. This demo utilizes Superset to retrieve data from Druid via SQL queries and build dashboards on top of that data
+** *Kafka*:  A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as a event streaming platform to stream the data in near real-time
+** *Druid*: A real-time database to power modern analytics applications. This demo uses it to ingest the near real-time data from Kafka, store it and enable to access the data via SQL
+** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage for Druid to store all the data used
+* Ingest water-level data from the https://www.pegelonline.wsv.de/webservice/ueberblick[PEGELONLINE webservice] into Kafka. The data contains measured water levels of different measuring station all around Germany. If the webservice is not available this demo will not work as it needs the webservice to ingest the data.
+** First of historical data of the last 31 days will be fetched and ingested
+** Afterwards the demo will fetch the current measurement of every station approximately every two minutes and ingest it near-realtime into Kafka
+* Start a Druid ingestion job that ingests the data into the Druid instance
+* Create Superset dashboards for visualization of the data
+
+The whole data pipeline will have a very low latency from putting a record into Kafka to it showing up in the dashboard charts.
+
+You can see the deployed products as well as their relationship in the following diagram:
+
+image::demo-kafka-druid-water-level-data/overview.png[]
+
+== List deployed Stackable services
+To list the installed installed Stackable services run the following command:
+
+[source,console]
+----
+$ stackablectl services list --all-namespaces
+stackablectl services list 
+ PRODUCT    NAME         NAMESPACE  ENDPOINTS                                   EXTRA INFOS                          
+                                                                                                                     
+ druid      druid        default    broker-http        http://172.18.0.4:31593                                       
+                                    coordinator-http   http://172.18.0.4:32366                                       
+                                    historical-http    http://172.18.0.5:30170                                       
+                                    middlemanager-http http://172.18.0.3:31305                                       
+                                    router-http        http://172.18.0.5:31050                                       
+                                                                                                                     
+ kafka      kafka        default    kafka              172.18.0.3:32536                                              
+                                                                                                                     
+ superset   superset     default    external-superset  http://172.18.0.4:30334  Admin user: admin, password: admin   
+                                                                                                                     
+ zookeeper  zookeeper    default    zk                 172.18.0.4:32738                                              
+                                                                                                                     
+ minio      minio-druid  default    http               http://172.18.0.5:31560  Third party service                  
+                                    console-http       http://172.18.0.5:30916  Admin user: root, password: rootroot
+----
+
+[NOTE]
+====
+When a product instance has not finished starting yet, the service will have no endpoint.
+Starting all of the product instances might take a considerable amount of time depending on your internet connectivity.
+In case the product is not ready yet a warning might be shown.
+====
+
+== Inspect data in Kafka
+Kafka is used as an event streaming platform to stream the data in near real-time.
+All the messages put in and read from Kafka are structured in dedicated queues called topics.
+The test data is split across two topic called `stations` and `measurements`.
+The topic `stations` contains a record for every station that can measure the water level.
+The topic `measurements` contains a record for every measurement that has happened.
+The records get produced (put in) by the data ingestion jon and are consumed (read) by Druid afterwards in the same order they where produced.
+
+As Kafka itself has no webinterface you have to use a Kafka client like https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html[kafkacat].
+In order to connect to Kafka, use the `kafka` endpoint from the `kafka` service in your `stackablectl services list` command output (`172.18.0.3:32536` in this case).
+
+=== List available topics
+If you have `kafkacat` installed, you can see the available brokers and topics with the following command.
+If not, that's no big deal as you would see nearly the exact same output.
+You need to replace the `-b` parameter to match your Kafka endpoint.
+
+[source,console]
+----
+$ kafkacat -b 172.18.0.3:32536 -L
+Metadata for all topics (from broker -1: 172.18.0.3:32536/bootstrap):
+ 1 brokers:
+  broker 1001 at 172.18.0.3:31631 (controller)
+ 2 topics:
+  topic "stations" with 1 partitions:
+    partition 0, leader 1001, replicas: 1001, isrs: 1001
+  topic "measurements" with 1 partitions:
+    partition 0, leader 1001, replicas: 1001, isrs: 1001
+----
+
+You can see that Kafka consists of one broker and the topics `stations` and `measurements` have been created.
+
+=== Show sample records
+To see some records that have been send to Kafka run the following commands.
+You can change the number of records to print via the `-c` parameter.
+The `| jq` part can be emitted if you don't have https://github.com/stedolan/jq[jq] installed (it's used to pretty-print the json here).
+
+// Choosing json over console here, because most part is json and it improves syntax highlighting
+[source,json]
+----
+kafkacat -b 172.18.0.3:32536 -C -t stations -c 2 | jq
+{
+  "uuid": "47174d8f-1b8e-4599-8a59-b580dd55bc87",
+  "number": 48900237,
+  "shortname": "EITZE",
+  "longname": "EITZE",
+  "km": 9.56,
+  "agency": "VERDEN",
+  "longitude": 9.2767694354,
+  "latitude": 52.9040654474,
+  "water": {
+    "shortname": "ALLER",
+    "longname": "ALLER"
+  }
+}
+{
+  "uuid": "5aaed954-de4e-4528-8f65-f3f530bc8325",
+  "number": 48900204,
+  "shortname": "RETHEM",
+  "longname": "RETHEM",
+  "km": 34.22,
+  "agency": "VERDEN",
+  "longitude": 9.3828408101,
+  "latitude": 52.7890975921,
+  "water": {
+    "shortname": "ALLER",
+    "longname": "ALLER"
+  }
+}
+----
+
+// Choosing json over console here, because most part is json and it improves syntax highlighting
+[source,json]
+----
+kafkacat -b 172.18.0.3:32536 -C -t measurements -c 3 | jq
+{
+  "timestamp": 1658151900000,
+  "value": 221,
+  "station_uuid": "47174d8f-1b8e-4599-8a59-b580dd55bc87"
+}
+{
+  "timestamp": 1658152800000,
+  "value": 220,
+  "station_uuid": "47174d8f-1b8e-4599-8a59-b580dd55bc87"
+}
+{
+  "timestamp": 1658153700000,
+  "value": 220,
+  "station_uuid": "47174d8f-1b8e-4599-8a59-b580dd55bc87"
+}
+----
+
+The records from the two topics only contain the needed data.
+The measurement records refer to a station.
+The relationship is illustrated below.
+
+image::demo-kafka-druid-water-level-data/topics.png[]
+
+The reason for splitting the data up into two different topics is the improved performance.
+On simpler solution would be to use a single topic and produce records that look like follows
+
+[source,json]
+{
+  "uuid": "47174d8f-1b8e-4599-8a59-b580dd55bc87",
+  "number": 48900237,
+  "shortname": "EITZE",
+  "longname": "EITZE",
+  "km": 9.56,
+  "agency": "VERDEN",
+  "longitude": 9.2767694354,
+  "latitude": 52.9040654474,
+  "water": {
+    "shortname": "ALLER",
+    "longname": "ALLER"
+  },
+  "timestamp": 1658151900000,
+  "value": 221
+}
+----
+
+Notice the two last lines that differ from the previously show `stations` records.
+The obvious downside of this is, that every measurement (there are multiple millions of it) has to contain all the data known about the station that it belongs to.
+That can lead to transmitting and storing the information of e.g. the longitude of a station multiple thousand times.
+The solution is to only transmit the needed data of either a station or a measurement.
+The downside here is that when analyzing the data you need to combine the records from two tables, `stations` and `measurements`.
+
+If you are interested on how many records have been produced to the Kafka topic so far, use the following command.
+It will print the last record produced to the topic, which will be formatted with the pattern specified in the `-f` parameter.
+The given pattern will print some metadata of the record.
+
+[source,console]
+----
+$ kafkacat -b 172.18.0.3:32536 -C -t stations -o -1 -c 1 \
+    -f 'Topic %t / Partition %p / Offset: %o / Timestamp: %T\n'
+Topic stations / Partition 0 / Offset: 688 / Timestamp: 1660829626969
+----
+
+[source,console]
+----
+$ kafkacat -b 172.18.0.3:32536 -C -t measurements -o -1 -c 1 \
+    -f 'Topic %t / Partition %p / Offset: %o / Timestamp: %T\n'
+Topic measurements / Partition 0 / Offset: 7586541 / Timestamp: 1660831499070
+----
+
+From the output you can see, that the last measurement record was produced at the timestamp `1660831499070` which translates to `Do 18. Aug 16:04:59 CEST 2022` (using the command `date -d @1660831499`).
+You can also see that it was the record number `7586541` send to this topic, so ~7.6 million records have been produced so far.
