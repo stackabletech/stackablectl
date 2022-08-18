@@ -21,7 +21,9 @@ select * from
     avg("value") as avg_measurement,
     latest("value") as current_measurement,
     (latest("value") - avg("value")) / avg("value") * 100 as deviation_percent,
-    round((latest("value") - avg("value")) / avg("value") * 100 / 25) * 25 as deviation_percent_bucketed
+    round((latest("value") - avg("value")) / avg("value") * 100 /  5) *  5 as deviation_percent_bucketed_5,
+    round((latest("value") - avg("value")) / avg("value") * 100 / 10) * 10 as deviation_percent_bucketed_10,
+    round((latest("value") - avg("value")) / avg("value") * 100 / 25) * 25 as deviation_percent_bucketed_25
   from measurements
   group by 1
 ) as measurements
