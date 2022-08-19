@@ -71,7 +71,6 @@ In order to connect to Kafka, use the `kafka` endpoint from the `kafka` service 
 
 === List available topics
 If you have `kafkacat` installed, you can see the available brokers and topics with the following command.
-If not, that's no big deal, as you would see nearly the exact same output if you would be able execute the commands.
 You need to replace the `-b` parameter to match your Kafka endpoint.
 
 [source,console]
