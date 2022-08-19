@@ -246,7 +246,7 @@ In this case the `measurements` data source is partitioned by the day of the mea
 
 image::demo-kafka-druid-water-level-data/druid_5.png[]
 
-Druid offers a web-based way of querying the datasources via SQL.
+Druid offers a web-based way of querying the data sources via SQL.
 To achieve this you first have to click on `Query` at the top.
 
 image::demo-kafka-druid-water-level-data/druid_6.png[]

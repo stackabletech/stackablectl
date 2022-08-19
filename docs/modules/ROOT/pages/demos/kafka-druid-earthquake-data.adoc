@@ -133,12 +133,12 @@ You can see the available data sources by clicking on `Datasources` at the top.
 
 image::demo-kafka-druid-earthquake-data/druid_4.png[]
 
-By clicking on the `earthquakes` datasource you can see the segments the datasource consists of.
-In this case the `earthquakes` datasource is partitioned by the year of the earthquake, resulting in 73 segments.
+By clicking on the `earthquakes` data source you can see the segments the data source consists of.
+In this case the `earthquakes` data source is partitioned by the year of the earthquake, resulting in 73 segments.
 
 image::demo-kafka-druid-earthquake-data/druid_5.png[]
 
-Druid offers a web-based way of querying the datasources via SQL.
+Druid offers a web-based way of querying the data sources via SQL.
 To achieve this you first have to click on `Query` at the top.
 
 image::demo-kafka-druid-earthquake-data/druid_6.png[]
