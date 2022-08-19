@@ -43,7 +43,10 @@ spec:
     roleGroups:
       default:
         config: {}
-        replicas: 1
+        # We use multiple middle-managers to be able to run multiple ingestion jobs simultaneously.
+        # If we need even more slots, the configuration maxNumConcurrentSubTasks should increase the number of slots
+        # without increasing the number of middleManagers.
+        replicas: 2
   routers:
     roleGroups:
       default:

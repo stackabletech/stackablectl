@@ -8,8 +8,8 @@ spec:
     spec:
       containers:
         - name: ingest-test-data
-          image: python:3.10
-          command: ["bash", "-c", "curl -o earthquake.csv https://repo.stackable.tech/repository/misc/earthquake-data/earthquakes_1950_to_2022.csv && pip install pandas==1.4.2 kafka-python3==3.0.0 && python /tmp/script/script.py"]
+          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
+          command: ["bash", "-c", "python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
@@ -31,16 +31,17 @@ data:
     from kafka3 import KafkaProducer
     import time
 
-    BOOTSTRAP_SERVERS = "kafka:9092"
+    BOOTSTRAP_SERVERS = "kafka:9092" # For local testing / developing replace it, afterwards change back to kafka:9092
     TOPIC = "earthquakes"
-    CSV_FILE = "earthquake.csv"
+    CSV_FILE = "https://repo.stackable.tech/repository/misc/earthquake-data/earthquakes_1950_to_2022.csv"
     TARGET_RECORDS_PER_SECOND = 1000
 
     print(f"Producing {TARGET_RECORDS_PER_SECOND} records/s from {CSV_FILE} to topic {TOPIC} with bootstrap servers {BOOTSTRAP_SERVERS}\n")
 
-    csv_file = pd.DataFrame(pd.read_csv(CSV_FILE, sep=","))
-
+    # Create producer first to early error out if Kafka is not ready yet to reduce unnecessary network usage
     producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVERS)
+
+    csv_file = pd.DataFrame(pd.read_csv(CSV_FILE, sep=","))
 
     for row in csv_file.index:
       starttime = time.time()

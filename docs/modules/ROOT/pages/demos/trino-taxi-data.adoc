@@ -62,7 +62,7 @@ Open it with your favorite browser.
 
 image::demo-trino-taxi-data/minio_1.png[]
 
-Log in with the credentials username `root`, password `rootroot`.
+Log in with the username `root` and password `rootroot`.
 
 image::demo-trino-taxi-data/minio_2.png[]
 
@@ -82,7 +82,7 @@ If you get a warning regarding the self signed certificate (e.g. `Warning: Poten
 
 image::demo-trino-taxi-data/trino_1.png[]
 
-Log in with the credentials username `admin`, password `admin`.
+Log in with the username `admin` and password `admin`.
 
 image::demo-trino-taxi-data/trino_2.png[]
 
@@ -94,7 +94,7 @@ Open the `superset` endpoint `external-superset` in your browser (`http://172.18
 
 image::demo-trino-taxi-data/superset_1.png[]
 
-Log in with the credentials username `admin`, password `admin`.
+Log in with the username `admin` and password `admin`.
 
 image::demo-trino-taxi-data/superset_2.png[]
 
