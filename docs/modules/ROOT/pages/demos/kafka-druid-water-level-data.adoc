@@ -177,7 +177,7 @@ One simpler solution would be to use a single topic and produce records that loo
 }
 ----
 
-Notice the two last lines that differ from the previously shown `stations` records.
+Notice the two last attributes that differ from the previously shown `stations` records.
 The obvious downside of this is, that every measurement (there are multiple millions of it) has to contain all the data known about the station that it was measured at.
 This can lead to transmitting and storing the information of e.g. the longitude of a station multiple thousand times.
 The solution is to only transmit the known/needed data of either a station or a measurement.
