@@ -417,7 +417,7 @@ Superset was used as a web-based frontend to execute SQL statements and build da
 == Where to go from here
 There are multiple paths to go from here.
 The following sections can give you some ideas on what to explore next.
-You can find the description of the water level data on the https://www.pegelonline.wsv.de/webservice/dokuRestapi[on the PEGELONLINE rest api documentation (german only)].
+You can find the description of the water level data on the https://www.pegelonline.wsv.de/webservice/dokuRestapi[on the PEGELONLINE rest api documentation (German only)].
 
 === Execute arbitrary SQL statements
 Within Superset (or the Druid webinterface) you can execute arbitrary SQL statements to explore the water level data.
