@@ -237,8 +237,11 @@ You can see the available data sources by clicking on `Datasources` at the top.
 
 image::demo-kafka-druid-water-level-data/druid_4.png[]
 
-By clicking on the `earthquakes` datasource you can see the segments the datasource consists of.
-In this case the `earthquakes` datasource is partitioned by the year of the earthquake, resulting in 73 segments.
+The `Avg. row size (bytes)` shows, that a typical `measurement` record, while a `station` record has 213 bytes, which is 50 times the size.
+So with choosing two dedicated topics over a single topic the demo was able to save 50x of storage and compute costs.
+
+By clicking on the `measurements` datasource you can see the segments the datasource consists of.
+In this case the `measurements` datasource is partitioned by the day of the measurement, resulting in 33 segments.
 
 image::demo-kafka-druid-water-level-data/druid_5.png[]
 
@@ -319,3 +322,87 @@ You can move and zoom the map with your mouse to interactively explore the map.
 You can e.g. have a detailed look at the water https://en.wikipedia.org/wiki/Rhine[Rhein].
 
 image::demo-kafka-druid-water-level-data/superset_8.png[]
+
+=== Execute arbitrary SQL statements
+Within Superset you can not only create dashboards but also run arbitrary SQL statements.
+On the top click on the tab `SQL Lab` -> `SQL Editor`.
+
+image::demo-kafka-druid-water-level-data/superset_9.png[]
+
+On the left select the database `druid`, the schema `druid` and set `See table schema` to `stations` or `measurements`.
+
+image::demo-kafka-druid-water-level-data/superset_10.png[]
+
+On the right textbox enter the desired SQL statement.
+We need to join the two tables to get interesting results.
+To find out the number of measurements the stations made run the following query:
+
+[source,sql]
+----
+select
+  stations.longname as station,
+  count(*) as measurements
+from measurements inner join stations on stations.uuid = measurements.station_uuid
+group by 1
+order by 2 desc
+----
+
+image::demo-kafka-druid-water-level-data/superset_11.png[]
+
+You can also find out the number of measurements for every water:
+
+[source,sql]
+----
+select
+  stations.water_longname as water,
+  count(*) as measurements
+from measurements inner join stations on stations.uuid = measurements.station_uuid
+group by 1
+order by 2 desc
+----
+
+image::demo-kafka-druid-water-level-data/superset_12.png[]
+
+What might also be interesting is the average and current measurement of the stations
+
+[source,sql]
+----
+select
+  stations.longname as station,
+  avg("value") as avg_measurement,
+  latest("value") as current_measurement,
+  latest("value") - avg("value") as diff
+from measurements inner join stations on stations.uuid = measurements.station_uuid
+group by 1
+order by 2 desc
+----
+
+image::demo-kafka-druid-water-level-data/superset_13.png[]
+
+== MinIO
+The S3 provided by MinIO is used as a persistent storage for Druid to store all the data used.
+Open the `minio` endpoint `console-http` in your browser (http://172.18.0.5:32595 in this case).
+
+image::demo-kafka-druid-water-level-data/minio_1.png[]
+
+Log in with the credentials username `root`, password `rootroot`.
+
+image::demo-kafka-druid-water-level-data/minio_2.png[]
+
+Click on the blue button `Browse` on the bucket `druid` and open the folders `data`.
+
+image::demo-kafka-druid-water-level-data/minio_3.png[]
+
+You can see the druid has created a folder for both of the two datasources.
+Go ahead and open the folder `measurements`.
+
+image::demo-kafka-druid-water-level-data/minio_4.png[]
+
+As you can see druid saved 35MB of data within 33 prefixes (folders).
+One prefix corresponds to on segment which in turn contains all the measurements of a day.
+If you don't see any folders or files, the reason is that Druid has not saved it's data from memory to the deep storage.
+After waiting for a few minutes the data should have been flushed to S3 and show up.
+
+image::demo-kafka-druid-water-level-data/minio_5.png[]
+
+If you open up a prefix for a specific day you can see that Druid has placed a file containing the data of this day there.

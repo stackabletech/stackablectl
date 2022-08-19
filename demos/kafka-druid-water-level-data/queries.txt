@@ -28,29 +28,3 @@ select * from
   group by 1
 ) as measurements
 inner join stations on stations.uuid = measurements.station_uuid
-
-
-
--- For users
-select
-  stations.longname as station,
-  count(*) as measurements 
-from measurements inner join stations on stations.uuid = measurements.station_uuid
-group by 1
-order by 2 desc
-
-
-select
-  stations.water_longname as water,
-  count(*) as measurements 
-from measurements inner join stations on stations.uuid = measurements.station_uuid
-group by 1
-order by 2 desc
-
-select
-  stations.longname as station,
-  avg("value") as avg_measurement,
-  latest("value") as current_measurement
-from measurements inner join stations on stations.uuid = measurements.station_uuid
-group by 1
-order by 2 desc

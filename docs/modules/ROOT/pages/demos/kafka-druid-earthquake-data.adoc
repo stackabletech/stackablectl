@@ -260,10 +260,10 @@ image::demo-kafka-druid-earthquake-data/minio_3.png[]
 
 As you can see druid saved 199MB of data within 73 prefixes (folders).
 One prefix corresponds to on segment which in turn contains all the data of a year.
-If you don't see any years or files, the reason is that Druid has not saved it's data from memory to the deep storage (in this case S3).
-After waiting a bit the data should have been flushed to S3 and should show up.
+If you don't see any folders or files, the reason is that Druid has not saved it's data from memory to the deep storage.
+After waiting for a few minutes the data should have been flushed to S3 and show up.
 
-image::demo-kafka-druid-earthquake-data/minio_3.png[]
+image::demo-kafka-druid-earthquake-data/minio_4.png[]
 
 If you open up a prefix for a specific year you can see that Druid has placed a file containing the data of this year there.
 
