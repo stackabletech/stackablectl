@@ -125,7 +125,7 @@ On the tab `Statistics` on the left you can see the number of processed records 
 
 image::demo-kafka-druid-earthquake-data/druid_3.png[]
 
-The statistics show that Druid is currently ingesting `1251`` records/s and has ingested 2.1 million records so far.
+The statistics show that Druid is currently ingesting `1251` records/s and has ingested 2.1 million records so far.
 All records have been ingested successfully, which is indicated by having no `processWithError`, `thrownAway` or `unparseable` records.
 
 === Query the data source
