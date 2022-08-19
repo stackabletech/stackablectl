@@ -383,7 +383,7 @@ image::demo-kafka-druid-water-level-data/superset_13.png[]
 
 == MinIO
 The S3 provided by MinIO is used as a persistent deep storage for Druid to store all the data used.
-Open the `minio` endpoint `console-http` in your browser (http://172.18.0.5:32595 in this case).
+Open the `minio` endpoint `console-http` retrieved by `stackablectl services list` in your browser (http://172.18.0.5:32595 in this case).
 
 image::demo-kafka-druid-water-level-data/minio_1.png[]
 
