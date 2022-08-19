@@ -406,3 +406,27 @@ After waiting for a few minutes the data should have been flushed to S3 and show
 image::demo-kafka-druid-water-level-data/minio_5.png[]
 
 If you open up a prefix for a specific day you can see that Druid has placed a file containing the data of this day there.
+
+== Summary
+The demo put station records into the Kafka stream pipeline topic `station`.
+It also streamed ~3500 measurements/s for a total of ~11 million measurements into the topic `measurements`.
+Druid ingested the data near real-time into its data source and enabled SQL access to it.
+Superset was used as a web-based frontend to execute SQL statements and build dashboards.
+
+== Where to go from here
+There are multiple paths to go from here.
+The following sections can give you some ideas on what to explore next.
+You can find the description of the water level data on the https://www.pegelonline.wsv.de/webservice/dokuRestapi[on the PEGELONLINE rest api documentation (german only)].
+
+=== Execute arbitrary SQL statements
+Within Superset (or the Druid webinterface) you can execute arbitrary SQL statements to explore the water level data.
+
+=== Create additional dashboards
+You also have the possibility to create additional charts and bundle them together in a Dashboard.
+Have a look at https://superset.apache.org/docs/creating-charts-dashboards/creating-your-first-dashboard#creating-charts-in-explore-view[the Superset documentation] on how to do that.
+
+=== Load additional data
+You can use a Kafka client like https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html[kafkacat] to create new topics and ingest data.
+Using the Druid web interface, you can start an ingestion job that consumes the data and stores it in an internal data source.
+There is a great https://druid.apache.org/docs/latest/tutorials/tutorial-kafka.html#loading-data-with-the-data-loader[tutorial] from Druid on how to do this.
+Afterwards the data source is available to be analyzed within Druid and Superset the same way the water level data is.
