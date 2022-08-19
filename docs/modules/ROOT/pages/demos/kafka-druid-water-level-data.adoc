@@ -156,7 +156,7 @@ The relationship is illustrated below.
 image::demo-kafka-druid-water-level-data/topics.png[]
 
 The reason for splitting the data up into two different topics is the improved performance.
-On simpler solution would be to use a single topic and produce records that look like follows
+One simpler solution would be to use a single topic and produce records that look like the following:
 
 [source,json]
 {
