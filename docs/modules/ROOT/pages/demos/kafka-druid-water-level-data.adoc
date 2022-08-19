@@ -64,7 +64,7 @@ All the messages put in and read from Kafka are structured in dedicated queues c
 The test data is split across two topic called `stations` and `measurements`.
 The topic `stations` contains a record for every station that can measure the water level.
 The topic `measurements` contains a record for every measurement that has happened.
-The records get produced (put in) by the data ingestion jon and are consumed (read) by Druid afterwards in the same order they where produced.
+The records get produced (put in) by the data ingestion job and are consumed (read) by Druid afterwards in the same order they where produced.
 
 As Kafka itself has no webinterface you have to use a Kafka client like https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html[kafkacat].
 In order to connect to Kafka, use the `kafka` endpoint from the `kafka` service in your `stackablectl services list` command output (`172.18.0.3:32536` in this case).
