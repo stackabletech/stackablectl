@@ -122,10 +122,11 @@ image::demo-kafka-druid-earthquake-data/druid_2.png[]
 
 After clicking on the magnification glass to the right side of the `RUNNING` supervisor you can see additional information.
 On the tab `Statistics` on the left you can see the number of processed records as well as the number of errors.
-The statistics show that Druid is currently ingesting 1251 records/s and has ingested 2.1 million records so far.
-All records have been ingested successfully, which is indicated by having no `processWithError`, `thrownAway` or `unparseable` records.
 
 image::demo-kafka-druid-earthquake-data/druid_3.png[]
+
+The statistics show that Druid is currently ingesting `1251`` records/s and has ingested 2.1 million records so far.
+All records have been ingested successfully, which is indicated by having no `processWithError`, `thrownAway` or `unparseable` records.
 
 === Query the data source
 The started ingestion job has automatically created the Druid data source `earthquakes`.
@@ -245,7 +246,7 @@ order by 1 desc
 image::demo-kafka-druid-earthquake-data/superset_12.png[]
 
 == MinIO
-The S3 provided by MinIO is used as a persistent storage for Druid to store all the data used.
+The S3 provided by MinIO is used as a persistent deep storage for Druid to store all the data used.
 Open the `minio` endpoint `console-http` in your browser (http://172.18.0.4:31664 in this case).
 
 image::demo-kafka-druid-earthquake-data/minio_1.png[]
@@ -265,11 +266,11 @@ After waiting for a few minutes the data should have been flushed to S3 and show
 
 image::demo-kafka-druid-earthquake-data/minio_4.png[]
 
-If you open up a prefix for a specific year you can see that Druid has placed a file containing the data of this year there.
+If you open up a prefix for a specific year you can see that Druid has placed a file containing the data of that year there.
 
 == Summary
 The demo streamed 1000 earthquake records/s for a total of ~3 million earthquakes into a Kafka steaming pipeline.
-Druid ingested the data near real-time into its data source and enabled SQL access to it.
+Druid ingested the data near real-time into its datasource and enabled SQL access to it.
 Superset was used as a web-based frontend to execute SQL statements and build dashboards.
 
 == Where to go from here

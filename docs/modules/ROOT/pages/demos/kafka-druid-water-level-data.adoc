@@ -181,7 +181,7 @@ Notice the two last attributes that differ from the previously shown `stations` 
 The obvious downside of this is, that every measurement (there are multiple millions of it) has to contain all the data known about the station that it was measured at.
 This can lead to transmitting and storing the information of e.g. the longitude of a station multiple thousand times.
 The solution is to only transmit the known/needed data of either a station or a measurement.
-The downside here is that when analyzing the data you need to combine the records from two tables in Druid (`stations` and `measurements`).
+The downside here is, that when analyzing the data you need to combine the records from multiple tables in Druid (`stations` and `measurements`).
 
 If you are interested on how many records have been produced to the Kafka topic so far, use the following command.
 It will print the last record produced to the topic, which will be formatted with the pattern specified in the `-f` parameter.
@@ -195,10 +195,10 @@ Topic stations / Partition 0 / Offset: 688 / Timestamp: 1660829626969
 ----
 
 `688` stations have been fetched and put into Kafka.
-This demo does not live-stream new stations into the topic, instead it is a one-time bulk job.
+This demo does not live-stream new stations into the topic, instead it is a one-time bulk ingestion job.
 New stations should be pretty rare.
 Druid ingests the topic near-realtime regardless.
-So if you produce new `stations` records they will shop up in Druid and are available for your analysis.
+So if you would produce new `stations` records they will shop up in Druid and are available for your analysis.
 
 [source,console]
 ----
@@ -226,10 +226,11 @@ image::demo-kafka-druid-water-level-data/druid_2.png[]
 
 After clicking on the magnification glass to the right side of the `RUNNING` supervisor you can see additional information (here the supervisor `measurements` was chosen).
 On the tab `Statistics` on the left you can see the number of processed records as well as the number of errors.
-The statistics show that Druid is currently ingesting 3597 records/s and has ingested ~10 million records so far.
-All records have been ingested successfully, which is indicated by having no `processWithError`, `thrownAway` or `unparseable` records.
 
 image::demo-kafka-druid-water-level-data/druid_3.png[]
+
+The statistics show that Druid is currently ingesting `3597` records/s and has ingested ~10 million records so far.
+All records have been ingested successfully, which is indicated by having no `processWithError`, `thrownAway` or `unparseable` records.
 
 === Query the data source
 The started ingestion jobs have automatically created the Druid data sources `stations` and `measurements`.
@@ -237,7 +238,7 @@ You can see the available data sources by clicking on `Datasources` at the top.
 
 image::demo-kafka-druid-water-level-data/druid_4.png[]
 
-The `Avg. row size (bytes)` shows, that a typical `measurement` record, while a `station` record has 213 bytes, which is 50 times the size.
+The `Avg. row size (bytes)` shows, that a typical `measurement` record has is `4` bytes large, while a `station` record has `213` bytes, which is more than 50 times the size.
 So with choosing two dedicated topics over a single topic the demo was able to save 50x of storage and compute costs.
 
 By clicking on the `measurements` datasource you can see the segments the datasource consists of.
@@ -307,7 +308,7 @@ On the left side you can modify the chart and click on `Run` to see the effect.
 image::demo-kafka-druid-water-level-data/superset_6.png[]
 
 You can see that starting from `2022/08/12` some stations didn't measure or transmit their data.
-They started measuring the data again at `2022/08/14`.
+They started sending measurements again at `2022/08/14`.
 
 === View station distribution on world map
 
@@ -317,7 +318,7 @@ Afterwards click on the chart `Stations distribution`.
 image::demo-kafka-druid-water-level-data/superset_7.png[]
 
 The stations are of course placed alongside of open waters.
-They are colored by the measured water, so all stations of a water have the same color.
+They are colored by the water they measure, so all stations of a water have the same color.
 You can move and zoom the map with your mouse to interactively explore the map.
 You can e.g. have a detailed look at the water https://en.wikipedia.org/wiki/Rhine[Rhein].
 
@@ -363,7 +364,7 @@ order by 2 desc
 
 image::demo-kafka-druid-water-level-data/superset_12.png[]
 
-What might also be interesting is the average and current measurement of the stations
+What might also be interesting is the average and current measurement of the stations:
 
 [source,sql]
 ----
@@ -380,7 +381,7 @@ order by 2 desc
 image::demo-kafka-druid-water-level-data/superset_13.png[]
 
 == MinIO
-The S3 provided by MinIO is used as a persistent storage for Druid to store all the data used.
+The S3 provided by MinIO is used as a persistent deep storage for Druid to store all the data used.
 Open the `minio` endpoint `console-http` in your browser (http://172.18.0.5:32595 in this case).
 
 image::demo-kafka-druid-water-level-data/minio_1.png[]
@@ -405,12 +406,12 @@ After waiting for a few minutes the data should have been flushed to S3 and show
 
 image::demo-kafka-druid-water-level-data/minio_5.png[]
 
-If you open up a prefix for a specific day you can see that Druid has placed a file containing the data of this day there.
+If you open up a prefix for a specific day you can see that Druid has placed a file containing the data of that day there.
 
 == Summary
 The demo put station records into the Kafka stream pipeline topic `station`.
 It also streamed ~3500 measurements/s for a total of ~11 million measurements into the topic `measurements`.
-Druid ingested the data near real-time into its data source and enabled SQL access to it.
+Druid ingested the data near real-time into its datasource and enabled SQL access to it.
 Superset was used as a web-based frontend to execute SQL statements and build dashboards.
 
 == Where to go from here
