@@ -319,7 +319,7 @@ Afterwards click on the chart `Stations distribution`.
 image::demo-kafka-druid-water-level-data/superset_7.png[]
 
 The stations are of course placed alongside of waters.
-They are colored by the water they measure, so all stations of a water have the same color.
+They are colored by the waters they measure, so all stations alongside a body of water have the same color.
 You can move and zoom the map with your mouse to interactively explore the map.
 You can e.g. have a detailed look at the water https://en.wikipedia.org/wiki/Rhine[Rhein].
 
