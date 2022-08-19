@@ -15,7 +15,7 @@ This demo will
 ** *Kafka*:  A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as a event streaming platform to stream the data in near real-time
 ** *Druid*: A real-time database to power modern analytics applications. This demo uses it to ingest the near real-time data from Kafka, store it and enable to access the data via SQL
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage for Druid to store all the data used
-* Ingest water-level data from the https://www.pegelonline.wsv.de/webservice/ueberblick[PEGELONLINE webservice] into Kafka. The data contains measured water levels of different measuring station all around Germany. If the webservice is not available this demo will not work as it needs the webservice to ingest the data.
+* Ingest water-level data from the https://www.pegelonline.wsv.de/webservice/ueberblick[PEGELONLINE webservice] into Kafka. The data contains measured water levels of different measuring stations all around Germany. If the webservice is not available this demo will not work, as it needs the webservice to ingest the data.
 ** First of historical data of the last 31 days will be fetched and ingested
 ** Afterwards the demo will fetch the current measurement of every station approximately every two minutes and ingest it near-realtime into Kafka
 * Start a Druid ingestion job that ingests the data into the Druid instance
@@ -33,23 +33,22 @@ To list the installed installed Stackable services run the following command:
 [source,console]
 ----
 $ stackablectl services list --all-namespaces
-stackablectl services list 
  PRODUCT    NAME         NAMESPACE  ENDPOINTS                                   EXTRA INFOS                          
                                                                                                                      
- druid      druid        default    broker-http        http://172.18.0.4:31593                                       
-                                    coordinator-http   http://172.18.0.4:32366                                       
-                                    historical-http    http://172.18.0.5:30170                                       
-                                    middlemanager-http http://172.18.0.3:31305                                       
-                                    router-http        http://172.18.0.5:31050                                       
+ druid      druid        default    broker-http        http://172.18.0.5:30837                                       
+                                    coordinator-http   http://172.18.0.5:30476                                       
+                                    historical-http    http://172.18.0.5:30592                                       
+                                    middlemanager-http http://172.18.0.4:32246                                       
+                                    router-http        http://172.18.0.4:30899                                       
                                                                                                                      
  kafka      kafka        default    kafka              172.18.0.3:32536                                              
                                                                                                                      
- superset   superset     default    external-superset  http://172.18.0.4:30334  Admin user: admin, password: admin   
+ superset   superset     default    external-superset  http://172.18.0.4:32251  Admin user: admin, password: admin   
                                                                                                                      
- zookeeper  zookeeper    default    zk                 172.18.0.4:32738                                              
+ zookeeper  zookeeper    default    zk                 172.18.0.3:31615                                              
                                                                                                                      
- minio      minio-druid  default    http               http://172.18.0.5:31560  Third party service                  
-                                    console-http       http://172.18.0.5:30916  Admin user: root, password: rootroot
+ minio      minio-druid  default    http               http://172.18.0.5:30016  Third party service                  
+                                    console-http       http://172.18.0.5:32595  Admin user: root, password: rootroot 
 ----
 
 [NOTE]
@@ -151,7 +150,7 @@ kafkacat -b 172.18.0.3:32536 -C -t measurements -c 3 | jq
 ----
 
 The records from the two topics only contain the needed data.
-The measurement records refer to a station.
+The measurement contain a refer to the station.
 The relationship is illustrated below.
 
 image::demo-kafka-druid-water-level-data/topics.png[]
@@ -178,11 +177,11 @@ On simpler solution would be to use a single topic and produce records that look
 }
 ----
 
-Notice the two last lines that differ from the previously show `stations` records.
-The obvious downside of this is, that every measurement (there are multiple millions of it) has to contain all the data known about the station that it belongs to.
-That can lead to transmitting and storing the information of e.g. the longitude of a station multiple thousand times.
-The solution is to only transmit the needed data of either a station or a measurement.
-The downside here is that when analyzing the data you need to combine the records from two tables, `stations` and `measurements`.
+Notice the two last lines that differ from the previously shown `stations` records.
+The obvious downside of this is, that every measurement (there are multiple millions of it) has to contain all the data known about the station that it was measured at.
+This can lead to transmitting and storing the information of e.g. the longitude of a station multiple thousand times.
+The solution is to only transmit the known/needed data of either a station or a measurement.
+The downside here is that when analyzing the data you need to combine the records from two tables in Druid (`stations` and `measurements`).
 
 If you are interested on how many records have been produced to the Kafka topic so far, use the following command.
 It will print the last record produced to the topic, which will be formatted with the pattern specified in the `-f` parameter.
@@ -195,6 +194,12 @@ $ kafkacat -b 172.18.0.3:32536 -C -t stations -o -1 -c 1 \
 Topic stations / Partition 0 / Offset: 688 / Timestamp: 1660829626969
 ----
 
+`688` stations have been fetched and put into Kafka.
+This demo does not live-stream new stations into the topic, instead it is a one-time bulk job.
+New stations should be pretty rare.
+Druid ingests the topic near-realtime regardless.
+So if you produce new `stations` records they will shop up in Druid and are available for your analysis.
+
 [source,console]
 ----
 $ kafkacat -b 172.18.0.3:32536 -C -t measurements -o -1 -c 1 \
@@ -204,3 +209,113 @@ Topic measurements / Partition 0 / Offset: 7586541 / Timestamp: 1660831499070
 
 From the output you can see, that the last measurement record was produced at the timestamp `1660831499070` which translates to `Do 18. Aug 16:04:59 CEST 2022` (using the command `date -d @1660831499`).
 You can also see that it was the record number `7586541` send to this topic, so ~7.6 million records have been produced so far.
+
+== Druid
+Druid is used to ingest the near real-time data from Kafka, store it and enable SQL access to it.
+The demo has started two ingestion jobs - one reading from the topic `stations` and the other from `measurements` - and saving it into Druids deep storage.
+The Druid deep storage is based on the S3 store provided by MinIO.
+
+=== View ingestion job
+You can have a look at the ingestion jobs running in Druid by opening the given `druid` endpoint `router-http` from your `stackablectl services list` command output. You have to use the endpoint from your command output, in this case it is http://172.18.0.4:30899. Open it with your favorite browser.
+
+image::demo-kafka-druid-water-level-data/druid_1.png[]
+
+By clicking on `Ingestion` at the top you can see the running ingestion jobs.
+
+image::demo-kafka-druid-water-level-data/druid_2.png[]
+
+After clicking on the magnification glass to the right side of the `RUNNING` supervisor you can see additional information (here the supervisor `measurements` was chosen).
+On the tab `Statistics` on the left you can see the number of processed records as well as the number of errors.
+The statistics show that Druid is currently ingesting 3597 records/s and has ingested ~10 million records so far.
+All records have been ingested successfully, which is indicated by having no `processWithError`, `thrownAway` or `unparseable` records.
+
+image::demo-kafka-druid-water-level-data/druid_3.png[]
+
+=== Query the data source
+The started ingestion jobs have automatically created the Druid data sources `stations` and `measurements`.
+You can see the available data sources by clicking on `Datasources` at the top.
+
+image::demo-kafka-druid-water-level-data/druid_4.png[]
+
+By clicking on the `earthquakes` datasource you can see the segments the datasource consists of.
+In this case the `earthquakes` datasource is partitioned by the year of the earthquake, resulting in 73 segments.
+
+image::demo-kafka-druid-water-level-data/druid_5.png[]
+
+Druid offers a web-based way of querying the datasources via SQL.
+To achieve this you first have to click on `Query` at the top.
+
+image::demo-kafka-druid-water-level-data/druid_6.png[]
+
+You can now enter any arbitrary SQL statement, to e.g. list 10 stations run
+
+[source,sql]
+----
+select * from stations limit 10
+----
+
+image::demo-kafka-druid-water-level-data/druid_7.png[]
+
+To count the measurements per day run
+
+[source,sql]
+----
+select
+  time_format(__time, 'YYYY/MM/dd') as "day",
+  count(*) as measurements
+from measurements
+group by 1
+order by 1 desc
+----
+
+image::demo-kafka-druid-water-level-data/druid_8.png[]
+
+== Superset
+Superset provides the ability to execute SQL queries and build dashboards.
+Open the `superset` endpoint `external-superset` in your browser (http://172.18.0.4:32251 in this case).
+
+image::demo-kafka-druid-water-level-data/superset_1.png[]
+
+Log in with the credentials username `admin`, password `admin`.
+
+image::demo-kafka-druid-water-level-data/superset_2.png[]
+
+=== View dashboard
+The demo has created a Dashboard to visualize the water level data.
+To open it click on the tab `Dashboards` at the top.
+
+image::demo-kafka-druid-water-level-data/superset_3.png[]
+
+Click on the dashboard called `Water level data`.
+It might take some time until the dashboards renders all the included charts.
+
+image::demo-kafka-druid-water-level-data/superset_4.png[]
+
+=== View charts
+
+The dashboard `Water level data` consists of multiple charts.
+To list the charts click on the tab `Charts` at the top.
+
+image::demo-kafka-druid-water-level-data/superset_5.png[]
+
+Click on the Chart `Measurements / hour`.
+On the left side you can modify the chart and click on `Run` to see the effect.
+
+image::demo-kafka-druid-water-level-data/superset_6.png[]
+
+You can see that starting from `2022/08/12` some stations didn't measure or transmit their data.
+They started measuring the data again at `2022/08/14`.
+
+=== View station distribution on world map
+
+To look at the geographical distribution of the stations you have to click on the tab `Charts` at the top again.
+Afterwards click on the chart `Stations distribution`.
+
+image::demo-kafka-druid-water-level-data/superset_7.png[]
+
+The stations are of course placed alongside of open waters.
+They are colored by the measured water, so all stations of a water have the same color.
+You can move and zoom the map with your mouse to interactively explore the map.
+You can e.g. have a detailed look at the water https://en.wikipedia.org/wiki/Rhine[Rhein].
+
+image::demo-kafka-druid-water-level-data/superset_8.png[]

@@ -199,7 +199,7 @@ On the left side you can modify the chart and click on `Run` to see the effect.
 
 image::demo-kafka-druid-earthquake-data/superset_6.png[]
 
-=== View distribution on world map
+=== View earthquake distribution on world map
 
 To look at the geographical distribution of the earthquakes you have to click on the tab `Charts` at the top again.
 Afterwards click on the chart `Earthquake distribution`.
