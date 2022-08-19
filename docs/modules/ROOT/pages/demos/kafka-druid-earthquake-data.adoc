@@ -200,7 +200,7 @@ On the left side you can modify the chart and click on `Run` to see the effect.
 
 image::demo-kafka-druid-earthquake-data/superset_6.png[]
 
-=== View earthquake distribution on world map
+=== View the earthquake distribution on the world map
 
 To look at the geographical distribution of the earthquakes you have to click on the tab `Charts` at the top again.
 Afterwards click on the chart `Earthquake distribution`.
@@ -261,8 +261,8 @@ image::demo-kafka-druid-earthquake-data/minio_3.png[]
 
 As you can see druid saved 199MB of data within 73 prefixes (folders).
 One prefix corresponds to on segment which in turn contains all the data of a year.
-If you don't see any folders or files, the reason is that Druid has not saved it's data from memory to the deep storage.
-After waiting for a few minutes the data should have been flushed to S3 and show up.
+If you don't see any folders or files, the reason is that Druid has not saved its data from memory to the deep storage yet.
+After waiting a few minutes, the data should have been flushed to S3 and show up.
 
 image::demo-kafka-druid-earthquake-data/minio_4.png[]
 
@@ -270,7 +270,7 @@ If you open up a prefix for a specific year you can see that Druid has placed a 
 
 == Summary
 The demo streamed 1000 earthquake records/s for a total of ~3 million earthquakes into a Kafka steaming pipeline.
-Druid ingested the data near real-time into its datasource and enabled SQL access to it.
+Druid ingested the data near real-time into its data source and enabled SQL access to it.
 Superset was used as a web-based frontend to execute SQL statements and build dashboards.
 
 == Where to go from here
