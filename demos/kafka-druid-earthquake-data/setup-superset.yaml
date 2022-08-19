@@ -30,8 +30,7 @@ data:
     import logging
     import requests
 
-    base_url = "http://superset-external:8088"
-    # base_url = "http://172.18.0.4:31024"
+    base_url = "http://superset-external:8088" # For local testing / developing replace it, afterwards change back to http://superset-external:8088
     username = "admin"
     password = "admin"
 

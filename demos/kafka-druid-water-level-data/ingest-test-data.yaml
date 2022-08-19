@@ -38,8 +38,7 @@ data:
     # This will result in a continuos stream of data.
     LIVE_UPDATE_INTERVAL_S = 60
 
-    BOOTSTRAP_SERVERS = "kafka:9092"
-    # BOOTSTRAP_SERVERS = "172.18.0.2:32316"
+    BOOTSTRAP_SERVERS = "kafka:9092" # For local testing / developing replace it, afterwards change back to kafka:9092
     STATIONS_TOPIC = "stations"
     MEASUREMENTS_TOPIC = "measurements"
 

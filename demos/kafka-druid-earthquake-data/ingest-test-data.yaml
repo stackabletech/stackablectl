@@ -31,7 +31,7 @@ data:
     from kafka3 import KafkaProducer
     import time
 
-    BOOTSTRAP_SERVERS = "kafka:9092"
+    BOOTSTRAP_SERVERS = "kafka:9092" # For local testing / developing replace it, afterwards change back to kafka:9092
     TOPIC = "earthquakes"
     CSV_FILE = "https://repo.stackable.tech/repository/misc/earthquake-data/earthquakes_1950_to_2022.csv"
     TARGET_RECORDS_PER_SECOND = 1000
