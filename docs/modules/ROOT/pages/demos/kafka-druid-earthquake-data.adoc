@@ -173,7 +173,7 @@ Open the `superset` endpoint `external-superset` in your browser (http://172.18.
 
 image::demo-kafka-druid-earthquake-data/superset_1.png[]
 
-Log in with the credentials username `admin`, password `admin`.
+Log in with the username `admin` and password `admin`.
 
 image::demo-kafka-druid-earthquake-data/superset_2.png[]
 
@@ -251,7 +251,7 @@ Open the `minio` endpoint `console-http` in your browser (http://172.18.0.4:3166
 
 image::demo-kafka-druid-earthquake-data/minio_1.png[]
 
-Log in with the credentials username `root`, password `rootroot`.
+Log in with the username `root` and password `rootroot`.
 
 image::demo-kafka-druid-earthquake-data/minio_2.png[]
 
