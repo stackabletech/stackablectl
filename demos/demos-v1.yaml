@@ -29,3 +29,18 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-earthquake-data/ingest-test-data.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-earthquake-data/setup-superset.yaml
+  kafka-druid-water-level-data:
+    description:  Demo ingesting water level data into Kafka, streaming it into Druid and creating a Superset dashboard
+    documentation: https://docs.stackable.tech/stackablectl/stable/demos/kafka-druid-water-level-data.html
+    stackableStack: kafka-druid-superset-s3
+    labels:
+      - kafka
+      - druid
+      - superset
+      - minio
+      - s3
+      - water-levels
+    manifests:
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-water-level-data/ingest-test-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-water-level-data/create-druid-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-water-level-data/setup-superset.yaml

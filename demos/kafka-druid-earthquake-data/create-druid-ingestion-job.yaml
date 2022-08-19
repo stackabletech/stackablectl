@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: create-druid-ingestion-job
-          image: python:3.10 # Using same image so caching can happen
+          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
           command: ["bash", "-c", "curl -X POST -H 'Content-Type: application/json' -d @/tmp/ingestion-job-spec/ingestion-job-spec.json http://druid-coordinator:8081/druid/indexer/v1/supervisor"]
           volumeMounts:
             - name: ingestion-job-spec
