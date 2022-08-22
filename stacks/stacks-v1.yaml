@@ -21,6 +21,8 @@ stacks:
             rootUser: root
             rootPassword: rootroot
             mode: standalone
+            persistence:
+              size: 10Gi
             users:
               - accessKey: druid
                 secretKey: druiddruid
@@ -73,6 +75,8 @@ stacks:
             rootUser: root
             rootPassword: rootroot
             mode: standalone
+            persistance:
+              size: 10Gi
             users:
               - accessKey: trino
                 secretKey: trinotrino
