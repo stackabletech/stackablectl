@@ -352,13 +352,9 @@ pub async fn get_extra_infos(
             }
         }
         "nifi" => {
-            if let Some(admin_credentials_secret) = product_crd.data["spec"]
-                .get("config")
-                .and_then(|i| i.get("authentication"))
-                .and_then(|i| i.get("method"))
-                .and_then(|i| i.get("singleUser"))
-                .and_then(|i| i.get("adminCredentialsSecret"))
-                .and_then(|i| i.as_str())
+            if let Some(admin_credentials_secret) = product_crd.data["spec"]["config"]
+                ["authentication"]["method"]["singleUser"]["adminCredentialsSecret"]
+                .as_str()
             {
                 let credentials = get_credentials_from_secret(
                     admin_credentials_secret,
