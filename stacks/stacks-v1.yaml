@@ -75,7 +75,7 @@ stacks:
             rootUser: root
             rootPassword: rootroot
             mode: standalone
-            persistance:
+            persistence:
               size: 10Gi
             users:
               - accessKey: trino
