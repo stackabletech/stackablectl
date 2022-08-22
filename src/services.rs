@@ -351,6 +351,34 @@ pub async fn get_extra_infos(
                 }
             }
         }
+        "nifi" => {
+            if let Some(admin_credentials_secret) = product_crd.data["spec"]
+                .get("config")
+                .and_then(|i| i.get("authentication"))
+                .and_then(|i| i.get("method"))
+                .and_then(|i| i.get("singleUser"))
+                .and_then(|i| i.get("adminCredentialsSecret"))
+                .and_then(|i| i.as_str())
+            {
+                let credentials = get_credentials_from_secret(
+                    admin_credentials_secret,
+                    product_crd
+                        .namespace()
+                        .ok_or(format!(
+                            "The custom resource {product_crd:?} had no namespace set"
+                        ))?
+                        .as_str(),
+                    "username",
+                    "password",
+                    redact_credentials,
+                )
+                .await?;
+
+                if let Some((username, password)) = credentials {
+                    result.push(format!("Admin user: {username}, password: {password}"));
+                }
+            }
+        }
         _ => (),
     }
 

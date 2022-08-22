@@ -4,7 +4,11 @@
 
 ### Added
 
+- Print Nifi adminuser credentials within services command ([#80](https://github.com/stackabletech/stackablectl/pull/80))
+
 ## [0.4.0] - 2022-08-19
+
+### Added
 
 - Support demos, which are an end-to-end demonstrations of the usage of the Stackable Data Platform ([#66](https://github.com/stackabletech/stackablectl/pull/66))
 
