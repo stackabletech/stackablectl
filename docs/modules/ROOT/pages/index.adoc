@@ -1,8 +1,8 @@
 = stackablectl
 
-The `stackablectl` command line tool is used to interact with the Stackable Data Platform.
-It can install individual operators as well as Platform releases.
-It also ships with a set of pre-built demos that utilize different data products of the Platform to get e.g. an end-to-end data pipeline.
+The `stackablectl` command line tool is used to interact with the Stackable data platform.
+It can install individual operators as well as platform releases.
+It also ships with a set of pre-built xref:commands/demo.adoc[] that utilize different data products of the Platform to get e.g. an end-to-end data pipeline.
 
 The installation of `stackablectl` is described in xref:installation.adoc[].
 
@@ -22,18 +22,18 @@ image::layers.png[Layers of the deployed services]
 
 == Operators
 This layer consists of Stackable operators managing the individual data products.
-They can either be installed one by one with the command `stackablectl operator` or from a release with `stackablectl release` which is preferred.
-A release is a well-playing bundle of operators that get released approximately every 2 months.
+They can either be installed one by one with the xref:commands/operator.adoc[] command or from a release with the xref:commands/release.adoc[] command which is recommended way.
+A release is a well-playing bundle of operators that has been extensively tested by Stackable.
 
 == Stacks
 A stack is a collection of ready-to-use Stackable data products as well as needed third-party services like Postgresql or MinIO.
 
-Stacks are installed with the command `stackablectl stack`.
+Stacks are installed with the xref:commands/stack.adoc[] command.
 A stack needs a release (of Stackable operators) to run on.
 To achieve this a stacks has a dependency on a release which gets automatically installed when a stack is installed.
 
 == Demos
-A demo is an end-to-end demonstration of the usage of the Stackable Data Platform.
+A demo is an end-to-end demonstration of the usage of the Stackable data platform.
 It contains
 
 . Installing a Stackable release
@@ -43,7 +43,7 @@ It contains
 .. Process test data
 .. Visualize results (optional)
 
-Demos are installed with the command `stackablectl demo`.
+Demos are installed with the xref:commands/demo.adoc[] command.
 A demo needs a stack to run on.
 To achieve this a demo has a dependency on a stack which gets automatically installed when a demo is installed.
 The stack in turn will install the needed Stackable release.

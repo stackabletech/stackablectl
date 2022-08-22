@@ -1,5 +1,117 @@
 = Quickstart
 
-This pages wait's until the xref:commands/demo.adoc[] is ready.
+== Goal
+In this Quickstart guide you will install a xref:commands/demo.adoc[], which is an end-to-end demonstration of the usage of the Stackable data platform.
 
-When the demo command is available we will browse the demos and install a demo together.
+== Install stackablectl
+Please follow the xref:installation.adoc[Installation documentation] to install `stackablectl`.
+
+== Browse available demos
+Stackable provides a set of ready-to-use demos.
+As of writing (2022/08/15) only two demos are available, but further demos will be added in the future.
+They will automatically show up, as `stackablectl` fetches the available list of demos via the internet.
+To list the available demos run the following command:
+
+[source,console]
+----
+$ stackablectl demo list
+DEMO                                STACKABLE STACK           DESCRIPTION
+trino-taxi-data                     trino-superset-s3         Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
+kafka-druid-earthquake-data         kafka-druid-superset-s3   Demo ingesting earthquake data into Kafka, streaming it into Druid and creating a Superset dashboard
+----
+
+[NOTE]
+====
+When you are on a Windows system you have to replace the `stackablectl` command with `stackablectl.exe`, e.g. `stackablectl.exe demo list`.
+This applies to all commands below.
+====
+
+For this guide we will use the xref:demos/trino-taxi-data.adoc[] demo.
+The installation of other available demos should work the same way.
+You simply need to use the name of the chosen demo instead of `trino-taxi-data` in the following commands.
+
+== Install demo
+The installation depends on wether you already have an Kubernetes available to run the Stackable data platform on.
+
+=== Using existing Kubernetes cluster
+If you want to access a Kubernetes cluster, make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
+After that run the following command.
+
+[source,console]
+----
+$ stackablectl demo install trino-taxi-data
+[INFO ] Installing demo trino-taxi-data
+[INFO ] Installing stack trino-superset-s3
+[INFO ] Installing release 22.06
+[INFO ] Installing airflow operator in version 0.4.0
+[INFO ] Installing commons operator in version 0.2.0
+[INFO ] Installing druid operator in version 0.6.0
+[INFO ] Installing hbase operator in version 0.3.0
+[INFO ] Installing hdfs operator in version 0.4.0
+[INFO ] Installing hive operator in version 0.6.0
+[INFO ] Installing kafka operator in version 0.6.0
+[INFO ] Installing nifi operator in version 0.6.0
+[INFO ] Installing opa operator in version 0.9.0
+[INFO ] Installing secret operator in version 0.5.0
+[INFO ] Installing spark-k8s operator in version 0.3.0
+[INFO ] Installing superset operator in version 0.5.0
+[INFO ] Installing trino operator in version 0.4.0
+[INFO ] Installing zookeeper operator in version 0.10.0
+[INFO ] Installing components of stack trino-superset-s3
+[INFO ] Installed stack trino-superset-s3
+[INFO ] Installing components of demo trino-taxi-data
+[INFO ] Installed demo trino-taxi-data. Use "stackablectl services list" to list the installed services
+----
+
+=== Using local kind cluster
+If you don't have a Kubernetes cluster available, `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
+Make sure you have `kind` installed and run the following command:
+
+[source,console]
+----
+$ stackablectl demo install trino-taxi-data --kind-cluster
+[INFO ] Creating kind cluster stackable-data-platform
+Creating cluster "stackable-data-platform" ...
+ ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
+ ✓ Preparing nodes 📦 📦 📦 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+ ✓ Joining worker nodes 🚜 
+Set kubectl context to "kind-stackable-data-platform"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-stackable-data-platform
+
+Have a nice day! 👋
+[INFO ] Installing demo trino-taxi-data
+[INFO ] Installing stack trino-superset-s3
+[INFO ] Installing release 22.06
+[INFO ] Installing airflow operator in version 0.4.0
+[INFO ] Installing commons operator in version 0.2.0
+[INFO ] Installing druid operator in version 0.6.0
+[INFO ] Installing hbase operator in version 0.3.0
+[INFO ] Installing hdfs operator in version 0.4.0
+[INFO ] Installing hive operator in version 0.6.0
+[INFO ] Installing kafka operator in version 0.6.0
+[INFO ] Installing nifi operator in version 0.6.0
+[INFO ] Installing opa operator in version 0.9.0
+[INFO ] Installing secret operator in version 0.5.0
+[INFO ] Installing spark-k8s operator in version 0.3.0
+[INFO ] Installing superset operator in version 0.5.0
+[INFO ] Installing trino operator in version 0.4.0
+[INFO ] Installing zookeeper operator in version 0.10.0
+[INFO ] Installing components of stack trino-superset-s3
+[INFO ] Installed stack trino-superset-s3
+[INFO ] Installing components of demo trino-taxi-data
+[INFO ] Installed demo trino-taxi-data. Use "stackablectl services list" to list the installed services
+----
+
+The demos create Kubernetes jobs, that will populate test data and talk to the installed products to process the data.
+Until the products are ready, it is completely normal that the pods of these jobs will fail with an error.
+They will get retried with an exponentially growing backoff time.
+After the products are ready they should turn green and everything should settle down.
+
+== Proceed with the demo
+Please read the documentation on the demo xref:demos/trino-taxi-data.adoc[] on how to proceed with the demo

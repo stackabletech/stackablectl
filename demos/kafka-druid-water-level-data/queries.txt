@@ -1,0 +1,30 @@
+-- For Superset datasets
+select
+  measurements.__time as __time,
+  measurements."value" as measurement,
+  stations.agency as agency,
+  stations.km as km,
+  stations.latitude as latitude,
+  stations.longitude as longitude,
+  stations.longname as longname,
+  stations.number as number,
+  stations.shortname as shortname,
+  stations.water_longname as water_longname,
+  stations.water_shortname as water_shortname,
+  measurements.station_uuid as station_uuid
+from measurements inner join stations on stations.uuid = measurements.station_uuid
+
+select * from
+(
+  select
+    station_uuid,
+    avg("value") as avg_measurement,
+    latest("value") as current_measurement,
+    (latest("value") - avg("value")) / avg("value") * 100 as deviation_percent,
+    round((latest("value") - avg("value")) / avg("value") * 100 /  5) *  5 as deviation_percent_bucketed_5,
+    round((latest("value") - avg("value")) / avg("value") * 100 / 10) * 10 as deviation_percent_bucketed_10,
+    round((latest("value") - avg("value")) / avg("value") * 100 / 25) * 25 as deviation_percent_bucketed_25
+  from measurements
+  group by 1
+) as measurements
+inner join stations on stations.uuid = measurements.station_uuid

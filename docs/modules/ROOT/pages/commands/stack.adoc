@@ -1,6 +1,7 @@
 = Stack
+
 A stack is a collection of ready-to-use Stackable data products as well as required third-party services like Postgresql or MinIO.
-It is tied to a specific release of the Stackable Data Platform, which will provide the required operators for the Stack.
+It is tied to a specific release of the Stackable data platform, which will provide the required operators for the stack.
 
 == Browse available stacks
 To list the available stacks, run the following command:
@@ -24,15 +25,17 @@ Stackable release:  22.06
 Labels:             druid, superset, minio, s3
 ----
 
-Future version of `stackablectl` will allow to search for stacks based on the labels.
+Future versions of `stackablectl` will also allow to search for stacks based on the labels.
 
 == Install stack
+=== Using existing Kubernetes cluster
 If you want to access a Kubernetes cluster, make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
 After that run the following command
 
 [source,console]
 ----
 $ stackablectl stack install druid-superset-s3
+[INFO ] Installing stack druid-superset-s3
 [INFO ] Installing release 22.06
 [INFO ] Installing airflow operator in version 0.4.0
 [INFO ] Installing commons operator in version 0.2.0
@@ -52,6 +55,7 @@ $ stackablectl stack install druid-superset-s3
 [INFO ] Installed stack druid-superset-s3
 ----
 
+=== Using local kind cluster
 If you don't have a Kubernetes cluster available, `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
 Make sure you have `kind` installed and run the following command:
 
@@ -73,6 +77,7 @@ You can now use your cluster with:
 kubectl cluster-info --context kind-stackable-data-platform
 
 Have a nice day! 👋
+[INFO ] Installing stack druid-superset-s3
 [INFO ] Installing release 22.06
 [INFO ] Installing airflow operator in version 0.4.0
 [INFO ] Installing commons operator in version 0.2.0
@@ -92,20 +97,28 @@ Have a nice day! 👋
 [INFO ] Installed stack druid-superset-s3
 ----
 
-After installing the stack, we can access the running services using the xref:commands/services.adoc[] command:
+=== List deployed services
+After installing your stack you can use the xref:commands/services.adoc[] command to list the installed services as follows
 
 [source,console]
 ----
-$ stackablectl services list
-PRODUCT      NAME                                     NAMESPACE                      ENDPOINTS                                          EXTRA INFOS
-druid        druid                                    default                        router-http:         http://172.18.0.2:30245       
-                                                                                     coordinator-http:    http://172.18.0.4:30506       
-superset     superset                                 default                        external-superset:   http://172.18.0.2:31891       Admin user: admin, password: admin
-zookeeper    druid-zookeeper                          default                        zk:                  172.18.0.5:30890              
-minio        minio-druid                              default                        http:                http://172.18.0.4:32173       Third party service
-                                                                                     console-http:        http://172.18.0.4:30982       Admin user: root, password: rootroot
+$ stackablectl services list --all-namespaces
+ PRODUCT   NAME         NAMESPACE  ENDPOINTS                                     EXTRA INFOS                          
+                                                                                                                      
+ hive      hive         default    hive                172.18.0.4:32658                                               
+                                   metrics             172.18.0.4:30745                                               
+                                                                                                                      
+ opa       opa          default    http                http://172.18.0.2:31324                                        
+                                                                                                                      
+ superset  superset     default    external-superset   http://172.18.0.2:32716   Admin user: admin, password: admin   
+                                                                                                                      
+ trino     trino        default    coordinator-http    http://172.18.0.5:32128                                        
+                                   coordinator-metrics 172.18.0.5:31199                                               
+                                   coordinator-https   https://172.18.0.5:32721                                       
+                                                                                                                      
+ minio     minio-trino  default    http                http://172.18.0.4:31026   Third party service                  
+                                   console-http        http://172.18.0.4:30354   Admin user: root, password: rootroot
 ----
 
 == Uninstall stack
 Currently there is no support for uninstalling a stack again.
-Maybe a solution would be to uninstall the components of the stack but leave the release running.

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+## [0.4.0] - 2022-08-19
+
+- Support demos, which are an end-to-end demonstrations of the usage of the Stackable Data Platform ([#66](https://github.com/stackabletech/stackablectl/pull/66))
+
 ## [0.3.0] - 2022-08-09
 
 ### Added

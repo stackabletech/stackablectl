@@ -8,11 +8,12 @@ If the binary does not work for you, you can always <<_build_stackablectl_from_s
 
 === Linux
 
-Download the `stackablectl-x86_64-unknown-linux-gnu` binary file from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release], then rename the file to `stackabelctl`:
+Download the `stackablectl-x86_64-unknown-linux-gnu` binary file from the link:https://github.com/stackabletech/stackablectl/releases/latest[latest release], then rename the file to `stackabelctl`.
+You can also use the following command:
 
 [source,console]
 ----
-$ mv stackablectl-x86_64-unknown-linux-gnu stackablectl
+$ curl -L -o stackablectl https://github.com/stackabletech/stackablectl/releases/latest/download/stackablectl-x86_64-unknown-linux-gnu
 ----
 
 and mark it as executable:

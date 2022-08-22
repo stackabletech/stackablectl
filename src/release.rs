@@ -228,7 +228,7 @@ async fn uninstall_release(release_name: &str) {
 /// Cached because of potential slow network calls
 #[cached]
 async fn get_releases() -> Releases {
-    let mut all_releases: IndexMap<String, Release> = IndexMap::new();
+    let mut all_releases = IndexMap::new();
     let release_files = RELEASE_FILES.lock().unwrap().deref().clone();
     for release_file in release_files {
         let yaml = helpers::read_from_url_or_file(&release_file).await;
