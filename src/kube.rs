@@ -112,16 +112,22 @@ pub async fn get_service_endpoint_urls(
                 } else {
                     format!("{endpoint_name}-{port_name}")
                 };
-                let endpoint = match port_name.as_str() {
-                    // TODO: Consolidate web-ui port names in operators based on decision in arch meeting from 2022/08/10
-                    // For Superset: https://github.com/stackabletech/superset-operator/issues/248
-                    // For Airflow: https://github.com/stackabletech/airflow-operator/issues/146
-                    // As we still support older operator versions we need to also include the "old" way of naming
-                    "http" | "http-ui" | "http-api" | "ui" | "airflow" | "superset" => {
-                        format!("http://{node_ip}:{node_port}")
-                    }
-                    "https" | "https-ui" | "https-api" => format!("https://{node_ip}:{node_port}"),
-                    _ => format!("{node_ip}:{node_port}"),
+
+                // TODO: Consolidate web-ui port names in operators based on decision in arch meeting from 2022/08/10
+                // For Superset: https://github.com/stackabletech/superset-operator/issues/248
+                // For Airflow: https://github.com/stackabletech/airflow-operator/issues/146
+                // As we still support older operator versions we need to also include the "old" way of naming
+                let endpoint = if port_name == "http"
+                    || port_name.starts_with("http-")
+                    || port_name == "ui"
+                    || port_name == "airflow"
+                    || port_name == "superset"
+                {
+                    format!("http://{node_ip}:{node_port}")
+                } else if port_name == "https" || port_name.starts_with("https-") {
+                    format!("https://{node_ip}:{node_port}")
+                } else {
+                    format!("{node_ip}:{node_port}")
                 };
 
                 result.insert(endpoint_name, endpoint);
