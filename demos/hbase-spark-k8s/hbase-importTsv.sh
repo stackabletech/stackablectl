@@ -1,6 +1,15 @@
 #!/bin/bash
 
-bin/hbase org.apache.hadoop.hbase.mapreduce.ImportTsv \
+
+kubectl -n stacks-demos cp 202004-divvy-tripdata.csv hdfs-namenode-default-0:/tmp
+
+kubectl exec -n stacks-demos hdfs-namenode-default-0 -- /bin/bash -x -v -c "bin/hdfs dfs -put /tmp/row-key_losses_ukraine.csv /hbase"
+
+echo 'create "cycling-tripdata","rideable_type","started_at","ended_at","start_station_name","start_station_id","end_station_name","end_station_id","start_lat","start_lng","end_lat","end_lng","member_casual"' | bin/hbase shell -n
+
+/stackable/hbase/bin/hbase org.apache.hadoop.hbase.mapreduce.ImportTsv \
           -Dimporttsv.separator=, \
-          -Dimporttsv.columns=HBASE_ROW_KEY,ID:equipment,model,sub_model,manufacturer,losses_total,,abandoned,abandoned and burned,abandoned and destroyed,captured,captured and destroyed,damaged,damaged and abandoned,damaged and captured,damaged beyond economical repair,damaged by Forpost-R,damaged by Orion and captured,destroyed,destroyed by Forpost-R,destroyed by Orion,destroyed by loitering munition,scuttled to prevent capture by Russia,sunk,sunk but raised by Russia \
-          -Dimporttsv.bulk.output=hdfs://hdfs-namenode-default-0:8020/hbase losses_ukraine_equipment /data/equipment/row-key_losses_ukraine.csv
+          -Dimporttsv.columns=HBASE_ROW_KEY,rideable_type,started_at,ended_at,start_station_name,start_station_id,end_station_name,end_station_id,start_lat,start_lng,end_lat,end_lng,member_casual \
+          -Dimporttsv.bulk.output=hdfs://hdfs/hfile3 \
+          cycling-tripdata hdfs://hdfs/data/raw/202004-divvy-tripdata.csv
+

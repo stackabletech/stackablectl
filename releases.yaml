@@ -31,10 +31,10 @@ releases:
       secret:
         operatorVersion: 0.6.0-nightly
       spark-k8s:
-        operatorVersion: 0.4.0-nightly
-      superset:
-        operatorVersion: 0.6.0-nightly
-      trino:
         operatorVersion: 0.5.0-nightly
+      #superset:
+        #operatorVersion: 0.6.0-nightly
+      #trino:
+        #operatorVersion: 0.5.0-nightly
       zookeeper:
         operatorVersion: 0.11.0-nightly

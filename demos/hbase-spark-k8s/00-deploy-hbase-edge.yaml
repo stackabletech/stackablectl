@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hbase-interactive-6
+spec:
+  initContainers:
+    - name: merge-config
+      image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.99.0
+      volumeMounts:
+        - name: config-volume-hbase
+          mountPath: /hbase/conf
+        - name: config-volume-hdfs
+          mountPath: /hdfs/conf
+        - name: merge-config
+          mountPath: /stackable/merged-conf
+      command: ["bash", "-c", "cp /hbase/conf/* /stackable/merged-conf && cp /hdfs/conf/* /stackable/merged-conf"]
+  containers:
+    - name: run
+      image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.99.0
+      env:
+        - name: HBASE_CONF_DIR
+          value: "/stackable/merged-conf"
+      command: ["bash", "-c", "sleep infinity"]
+      volumeMounts:
+        - name: merge-config
+          mountPath: /stackable/merged-conf
+  volumes:
+    - name: config-volume-hbase
+      configMap:
+        name: hbase-demo-master-default
+    - name: config-volume-hdfs
+      configMap:
+        name: hdfs
+    - name: merge-config
+      emptyDir: {}
