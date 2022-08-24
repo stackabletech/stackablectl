@@ -1,9 +1,9 @@
 use crate::{arguments::OutputType, helm, helm::HELM_REPOS, kind, AVAILABLE_OPERATORS};
-use clap::{Parser, ValueHint};
+use clap::Parser;
 use indexmap::IndexMap;
 use log::{info, warn};
 use serde::Serialize;
-use std::{error::Error, str::FromStr};
+use std::str::FromStr;
 
 #[derive(Parser)]
 pub enum CliCommandOperator {
@@ -17,7 +17,7 @@ pub enum CliCommandOperator {
     #[clap(alias("desc"))]
     Describe {
         /// Name of the operator to describe
-        #[clap(required = true, value_hint = ValueHint::Other)]
+        #[clap(required = true)]
         operator: String,
 
         #[clap(short, long, arg_enum, default_value = "text")]
@@ -30,13 +30,12 @@ pub enum CliCommandOperator {
         /// Must have the form `name[=version]` e.g. `superset`, `superset=0.3.0`, `superset=0.3.0-nightly` or `superset=0.3.0-pr123`.
         /// If no version is specified the latest nightly version - build from the main branch - will be used.
         /// You can get the available versions with `stackablectl operator list` or `stackablectl operator describe superset`
-        #[clap(multiple_occurrences(true), required = true, value_hint = ValueHint::Other)]
+        #[clap(multiple_occurrences(true), required = true)]
         operators: Vec<Operator>,
 
-        /// If specified, a local Kubernetes cluster consisting of 4 nodes (1 for control-plane and 3 workers) for testing purposes will be created.
-        /// Kind is a tool to spin up a local Kubernetes cluster running on Docker on your machine.
-        /// You need to have `docker` and `kind` installed.
-        /// Have a look at our documentation on how to install `kind` at <https://docs.stackable.tech/home/getting_started.html#_installing_kubernetes_using_kind>
+        /// If specified a local kubernetes cluster consisting of 4 nodes for testing purposes will be created.
+        /// Kind is a tool to spin up a local kubernetes cluster running on docker on your machine.
+        /// You need to have `docker` and `kind` installed. Have a look at the README at <https://github.com/stackabletech/stackablectl> on how to install them.
         #[clap(short, long)]
         kind_cluster: bool,
 
@@ -44,8 +43,7 @@ pub enum CliCommandOperator {
         #[clap(
             long,
             default_value = "stackable-data-platform",
-            requires = "kind-cluster",
-            value_hint = ValueHint::Other,
+            requires = "kind-cluster"
         )]
         kind_cluster_name: String,
     },
@@ -53,7 +51,7 @@ pub enum CliCommandOperator {
     #[clap(alias("un"))]
     Uninstall {
         /// Space separated list of operators to uninstall.
-        #[clap(multiple_occurrences(true), required = true, value_hint = ValueHint::Other)]
+        #[clap(multiple_occurrences(true), required = true)]
         operators: Vec<String>,
     },
     /// List installed operators
@@ -64,31 +62,29 @@ pub enum CliCommandOperator {
 }
 
 impl CliCommandOperator {
-    pub async fn handle(&self) -> Result<(), Box<dyn Error>> {
+    pub async fn handle(&self) {
         match self {
-            CliCommandOperator::List { output } => list_operators(output).await?,
+            CliCommandOperator::List { output } => list_operators(output).await,
             CliCommandOperator::Describe { operator, output } => {
-                describe_operator(operator, output).await?
+                describe_operator(operator, output).await
             }
             CliCommandOperator::Install {
                 operators,
                 kind_cluster,
                 kind_cluster_name,
             } => {
-                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name)?;
+                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
                 for operator in operators {
-                    operator.install()?;
+                    operator.install();
                 }
             }
             CliCommandOperator::Uninstall { operators } => uninstall_operators(operators),
-            CliCommandOperator::Installed { output } => list_installed_operators(output)?,
+            CliCommandOperator::Installed { output } => list_installed_operators(output),
         }
-
-        Ok(())
     }
 }
 
-async fn list_operators(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
+async fn list_operators(output_type: &OutputType) {
     type Output = IndexMap<String, OutputOperatorEntry>;
 
     #[derive(Serialize)]
@@ -104,9 +100,9 @@ async fn list_operators(output_type: &OutputType) -> Result<(), Box<dyn Error>> 
         output.insert(
             operator.to_string(),
             OutputOperatorEntry {
-                stable_versions: get_versions_from_repo(operator, "stackable-stable").await?,
-                test_versions: get_versions_from_repo(operator, "stackable-test").await?,
-                dev_versions: get_versions_from_repo(operator, "stackable-dev").await?,
+                stable_versions: get_versions_from_repo(operator, "stackable-stable").await,
+                test_versions: get_versions_from_repo(operator, "stackable-test").await,
+                dev_versions: get_versions_from_repo(operator, "stackable-dev").await,
             },
         );
     }
@@ -114,7 +110,7 @@ async fn list_operators(output_type: &OutputType) -> Result<(), Box<dyn Error>> 
     match output_type {
         OutputType::Text => {
             println!("OPERATOR           STABLE VERSIONS");
-            for (operator, operator_entry) in output {
+            for (operator, operator_entry) in output.iter() {
                 println!(
                     "{:18} {}",
                     operator,
@@ -123,17 +119,15 @@ async fn list_operators(output_type: &OutputType) -> Result<(), Box<dyn Error>> 
             }
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output)?);
+            println!("{}", serde_json::to_string_pretty(&output).unwrap());
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output)?);
+            println!("{}", serde_yaml::to_string(&output).unwrap());
         }
     }
-
-    Ok(())
 }
 
-async fn describe_operator(operator: &str, output_type: &OutputType) -> Result<(), Box<dyn Error>> {
+async fn describe_operator(operator: &str, output_type: &OutputType) {
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
     struct Output {
@@ -144,9 +138,9 @@ async fn describe_operator(operator: &str, output_type: &OutputType) -> Result<(
     }
     let output = Output {
         operator: operator.to_string(),
-        stable_versions: get_versions_from_repo(operator, "stackable-stable").await?,
-        test_versions: get_versions_from_repo(operator, "stackable-test").await?,
-        dev_versions: get_versions_from_repo(operator, "stackable-dev").await?,
+        stable_versions: get_versions_from_repo(operator, "stackable-stable").await,
+        test_versions: get_versions_from_repo(operator, "stackable-test").await,
+        dev_versions: get_versions_from_repo(operator, "stackable-dev").await,
     };
 
     match output_type {
@@ -157,42 +151,36 @@ async fn describe_operator(operator: &str, output_type: &OutputType) -> Result<(
             println!("Dev versions:       {}", output.dev_versions.join(", "));
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output)?);
+            println!("{}", serde_json::to_string_pretty(&output).unwrap());
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output)?);
+            println!("{}", serde_yaml::to_string(&output).unwrap());
         }
     }
-
-    Ok(())
 }
 
-async fn get_versions_from_repo(
-    operator: &str,
-    helm_repo_name: &str,
-) -> Result<Vec<String>, Box<dyn Error>> {
+async fn get_versions_from_repo(operator: &str, helm_repo_name: &str) -> Vec<String> {
     let chart_name = format!("{operator}-operator");
 
     let helm_repo_url = HELM_REPOS
-        .lock()?
+        .lock()
+        .unwrap()
         .get(helm_repo_name)
-        .ok_or(format!(
-            "Could not find a helm repo with the name {helm_repo_name}"
-        ))?
+        .unwrap_or_else(|| panic!("Could not find a helm repo with the name {helm_repo_name}"))
         .to_string();
 
-    let repo = helm::get_repo_index(helm_repo_url).await?;
+    let repo = helm::get_repo_index(helm_repo_url).await;
 
     match repo.entries.get(&chart_name) {
         None => {
             warn!("Could not find {operator} operator (chart name {chart_name}) in helm repo {helm_repo_name}");
-            Ok(vec![])
+            vec![]
         }
-        Some(versions) => Ok(versions
+        Some(versions) => versions
             .iter()
             .map(|entry| entry.version.clone())
             .rev()
-            .collect()),
+            .collect(),
     }
 }
 
@@ -204,7 +192,7 @@ pub fn uninstall_operators(operators: &Vec<String>) {
     }
 }
 
-fn list_installed_operators(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
+fn list_installed_operators(output_type: &OutputType) {
     type Output = IndexMap<String, OutputInstalledOperatorEntry>;
 
     #[derive(Serialize)]
@@ -216,7 +204,7 @@ fn list_installed_operators(output_type: &OutputType) -> Result<(), Box<dyn Erro
         last_updated: String,
     }
 
-    let output: Output = helm::helm_list_releases()?
+    let output: Output = helm::helm_list_releases()
         .into_iter()
         .filter(|release| {
             AVAILABLE_OPERATORS
@@ -239,7 +227,7 @@ fn list_installed_operators(output_type: &OutputType) -> Result<(), Box<dyn Erro
     match output_type {
         OutputType::Text => {
             println!("OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED");
-            for (operator, operator_entry) in output {
+            for (operator, operator_entry) in output.iter() {
                 println!(
                     "{:21} {:15} {:30} {:16} {}",
                     operator,
@@ -251,14 +239,12 @@ fn list_installed_operators(output_type: &OutputType) -> Result<(), Box<dyn Erro
             }
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output)?);
+            println!("{}", serde_json::to_string_pretty(&output).unwrap());
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output)?);
+            println!("{}", serde_yaml::to_string(&output).unwrap());
         }
     }
-
-    Ok(())
 }
 
 #[derive(Debug)]
@@ -278,7 +264,7 @@ impl Operator {
         }
     }
 
-    pub fn install(&self) -> Result<(), Box<dyn Error>> {
+    pub fn install(&self) {
         info!(
             "Installing {} operator{}",
             self.name,
@@ -303,9 +289,7 @@ impl Operator {
             &helm_release_name,
             self.version.as_deref(),
             None,
-        )?;
-
-        Ok(())
+        );
     }
 }
 

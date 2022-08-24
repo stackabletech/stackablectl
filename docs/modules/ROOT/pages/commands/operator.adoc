@@ -1,15 +1,15 @@
 = Operator
 
 The `stackable operator` command allows to list, install and uninstall Stackable operators.
-Operators manage the individual data products of the Stackable Data Platform.
+Operators manage the individual data products the Stackable Data Platform consists of.
 
 This command manages individual operators.
-It is mainly intended for people already having experience or working on the Stackable Data Platform.
-If you just want an easy way to get started or don't know which products and/or which version to install it is recommended to use the xref:commands/release.adoc[] command.
-This command will install a bundle of operators from an official Stackable release.
+It is mainly intended for persons already having experience or working on the Stackable Data Platform.
+If you just wan't an easy way to get started or don't know which products and/or which version to install it is recommended to use the xref:commands/release.adoc[] command.
+This command will install a bundle of operators from a official Stackable Release.
 
 == Browse available operators
-To list the operators that are part of the Stackable Data Platform as well as their stable versions run the following command:
+To list the operators that are part of the Stackable Data Platform as well as their stable versions run the following command
 
 [source,console]
 ----
@@ -32,8 +32,8 @@ trino              0.4.0, 0.3.1, 0.3.0, 0.2.0
 zookeeper          0.9.0, 0.8.0, 0.7.0, 0.6.0, 0.10.0
 ----
 
-This command only includes the stable versions of every operator for clarity.
-If you're interested in a special version of an operator you can use the `describe` command to get more details for a specific operator as follows:
+This command only includes the stable versions for every operator to not mess up the whole screen.
+If you're interested in a special version of an operator you can use the describe command to get more details for an specific operator as follows
 
 [source,console]
 ----
@@ -45,8 +45,8 @@ Dev versions:       0.5.0-nightly, 0.4.0-nightly, 0.3.0-nightly, 0.2.0-nightly, 
 ----
 
 == Install operator
-If you want to access a Kubernetes cluster, make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
-After that run the following command, which will install the operators in their latest nightly version - built from the main branch of the operators.
+If you access to an Kubernetes cluster make sure your https://kubernetes.io/docs/tasks/tools/#kubectl[`kubectl`] Kubernetes client is configured to interact with the Kubernetes cluster.
+After that run the following command
 
 [source,console]
 ----
@@ -56,8 +56,8 @@ $ stackablectl operator install airflow commons secret
 [INFO ] Installing secret operator
 ----
 
-If you don't have a Kubernetes cluster available, `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
-Make sure you have `kind` installed and run the following command:
+If you don't have an Kubernetes cluster available `stackablectl` can spin up a https://kind.sigs.k8s.io/[kind] Kubernetes cluster for you.
+Make sure you have https://kind.sigs.k8s.io/[kind] installed and run the following command
 
 [source,console]
 ----
@@ -84,9 +84,9 @@ Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/qui
 
 With this command we installed the operator for Apache Airflow as well as two operators needed internally by the Stackable Data Platform (commons and secret).
 
-As we didn't specify a specific version to install, the operators were installed in the latest nightly version - built from the main branch of the operators.
+As we didn't specify a specific version to install the operators were installed in the latest nightly version - build from the main branch of the operator.
 
-If you want to install a specific version, you can add the version to each operator to install as follows:
+If you want to install a specific version you can add the version to each operator to install as follows
 
 [source,console]
 ----
@@ -96,12 +96,12 @@ $ stackablectl operator install airflow=0.4.0 commons=0.2.0 secret=0.5.0
 [INFO ] Installing secret operator in version 0.5.0
 ----
 
-As you can see, the three operators where installed in the requested version.
+As you can see the three operators where installed in the requested version.
 
-Remember: If you want to install a recommended and tested set of operator versions, have a look at the xref:commands/release.adoc[] command.
+Remember: If you want to install a recommended and tested set of operator versions have a look at the xref:commands/release.adoc[] command.
 
 == List installed operators
-After installing some operators, you can list which operators are installed in your Kubernetes cluster.
+After installing some operators you can list which operators are installed in you Kubernetes cluster.
 
 [source,console]
 ----
@@ -111,8 +111,6 @@ airflow               0.5.0-nightly   default                        deployed   
 commons               0.3.0-nightly   default                        deployed         2022-07-15 09:44:03.215214235 +0200 CEST
 secret                0.6.0-nightly   default                        deployed         2022-07-15 09:44:13.526843785 +0200 CEST
 ----
-
-In case you have installed the operators in a specific version, the specific versions will be shown instead of the `*-nightly` versions.
 
 == Uninstall operator
 To uninstall the operators again you can use the `uninstall` command

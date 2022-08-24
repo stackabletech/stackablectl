@@ -1,0 +1,48 @@
+---
+apiVersion: spark.stackable.tech/v1alpha1
+kind: SparkApplication
+metadata:
+  name: hbase-spark-demo
+spec:
+  version: "1.0"
+  sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.99.0
+  sparkImagePullPolicy: IfNotPresent
+  mode: cluster
+  mainClass: com.stackable.demo.load
+  mainApplicationFile:
+  #  s3bucket:
+  #    inline:
+  #      bucketName: my-bucket
+  #      connection:
+  #        inline:
+  #          host: test-minio
+  #          port: 9000
+  #          accessStyle: Path
+  #          credentials:
+  #            secretClass: s3-credentials-class
+  volumes:
+    - name: spark-hbase-connections-deps
+      persistentVolumeClaim:
+        claimName: spark-hbase-connections-private-pvc
+  sparkConf:
+    #spark.hadoop.fs.s3a.aws.credentials.provider: "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider" not needed
+    spark.driver.extraClassPath: "/dependencies/jars/*"
+    spark.executor.extraClassPath: "/dependencies/jars/*"
+  driver:
+    cores: 1
+    coreLimit: "1200m"
+    memory: "512m"
+    volumeMounts:
+      - name: spark-hbase-connections-deps
+        mountPath: /dependencies
+    nodeSelector:
+      node: "1"
+  executor:
+    cores: 1
+    instances: 1
+    memory: "512m"
+    volumeMounts:
+      - name: spark-hbase-connections-deps
+        mountPath: /dependencies
+    nodeSelector:
+      node: "1"

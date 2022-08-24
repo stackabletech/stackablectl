@@ -1,11 +1,11 @@
 use crate::{arguments::OutputType, helpers, kind, operator, operator::Operator, CliArgs};
 use cached::proc_macro::cached;
-use clap::{ArgGroup, Parser, ValueHint};
+use clap::{ArgGroup, Parser};
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
-use std::{error::Error, ops::Deref, process::exit, sync::Mutex};
+use std::{ops::Deref, process::exit, sync::Mutex};
 
 lazy_static! {
     pub static ref RELEASE_FILES: Mutex<Vec<String>> = Mutex::new(vec![
@@ -25,7 +25,7 @@ pub enum CliCommandRelease {
     #[clap(alias("desc"))]
     Describe {
         /// Name of the release to describe
-        #[clap(required = true, value_hint = ValueHint::Other)]
+        #[clap(required = true)]
         release: String,
 
         #[clap(short, long, arg_enum, default_value = "text")]
@@ -40,23 +40,22 @@ pub enum CliCommandRelease {
     ))]
     Install {
         /// Name of the release to install
-        #[clap(required = true, value_hint = ValueHint::Other)]
+        #[clap(required = true)]
         release: String,
 
         /// Whitelist of product operators to install.
         /// Mutually exclusive with `--exclude-products`
-        #[clap(short, long, value_hint = ValueHint::Other)]
+        #[clap(short, long)]
         include_products: Vec<String>,
 
         /// Blacklist of product operators to install.
         /// Mutually exclusive with `--include-products`
-        #[clap(short, long, value_hint = ValueHint::Other)]
+        #[clap(short, long)]
         exclude_products: Vec<String>,
 
-        /// If specified, a local Kubernetes cluster consisting of 4 nodes (1 for control-plane and 3 workers) for testing purposes will be created.
-        /// Kind is a tool to spin up a local Kubernetes cluster running on Docker on your machine.
-        /// You need to have `docker` and `kind` installed.
-        /// Have a look at our documentation on how to install `kind` at <https://docs.stackable.tech/home/getting_started.html#_installing_kubernetes_using_kind>
+        /// If specified a local kubernetes cluster consisting of 4 nodes for testing purposes will be created.
+        /// Kind is a tool to spin up a local kubernetes cluster running on docker on your machine.
+        /// You need to have `docker` and `kind` installed. Have a look at the README at <https://github.com/stackabletech/stackablectl> on how to install them.
         #[clap(short, long)]
         kind_cluster: bool,
 
@@ -64,8 +63,7 @@ pub enum CliCommandRelease {
         #[clap(
             long,
             default_value = "stackable-data-platform",
-            requires = "kind-cluster",
-            value_hint = ValueHint::Other,
+            requires = "kind-cluster"
         )]
         kind_cluster_name: String,
     },
@@ -73,17 +71,17 @@ pub enum CliCommandRelease {
     #[clap(alias("un"))]
     Uninstall {
         /// Name of the release to uninstall
-        #[clap(required = true, value_hint = ValueHint::Other)]
+        #[clap(required = true)]
         release: String,
     },
 }
 
 impl CliCommandRelease {
-    pub async fn handle(&self) -> Result<(), Box<dyn Error>> {
+    pub async fn handle(&self) {
         match self {
-            CliCommandRelease::List { output } => list_releases(output).await?,
+            CliCommandRelease::List { output } => list_releases(output).await,
             CliCommandRelease::Describe { release, output } => {
-                describe_release(release, output).await?
+                describe_release(release, output).await
             }
             CliCommandRelease::Install {
                 release,
@@ -92,19 +90,17 @@ impl CliCommandRelease {
                 kind_cluster,
                 kind_cluster_name,
             } => {
-                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name)?;
-                install_release(release, include_products, exclude_products).await?;
+                kind::handle_cli_arguments(*kind_cluster, kind_cluster_name);
+                install_release(release, include_products, exclude_products).await;
             }
             CliCommandRelease::Uninstall { release } => uninstall_release(release).await,
         }
-
-        Ok(())
     }
 }
 
 pub fn handle_common_cli_args(args: &CliArgs) {
     let mut release_files = RELEASE_FILES.lock().unwrap();
-    release_files.extend_from_slice(&args.additional_releases_file);
+    release_files.append(&mut args.additional_release_files.clone());
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -127,12 +123,12 @@ struct ReleaseProduct {
     operator_version: String,
 }
 
-async fn list_releases(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
+async fn list_releases(output_type: &OutputType) {
     let output = get_releases().await;
     match output_type {
         OutputType::Text => {
             println!("RELEASE            RELEASE DATE   DESCRIPTION");
-            for (release_name, release_entry) in output.releases {
+            for (release_name, release_entry) in output.releases.iter() {
                 println!(
                     "{:18} {:14} {}",
                     release_name, release_entry.release_date, release_entry.description,
@@ -140,20 +136,15 @@ async fn list_releases(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
             }
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output)?);
+            println!("{}", serde_json::to_string_pretty(&output).unwrap());
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output)?);
+            println!("{}", serde_yaml::to_string(&output).unwrap());
         }
     }
-
-    Ok(())
 }
 
-async fn describe_release(
-    release_name: &str,
-    output_type: &OutputType,
-) -> Result<(), Box<dyn Error>> {
+async fn describe_release(release_name: &str, output_type: &OutputType) {
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
     struct Output {
@@ -179,19 +170,17 @@ async fn describe_release(
             println!("Included products:");
             println!();
             println!("PRODUCT             OPERATOR VERSION");
-            for (product_name, product) in output.products {
+            for (product_name, product) in output.products.iter() {
                 println!("{:19} {}", product_name, product.operator_version);
             }
         }
         OutputType::Json => {
-            println!("{}", serde_json::to_string_pretty(&output)?);
+            println!("{}", serde_json::to_string_pretty(&output).unwrap());
         }
         OutputType::Yaml => {
-            println!("{}", serde_yaml::to_string(&output)?);
+            println!("{}", serde_yaml::to_string(&output).unwrap());
         }
     }
-
-    Ok(())
 }
 
 /// If include_operators is an non-empty list only the whitelisted product operators will be installed.
@@ -200,22 +189,20 @@ pub async fn install_release(
     release_name: &str,
     include_products: &[String],
     exclude_products: &[String],
-) -> Result<(), Box<dyn Error>> {
+) {
     info!("Installing release {release_name}");
     let release = get_release(release_name).await;
 
-    for (product_name, product) in release.products {
+    for (product_name, product) in release.products.into_iter() {
         let included = include_products.is_empty() || include_products.contains(&product_name);
         let excluded = exclude_products.contains(&product_name);
 
         if included && !excluded {
             Operator::new(product_name, Some(product.operator_version))
                 .expect("Failed to construct operator definition")
-                .install()?;
+                .install();
         }
     }
-
-    Ok(())
 }
 
 async fn uninstall_release(release_name: &str) {

@@ -7,7 +7,7 @@ spec:
   version: 1.5.1-stackable0.2.0
   statsdExporterVersion: v0.22.4
   credentialsSecret: superset-credentials
-  mapboxSecret: superset-mapbox-api-key
+  loadExamplesOnInit: true
   nodes:
     roleGroups:
       default:
@@ -26,14 +26,6 @@ stringData:
   adminUser.password: admin
   connections.secretKey: thisISaSECRET_1234
   connections.sqlalchemyDatabaseUri: postgresql://superset:superset@postgresql-superset/superset
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: superset-mapbox-api-key
-type: Opaque
-stringData:
-  connections.mapboxApiKey: "pk.eyJ1IjoibXVlbGxlcmNlbGluZSIsImEiOiJjbDZwM3llMTAwNGpmM2psdHU0Y21wZHJwIn0.kXFJKBbeyhbwf0z460JcTQ"
 # ---
 # TODO Use when available (https://github.com/stackabletech/superset-operator/issues/3)
 # apiVersion: superset.stackable.tech/v1alpha1
