@@ -7,24 +7,26 @@ spec:
   template:
     spec:
       restartPolicy: OnFailure
-      initContainers:
-        - name: merge-config # hbase expects configs from hdfs + hbase in a single directory. Mounting config-maps is only possible to different directories. Therefore, we decided to merge the configs with a InitContainer and provide the configs in a single directory.
-          image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.1.0
-          volumeMounts:
-            - name: config-volume-hbase
-              mountPath: /hbase/conf
-            - name: config-volume-hdfs
-              mountPath: /hdfs/conf
-            - name: merge-config
-              mountPath: /stackable/merged-conf
-          command: ["bash", "-c", "cp /hbase/conf/* /stackable/merged-conf && cp /hdfs/conf/* /stackable/merged-conf"]
       containers:
         - name: run
-          image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.99.0
+          image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.2.0
           env:
             - name: HBASE_CONF_DIR
-              value: "/stackable/merged-conf"
-          command: ["bash", "-c", "/stackable/hbase/bin/hbase \
+              value: "/stackable/conf/"
+          volumeMounts:
+            - mountPath: /stackable/conf/hdfs-site.xml
+              name: config-volume-hdfs
+              subPath: hdfs-site.xml
+            - mountPath: /stackable/conf/core-site.xml
+              name: config-volume-hdfs
+              subPath: core-site.xml
+            - mountPath: /stackable/conf/hbase-site.xml
+              name: config-volume-hbase
+              subPath: hbase-site.xml
+            - mountPath: /stackable/conf/hbase-env.sh
+              name: config-volume-hbase
+              subPath: hbase-env.sh
+          command: [ "bash", "-c", "/stackable/hbase/bin/hbase \
                                     org.apache.hadoop.hbase.mapreduce.ImportTsv \
                                     -Dimporttsv.separator=, \
                                     -Dimporttsv.columns=HBASE_ROW_KEY,rideable_type,started_at,ended_at,start_station_name,start_station_id,end_station_name,end_station_id,start_lat,start_lng,end_lat,end_lng,member_casual \
@@ -33,10 +35,7 @@ spec:
                                     && /stackable/hbase/bin/hbase \
                                     org.apache.hadoop.hbase.tool.LoadIncrementalHFiles \
                                     hdfs://hdfs/data/hfile \
-                                    cycling-tripdata"] #https://hbase.apache.org/book.html#tools
-          volumeMounts:
-            - name: merge-config
-              mountPath: /stackable/merged-conf
+                                    cycling-tripdata" ] #https://hbase.apache.org/book.html#tools
       volumes:
         - name: config-volume-hbase
           configMap:
@@ -44,5 +43,3 @@ spec:
         - name: config-volume-hdfs
           configMap:
             name: hdfs
-        - name: merge-config
-          emptyDir: {}
