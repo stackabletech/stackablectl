@@ -13,7 +13,7 @@ spec:
             name: hdfs
       containers:
         - name: load-ny-taxi-data
-          image: docker.stackable.tech/stackable/hadoop:3.3.3-stackable0.99.0
+          image: docker.stackable.tech/stackable/hadoop:3.3.3-stackable0.1.0
           env:
             - name: HADOOP_CONF_DIR
               value: "/stackable/conf/hdfs"

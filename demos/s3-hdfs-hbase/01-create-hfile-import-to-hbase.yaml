@@ -9,7 +9,7 @@ spec:
       restartPolicy: OnFailure
       initContainers:
         - name: merge-config # hbase expects configs from hdfs + hbase in a single directory. Mounting config-maps is only possible to different directories. Therefore, we decided to merge the configs with a InitContainer and provide the configs in a single directory.
-          image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.99.0
+          image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.1.0
           volumeMounts:
             - name: config-volume-hbase
               mountPath: /hbase/conf
