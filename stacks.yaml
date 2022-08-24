@@ -174,7 +174,7 @@ stacks:
       - plainYaml: stacks/hdfs-hbase-trino/hdfs.yaml
       - plainYaml: stacks/hdfs-hbase-trino/trino.yaml
       - plainYaml: stacks/hdfs-hbase-trino/hive-metastore.yaml
-  hdfs-hbase-spark-k8s:
+  hdfs-hbase:
     description: A stack in preperation for the hdfs-hbase-spark-k8s demo. The demo wants to query data that is stored in hbase via spark-k8s by using the hbase-spark-connector
     stackableRelease: 22.06-nightly
     labels:
@@ -184,6 +184,6 @@ stacks:
       - spark-k8s
       - minio
     manifests:
-      - plainYaml: stacks/hdfs-hbase-spark-k8s/zookeeper.yaml
-      - plainYaml: stacks/hdfs-hbase-spark-k8s/hdfs.yaml
-      - plainYaml: stacks/hdfs-hbase-spark-k8s/hbase.yaml
+      - plainYaml: stacks/hdfs-hbase/zookeeper.yaml
+      - plainYaml: stacks/hdfs-hbase/hdfs.yaml
+      - plainYaml: stacks/hdfs-hbase/hbase.yaml

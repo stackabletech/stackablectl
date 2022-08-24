@@ -22,3 +22,16 @@ demos:
       - s3
       - ny-taxi-data
     manifests: []
+  s3-hdfs-hbase:
+    description: initial situation is having data located in a s3 bucket. Get the data to hbase to query a table
+    stackableStack: hdfs-hbase
+    labels:
+      - hdfs
+      - distcp
+      - hbase
+      - zookeeper
+      - s3
+      - cycling-tripdata
+    manifests:
+      - plainYaml: demos/s3-hdfs-hbase/00-hdfs-upload-job.yaml
+      - plainYaml: demos/s3-hdfs-hbase/01-create-hfile-import-to-hbase.yaml
