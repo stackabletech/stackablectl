@@ -1,0 +1,45 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-hfile-and-import-to-hbase # this jobs create Hfiles first (=dedicated Hbase file format with metadata for the HCatalog.) Afterwards executing a bulkload to Hbase.
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: run
+          image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.2.0
+          env:
+            - name: HBASE_CONF_DIR
+              value: "/stackable/conf/"
+          volumeMounts:
+            - mountPath: /stackable/conf/hdfs-site.xml
+              name: config-volume-hdfs
+              subPath: hdfs-site.xml
+            - mountPath: /stackable/conf/core-site.xml
+              name: config-volume-hdfs
+              subPath: core-site.xml
+            - mountPath: /stackable/conf/hbase-site.xml
+              name: config-volume-hbase
+              subPath: hbase-site.xml
+            - mountPath: /stackable/conf/hbase-env.sh
+              name: config-volume-hbase
+              subPath: hbase-env.sh
+          command: [ "bash", "-c", "/stackable/hbase/bin/hbase \
+                                    org.apache.hadoop.hbase.mapreduce.ImportTsv \
+                                    -Dimporttsv.separator=, \
+                                    -Dimporttsv.columns=HBASE_ROW_KEY,rideable_type,started_at,ended_at,start_station_name,start_station_id,end_station_name,end_station_id,start_lat,start_lng,end_lat,end_lng,member_casual \
+                                    -Dimporttsv.bulk.output=hdfs://hdfs/data/hfile \
+                                    cycling-tripdata hdfs://hdfs/data/raw/demo-cycling-tripdata.csv.gz \
+                                    && /stackable/hbase/bin/hbase \
+                                    org.apache.hadoop.hbase.tool.LoadIncrementalHFiles \
+                                    hdfs://hdfs/data/hfile \
+                                    cycling-tripdata" ] #https://hbase.apache.org/book.html#tools
+      volumes:
+        - name: config-volume-hbase
+          configMap:
+            name: hbase-demo-master-default
+        - name: config-volume-hdfs
+          configMap:
+            name: hdfs
