@@ -49,11 +49,8 @@ demos:
     stackableStack: hdfs-hbase
     labels:
       - hdfs
-      - distcp
       - hbase
-      - zookeeper
-      - s3
       - cycling-tripdata
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/s3-hdfs-hbase/00-hdfs-upload-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/s3-hdfs-hbase/01-create-hfile-import-to-hbase.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/71-new-demo-ingest-data-to-hbase-part-I/demos/s3-hdfs-hbase/00-hdfs-upload-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/71-new-demo-ingest-data-to-hbase-part-I/demos/s3-hdfs-hbase/01-create-hfile-import-to-hbase.yaml

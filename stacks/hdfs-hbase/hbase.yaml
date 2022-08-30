@@ -2,7 +2,7 @@
 apiVersion: hbase.stackable.tech/v1alpha1
 kind: HbaseCluster
 metadata:
-  name: hbase-demo
+  name: hbase
 spec:
   version: 2.4.12-stackable0.2.0
   hdfsConfigMapName: hdfs-namenode-default
@@ -12,14 +12,8 @@ spec:
   masters:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         replicas: 1
   regionServers:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         replicas: 2

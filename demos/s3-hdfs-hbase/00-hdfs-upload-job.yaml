@@ -26,7 +26,7 @@ spec:
           command: ["bash", "-c", "bin/hdfs dfs -mkdir -p /data/raw \
                                   && bin/hadoop distcp -D fs.s3a.aws.credentials.provider=org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider \
                                      s3a://public-backup-nyc-tlc/cycling-tripdata/demo-cycling-tripdata.csv.gz \
-                                     hdfs://hdfs-namenode-default-0:8020/data/raw"] # need to add property for anonymous authentication
+                                     hdfs://hdfs/data/raw"] # need to add property for anonymous authentication
           volumeMounts:
             - name: config-volume-hdfs
               mountPath: /stackable/conf/hdfs

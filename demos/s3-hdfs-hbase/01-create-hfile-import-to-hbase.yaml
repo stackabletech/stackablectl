@@ -39,7 +39,7 @@ spec:
       volumes:
         - name: config-volume-hbase
           configMap:
-            name: hbase-demo-master-default
+            name: hbase-master-default
         - name: config-volume-hdfs
           configMap:
             name: hdfs
