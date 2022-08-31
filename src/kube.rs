@@ -35,7 +35,7 @@ pub async fn deploy_manifests(yaml: &str) -> Result<(), Box<dyn Error>> {
         };
 
         api.patch(
-            &object.name(),
+            &object.name_any(),
             &PatchParams::apply("stackablectl"),
             &Patch::Apply(object),
         )
@@ -53,7 +53,7 @@ pub async fn get_service_endpoint_urls(
     let namespace = service
         .namespace()
         .ok_or(format!("Service {service:?} must have a namespace"))?;
-    let service_name = service.name();
+    let service_name = service.name_unchecked();
 
     let endpoints_api: Api<Endpoints> = Api::namespaced(client.clone(), &namespace);
     let endpoints = endpoints_api.get(&service_name).await?;
@@ -161,7 +161,7 @@ async fn get_node_name_ip_mapping() -> Result<HashMap<String, String>, String> {
 
     let mut result = HashMap::new();
     for node in nodes {
-        let node_name = node.name();
+        let node_name = node.name_unchecked();
         let preferred_node_ip = node
             .status
             .ok_or(format!("Failed to get status of node {node_name}"))?
