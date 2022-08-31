@@ -36,9 +36,9 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
-        with:
-          key: udeps
+      # - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
+      #   with:
+      #     key: udeps
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # renovate: tag=v1.0.3
         with:
           command: install
@@ -98,9 +98,9 @@ jobs:
           toolchain: stable
           components: clippy
           override: true
-      - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
-        with:
-          key: clippy
+      # - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
+      #   with:
+      #     key: clippy
       - name: Run clippy action to produce annotations
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -128,9 +128,9 @@ jobs:
           toolchain: stable
           components: rustfmt
           override: true
-      - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
-        with:
-          key: doc
+      # - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
+      #   with:
+      #     key: doc
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # renovate: tag=v1.0.3
         with:
           command: doc
@@ -153,9 +153,9 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
-        with:
-          key: test
+      # - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
+      #   with:
+      #     key: test
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # renovate: tag=v1.0.3
         with:
           command: test
@@ -186,9 +186,9 @@ jobs:
           toolchain: stable
           target: ${{ matrix.target }}
           override: true
-      - uses: Swatinem/rust-cache@v1
-        with:
-          key: build-${{ matrix.target }}
+      # - uses: Swatinem/rust-cache@v1
+      #   with:
+      #     key: build-${{ matrix.target }}
       - name: Prepare Ubuntu env
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt install -y musl-tools
