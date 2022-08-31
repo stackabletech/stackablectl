@@ -1,6 +1,6 @@
 module go-helm-wrapper
 
-go 1.18
+go 1.19
 
 require (
 	github.com/mittwald/go-helm-client v0.11.3
