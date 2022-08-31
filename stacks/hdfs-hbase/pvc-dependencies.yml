@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: spark-hbase-dependencies-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: spark-hbase-dependencies-job
+spec:
+  template:
+    spec:
+      nodeSelector:
+        node: "1"
+      restartPolicy: Never
+      volumes:
+        - name: job-deps
+          persistentVolumeClaim:
+            claimName: spark-hbase-dependencies-pvc
+      containers:
+        - name: hbase-connector-deps
+          image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.99.0
+          env:
+            - name: DEST_DIR
+              value: "/dependencies/"
+          command: [ "bash", "-c", "mkdir ${DEST_DIR} &&\
+                                    cd ${DEST_DIR} &&\  
+                                    curl -O https://repo.stackable.tech/repository/misc/hbase-spark-k8s/hbase-spark-protocol-shaded-1.0.1-SNAPSHOT.jar &&\
+                                    curl -O https://repo.stackable.tech/repository/misc/hbase-spark-k8s/original-hdfs-hbase-load-1.0.jar &&\
+                                    curl -O https://repo.stackable.tech/repository/misc/hbase-spark-k8s/scala-library-2.12.14.jar" ]
+          volumeMounts:
+            - name: job-deps
+              mountPath: /dependencies
+          securityContext:
+            runAsUser: 0

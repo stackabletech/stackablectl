@@ -164,6 +164,6 @@ stacks:
       - hbase
       - hdfs
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/71-new-demo-ingest-data-to-hbase-part-I/stacks/hdfs-hbase/zookeeper.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/71-new-demo-ingest-data-to-hbase-part-I/stacks/hdfs-hbase/hdfs.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/71-new-demo-ingest-data-to-hbase-part-I/stacks/hdfs-hbase/hbase.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/87-Hbase-demo-part-II/stacks/hdfs-hbase/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/87-Hbase-demo-part-II/stacks/hdfs-hbase/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/87-Hbase-demo-part-II/stacks/hdfs-hbase/hbase.yaml

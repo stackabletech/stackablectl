@@ -17,3 +17,7 @@ spec:
     roleGroups:
       default:
         replicas: 2
+  volumes:
+    - name: spark-hbase-deps
+      persistentVolumeClaim:
+        claimName: spark-hbase-dependencies-pvc

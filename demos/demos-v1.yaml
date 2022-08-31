@@ -52,5 +52,5 @@ demos:
       - hbase
       - cycling-tripdata
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/71-new-demo-ingest-data-to-hbase-part-I/demos/s3-hdfs-hbase/00-hdfs-upload-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/71-new-demo-ingest-data-to-hbase-part-I/demos/s3-hdfs-hbase/01-create-hfile-import-to-hbase.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/87-Hbase-demo-part-II/demos/s3-hdfs-hbase/00-hdfs-upload-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/87-Hbase-demo-part-II/demos/s3-hdfs-hbase/01-create-hfile-import-to-hbase.yaml
