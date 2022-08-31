@@ -27,7 +27,6 @@ const AVAILABLE_OPERATORS: &[&str] = &[
     "nifi",
     "opa",
     "secret",
-    "spark",
     "spark-k8s",
     "superset",
     "trino",
