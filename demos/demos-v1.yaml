@@ -52,5 +52,5 @@ demos:
       - hdfs
       - cycling-tripdata
     manifests:
-      - plainYaml: demos/hbase-hdfs-load-cycling-data/01-distcp-cycling-data.yaml
-      - plainYaml: demos/hbase-hdfs-load-cycling-data/02-create-hfile-and-import-to-hbase.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/01-distcp-cycling-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/02-create-hfile-and-import-to-hbase.yaml

@@ -164,6 +164,6 @@ stacks:
       - hbase
       - hdfs
     manifests:
-      - plainYaml: stacks/hdfs-hbase/zookeeper.yaml
-      - plainYaml: stacks/hdfs-hbase/hdfs.yaml
-      - plainYaml: stacks/hdfs-hbase/hbase.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hbase.yaml
