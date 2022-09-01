@@ -44,13 +44,13 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-water-level-data/ingest-test-data.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-water-level-data/create-druid-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-water-level-data/setup-superset.yaml
-  s3-hdfs-hbase:
-    description: initial situation is having data located in a s3 bucket. Get the data to hbase to query a table
+  hbase-hdfs-load-cycling-data:
+    description: Copy data from S3 bucket to an HBase table
     stackableStack: hdfs-hbase
     labels:
-      - hdfs
       - hbase
+      - hdfs
       - cycling-tripdata
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/87-Hbase-demo-part-II/demos/s3-hdfs-hbase/00-hdfs-upload-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/87-Hbase-demo-part-II/demos/s3-hdfs-hbase/01-create-hfile-import-to-hbase.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/01-distcp-cycling-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/02-create-hfile-and-import-to-hbase.yaml
