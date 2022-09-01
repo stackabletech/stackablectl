@@ -6,6 +6,9 @@
 
 - Print Nifi adminuser credentials within services command ([#80](https://github.com/stackabletech/stackablectl/pull/80))
 
+### Removed
+- Remove Spark from supported operators ([#100](https://github.com/stackabletech/stackablectl/pull/100))
+
 ## [0.4.0] - 2022-08-19
 
 ### Added

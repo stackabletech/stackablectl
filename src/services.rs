@@ -278,7 +278,7 @@ pub async fn get_stackable_services(
         let objects = object_api.list(&ListParams::default()).await?;
         let mut installed_products = Vec::new();
         for object in objects {
-            let object_name = object.name();
+            let object_name = object.name_any();
             let object_namespace = match object.namespace() {
                 Some(namespace) => namespace,
                 // If the custom resource does not have a namespace set it can't expose a service
@@ -303,7 +303,7 @@ pub async fn get_stackable_services(
                     Ok(service_endpoint_urls) => endpoints.extend(service_endpoint_urls),
                     Err(err) => warn!(
                         "Failed to get endpoint_urls of service {service_name}: {err}",
-                        service_name = service.name(),
+                        service_name = service.name_unchecked(),
                     ),
                 }
             }
@@ -430,7 +430,7 @@ async fn get_minio_services(
 
     let mut result = Vec::new();
     for minio_deployment in minio_deployments {
-        let deployment_name = minio_deployment.name();
+        let deployment_name = minio_deployment.name_unchecked();
         let deployment_namespace = minio_deployment.namespace().ok_or(format!(
             "MinIO deployment {deployment_name} had no namespace"
         ))?;
