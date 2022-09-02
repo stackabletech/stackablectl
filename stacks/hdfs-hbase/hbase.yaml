@@ -4,7 +4,7 @@ kind: HbaseCluster
 metadata:
   name: hbase
 spec:
-  version: 2.4.12-stackable0.2.0
+  version: 2.4.12-stackable0.99.0
   hdfsConfigMapName: hdfs
   zookeeperConfigMapName: hbase-znode
   config:
@@ -17,7 +17,3 @@ spec:
     roleGroups:
       default:
         replicas: 2
-  volumes:
-    - name: spark-hbase-deps
-      persistentVolumeClaim:
-        claimName: spark-hbase-dependencies-pvc
