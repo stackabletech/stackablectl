@@ -2,6 +2,7 @@ use crate::{arguments::OutputType, helm, helm::HELM_REPOS, kind, AVAILABLE_OPERA
 use clap::{Parser, ValueHint};
 use indexmap::IndexMap;
 use log::{info, warn};
+use semver::Version;
 use serde::Serialize;
 use std::{error::Error, str::FromStr};
 
@@ -167,6 +168,8 @@ async fn describe_operator(operator: &str, output_type: &OutputType) -> Result<(
     Ok(())
 }
 
+/// Returns list of available versions for a specific operator within a helm repo.
+/// Uses the semver crate to parse and sort the versions descending.
 async fn get_versions_from_repo(
     operator: &str,
     helm_repo_name: &str,
@@ -188,11 +191,15 @@ async fn get_versions_from_repo(
             warn!("Could not find {operator} operator (chart name {chart_name}) in helm repo {helm_repo_name}");
             Ok(vec![])
         }
-        Some(versions) => Ok(versions
-            .iter()
-            .map(|entry| entry.version.clone())
-            .rev()
-            .collect()),
+        Some(repo_entries) => {
+            let mut versions = repo_entries
+                .iter()
+                .map(|entry| Version::parse(&entry.version))
+                .collect::<Result<Vec<Version>, _>>()?;
+            versions.sort();
+            versions.reverse();
+            Ok(versions.iter().map(|version| version.to_string()).collect())
+        }
     }
 }
 
