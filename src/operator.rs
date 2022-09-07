@@ -197,7 +197,11 @@ async fn get_versions_from_repo(
                 .map(|entry| Version::parse(&entry.version))
                 .collect::<Result<Vec<Version>, _>>()?;
             versions.sort();
-            Ok(versions.iter().rev().map(|version| version.to_string()).collect())
+            Ok(versions
+                .iter()
+                .rev()
+                .map(|version| version.to_string())
+                .collect())
         }
     }
 }
