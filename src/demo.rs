@@ -88,6 +88,7 @@ pub fn handle_common_cli_args(args: &CliArgs) {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct Demos {
+    #[serde(with = "serde_yaml::with::singleton_map_recursive")]
     demos: IndexMap<String, Demo>,
 }
 
