@@ -52,7 +52,7 @@ stacks:
               password: superset
               database: superset
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/zookeeper.yaml
-      - plainYaml: stacks/kafka-druid-superset-s3/kafka.yaml # TODO
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/kafka.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/druid.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml
   trino-superset-s3:
@@ -124,7 +124,7 @@ stacks:
               password: superset
               database: superset
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
-      - plainYaml: stacks/trino-superset-s3/trino.yaml # TODO
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
   airflow:
     description: Stack containing Airflow scheduling platform
