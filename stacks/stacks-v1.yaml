@@ -2,7 +2,7 @@
 stacks:
   kafka-druid-superset-s3:
     description: Stack containing Kafka, MinIO, Druid and Superset for data visualization
-    stackableRelease: 22.06
+    stackableRelease: 22.09
     labels:
       - kafka
       - druid
@@ -57,7 +57,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 22.06
+    stackableRelease: 22.09
     labels:
       - trino
       - superset
