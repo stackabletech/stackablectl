@@ -128,7 +128,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
   airflow:
     description: Stack containing Airflow scheduling platform
-    stackableRelease: 22.06
+    stackableRelease: 22.09
     labels:
       - airflow
     manifests:
