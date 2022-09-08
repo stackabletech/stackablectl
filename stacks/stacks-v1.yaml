@@ -159,7 +159,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
-    stackableRelease: 22.06
+    stackableRelease: 22.09
     labels:
       - hbase
       - hdfs
