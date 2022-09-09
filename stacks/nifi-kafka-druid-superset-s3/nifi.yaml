@@ -1,0 +1,54 @@
+---
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: nifi
+spec:
+  version: 1.16.3-stackable0.1.0
+  zookeeperConfigMapName: nifi-znode
+  config:
+    authentication:
+      method:
+        singleUser:
+          adminCredentialsSecret: nifi-admin-credentials
+    sensitiveProperties:
+      keySecret: nifi-sensitive-property-key
+      autoGenerate: true
+  nodes:
+    config:
+      resources:
+        memory:
+          limit: '4Gi'
+        cpu:
+          min: "500m"
+          max: "4"
+        storage:
+          contentRepo:
+            capacity: "5Gi"
+          databaseRepo:
+            capacity: "5Gi"
+          flowfileRepo:
+            capacity: "10Gi"
+          provenanceRepo:
+            capacity: "5Gi"
+          stateRepo:
+            capacity: "5Gi"
+    roleGroups:
+      default:
+        replicas: 1
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nifi-admin-credentials
+stringData:
+  username: admin
+  password: adminadmin
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperZnode
+metadata:
+  name: nifi-znode
+spec:
+  clusterRef:
+    name: zookeeper
