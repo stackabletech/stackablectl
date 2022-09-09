@@ -1,5 +1,138 @@
 ---
+_templates:
+  - helmChart: &template-minio-druid
+      releaseName: minio-druid
+      name: minio
+      repo:
+        name: minio
+        url: https://charts.min.io/
+      version: 4.0.2
+      options:
+        rootUser: root
+        rootPassword: rootroot
+        mode: standalone
+        persistence:
+          size: 10Gi
+        users:
+          - accessKey: druid
+            secretKey: druiddruid
+            policy: readwrite
+        buckets:
+          - name: druid
+            policy: public
+        resources:
+          requests:
+            memory: 2Gi
+        service:
+          type: NodePort
+          nodePort: null
+        consoleService:
+          type: NodePort
+          nodePort: null
+  - helmChart: &template-minio-trino
+      releaseName: minio-trino
+      name: minio
+      repo:
+        name: minio
+        url: https://charts.min.io/
+      version: 4.0.5
+      options:
+        rootUser: root
+        rootPassword: rootroot
+        mode: standalone
+        persistence:
+          size: 10Gi
+        users:
+          - accessKey: trino
+            secretKey: trinotrino
+            policy: readwrite
+          - accessKey: hive
+            secretKey: hivehive
+            policy: readwrite
+          - accessKey: demo
+            secretKey: demodemo
+            policy: readwrite
+        buckets:
+          - name: demo
+            policy: public
+        resources:
+          requests:
+            memory: 2Gi
+        service:
+          type: NodePort
+          nodePort: null
+        consoleService:
+          type: NodePort
+          nodePort: null
+  - helmChart: &template-postgresql-hive
+      releaseName: postgresql-hive
+      name: postgresql
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 10.16.2
+      options:
+        # Old version (10) of helm-charts has old way of setting credentials
+        postgresqlUsername: hive
+        postgresqlPassword: hive
+        postgresqlDatabase: hive
+  - helmChart: &template-postgresql-superset
+      releaseName: postgresql-superset
+      name: postgresql
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 11.0.0
+      options:
+        auth:
+          username: superset
+          password: superset
+          database: superset
+  - helmChart: &template-postgresql-airflow
+      releaseName: postgresql-airflow
+      name: postgresql
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 11.0.0
+      options:
+        auth:
+          username: airflow
+          password: airflow
+          database: airflow
+  - helmChart: &template-redis-airflow
+      releaseName: redis-airflow
+      name: redis
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 16.13.2
+      options:
+        auth:
+          password: airflow
+        replica:
+          replicaCount: 1
+
 stacks:
+  airflow:
+    description: Stack containing Airflow scheduling platform
+    stackableRelease: 22.09
+    labels:
+      - airflow
+    manifests:
+      - helmChart: *template-postgresql-airflow
+      - helmChart: *template-redis-airflow
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
+  hdfs-hbase:
+    description: HBase cluster using HDFS as underlying storage
+    stackableRelease: 22.09
+    labels:
+      - hbase
+      - hdfs
+    manifests:
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hbase.yaml
   kafka-druid-superset-s3:
     description: Stack containing Kafka, MinIO, Druid and Superset for data visualization
     stackableRelease: 22.09
@@ -10,47 +143,8 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart:
-          releaseName: minio-druid
-          name: minio
-          repo:
-            name: minio
-            url: https://charts.min.io/
-          version: 4.0.2
-          options:
-            rootUser: root
-            rootPassword: rootroot
-            mode: standalone
-            persistence:
-              size: 10Gi
-            users:
-              - accessKey: druid
-                secretKey: druiddruid
-                policy: readwrite
-            buckets:
-              - name: druid
-                policy: public
-            resources:
-              requests:
-                memory: 2Gi
-            service:
-              type: NodePort
-              nodePort: null
-            consoleService:
-              type: NodePort
-              nodePort: null
-      - helmChart:
-          releaseName: postgresql-superset
-          name: postgresql
-          repo:
-            name: bitnami
-            url: https://charts.bitnami.com/bitnami/
-          version: 11.0.0
-          options:
-            auth:
-              username: superset
-              password: superset
-              database: superset
+      - helmChart: *template-minio-druid
+      - helmChart: *template-postgresql-superset
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/zookeeper.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/kafka.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/druid.yaml
@@ -64,106 +158,9 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart:
-          releaseName: minio-trino
-          name: minio
-          repo:
-            name: minio
-            url: https://charts.min.io/
-          version: 4.0.5
-          options:
-            rootUser: root
-            rootPassword: rootroot
-            mode: standalone
-            persistence:
-              size: 10Gi
-            users:
-              - accessKey: trino
-                secretKey: trinotrino
-                policy: readwrite
-              - accessKey: hive
-                secretKey: hivehive
-                policy: readwrite
-              - accessKey: demo
-                secretKey: demodemo
-                policy: readwrite
-            buckets:
-              - name: demo
-                policy: public
-            resources:
-              requests:
-                memory: 2Gi
-            service:
-              type: NodePort
-              nodePort: null
-            consoleService:
-              type: NodePort
-              nodePort: null
-      - helmChart:
-          releaseName: postgresql-hive
-          name: postgresql
-          repo:
-            name: bitnami
-            url: https://charts.bitnami.com/bitnami/
-          version: 10.16.2
-          options:
-            # Old version (10) of helm-charts has old way of setting credentials
-            postgresqlUsername: hive
-            postgresqlPassword: hive
-            postgresqlDatabase: hive
-      - helmChart:
-          releaseName: postgresql-superset
-          name: postgresql
-          repo:
-            name: bitnami
-            url: https://charts.bitnami.com/bitnami/
-          version: 11.0.0
-          options:
-            auth:
-              username: superset
-              password: superset
-              database: superset
+      - helmChart: *template-minio-trino
+      - helmChart: *template-postgresql-hive
+      - helmChart: *template-postgresql-superset
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
-  airflow:
-    description: Stack containing Airflow scheduling platform
-    stackableRelease: 22.09
-    labels:
-      - airflow
-    manifests:
-      - helmChart:
-          releaseName: postgresql-airflow
-          name: postgresql
-          repo:
-            name: bitnami
-            url: https://charts.bitnami.com/bitnami/
-          version: 11.0.0
-          options:
-            auth:
-              username: airflow
-              password: airflow
-              database: airflow
-      - helmChart:
-          releaseName: redis-airflow
-          name: redis
-          repo:
-            name: bitnami
-            url: https://charts.bitnami.com/bitnami/
-          version: 16.13.2
-          options:
-            auth:
-              password: airflow
-            replica:
-              replicaCount: 1
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
-  hdfs-hbase:
-    description: HBase cluster using HDFS as underlying storage
-    stackableRelease: 22.09
-    labels:
-      - hbase
-      - hdfs
-    manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/zookeeper.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hdfs.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hbase.yaml
