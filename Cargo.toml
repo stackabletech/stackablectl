@@ -18,7 +18,7 @@ k8s-openapi = { version = "0.15", default-features = false, features = ["v1_24"]
 kube = "0.74" # Using openssl (and not native-tls) as kube-rs team tries to move away from native-tls
 lazy_static = "1.4"
 log = "0.4"
-openssl = { version = "0.10.36", features = ["vendored"] } # Must match version from kube
+openssl = { version = "0.10.41", features = ["vendored"] } # Must match version from kube
 which = "4.2"
 semver = "1.0"
 serde = { version = "1.0", features = ["derive"]}
