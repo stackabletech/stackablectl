@@ -106,10 +106,10 @@ async fn list_demos(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     let output = get_demos().await;
     match output_type {
         OutputType::Text => {
-            println!("DEMO                                STACKABLE STACK           DESCRIPTION");
+            println!("DEMO                                STACKABLE STACK              DESCRIPTION");
             for (demo_name, demo) in output.demos.iter() {
                 println!(
-                    "{:35} {:25} {}",
+                    "{:35} {:28} {}",
                     demo_name, demo.stackable_stack, demo.description,
                 );
             }
