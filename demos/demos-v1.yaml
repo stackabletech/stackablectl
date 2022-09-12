@@ -61,4 +61,5 @@ demos:
       - airflow
       - cron-scheduling
     manifests:
+      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-cron-dag/enable-and-run-dag.yaml
       - plainYaml: demos/airflow-cron-dag/enable-and-run-dag.yaml
