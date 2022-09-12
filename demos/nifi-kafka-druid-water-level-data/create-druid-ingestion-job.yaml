@@ -120,8 +120,9 @@ data:
           "dataSource": "measurements",
           "timestampSpec": {
             "column": "timestamp",
-            "format": "millis"
+            "format": "iso"
           },
+          "transformSpec": {},
           "dimensionsSpec": {
             "dimensions": [
               {
