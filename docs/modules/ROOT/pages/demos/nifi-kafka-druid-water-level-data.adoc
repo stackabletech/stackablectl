@@ -1,10 +1,10 @@
-= kafka-druid-water-level-data
+= nifi-kafka-druid-water-level-data
 
 [NOTE]
 ====
-This guide assumes you already have the demo `kafka-druid-water-level-data` installed.
+This guide assumes you already have the demo `nifi-kafka-druid-water-level-data` installed.
 If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
-To put it simply you have to run `stackablectl demo install kafka-druid-water-level-data`.
+To put it simply you have to run `stackablectl demo install nifi-kafka-druid-water-level-data`.
 ====
 
 This demo will
@@ -13,6 +13,7 @@ This demo will
 * Spin up the following data products
 ** *Superset*: A modern data exploration and visualization platform. This demo utilizes Superset to retrieve data from Druid via SQL queries and build dashboards on top of that data
 ** *Kafka*:  A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as a event streaming platform to stream the data in near real-time
+** *NiFi*:  An easy-to-use, powerful system to process and distribute data. This demos uses it to fetch water-level-data from the internet and ingest it into Kafka
 ** *Druid*: A real-time database to power modern analytics applications. This demo uses it to ingest the near real-time data from Kafka, store it and enable to access the data via SQL
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage for Druid to store all the data used
 * Ingest water level data from the https://www.pegelonline.wsv.de/webservice/ueberblick[PEGELONLINE webservice] into Kafka. The data contains measured water levels of different measuring stations all around Germany. If the webservice is not available this demo will not work, as it needs the webservice to ingest the data.
@@ -25,7 +26,7 @@ The whole data pipeline will have a very low latency from putting a record into 
 
 You can see the deployed products as well as their relationship in the following diagram:
 
-image::demo-kafka-druid-water-level-data/overview.png[]
+image::demo-nifi-kafka-druid-water-level-data/overview.png[]
 
 == List deployed Stackable services
 To list the installed installed Stackable services run the following command:
@@ -42,13 +43,15 @@ $ stackablectl services list --all-namespaces
                                     router-http        http://172.18.0.4:30899                                       
                                                                                                                      
  kafka      kafka        default    kafka              172.18.0.3:32536                                              
+
+ nifi       nifi         default    https              https://172.18.0.3:32440  Admin user: admin, password: adminadmin
                                                                                                                      
- superset   superset     default    external-superset  http://172.18.0.4:32251  Admin user: admin, password: admin   
+ superset   superset     default    external-superset  http://172.18.0.4:32251   Admin user: admin, password: admin   
                                                                                                                      
  zookeeper  zookeeper    default    zk                 172.18.0.3:31615                                              
                                                                                                                      
- minio      minio-druid  default    http               http://172.18.0.5:30016  Third party service                  
-                                    console-http       http://172.18.0.5:32595  Admin user: root, password: rootroot 
+ minio      minio-druid  default    http               http://172.18.0.5:30016   Third party service                  
+                                    console-http       http://172.18.0.5:32595   Admin user: root, password: rootroot 
 ----
 
 [NOTE]
@@ -152,7 +155,7 @@ The records of the two topics only contain the needed data.
 The measurement records contain a `station_uuid` to refer to the measuring station.
 The relationship is illustrated below.
 
-image::demo-kafka-druid-water-level-data/topics.png[]
+image::demo-nifi-kafka-druid-water-level-data/topics.png[]
 
 The reason for splitting the data up into two different topics is the improved performance.
 One simpler solution would be to use a single topic and produce records that look like the following:
@@ -210,24 +213,53 @@ Topic measurements / Partition 0 / Offset: 7586541 / Timestamp: 1660831499070
 The output shows that the last measurement record was produced at the timestamp `1660831499070` which translates to `Do 18. Aug 16:04:59 CEST 2022` (using the command `date -d @1660831499`).
 You can also see that it was the record number `7586541` send to this topic, so ~7.6 million records have been produced so far.
 
+== NiFi
+
+NiFi is used to fetch water-level-data from the internet and ingest it into Kafka near-realtime.
+This demo includes a workflow ("process group") that fetches the last 30 days of historical measurements and produces the records into Kafka.
+It also keeps streaming near-realtime updates for every available measuring station.
+
+=== View testdata-generation job
+You can have a look at the ingestion job running in NiFi by opening the given `nifi` endpoint `https` from your `stackablectl services list` command output.
+You have to use the endpoint from your command output, in this case it is https://172.18.0.3:32440. Open it with your favorite browser.
+If you get a warning regarding the self-signed certificate generated by the xref:secret-operator::index.adoc[Secret Operator] (e.g. `Warning: Potential Security Risk Ahead`), you have to tell your browser to trust the website and continue.
+
+image::demo-nifi-kafka-druid-water-level-data/nifi_1.png[]
+
+Log in with the username `admin` and password `adminadmin`.
+
+image::demo-nifi-kafka-druid-water-level-data/nifi_2.png[]
+
+
+
+
+
+
+TODO Explain processors
+
+
+
+
+
+
 == Druid
 Druid is used to ingest the near real-time data from Kafka, store it and enable SQL access to it.
 The demo has started two ingestion jobs - one reading from the topic `stations` and the other from `measurements` - and saving it into Druids deep storage.
 The Druid deep storage is based on the S3 store provided by MinIO.
 
 === View ingestion job
-You can have a look at the ingestion jobs running in Druid by opening the given `druid` endpoint `router-http` from your `stackablectl services list` command output. You have to use the endpoint from your command output, in this case it is http://172.18.0.4:30899. Open it with your favorite browser.
+You can have a look at the ingestion jobs running in Druid by opening the given `druid` endpoint `router-http` from your `stackablectl services list` command output (http://172.18.0.4:30899 in this case).
 
-image::demo-kafka-druid-water-level-data/druid_1.png[]
+image::demo-nifi-kafka-druid-water-level-data/druid_1.png[]
 
 By clicking on `Ingestion` at the top you can see the running ingestion jobs.
 
-image::demo-kafka-druid-water-level-data/druid_2.png[]
+image::demo-nifi-kafka-druid-water-level-data/druid_2.png[]
 
 After clicking on the magnification glass to the right side of the `RUNNING` supervisor you can see additional information (here the supervisor `measurements` was chosen).
 On the tab `Statistics` on the left you can see the number of processed records as well as the number of errors.
 
-image::demo-kafka-druid-water-level-data/druid_3.png[]
+image::demo-nifi-kafka-druid-water-level-data/druid_3.png[]
 
 The statistics show that Druid is currently ingesting `3597` records/s and has ingested ~10 million records so far.
 All records have been ingested successfully, which is indicated by having no `processWithError`, `thrownAway` or `unparseable` records.
@@ -236,7 +268,7 @@ All records have been ingested successfully, which is indicated by having no `pr
 The started ingestion jobs have automatically created the Druid data sources `stations` and `measurements`.
 You can see the available data sources by clicking on `Datasources` at the top.
 
-image::demo-kafka-druid-water-level-data/druid_4.png[]
+image::demo-nifi-kafka-druid-water-level-data/druid_4.png[]
 
 The `Avg. row size (bytes)` shows, that a typical `measurement` record has `4` bytes, while a `station` record has `213` bytes, which is more than 50 times the size.
 So with choosing two dedicated topics over a single topic, this demo was able to save 50x of storage and computation costs.
@@ -244,12 +276,12 @@ So with choosing two dedicated topics over a single topic, this demo was able to
 By clicking on the `measurements` data source you can see the segments of which the data source consists of.
 In this case the `measurements` data source is partitioned by the day of the measurement, resulting in 33 segments.
 
-image::demo-kafka-druid-water-level-data/druid_5.png[]
+image::demo-nifi-kafka-druid-water-level-data/druid_5.png[]
 
 Druid offers a web-based way of querying the data sources via SQL.
 To achieve this you first have to click on `Query` at the top.
 
-image::demo-kafka-druid-water-level-data/druid_6.png[]
+image::demo-nifi-kafka-druid-water-level-data/druid_6.png[]
 
 You can now enter any arbitrary SQL statement, to e.g. list 10 stations run
 
@@ -258,7 +290,7 @@ You can now enter any arbitrary SQL statement, to e.g. list 10 stations run
 select * from stations limit 10
 ----
 
-image::demo-kafka-druid-water-level-data/druid_7.png[]
+image::demo-nifi-kafka-druid-water-level-data/druid_7.png[]
 
 To count the measurements per day run
 
@@ -272,40 +304,40 @@ group by 1
 order by 1 desc
 ----
 
-image::demo-kafka-druid-water-level-data/druid_8.png[]
+image::demo-nifi-kafka-druid-water-level-data/druid_8.png[]
 
 == Superset
 Superset provides the ability to execute SQL queries and build dashboards.
 Open the `superset` endpoint `external-superset` in your browser (http://172.18.0.4:32251 in this case).
 
-image::demo-kafka-druid-water-level-data/superset_1.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_1.png[]
 
 Log in with the username `admin` and password `admin`.
 
-image::demo-kafka-druid-water-level-data/superset_2.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_2.png[]
 
 === View dashboard
 The demo has created a Dashboard to visualize the water level data.
 To open it click on the tab `Dashboards` at the top.
 
-image::demo-kafka-druid-water-level-data/superset_3.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_3.png[]
 
 Click on the dashboard called `Water level data`.
 It might take some time until the dashboards renders all the included charts.
 
-image::demo-kafka-druid-water-level-data/superset_4.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_4.png[]
 
 === View charts
 
 The dashboard `Water level data` consists of multiple charts.
 To list the charts click on the tab `Charts` at the top.
 
-image::demo-kafka-druid-water-level-data/superset_5.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_5.png[]
 
 Click on the Chart `Measurements / hour`.
 On the left side you can modify the chart and click on `Run` to see the effect.
 
-image::demo-kafka-druid-water-level-data/superset_6.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_6.png[]
 
 You can see that starting from `2022/08/12` some stations didn't measure or transmit their data.
 They started sending measurements again at `2022/08/14`.
@@ -315,24 +347,24 @@ They started sending measurements again at `2022/08/14`.
 To look at the geographical distribution of the stations you have to click on the tab `Charts` at the top again.
 Afterwards click on the chart `Stations distribution`.
 
-image::demo-kafka-druid-water-level-data/superset_7.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_7.png[]
 
 The stations are of course placed alongside of waters.
 They are colored by the waters they measure, so all stations alongside a body of water have the same color.
 You can move and zoom the map with your mouse to interactively explore the map.
 You can e.g. have a detailed look at the water https://en.wikipedia.org/wiki/Rhine[Rhein].
 
-image::demo-kafka-druid-water-level-data/superset_8.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_8.png[]
 
 === Execute arbitrary SQL statements
 Within Superset you can not only create dashboards but also run arbitrary SQL statements.
 On the top click on the tab `SQL Lab` -> `SQL Editor`.
 
-image::demo-kafka-druid-water-level-data/superset_9.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_9.png[]
 
 On the left select the database `druid`, the schema `druid` and set `See table schema` to `stations` or `measurements`.
 
-image::demo-kafka-druid-water-level-data/superset_10.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_10.png[]
 
 On the right textbox enter the desired SQL statement.
 We need to join the two tables to get interesting results.
@@ -348,7 +380,7 @@ group by 1
 order by 2 desc
 ----
 
-image::demo-kafka-druid-water-level-data/superset_11.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_11.png[]
 
 You can also find out the number of measurements for every body of water:
 
@@ -362,7 +394,7 @@ group by 1
 order by 2 desc
 ----
 
-image::demo-kafka-druid-water-level-data/superset_12.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_12.png[]
 
 What might also be interesting is the average and current measurement of the stations:
 
@@ -378,33 +410,33 @@ group by 1
 order by 2 desc
 ----
 
-image::demo-kafka-druid-water-level-data/superset_13.png[]
+image::demo-nifi-kafka-druid-water-level-data/superset_13.png[]
 
 == MinIO
 The S3 provided by MinIO is used as a persistent deep storage for Druid to store all the data used.
 Open the `minio` endpoint `console-http` retrieved by `stackablectl services list` in your browser (http://172.18.0.5:32595 in this case).
 
-image::demo-kafka-druid-water-level-data/minio_1.png[]
+image::demo-nifi-kafka-druid-water-level-data/minio_1.png[]
 
 Log in with the username `root` and password `rootroot`.
 
-image::demo-kafka-druid-water-level-data/minio_2.png[]
+image::demo-nifi-kafka-druid-water-level-data/minio_2.png[]
 
 Click on the blue button `Browse` on the bucket `druid` and open the folders `data`.
 
-image::demo-kafka-druid-water-level-data/minio_3.png[]
+image::demo-nifi-kafka-druid-water-level-data/minio_3.png[]
 
 You can see the druid has created a folder for both data sources.
 Go ahead and open the folder `measurements`.
 
-image::demo-kafka-druid-water-level-data/minio_4.png[]
+image::demo-nifi-kafka-druid-water-level-data/minio_4.png[]
 
 As you can see druid saved 35MB of data within 33 prefixes (folders).
 One prefix corresponds to one segment which in turn contains all the measurements of a day.
 If you don't see any folders or files, the reason is that Druid has not saved its data from memory to the deep storage yet.
 After waiting for a few minutes the data should have been flushed to S3 and show up.
 
-image::demo-kafka-druid-water-level-data/minio_5.png[]
+image::demo-nifi-kafka-druid-water-level-data/minio_5.png[]
 
 If you open up a prefix for a specific day you can see that Druid has placed a file containing the data of that day there.
 
