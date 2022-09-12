@@ -114,7 +114,7 @@ NiFi is used to fetch earthquake-data from the internet and ingest it into Kafka
 The demo has stated a workflow ("process group") that download a large CSV file, converts it to individual JSON record and produce the records into Kafka.
 
 === View testdata-generation job
-You can have a look at the ingestion job running in Druid by opening the given `nifi` endpoint `https` from your `stackablectl services list` command output.
+You can have a look at the ingestion job running in NiFi by opening the given `nifi` endpoint `https` from your `stackablectl services list` command output.
 You have to use the endpoint from your command output, in this case it is https://172.18.0.3:32558. Open it with your favorite browser.
 If you get a warning regarding the self signed certificate (e.g. `Warning: Potential Security Risk Ahead`) you have to tell your browser to trust the website and continue.
 
