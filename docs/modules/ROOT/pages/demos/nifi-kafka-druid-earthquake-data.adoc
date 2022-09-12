@@ -65,7 +65,7 @@ All the messages put in and read from Kafka are structured in dedicated queues c
 The test data will be put in a topic called `earthquakes`.
 The records get produced (put in) by the test data generator and are consumed (read) by Druid afterwards in the same order they where produced.
 
-As Kafka itself has no webinterface you have to use a Kafka client like https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html[kafkacat].
+As Kafka itself has no webinterface you have to use a Kafka client like https://github.com/edenhill/kcat[kafkacat].
 In order to connect to Kafka, use the `kafka` endpoint from the `kafka` service in your `stackablectl services list` command output (`172.18.0.4:30968` in this case).
 
 If you have `kafkacat` installed, you can see the available brokers and topics with the following command.
@@ -327,7 +327,7 @@ Have a look at https://superset.apache.org/docs/creating-charts-dashboards/creat
 
 === Load additional data
 You can use the NiFi web interface to collect arbitrary data and write it to Kafka (it's recommended to use new Kafka topics for that).
-As an alternative you can use a Kafka client like https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html[kafkacat] to create new topics and ingest data.
+As an alternative you can use a Kafka client like https://github.com/edenhill/kcat[kafkacat] to create new topics and ingest data.
 Using the Druid web interface, you can start an ingestion job that consumes the data and stores it in an internal data source.
 There is a great https://druid.apache.org/docs/latest/tutorials/tutorial-kafka.html#loading-data-with-the-data-loader[tutorial] from Druid on how to do this.
 Afterwards the data source is available to be analyzed within Druid and Superset the same way the earthquake data is.
