@@ -9,6 +9,6 @@
 * xref:demos/index.adoc[]
 ** xref:demos/trino-taxi-data.adoc[]
 ** xref:demos/nifi-kafka-druid-earthquake-data.adoc[]
-** xref:demos/kafka-druid-water-level-data.adoc[]
+** xref:demos/nifi-kafka-druid-water-level-data.adoc[]
 * xref:customization.adoc[]
 * xref:troubleshooting.adoc[]
