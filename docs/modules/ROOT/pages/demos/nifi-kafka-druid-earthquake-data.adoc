@@ -16,7 +16,7 @@ This demo will
 ** *NiFi*:  An easy-to-use, powerful system to process and distribute data. This demos uses it to fetch earthquake-data from the internet and ingest it into Kafka
 ** *Druid*: A real-time database to power modern analytics applications. This demo uses it to ingest the near real-time data from Kafka, store it and enable to access the data via SQL
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage for Druid to store all the data used
-* Continuously emit approximately 10.000 records/s of https://earthquake.usgs.gov/[earthquake data] into Kafka
+* Continuously emit approximately 10,000 records/s of https://earthquake.usgs.gov/[earthquake data] into Kafka
 * Start a Druid ingestion job that ingests the data into the Druid instance
 * Create Superset dashboards for visualization of the data
 
@@ -136,7 +136,7 @@ Head over to the Tab `PROPERTIES`.
 
 image::demo-nifi-kafka-druid-earthquake-data/nifi_4.png[]
 
-Here you can see the setting `Remote URl` which specifies the download URL from where the CSV file is retrieved.
+Here you can see the setting `Remote URl`, which specifies the download URL from where the CSV file is retrieved.
 
 Close the processor details popup by clicking `OK`.
 Afterwards double-click on the processor `PublishKafkaRecord_2_6`.
@@ -309,7 +309,7 @@ image::demo-nifi-kafka-druid-earthquake-data/minio_4.png[]
 If you open up a prefix for a specific year you can see that Druid has placed a file containing the data of that year there.
 
 == Summary
-The demo streamed 10.000 earthquake records/s for a total of ~3 million earthquakes into a Kafka steaming pipeline.
+The demo streamed 10,000 earthquake records/s for a total of ~3 million earthquakes into a Kafka steaming pipeline.
 Druid ingested the data near real-time into its data source and enabled SQL access to it.
 Superset was used as a web-based frontend to execute SQL statements and build dashboards.
 

@@ -230,17 +230,79 @@ Log in with the username `admin` and password `adminadmin`.
 
 image::demo-nifi-kafka-druid-water-level-data/nifi_2.png[]
 
+As you can see, the NiFi workflow consists of lot's of components.
+It is split in two main components:
 
+1. On the left is the part bulk-loading all the known stations and the historical data of the last 30 days
+2. On the right it the other part iterating over all stations and emitting the current measurement in an endless loop
 
+You can zoom in by using you mouse and mouse wheel.
 
+image::demo-nifi-kafka-druid-water-level-data/nifi_3.png[]
+image::demo-nifi-kafka-druid-water-level-data/nifi_4.png[]
 
+Detailed view of the top and bottom section.
 
-TODO Explain processors
+The `Get station list` processors fet the current list of stations as JSON via HTTP from the PEGELONLINE web service.
+Two downstream processors consume this list:
+The left workflows works as follows:
 
+1. The `Get station list` processors fetches the current list of stations as JSON via HTTP from the PEGELONLINE web service.
+2. `Produce stations records` takes the list and produces a Kafka record for every station into the topic `stations`
+3. `SplitRecords` simultaneously takes the single FlowFile (NiFI record) containing all the stations and crates a new FlowFile for every station
+4. `Extract station_uuid` takes every FlowFile representing a station and extract the attribute `station_uuid` into the metadata of the FlowFile
+5. `Get historic measurements` calls the PEGELONLINE web service for every station and fetches the measurements of the last 30 days. All failures are routed to the `LogAttribute` processor to inspect them in case any failure occur.
+6. `Add station_uuid` will add the attribute `station_uuid` to the JSON list of measurements returned from the PEGELONLINE web service, which is missing this information.
+7. `PublishKafkaRecord_2_6` finally emits every measurement as a Kafka records to the topic `measurements`.
 
+The right side works nearly the same way, but is executed in an endless loop to stream the data in near-realtime.
 
+Double-click on the `Get station list` processor to show the processor details.
 
+image::demo-nifi-kafka-druid-water-level-data/nifi_5.png[]
 
+Head over to the Tab `PROPERTIES`.
+
+image::demo-nifi-kafka-druid-water-level-data/nifi_6.png[]
+
+Here you can see the setting `Remote URl`, which specifies the download URL from where the JSON file containing the stations is retrieved.
+Close the processor details popup by clicking `OK`.
+You can also have a detailed view of the `Produce station records` processor by double-clicking it.
+
+image::demo-nifi-kafka-druid-water-level-data/nifi_7.png[]
+
+Within this processor the Kafka connection details - like broker addresses and topic name - are specified.
+It uses the `JsonTreeReader` to parse the downloaded JSON and the `JsonRecordSetWriter` to split it into individual JSON records before writing it out.
+
+Double-click the `Get historic measurements` processor.
+
+image::demo-nifi-kafka-druid-water-level-data/nifi_8.png[]
+
+This processor fetched the historical data for every station.
+Click on the `Remote URL` setting.
+
+image::demo-nifi-kafka-druid-water-level-data/nifi_9.png[]
+
+The `Remote URL` does contain the `${station_uuid}` placeholder, which get's replaced for every station.
+
+Double-click the `PublishKafkaRecord_2_6` processor.
+
+image::demo-nifi-kafka-druid-water-level-data/nifi_10.png[]
+
+You can also see the number of produced records by right-clicking on `PublishKafkaRecord_2_6` and selecting `View status history`.
+
+image::demo-nifi-kafka-druid-water-level-data/nifi_11.png[]
+
+You have to choose `Messages Send (5 mins)` in the top right corner.
+Afterwards you can see that ~10 million records got produced in ~5 mins, which corresponds to ~30k measurements/s.
+Keep in mind that the demos uses a single-node NiFi setup, the performance could have been increased.
+
+Speaking of the NiFi resources, on the top right corner use the hamburger menu icon and select `Node Status History`.
+
+image::demo-nifi-kafka-druid-water-level-data/nifi_12.png[]
+
+The diagram shows the used heap size of the NiFi node.
+You can also select other metrics to show in the top right corner.
 
 == Druid
 Druid is used to ingest the near real-time data from Kafka, store it and enable SQL access to it.
@@ -442,7 +504,7 @@ If you open up a prefix for a specific day you can see that Druid has placed a f
 
 == Summary
 The demo put station records into the Kafka stream pipeline topic `station`.
-It also streamed ~3500 measurements/s for a total of ~11 million measurements into the topic `measurements`.
+It also streamed ~30,000 measurements/s for a total of ~11 million measurements into the topic `measurements`.
 Druid ingested the data near real-time into its data source and enabled SQL access to it.
 Superset was used as a web-based frontend to execute SQL statements and build dashboards.
 
@@ -459,6 +521,7 @@ You also have the possibility to create additional charts and bundle them togeth
 Have a look at https://superset.apache.org/docs/creating-charts-dashboards/creating-your-first-dashboard#creating-charts-in-explore-view[the Superset documentation] on how to do that.
 
 === Load additional data
+You can use the NiFi web interface to collect arbitrary data and write it to Kafka (it's recommended to use new Kafka topics for that).
 You can use a Kafka client like https://github.com/edenhill/kcat[kafkacat] to create new topics and ingest data.
 Using the Druid web interface, you can start an ingestion job that consumes the data and stores it in an internal data source.
 There is a great https://druid.apache.org/docs/latest/tutorials/tutorial-kafka.html#loading-data-with-the-data-loader[tutorial] from Druid on how to do this.
