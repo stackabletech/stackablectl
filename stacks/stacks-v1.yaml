@@ -128,7 +128,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
   airflow:
     description: Stack containing Airflow scheduling platform
-    stackableRelease: 22.06
+    stackableRelease: 22.09
     labels:
       - airflow
     manifests:
@@ -156,7 +156,8 @@ stacks:
               password: airflow
             replica:
               replicaCount: 1
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
+      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
+      - plainYaml: stacks/airflow/airflow.yaml
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
     stackableRelease: 22.06
