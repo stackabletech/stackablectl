@@ -18,13 +18,12 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-      restartPolicy: OnFailure
       volumes:
       - name: script
         configMap:
           name: create-nifi-ingestion-job-script
-      restartPolicy: Never
-  backoffLimit: 50 # It can take some time until NiFI is ready
+      restartPolicy: OnFailure
+  backoffLimit: 50
 ---
 apiVersion: v1
 kind: ConfigMap

@@ -9,17 +9,17 @@ spec:
       containers:
         - name: setup-superset
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
-          command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/kafka-druid-water-level-data/superset-assets.zip && python -u /tmp/script/script.py"]
+#          command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/superset-assets.zip && python -u /tmp/script/script.py"]
+          command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/demo-nifi-kafka-druid-water-level-data/demos/nifi-kafka-druid-water-level-data/superset-assets.zip && python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
-      restartPolicy: OnFailure
       volumes:
       - name: script
         configMap:
           name: setup-superset-script
-      restartPolicy: Never
-  backoffLimit: 50 # It can take some time until Superset is ready
+      restartPolicy: OnFailure
+  backoffLimit: 50
 ---
 apiVersion: v1
 kind: ConfigMap
