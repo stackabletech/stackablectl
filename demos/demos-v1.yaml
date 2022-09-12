@@ -27,9 +27,9 @@ demos:
       - s3
       - earthquake
     manifests:
-      - plainYaml: demos/nifi-kafka-druid-earthquake-data/create-nifi-ingestion-job.yaml # TODO
-      - plainYaml: demos/nifi-kafka-druid-earthquake-data/create-druid-ingestion-job.yaml # TODO
-      - plainYaml: demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml # TODO
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-nifi-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml
   nifi-kafka-druid-water-level-data:
     description:  Demo ingesting water level data into Kafka using NiFi, streaming it into Druid and creating a Superset dashboard
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/nifi-kafka-druid-water-level-data.html
@@ -43,7 +43,7 @@ demos:
       - s3
       - water-levels
     manifests:
-      # - plainYaml: demos/nifi-kafka-druid-water-level-data/ingest-test-data.yaml # TODO
+      - plainYaml: demos/nifi-kafka-druid-water-level-data/create-nifi-ingestion-job.yaml # TODO
       - plainYaml: demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml # TODO
       - plainYaml: demos/nifi-kafka-druid-water-level-data/setup-superset.yaml # TODO
   hbase-hdfs-load-cycling-data:
