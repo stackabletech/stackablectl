@@ -27,22 +27,18 @@ spec:
   brokers:
     roleGroups:
       default:
-        config: {}
         replicas: 1
   coordinators:
     roleGroups:
       default:
-        config: {}
         replicas: 1
   historicals:
     roleGroups:
       default:
-        config: {}
         replicas: 1
   middleManagers:
     roleGroups:
       default:
-        config: {}
         # We use multiple middle-managers to be able to run multiple ingestion jobs simultaneously.
         # If we need even more slots, the configuration maxNumConcurrentSubTasks should increase the number of slots
         # without increasing the number of middleManagers.
@@ -50,7 +46,6 @@ spec:
   routers:
     roleGroups:
       default:
-        config: {}
         replicas: 1
 ---
 apiVersion: zookeeper.stackable.tech/v1alpha1

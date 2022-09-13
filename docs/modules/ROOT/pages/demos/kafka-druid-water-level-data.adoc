@@ -66,7 +66,7 @@ The topic `stations` contains a record for every station that can measure the wa
 The topic `measurements` contains a record for every measurement that has happened.
 The records are produced (written) by the data ingestion job and are consumed (read) by Druid afterwards in the same order they where produced.
 
-As Kafka itself has no webinterface you have to use a Kafka client like https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html[kafkacat].
+As Kafka itself has no webinterface you have to use a Kafka client like https://github.com/edenhill/kcat[kafkacat].
 In order to connect to Kafka, use the `kafka` endpoint from the `kafka` service in your `stackablectl services list` command output (`172.18.0.3:32536` in this case).
 
 === List available topics
@@ -427,7 +427,7 @@ You also have the possibility to create additional charts and bundle them togeth
 Have a look at https://superset.apache.org/docs/creating-charts-dashboards/creating-your-first-dashboard#creating-charts-in-explore-view[the Superset documentation] on how to do that.
 
 === Load additional data
-You can use a Kafka client like https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html[kafkacat] to create new topics and ingest data.
+You can use a Kafka client like https://github.com/edenhill/kcat[kafkacat] to create new topics and ingest data.
 Using the Druid web interface, you can start an ingestion job that consumes the data and stores it in an internal data source.
 There is a great https://druid.apache.org/docs/latest/tutorials/tutorial-kafka.html#loading-data-with-the-data-loader[tutorial] from Druid on how to do this.
 Afterwards the data source is available to be analyzed within Druid and Superset the same way the water level data is.

@@ -1,10 +1,10 @@
-= kafka-druid-earthquake-data
+= nifi-kafka-druid-earthquake-data
 
 [NOTE]
 ====
-This guide assumes you already have the demo `kafka-druid-earthquake-data` installed.
+This guide assumes you already have the demo `nifi-kafka-druid-earthquake-data` installed.
 If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
-To put it simply you have to run `stackablectl demo install kafka-druid-earthquake-data`.
+To put it simply you have to run `stackablectl demo install nifi-kafka-druid-earthquake-data`.
 ====
 
 This demo will
@@ -12,26 +12,27 @@ This demo will
 * Install the required Stackable operators
 * Spin up the follow data products
 ** *Superset*: A modern data exploration and visualization platform. This demo utilizes Superset to retrieve data from Druid via SQL queries and build dashboards on top of that data
-** *Kafka*:  A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as a event streaming platform to stream the data in near real-time
+** *Kafka*:  A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as an event streaming platform to stream the data in near real-time
+** *NiFi*:  An easy-to-use, powerful system to process and distribute data. This demos uses it to fetch earthquake-data from the internet and ingest it into Kafka
 ** *Druid*: A real-time database to power modern analytics applications. This demo uses it to ingest the near real-time data from Kafka, store it and enable to access the data via SQL
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage for Druid to store all the data used
-* Continuously emit approximately 1000 records/s of https://earthquake.usgs.gov/[earthquake data] into Kafka
+* Continuously emit approximately 10.000 records/s of https://earthquake.usgs.gov/[earthquake data] into Kafka
 * Start a Druid ingestion job that ingests the data into the Druid instance
-* Create Superset dashboards for visualization of the data.
+* Create Superset dashboards for visualization of the data
 
 The whole data pipeline will have a very low latency from putting a record into Kafka to it showing up in the dashboard charts.
 
 You can see the deployed products as well as their relationship in the following diagram:
 
-image::demo-kafka-druid-earthquake-data/overview.png[]
+image::demo-nifi-kafka-druid-earthquake-data/overview.png[]
 
 == List deployed Stackable services
-To list the installed installed Stackable services run the following command:
+To list the installed Stackable services run the following command:
 
 [source,console]
 ----
 $ stackablectl services list --all-namespaces
- PRODUCT    NAME         NAMESPACE  ENDPOINTS                                   EXTRA INFOS                          
+ PRODUCT    NAME         NAMESPACE  ENDPOINTS                                    EXTRA INFOS                          
 
  druid      druid        default    broker-http        http://172.18.0.3:32670                                       
                                     coordinator-http   http://172.18.0.3:30392                                       
@@ -40,13 +41,15 @@ $ stackablectl services list --all-namespaces
                                     router-http        http://172.18.0.4:30109                                       
                                                                                                                      
  kafka      kafka        default    kafka              172.18.0.4:30968                                              
+
+ nifi       nifi         default    https              https://172.18.0.3:32558  Admin user: admin, password: adminadmin
                                                                                                                      
- superset   superset     default    external-superset  http://172.18.0.3:32108  Admin user: admin, password: admin   
+ superset   superset     default    external-superset  http://172.18.0.3:32108   Admin user: admin, password: admin   
                                                                                                                      
  zookeeper  zookeeper    default    zk                 172.18.0.2:32309                                              
                                                                                                                      
- minio      minio-druid  default    http               http://172.18.0.4:32306  Third party service                  
-                                    console-http       http://172.18.0.4:31664  Admin user: root, password: rootroot
+ minio      minio-druid  default    http               http://172.18.0.4:32306   Third party service                  
+                                    console-http       http://172.18.0.4:31664   Admin user: root, password: rootroot
 ----
 
 [NOTE]
@@ -62,7 +65,7 @@ All the messages put in and read from Kafka are structured in dedicated queues c
 The test data will be put in a topic called `earthquakes`.
 The records get produced (put in) by the test data generator and are consumed (read) by Druid afterwards in the same order they where produced.
 
-As Kafka itself has no webinterface you have to use a Kafka client like https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html[kafkacat].
+As Kafka itself has no webinterface you have to use a Kafka client like https://github.com/edenhill/kcat[kafkacat].
 In order to connect to Kafka, use the `kafka` endpoint from the `kafka` service in your `stackablectl services list` command output (`172.18.0.4:30968` in this case).
 
 If you have `kafkacat` installed, you can see the available brokers and topics with the following command.
@@ -105,24 +108,62 @@ Topic earthquakes / Partition 0 / Offset: 2670281 / Timestamp: 1660571644060
 From the output you can see, that the last record was produced at the timestamp `1660571644060` which translates to `Mo 15. Aug 15:54:04 CEST 2022` (using the command `date -d @1660571644`).
 You can also see that it was the record number `2670281` send to this topic, so ~2.6 million records have been produced so far.
 
+== NiFi
+
+NiFi is used to fetch earthquake-data from the internet and ingest it into Kafka.
+This demo includes a workflow ("process group") that downloads a large CSV file, converts it to individual JSON records and produces the records into Kafka.
+
+=== View testdata-generation job
+You can have a look at the ingestion job running in NiFi by opening the given `nifi` endpoint `https` from your `stackablectl services list` command output.
+You have to use the endpoint from your command output, in this case it is https://172.18.0.3:32558. Open it with your favorite browser.
+If you get a warning regarding the self-signed certificate generated by the xref:secret-operator::index.adoc[Secret Operator] (e.g. `Warning: Potential Security Risk Ahead`), you have to tell your browser to trust the website and continue.
+
+image::demo-nifi-kafka-druid-earthquake-data/nifi_1.png[]
+
+Log in with the username `admin` and password `adminadmin`.
+
+image::demo-nifi-kafka-druid-earthquake-data/nifi_2.png[]
+
+You can see the started ProcessGroup consisting of two processors.
+The first one - `InvokeHTTP` fetches the CSV file from the Internet and put's it into the queue to the next processor.
+The second processor - `PublishKafkaRecord_2_6` parses the CSV file, converts it to JSON records and writes them out into Kafka.
+
+Double-click on the `InvokeHTTP` processor to show the processor details.
+
+image::demo-nifi-kafka-druid-earthquake-data/nifi_3.png[]
+
+Head over to the Tab `PROPERTIES`.
+
+image::demo-nifi-kafka-druid-earthquake-data/nifi_4.png[]
+
+Here you can see the setting `Remote URl` which specifies the download URL from where the CSV file is retrieved.
+
+Close the processor details popup by clicking `OK`.
+Afterwards double-click on the processor `PublishKafkaRecord_2_6`.
+
+image::demo-nifi-kafka-druid-earthquake-data/nifi_5.png[]
+
+Within this processor the Kafka connection details - like broker addresses and topic name - are specified.
+It uses the `CSVReader` to parse the downloaded CSV and the `JsonRecordSetWriter` to split it into individual JSON records before writing it out.
+
 == Druid
 Druid is used to ingest the near real-time data from Kafka, store it and enable SQL access to it.
 The demo has started an ingestion job reading earthquake records from the Kafka topic `earthquakes` and saving it into Druids deep storage.
 The Druid deep storage is based on the S3 store provided by MinIO.
 
 === View ingestion job
-You can have a look at the ingestion job running in Druid by opening the given `druid` endpoint `router-http` from your `stackablectl services list` command output. You have to use the endpoint from your command output, in this case it is http://172.18.0.4:30109. Open it with your favorite browser.
+You can have a look at the ingestion job running in Druid by opening the given `druid` endpoint `router-http` from your `stackablectl services list` command output (http://172.18.0.4:30109 in this case).
 
-image::demo-kafka-druid-earthquake-data/druid_1.png[]
+image::demo-nifi-kafka-druid-earthquake-data/druid_1.png[]
 
 By clicking on `Ingestion` at the top you can see the running ingestion jobs.
 
-image::demo-kafka-druid-earthquake-data/druid_2.png[]
+image::demo-nifi-kafka-druid-earthquake-data/druid_2.png[]
 
 After clicking on the magnification glass to the right side of the `RUNNING` supervisor you can see additional information.
 On the tab `Statistics` on the left you can see the number of processed records as well as the number of errors.
 
-image::demo-kafka-druid-earthquake-data/druid_3.png[]
+image::demo-nifi-kafka-druid-earthquake-data/druid_3.png[]
 
 The statistics show that Druid is currently ingesting `1251` records/s and has ingested 2.1 million records so far.
 All records have been ingested successfully, which is indicated by having no `processWithError`, `thrownAway` or `unparseable` records.
@@ -131,17 +172,17 @@ All records have been ingested successfully, which is indicated by having no `pr
 The started ingestion job has automatically created the Druid data source `earthquakes`.
 You can see the available data sources by clicking on `Datasources` at the top.
 
-image::demo-kafka-druid-earthquake-data/druid_4.png[]
+image::demo-nifi-kafka-druid-earthquake-data/druid_4.png[]
 
 By clicking on the `earthquakes` data source you can see the segments the data source consists of.
 In this case the `earthquakes` data source is partitioned by the year of the earthquake, resulting in 73 segments.
 
-image::demo-kafka-druid-earthquake-data/druid_5.png[]
+image::demo-nifi-kafka-druid-earthquake-data/druid_5.png[]
 
 Druid offers a web-based way of querying the data sources via SQL.
 To achieve this you first have to click on `Query` at the top.
 
-image::demo-kafka-druid-earthquake-data/druid_6.png[]
+image::demo-nifi-kafka-druid-earthquake-data/druid_6.png[]
 
 You can now enter any arbitrary SQL statement, to e.g. list 10 earthquakes run
 
@@ -150,7 +191,7 @@ You can now enter any arbitrary SQL statement, to e.g. list 10 earthquakes run
 select * from earthquakes limit 10
 ----
 
-image::demo-kafka-druid-earthquake-data/druid_7.png[]
+image::demo-nifi-kafka-druid-earthquake-data/druid_7.png[]
 
 To count the number of earthquakes per year run
 
@@ -164,47 +205,47 @@ group by 1
 order by 1 desc
 ----
 
-image::demo-kafka-druid-earthquake-data/druid_8.png[]
+image::demo-nifi-kafka-druid-earthquake-data/druid_8.png[]
 
 == Superset
 Superset provides the ability to execute SQL queries and build dashboards.
 Open the `superset` endpoint `external-superset` in your browser (http://172.18.0.3:32108 in this case).
 
-image::demo-kafka-druid-earthquake-data/superset_1.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_1.png[]
 
 Log in with the username `admin` and password `admin`.
 
-image::demo-kafka-druid-earthquake-data/superset_2.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_2.png[]
 
 === View dashboard
 The demo has created a Dashboard to visualize the earthquake data.
 To open it click on the tab `Dashboards` at the top.
 
-image::demo-kafka-druid-earthquake-data/superset_3.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_3.png[]
 
 Click on the dashboard called `Earthquakes`.
 It might take some time until the dashboards renders all the included charts.
 
-image::demo-kafka-druid-earthquake-data/superset_4.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_4.png[]
 
 === View charts
 
 The dashboard `Earthquakes` consists of multiple charts.
 To list the charts click on the tab `Charts` at the top.
 
-image::demo-kafka-druid-earthquake-data/superset_5.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_5.png[]
 
 Click on the Chart `Number of earthquakes my magnitude`.
 On the left side you can modify the chart and click on `Run` to see the effect.
 
-image::demo-kafka-druid-earthquake-data/superset_6.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_6.png[]
 
 === View the earthquake distribution on the world map
 
 To look at the geographical distribution of the earthquakes you have to click on the tab `Charts` at the top again.
 Afterwards click on the chart `Earthquake distribution`.
 
-image::demo-kafka-druid-earthquake-data/superset_7.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_7.png[]
 
 The distribution of the earthquakes matches the continental plate margins.
 This is the expected distribution from the https://en.wikipedia.org/wiki/Earthquake[Wikipedia article on Earthquakes].
@@ -212,22 +253,22 @@ This is the expected distribution from the https://en.wikipedia.org/wiki/Earthqu
 You can move and zoom the map with your mouse to interactively explore the map.
 You can e.g. have a detailed look at the detected earthquakes in Germany.
 
-image::demo-kafka-druid-earthquake-data/superset_8.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_8.png[]
 
 You can also click on the magnitudes in the legend on the top right side to enable/disable printing the earthquakes of that magnitude.
 By only enabling magnitudes greater or equal to 8 you can plot only the most severe earthquakes.
 
-image::demo-kafka-druid-earthquake-data/superset_9.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_9.png[]
 
 === Execute arbitrary SQL statements
 Within Superset you can not only create dashboards but also run arbitrary SQL statements.
 On the top click on the tab `SQL Lab` -> `SQL Editor`.
 
-image::demo-kafka-druid-earthquake-data/superset_10.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_10.png[]
 
 On the left select the database `druid`, the schema `druid` and set `See table schema` to `earthquakes`.
 
-image::demo-kafka-druid-earthquake-data/superset_11.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_11.png[]
 
 On the right textbox enter the desired SQL statement.
 If you do not want to make one up, you can use the following:
@@ -242,33 +283,33 @@ group by 1
 order by 1 desc
 ----
 
-image::demo-kafka-druid-earthquake-data/superset_12.png[]
+image::demo-nifi-kafka-druid-earthquake-data/superset_12.png[]
 
 == MinIO
 The S3 provided by MinIO is used as a persistent deep storage for Druid to store all the data used.
 Open the `minio` endpoint `console-http` in your browser (http://172.18.0.4:31664 in this case).
 
-image::demo-kafka-druid-earthquake-data/minio_1.png[]
+image::demo-nifi-kafka-druid-earthquake-data/minio_1.png[]
 
 Log in with the username `root` and password `rootroot`.
 
-image::demo-kafka-druid-earthquake-data/minio_2.png[]
+image::demo-nifi-kafka-druid-earthquake-data/minio_2.png[]
 
 Click on the blue button `Browse` on the bucket `druid` and open the folders `data` -> `earthquakes`.
 
-image::demo-kafka-druid-earthquake-data/minio_3.png[]
+image::demo-nifi-kafka-druid-earthquake-data/minio_3.png[]
 
 As you can see druid saved 199MB of data within 73 prefixes (folders).
 One prefix corresponds to on segment which in turn contains all the data of a year.
 If you don't see any folders or files, the reason is that Druid has not saved its data from memory to the deep storage yet.
 After waiting a few minutes, the data should have been flushed to S3 and show up.
 
-image::demo-kafka-druid-earthquake-data/minio_4.png[]
+image::demo-nifi-kafka-druid-earthquake-data/minio_4.png[]
 
 If you open up a prefix for a specific year you can see that Druid has placed a file containing the data of that year there.
 
 == Summary
-The demo streamed 1000 earthquake records/s for a total of ~3 million earthquakes into a Kafka steaming pipeline.
+The demo streamed 10.000 earthquake records/s for a total of ~3 million earthquakes into a Kafka steaming pipeline.
 Druid ingested the data near real-time into its data source and enabled SQL access to it.
 Superset was used as a web-based frontend to execute SQL statements and build dashboards.
 
@@ -285,7 +326,8 @@ You also have the possibility to create additional charts and bundle them togeth
 Have a look at https://superset.apache.org/docs/creating-charts-dashboards/creating-your-first-dashboard#creating-charts-in-explore-view[the Superset documentation] on how to do that.
 
 === Load additional data
-You can use a Kafka client like https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html[kafkacat] to create new topics and ingest data.
+You can use the NiFi web interface to collect arbitrary data and write it to Kafka (it's recommended to use new Kafka topics for that).
+As an alternative you can use a Kafka client like https://github.com/edenhill/kcat[kafkacat] to create new topics and ingest data.
 Using the Druid web interface, you can start an ingestion job that consumes the data and stores it in an internal data source.
 There is a great https://druid.apache.org/docs/latest/tutorials/tutorial-kafka.html#loading-data-with-the-data-loader[tutorial] from Druid on how to do this.
 Afterwards the data source is available to be analyzed within Druid and Superset the same way the earthquake data is.
