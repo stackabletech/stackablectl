@@ -56,7 +56,7 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/01-distcp-cycling-data.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/02-create-hfile-and-import-to-hbase.yaml
   airflow-cron-dag:
-    description: Activate a simple DAG to run continously at a set interval
+    description: Activate a simple Airflow DAG to run continously at a set interval
     stackableStack: airflow
     labels:
       - airflow
