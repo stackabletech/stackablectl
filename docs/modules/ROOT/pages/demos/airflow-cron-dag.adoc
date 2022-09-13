@@ -50,7 +50,7 @@ Log in with the username `airflow` and password `airflow`. The overview screen s
 
 image::demo-airflow-cron-dag/airflow_2.png[]
 
-There are two things to notice here. The DAG has been enabled, as shown by the slider to the right of the DAG name (DAGs are initially all `paused` and can be activated either manually in the UI or via a REST call, as done in the setup for this demo):
+There are two things to notice here. The DAG has been enabled, as shown by the slider to the left of the DAG name (DAGs are initially all `paused` and can be activated either manually in the UI or via a REST call, as done in the setup for this demo):
 
 image::demo-airflow-cron-dag/airflow_3.png[]
 
