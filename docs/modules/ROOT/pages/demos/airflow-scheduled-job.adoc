@@ -1,4 +1,4 @@
-= airflow-cron-dag
+= airflow-scheduled-job
 
 [NOTE]
 ====
@@ -20,7 +20,7 @@ This demo will
 
 You can see the deployed products as well as their relationship in the following diagram:
 
-image::demo-airflow-cron-dag/overview.png[]
+image::demo-airflow-scheduled-job/overview.png[]
 
 == List deployed Stackable services
 To list the installed Stackable services run the following command:
@@ -44,23 +44,23 @@ In case the product is not ready yet a warning might be shown.
 Superset gives the ability to execute SQL queries and build dashboards.
 Open the `airflow` endpoint `webserver-airflow` in your browser (`http://172.18.0.4:32754` in this case).
 
-image::demo-airflow-cron-dag/airflow_1.png[]
+image::demo-airflow-scheduled-job/airflow_1.png[]
 
 Log in with the username `airflow` and password `airflow`. The overview screen shows the DAG that has been mounted during the demo set-up (`date_demo`).
 
-image::demo-airflow-cron-dag/airflow_2.png[]
+image::demo-airflow-scheduled-job/airflow_2.png[]
 
 There are two things to notice here. The DAG has been enabled, as shown by the slider to the left of the DAG name (DAGs are initially all `paused` and can be activated either manually in the UI or via a REST call, as done in the setup for this demo):
 
-image::demo-airflow-cron-dag/airflow_3.png[]
+image::demo-airflow-scheduled-job/airflow_3.png[]
 
 Secondly, the job has been busy, with several runs already logged!
 
-image::demo-airflow-cron-dag/airflow_4.png[]
+image::demo-airflow-scheduled-job/airflow_4.png[]
 
 Clicking on this number will display the individual job runs:
 
-image::demo-airflow-cron-dag/airflow_5.png[]
+image::demo-airflow-scheduled-job/airflow_5.png[]
 
 The job is running every minute. With Airflow, DAGs can be started manually or scheduled to run when certain conditions are fulfilled: in this case the DAG has been set up to run using a cron table, which is part of the DAG definition.
 
@@ -68,23 +68,23 @@ The job is running every minute. With Airflow, DAGs can be started manually or s
 
 Let's drill down a bit deeper into this DAG. Click on one of the individual job runs shown in the previous step to display the job details. The DAG is displayed in the form of a graph (this job is so simple that it only has one step, called `run_every_minute`).
 
-image::demo-airflow-cron-dag/airflow_6.png[]
+image::demo-airflow-scheduled-job/airflow_6.png[]
 
 In the top right-hand corner there is some scheduling information, which tells us that this job will run every minute continuously:
 
-image::demo-airflow-cron-dag/airflow_7.png[]
+image::demo-airflow-scheduled-job/airflow_7.png[]
 
 Click on the `run_every_minute` box in the centre of the page and then select `Log`:
 
-image::demo-airflow-cron-dag/airflow_8.png[]
+image::demo-airflow-scheduled-job/airflow_8.png[]
 
 This will navigate to the worker where this job was run (with multiple workers the jobs will be queued and distributed to the next free worker) and display the log. In this case the output is a simple printout of the timestamp:
 
-image::demo-airflow-cron-dag/airflow_9.png[]
+image::demo-airflow-scheduled-job/airflow_9.png[]
 
 To look at the actual DAG code click on `Code`. Here we can see the crontab information used to schedule the job as well the `bash` command that provides the output:
 
-image::demo-airflow-cron-dag/airflow_10.png[]
+image::demo-airflow-scheduled-job/airflow_10.png[]
 
 == Summary
 

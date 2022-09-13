@@ -7,7 +7,7 @@
 ** xref:commands/services.adoc[]
 ** xref:commands/stack.adoc[]
 * xref:demos/index.adoc[]
-** xref:demos/airflow-cron-dag.adoc[]
+** xref:demos/airflow-scheduled-job.adoc[]
 ** xref:demos/kafka-druid-water-level-data.adoc[]
 ** xref:demos/nifi-kafka-druid-earthquake-data.adoc[]
 ** xref:demos/trino-taxi-data.adoc[]
