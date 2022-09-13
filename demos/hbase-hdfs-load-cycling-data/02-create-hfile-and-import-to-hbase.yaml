@@ -6,7 +6,6 @@ metadata:
 spec:
   template:
     spec:
-      restartPolicy: OnFailure
       containers:
         - name: create-hfile-and-import-to-hbase
           image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.2.0
@@ -43,3 +42,5 @@ spec:
         - name: config-volume-hdfs
           configMap:
             name: hdfs
+      restartPolicy: OnFailure
+  backoffLimit: 50
