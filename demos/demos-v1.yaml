@@ -43,9 +43,9 @@ demos:
       - s3
       - water-levels
     manifests:
-      - plainYaml: demos/nifi-kafka-druid-water-level-data/create-nifi-ingestion-job.yaml # TODO
-      - plainYaml: demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml # TODO
-      - plainYaml: demos/nifi-kafka-druid-water-level-data/setup-superset.yaml # TODO
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-nifi-ingestion-job.yaml # TODO
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml # TODO
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/setup-superset.yaml # TODO
   hbase-hdfs-load-cycling-data:
     description: Copy data from S3 bucket to an HBase table
     stackableStack: hdfs-hbase
