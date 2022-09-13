@@ -122,8 +122,7 @@ stacks:
     manifests:
       - helmChart: *template-postgresql-airflow
       - helmChart: *template-redis-airflow
-#      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
-      - plainYaml: stacks/airflow/airflow.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
     stackableRelease: 22.09

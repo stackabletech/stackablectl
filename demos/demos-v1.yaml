@@ -62,5 +62,4 @@ demos:
       - airflow
       - job-scheduling
     manifests:
-      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/enable-and-run-dag.yaml
-      - plainYaml: demos/airflow-scheduled-job/enable-and-run-dag.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/enable-and-run-dag.yaml
