@@ -12,7 +12,7 @@ This demo will
 * Install the required Stackable operators
 * Spin up the following data products
 ** *Superset*: A modern data exploration and visualization platform. This demo utilizes Superset to retrieve data from Druid via SQL queries and build dashboards on top of that data
-** *Kafka*:  A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as a event streaming platform to stream the data in near real-time
+** *Kafka*:  A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as an event streaming platform to stream the data in near real-time
 ** *NiFi*:  An easy-to-use, powerful system to process and distribute data. This demos uses it to fetch water-level-data from the internet and ingest it into Kafka
 ** *Druid*: A real-time database to power modern analytics applications. This demo uses it to ingest the near real-time data from Kafka, store it and enable to access the data via SQL
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage for Druid to store all the data used
@@ -249,7 +249,7 @@ The left workflows works as follows:
 4. `Extract station_uuid` takes every FlowFile representing a station and extract the attribute `station_uuid` into the metadata of the FlowFile
 5. `Get historic measurements` calls the PEGELONLINE web service for every station and fetches the measurements of the last 30 days. All failures are routed to the `LogAttribute` processor to inspect them in case any failure occur.
 6. `Add station_uuid` will add the attribute `station_uuid` to the JSON list of measurements returned from the PEGELONLINE web service, which is missing this information.
-7. `PublishKafkaRecord_2_6` finally emits every measurement as a Kafka records to the topic `measurements`. All failures are routed to the `LogAttribute` processor to inspect them in case any failure occur.
+7. `PublishKafkaRecord_2_6` finally emits every measurement as a Kafka records to the topic `measurements`. All failures are routed to the `LogAttribute` processor to inspect them in case any failures occur.
 
 The right side works similar, but is executed in an endless loop to stream the data in near-realtime.
 
