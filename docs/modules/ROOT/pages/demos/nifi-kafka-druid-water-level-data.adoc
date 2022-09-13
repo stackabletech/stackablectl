@@ -243,12 +243,12 @@ image::demo-nifi-kafka-druid-water-level-data/nifi_4.png[]
 
 The left workflows works as follows:
 
-1. The `Get station list` processors fetches the current list of stations as JSON via HTTP from the PEGELONLINE web service.
+1. The `Get station list` processors fetches the current list of stations as JSON via HTTP from the https://www.pegelonline.wsv.de/webservice/ueberblick[PEGELONLINE webservice].
 2. `Produce stations records` takes the list and produces a Kafka record for every station into the topic `stations`
 3. `SplitRecords` simultaneously takes the single FlowFile (NiFI record) containing all the stations and crates a new FlowFile for every station
 4. `Extract station_uuid` takes every FlowFile representing a station and extract the attribute `station_uuid` into the metadata of the FlowFile
-5. `Get historic measurements` calls the PEGELONLINE web service for every station and fetches the measurements of the last 30 days. All failures are routed to the `LogAttribute` processor to inspect them in case any failure occur.
-6. `Add station_uuid` will add the attribute `station_uuid` to the JSON list of measurements returned from the PEGELONLINE web service, which is missing this information.
+5. `Get historic measurements` calls the https://www.pegelonline.wsv.de/webservice/ueberblick[PEGELONLINE webservice] for every station and fetches the measurements of the last 30 days. All failures are routed to the `LogAttribute` processor to inspect them in case any failure occur.
+6. `Add station_uuid` will add the attribute `station_uuid` to the JSON list of measurements returned from the https://www.pegelonline.wsv.de/webservice/ueberblick[PEGELONLINE webservice], which is missing this information.
 7. `PublishKafkaRecord_2_6` finally emits every measurement as a Kafka records to the topic `measurements`. All failures are routed to the `LogAttribute` processor to inspect them in case any failures occur.
 
 The right side works similar, but is executed in an endless loop to stream the data in near-realtime.
