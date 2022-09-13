@@ -1,19 +1,23 @@
 ---
 demos:
-  trino-taxi-data:
-    description: Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
-    documentation: https://docs.stackable.tech/stackablectl/stable/demos/trino-taxi-data.html
-    stackableStack: trino-superset-s3
+  airflow-scheduled-job:
+    description: Activate a simple Airflow DAG to run continuously at a set interval
+    stackableStack: airflow
     labels:
-      - trino
-      - superset
-      - minio
-      - s3
-      - ny-taxi-data
+      - airflow
+      - job-scheduling
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/load-test-data.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/create-table-in-trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/enable-and-run-dag.yaml
+  hbase-hdfs-load-cycling-data:
+    description: Copy data from S3 bucket to an HBase table
+    stackableStack: hdfs-hbase
+    labels:
+      - hbase
+      - hdfs
+      - cycling-tripdata
+    manifests:
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/01-distcp-cycling-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/02-create-hfile-and-import-to-hbase.yaml
   nifi-kafka-druid-earthquake-data:
     description: Demo ingesting earthquake data into Kafka using NiFi, streaming it into Druid and creating a Superset dashboard
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/nifi-kafka-druid-earthquake-data.html
@@ -46,21 +50,17 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-nifi-ingestion-job.yaml # TODO
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml # TODO
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/setup-superset.yaml # TODO
-  hbase-hdfs-load-cycling-data:
-    description: Copy data from S3 bucket to an HBase table
-    stackableStack: hdfs-hbase
+  trino-taxi-data:
+    description: Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
+    documentation: https://docs.stackable.tech/stackablectl/stable/demos/trino-taxi-data.html
+    stackableStack: trino-superset-s3
     labels:
-      - hbase
-      - hdfs
-      - cycling-tripdata
+      - trino
+      - superset
+      - minio
+      - s3
+      - ny-taxi-data
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/01-distcp-cycling-data.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/02-create-hfile-and-import-to-hbase.yaml
-  airflow-scheduled-job:
-    description: Activate a simple Airflow DAG to run continously at a set interval
-    stackableStack: airflow
-    labels:
-      - airflow
-      - job-scheduling
-    manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/enable-and-run-dag.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/load-test-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/create-table-in-trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
