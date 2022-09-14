@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2022-09-14
+
 ### Added
 
 - Print Nifi adminuser credentials within services command ([#80](https://github.com/stackabletech/stackablectl/pull/80))
