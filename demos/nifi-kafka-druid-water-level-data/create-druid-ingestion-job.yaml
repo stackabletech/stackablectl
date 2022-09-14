@@ -13,13 +13,12 @@ spec:
           volumeMounts:
             - name: ingestion-job-spec
               mountPath: /tmp/ingestion-job-spec
-      restartPolicy: OnFailure
       volumes:
       - name: ingestion-job-spec
         configMap:
           name: create-druid-ingestion-job-spec
-      restartPolicy: Never
-  backoffLimit: 50 # It can take some time until Druid is ready
+      restartPolicy: OnFailure
+  backoffLimit: 50
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -120,8 +119,9 @@ data:
           "dataSource": "measurements",
           "timestampSpec": {
             "column": "timestamp",
-            "format": "millis"
+            "format": "iso"
           },
+          "transformSpec": {},
           "dimensionsSpec": {
             "dimensions": [
               {

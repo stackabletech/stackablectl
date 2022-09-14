@@ -13,13 +13,12 @@ spec:
           volumeMounts:
             - name: script
               mountPath: /tmp/script
-      restartPolicy: OnFailure
       volumes:
       - name: script
         configMap:
           name: create-ny-taxi-data-table-in-trino-script
-      restartPolicy: Never
-  backoffLimit: 50 # It can take some time until Trino is ready
+      restartPolicy: OnFailure
+  backoffLimit: 50
 ---
 apiVersion: v1
 kind: ConfigMap
