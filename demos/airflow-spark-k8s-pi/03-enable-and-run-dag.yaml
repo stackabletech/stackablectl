@@ -10,7 +10,8 @@ spec:
         - name: start-pyspark-job
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
           command: ["bash", "-c", "
-          curl -s --user airflow:airflow -H 'Content-Type:application/json' -XPATCH http://airflow-webserver-default:8080/api/v1/dags/sparkapp_dag -d '{\"is_paused\": false}'
+          until $(curl --output /dev/null --silent http://airflow-webserver-default:8080/api/v1/dags/sparkapp_dag); do printf '.'; sleep 2; done
+          && curl -s --user airflow:airflow -H 'Content-Type:application/json' -XPATCH http://airflow-webserver-default:8080/api/v1/dags/sparkapp_dag -d '{\"is_paused\": false}'
           && curl -s --user airflow:airflow -H 'Content-Type:application/json' -XPOST http://airflow-webserver-default:8080/api/v1/dags/sparkapp_dag/dagRuns -d '{}'
           "]
       restartPolicy: OnFailure
