@@ -82,6 +82,9 @@ data:
     from airflow.sensors.base import BaseSensorOperator
     from airflow.models import BaseOperator
     from airflow.providers.cncf.kubernetes.hooks.kubernetes import KubernetesHook
+    import yaml
+    from airflow.utils import yaml
+    import os
 
     if TYPE_CHECKING:
         from airflow.utils.context import Context
@@ -210,10 +213,25 @@ data:
             params={"example_key": "example_value"},
     ) as dag:
 
+        def load_body_to_dict(body):
+            try:
+                body_dict = yaml.safe_load(body)
+            except yaml.YAMLError as e:
+                raise AirflowException(f"Exception when loading resource definition: {e}\n")
+            return body_dict
+
+        yaml_path = os.path.join(os.environ.get('AIRFLOW__CORE__DAGS_FOLDER'), 'pyspark_pi.yaml')
+        with open(yaml_path, 'r') as file:
+            crd = file.read()
+
+        document=load_body_to_dict(crd)
+        application_name='pyspark-pi-'+datetime.utcnow().strftime('%Y%m%d%H%M%S')
+        document.update({'metadata': {'name': application_name}})
+
         t1 = SparkKubernetesOperator(
             task_id='spark_pi_submit',
             namespace="default",
-            application_file="pyspark_pi.yaml",
+            application_file=document,
             do_xcom_push=True,
             dag=dag,
         )
