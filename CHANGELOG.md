@@ -2,9 +2,19 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2022-09-14
+
 ### Added
 
 - Print Nifi adminuser credentials within services command ([#80](https://github.com/stackabletech/stackablectl/pull/80))
+
+### Changed
+
+- Sort operator versions descending ([#102](https://github.com/stackabletech/stackablectl/pull/102))
+
+### Fixed
+
+- Fix bug that prevents deserializing stacks and demos using `serde_yaml` 0.9 ([#103](https://github.com/stackabletech/stackablectl/pull/103))
 
 ### Removed
 - Remove Spark from supported operators ([#100](https://github.com/stackabletech/stackablectl/pull/100))
