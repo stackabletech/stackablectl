@@ -1,3 +1,5 @@
+package tech.stackable.demo.spark;
+
 import org.apache.commons.cli.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -6,27 +8,24 @@ import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
+
 import org.apache.hadoop.hbase.spark.JavaHBaseContext;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.SparkSession;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.sql.SparkSession;
 import scala.Tuple2;
 
 import java.util.List;
 
-
-final public class scan {
-
+public class Main {
 
     private static final String CMD_HBASE_SITE = "hbaseSite";
     private static final String CMD_CORE_SITE = "coreSite";
     private static final String CMD_HDFS_SITE = "hdfsSite";
 
     private static final String CMD_TABLENAME = "tableName";
-
-
 
     public static void main(String[] args) throws ParseException {
 
@@ -45,6 +44,10 @@ final public class scan {
         SparkSession spark = SparkSession.builder().appName("sparkHbase").getOrCreate();
 
         JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
+        // How to add HavaHbaseContext:
+        // clone repo: https://github.com/apache/hbase-connectors/tree/master/spark
+        // mvn -Dspark.version=3.3.0 -Dscala.version=2.12.14 -Dhadoop-three.version=3.3.2 -Dscala.binary.version=2.12 -Dhbase.version=2.4.12 -DrecompileMode=all -DskipTests clean package
+        // Intellij: Project Structure --> add library --> New Library --> Java --> hbase-spark-1.0.1-SNAPSHOT.jar
         JavaHBaseContext hbaseContext = new JavaHBaseContext(jsc, config);
 
         try {
@@ -70,7 +73,6 @@ final public class scan {
             return Bytes.toString(v1._1().copyBytes());
         }
     }
-
 
     static final CommandLine buildCommandLineParser(final String[] args) throws ParseException {
         final Options options = new Options();

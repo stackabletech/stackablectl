@@ -5,12 +5,12 @@ metadata:
   name: zookeeper
 spec:
   version: 3.8.0-stackable0.99.0
- config:
-   quorumTlsSecretClass: tls
- servers:
-   roleGroups:
-     default:
-       replicas: 1
+  config:
+    quorumTlsSecretClass: tls
+  servers:
+    roleGroups:
+      default:
+        replicas: 1
 ---
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode
