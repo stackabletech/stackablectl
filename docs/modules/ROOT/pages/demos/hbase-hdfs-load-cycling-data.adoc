@@ -14,13 +14,108 @@ This demo will
 ** *Hbase*: A Open-source distributed scalable, big data store.
 ** *HDFS*: The Hadoop Distributed File System (HDFS) is a distributed file system
 ** *S3*: Object storage built to retrieve any amount of data from anywhere
-* Use distcp to copy data. DistCp (distributed copy) is a tool used for large inter/intra-cluster copying. It uses MapReduce to effect its distribution, error handling and recovery, and reporting. It expands a list of files and directories into input to map tasks, each of which will copy a partition of the files specified in the source list.
+* Use distcp to copy data.
 * Create HFiles. A File format for hbase. A file of sorted key/value pairs. Both keys and values are byte arrays.
 * Load Hfiles into an existing table via Importtsv. A utility that will load data in TSV or CSV format into HBase.
 * Query Data via hbase shell. An interactive shell to execute commands on the created table
+* Thanks Kaggle for the example data: https://www.kaggle.com/datasets/timgid/cyclistic-dataset-google-certificate-capstone?select=Divvy_Trips_2020_Q1.csv
 
 
 image::demo-hbase-hdfs-load-cycling-data/overview.png[]
 
 == List deployed Stackable services
 To list the installed Stackable services run the following command:
+
+
+[source,console]
+----
+PRODUCT    NAME       NAMESPACE     ENDPOINTS                             EXTRA INFOS
+
+ hbase      hbase      stacks-demos  regionserver 172.18.0.3:30449
+                                     ui           http://172.18.0.3:31924
+                                     metrics      172.18.0.3:32317
+
+ hdfs       hdfs       stacks-demos
+
+ zookeeper  zookeeper  stacks-demos  zk           172.18.0.4:30169
+----
+
+[NOTE]
+====
+When a product instance has not finished starting yet, the service will have no endpoint.
+Starting all of the product instances might take a considerable amount of time depending on your internet connectivity.
+In case the product is not ready yet a warning might be shown.
+====
+
+== The first Job
+DistCp (distributed copy) is a tool used for large inter/intra-cluster copying. It uses MapReduce to effect its distribution, error handling and recovery, and reporting. It expands a list of files and directories into input to map tasks, each of which will copy a partition of the files specified in the source list.
+Therefore, the first Job uses DistCp to copy data from a S3 bucket into HDFS. Below you'll see parts from the logs.
+
+[source,console]
+----
+Copying s3a://public-backup-nyc-tlc/cycling-tripdata/demo-cycling-tripdata.csv.gz to hdfs://hdfs/data/raw/demo-cycling-tripdata.csv.gz
+[LocalJobRunner Map Task Executor #0] mapred.RetriableFileCopyCommand (RetriableFileCopyCommand.java:getTempFile(235)) - Creating temp file: hdfs://hdfs/data/raw/.distcp.tmp.attempt_local60745921_0001_m_000000_0.1663687068145
+[LocalJobRunner Map Task Executor #0] mapred.RetriableFileCopyCommand (RetriableFileCopyCommand.java:doCopy(127)) - Writing to temporary target file path hdfs://hdfs/data/raw/.distcp.tmp.attempt_local60745921_0001_m_000000_0.1663687068145
+[LocalJobRunner Map Task Executor #0] mapred.RetriableFileCopyCommand (RetriableFileCopyCommand.java:doCopy(153)) - Renaming temporary target file path hdfs://hdfs/data/raw/.distcp.tmp.attempt_local60745921_0001_m_000000_0.1663687068145 to hdfs://hdfs/data/raw/demo-cycling-tripdata.csv.gz
+[LocalJobRunner Map Task Executor #0] mapred.RetriableFileCopyCommand (RetriableFileCopyCommand.java:doCopy(157)) - Completed writing hdfs://hdfs/data/raw/demo-cycling-tripdata.csv.gz (3342891 bytes)
+[LocalJobRunner Map Task Executor #0] mapred.LocalJobRunner (LocalJobRunner.java:statusUpdate(634)) -
+[LocalJobRunner Map Task Executor #0] mapred.Task (Task.java:done(1244)) - Task:attempt_local60745921_0001_m_000000_0 is done. And is in the process of committing
+[LocalJobRunner Map Task Executor #0] mapred.LocalJobRunner (LocalJobRunner.java:statusUpdate(634)) -
+[LocalJobRunner Map Task Executor #0] mapred.Task (Task.java:commit(1421)) - Task attempt_local60745921_0001_m_000000_0 is allowed to commit now
+[LocalJobRunner Map Task Executor #0] output.FileOutputCommitter (FileOutputCommitter.java:commitTask(609)) - Saved output of task 'attempt_local60745921_0001_m_000000_0' to file:/tmp/hadoop/mapred/staging/stackable339030898/.staging/_distcp-1760904616/_logs
+[LocalJobRunner Map Task Executor #0] mapred.LocalJobRunner (LocalJobRunner.java:statusUpdate(634)) - 100.0% Copying s3a://public-backup-nyc-tlc/cycling-tripdata/demo-cycling-tripdata.csv.gz to hdfs://hdfs/data/raw/demo-cycling-tripdata.csv.gz
+----
+
+== The second Job
+The second Job consists of 2 steps.
+First, we use `org.apache.hadoop.hbase.mapreduce.ImportTsv` (see https://hbase.apache.org/book.html#importtsv) to create a table and Hfiles.
+Hfile is an Hbase dedicated file format which is performance optimized for hbase. It stores meta information about the data and thus increases the performance of hbase
+When connecting to the hbase master and opening a `bin/hbase shell` and executing `list`, you will see the created table. However, it'll contain 0 rows at this point.
+
+[source,console]
+----
+list
+TABLE
+cycling-tripdata
+----
+
+Secondly, we'll use `org.apache.hadoop.hbase.tool.LoadIncrementalHFiles` (see https://hbase.apache.org/book.html#arch.bulk.load) to import the Hfiles into the table and ingest rows.
+You can now use the `bin/hbase shell` again and execute `count 'cycling-tripdata'` and see below for a partial result.
+
+[source,console]
+----
+Current count: 1000, row: 02FD41C2518CCF81
+Current count: 2000, row: 06022E151BC79CE0
+Current count: 3000, row: 090E4E73A888604A
+...
+Current count: 82000, row: F7A8C86949FD9B1B
+Current count: 83000, row: FA9AA8F17E766FD5
+Current count: 84000, row: FDBD9EC46964C103
+84777 row(s)
+Took 13.4666 seconds
+=> 84777
+----
+
+
+== The table
+You can now use the table and the data. Use all available hbase shell commands. Below, you'll see the table description.
+
+[source,console]
+----
+describe 'cycling-tripdata'
+Table cycling-tripdata is ENABLED
+cycling-tripdata
+COLUMN FAMILIES DESCRIPTION
+{NAME => 'end_lat', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+{NAME => 'end_lng', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+{NAME => 'end_station_id', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+{NAME => 'end_station_name', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+{NAME => 'ended_at', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+{NAME => 'member_casual', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+{NAME => 'rideable_type', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+{NAME => 'start_lat', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+{NAME => 'start_lng', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+{NAME => 'start_station_id', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+{NAME => 'start_station_name', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+{NAME => 'started_at', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
+----
