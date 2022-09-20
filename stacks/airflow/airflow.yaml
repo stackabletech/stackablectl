@@ -225,12 +225,13 @@ data:
             crd = file.read()
 
         document=load_body_to_dict(crd)
+        ns=document['metadata']['namespace']
         application_name='pyspark-pi-'+datetime.utcnow().strftime('%Y%m%d%H%M%S')
-        document.update({'metadata': {'name': application_name}})
+        document.update({'metadata': {'name': application_name, 'namespace': ns}})
 
         t1 = SparkKubernetesOperator(
             task_id='spark_pi_submit',
-            namespace="default",
+            namespace=ns,
             application_file=document,
             do_xcom_push=True,
             dag=dag,
@@ -238,7 +239,7 @@ data:
 
         t2 = SparkKubernetesSensor(
             task_id='spark_pi_monitor',
-            namespace="default",
+            namespace=ns,
             application_name="{{ task_instance.xcom_pull(task_ids='spark_pi_submit')['metadata']['name'] }}",
             poke_interval=5,
             dag=dag,
@@ -251,7 +252,7 @@ data:
     kind: SparkApplication
     metadata:
       name: pyspark-pi
-      namespace: default
+      namespace: test-spark-k8s-cr-def
     spec:
       version: "1.0"
       sparkImage: docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable0.1.0
