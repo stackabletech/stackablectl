@@ -1,0 +1,26 @@
+= hbase-hdfs-cycling-data
+
+[NOTE]
+====
+This guide assumes you already have the demo `hbase-hdfs-load-cycling-data` installed.
+If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you have to run `stackablectl demo install hbase-hdfs-load-cycling-data`.
+====
+
+This demo will
+
+* Install the required Stackable operators
+* Spin up the follow data products
+** *Hbase*: A Open-source distributed scalable, big data store.
+** *HDFS*: The Hadoop Distributed File System (HDFS) is a distributed file system
+** *S3*: Object storage built to retrieve any amount of data from anywhere
+* Use distcp to copy data. DistCp (distributed copy) is a tool used for large inter/intra-cluster copying. It uses MapReduce to effect its distribution, error handling and recovery, and reporting. It expands a list of files and directories into input to map tasks, each of which will copy a partition of the files specified in the source list.
+* Create HFiles. A File format for hbase. A file of sorted key/value pairs. Both keys and values are byte arrays.
+* Load Hfiles into an existing table via Importtsv. A utility that will load data in TSV or CSV format into HBase.
+* Query Data via hbase shell. An interactive shell to execute commands on the created table
+
+
+image::demo-hbase-hdfs-load-cycling-data/overview.png[]
+
+== List deployed Stackable services
+To list the installed Stackable services run the following command:
