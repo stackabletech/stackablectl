@@ -7,7 +7,10 @@ demos:
       - airflow
       - job-scheduling
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/enable-and-run-dag.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/01-airflow-spark-clusterrole.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/02-airflow-spark-clusterrolebinding.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/03-enable-and-run-spark-dag.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/04-enable-and-run-date-dag.yaml
   hbase-hdfs-load-cycling-data:
     description: Copy data from S3 bucket to an HBase table
     stackableStack: hdfs-hbase
