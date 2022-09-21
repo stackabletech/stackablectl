@@ -11,25 +11,23 @@ This demo will
 
 * Install the required Stackable operators
 * Spin up the follow data products
-** *Hbase*: A Open-source distributed scalable, big data store.
-** *HDFS*: The Hadoop Distributed File System (HDFS) is a distributed file system
-** *S3*: Object storage built to retrieve any amount of data from anywhere
-* Use distcp to copy data.
-* Create HFiles. A File format for hbase. A file of sorted key/value pairs. Both keys and values are byte arrays.
-* Load Hfiles into an existing table via Importtsv. A utility that will load data in TSV or CSV format into HBase.
-* Query Data via hbase shell. An interactive shell to execute commands on the created table
-* Thanks Kaggle for the example data: https://www.kaggle.com/datasets/timgid/cyclistic-dataset-google-certificate-capstone?select=Divvy_Trips_2020_Q1.csv
+** *Hbase*: A open source distributed scalable, big data store. This demos uses it to store the https://www.kaggle.com/datasets/timgid/cyclistic-dataset-google-certificate-capstone?select=Divvy_Trips_2020_Q1.csv[cyclistic dataset] and enable access to it
+** *HDFS*: A distributed file system used to intermediately store the dataset before importing it into Hbase
+* Use https://hadoop.apache.org/docs/stable/hadoop-distcp/DistCp.html[distcp] to copy a https://www.kaggle.com/datasets/timgid/cyclistic-dataset-google-certificate-capstone?select=Divvy_Trips_2020_Q1.csv[cyclistic dataset] from an S3 bucket into HDFS
+* Create HFiles, which is a File format for hbase consisting of sorted key/value pairs. Both keys and values are byte arrays
+* Load Hfiles into an existing table via the `Importtsv` utility, which will load data in `TSV` or `CSV` format into HBase
+* Query data via hbase shell, which is an interactive shell to execute commands on the created table
 
+You can see the deployed products as well as their relationship in the following diagram:
 
 image::demo-hbase-hdfs-load-cycling-data/overview.png[]
 
 == List deployed Stackable services
 To list the installed Stackable services run the following command:
 
-
 [source,console]
 ----
-PRODUCT    NAME       NAMESPACE     ENDPOINTS                             EXTRA INFOS
+ PRODUCT    NAME       NAMESPACE     ENDPOINTS                             EXTRA INFOS
 
  hbase      hbase      stacks-demos  regionserver 172.18.0.3:30449
                                      ui           http://172.18.0.3:31924
@@ -48,10 +46,10 @@ In case the product is not ready yet a warning might be shown.
 ====
 
 == The first Job
-DistCp (distributed copy) is a tool used for large inter/intra-cluster copying. It uses MapReduce to effect its distribution, error handling and recovery, and reporting. It expands a list of files and directories into input to map tasks, each of which will copy a partition of the files specified in the source list.
+https://hadoop.apache.org/docs/stable/hadoop-distcp/DistCp.html[DistCp] (distributed copy) is a tool used for large inter/intra-cluster copying. It uses MapReduce to effect its distribution, error handling, recovery, and reporting. It expands a list of files and directories into input to map tasks, each of which will copy a partition of the files specified in the source list.
 Therefore, the first Job uses DistCp to copy data from a S3 bucket into HDFS. Below you'll see parts from the logs.
 
-[source,console]
+[source]
 ----
 Copying s3a://public-backup-nyc-tlc/cycling-tripdata/demo-cycling-tripdata.csv.gz to hdfs://hdfs/data/raw/demo-cycling-tripdata.csv.gz
 [LocalJobRunner Map Task Executor #0] mapred.RetriableFileCopyCommand (RetriableFileCopyCommand.java:getTempFile(235)) - Creating temp file: hdfs://hdfs/data/raw/.distcp.tmp.attempt_local60745921_0001_m_000000_0.1663687068145
@@ -68,11 +66,12 @@ Copying s3a://public-backup-nyc-tlc/cycling-tripdata/demo-cycling-tripdata.csv.g
 
 == The second Job
 The second Job consists of 2 steps.
+
 First, we use `org.apache.hadoop.hbase.mapreduce.ImportTsv` (see https://hbase.apache.org/book.html#importtsv) to create a table and Hfiles.
 Hfile is an Hbase dedicated file format which is performance optimized for hbase. It stores meta information about the data and thus increases the performance of hbase
 When connecting to the hbase master and opening a `bin/hbase shell` and executing `list`, you will see the created table. However, it'll contain 0 rows at this point.
 
-[source,console]
+[source]
 ----
 list
 TABLE
@@ -82,7 +81,7 @@ cycling-tripdata
 Secondly, we'll use `org.apache.hadoop.hbase.tool.LoadIncrementalHFiles` (see https://hbase.apache.org/book.html#arch.bulk.load) to import the Hfiles into the table and ingest rows.
 You can now use the `bin/hbase shell` again and execute `count 'cycling-tripdata'` and see below for a partial result.
 
-[source,console]
+[source]
 ----
 Current count: 1000, row: 02FD41C2518CCF81
 Current count: 2000, row: 06022E151BC79CE0
@@ -95,7 +94,6 @@ Current count: 84000, row: FDBD9EC46964C103
 Took 13.4666 seconds
 => 84777
 ----
-
 
 == The table
 You can now use the table and the data. Use all available hbase shell commands. Below, you'll see the table description.
