@@ -70,6 +70,8 @@ The second Job consists of 2 steps.
 First, we use `org.apache.hadoop.hbase.mapreduce.ImportTsv` (see https://hbase.apache.org/book.html#importtsv) to create a table and Hfiles.
 Hfile is an Hbase dedicated file format which is performance optimized for hbase. It stores meta information about the data and thus increases the performance of hbase
 When connecting to the hbase master and opening a `bin/hbase shell` and executing `list`, you will see the created table. However, it'll contain 0 rows at this point.
+You can connect to the shell via `kubectl -n stacks-demos exec -it hbase-master-default-0 -- bin/hbase shell`.
+If you use k9s you can go into the `hbase-master-default-0` and execute `bin/hbase shell`.
 
 [source]
 ----
