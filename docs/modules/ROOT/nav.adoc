@@ -8,6 +8,7 @@
 ** xref:commands/stack.adoc[]
 * xref:demos/index.adoc[]
 ** xref:demos/airflow-scheduled-job.adoc[]
+** xref:demos/hbase-hdfs-load-cycling-data.adoc[]
 ** xref:demos/nifi-kafka-druid-earthquake-data.adoc[]
 ** xref:demos/nifi-kafka-druid-water-level-data.adoc[]
 ** xref:demos/trino-taxi-data.adoc[]
