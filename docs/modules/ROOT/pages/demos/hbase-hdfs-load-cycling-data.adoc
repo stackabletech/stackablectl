@@ -81,20 +81,19 @@ Copying s3a://public-backup-nyc-tlc/cycling-tripdata/demo-cycling-tripdata.csv.g
 == The second Job
 The second Job consists of 2 steps.
 
-First, we use `org.apache.hadoop.hbase.mapreduce.ImportTsv` (see https://hbase.apache.org/book.html#importtsv) to create a table and Hfiles.
+First, we use `org.apache.hadoop.hbase.mapreduce.ImportTsv` (see https://hbase.apache.org/book.html#importtsv[ImportTsv Docs]) to create a table and Hfiles.
 Hfile is an Hbase dedicated file format which is performance optimized for hbase. It stores meta information about the data and thus increases the performance of hbase
 When connecting to the hbase master and opening a `bin/hbase shell` and executing `list`, you will see the created table. However, it'll contain 0 rows at this point.
-You can connect to the shell via `kubectl -n stacks-demos exec -it hbase-master-default-0 -- bin/hbase shell`.
-If you use k9s you can go into the `hbase-master-default-0` and execute `bin/hbase shell`.
+You can connect to the shell via `kubectl exec -it hbase-master-default-0 -- bin/hbase shell`.
+If you use k9s you can go into the `hbase-master-default-0` and execute `bin/hbase shell list`.
 
 [source]
 ----
-list
 TABLE
 cycling-tripdata
 ----
 
-Secondly, we'll use `org.apache.hadoop.hbase.tool.LoadIncrementalHFiles` (see https://hbase.apache.org/book.html#arch.bulk.load) to import the Hfiles into the table and ingest rows.
+Secondly, we'll use `org.apache.hadoop.hbase.tool.LoadIncrementalHFiles` (see https://hbase.apache.org/book.html#arch.bulk.load[see bulk load docs]) to import the Hfiles into the table and ingest rows.
 You can now use the `bin/hbase shell` again and execute `count 'cycling-tripdata'` and see below for a partial result.
 
 [source]
@@ -112,7 +111,7 @@ Took 13.4666 seconds
 ----
 
 == The table
-You can now use the table and the data. Use all available hbase shell commands. Below, you'll see the table description.
+You can now use the table and the data. You are able to use all available hbase shell commands. Below, you'll see the table description.
 
 [source,console]
 ----
