@@ -44,6 +44,14 @@
             <artifactId>hbase-common</artifactId>
             <version>2.4.11</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-spark</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/libs/hbase-spark-1.0.1-SNAPSHOT.jar</systemPath>
+        </dependency>
+
 
 
     </dependencies>

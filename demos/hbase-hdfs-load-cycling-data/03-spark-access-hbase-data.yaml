@@ -2,20 +2,23 @@
 apiVersion: spark.stackable.tech/v1alpha1
 kind: SparkApplication
 metadata:
-  name: spark-hbase-connection
+  name: spark-hbase-connection-2
 spec:
   version: "1.0"
   sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.99.0 #local ARM version
   sparkImagePullPolicy: IfNotPresent
   mode: cluster
-  mainClass: tech.stackable.demo.spark.tbd
-  mainApplicationFile: tbd
+  mainClass: tech.stackable.demo.spark
+  mainApplicationFile: local:////Users/Simon/Repo/stackable/stackablectl/demos/hbase-hdfs-load-cycling-data/sparkHbaseAccess/target/sparkHbaseAccess-1.0-SNAPSHOT.jar
   volumes:
     - name: config-volume-hbase
       configMap:
         name: hbase-master-default
   args:
-    - "--input /arguments/hbase-site.xml"
+    - "--hbaseSite /arguments/hbase-site.xml"
+    - "--hdfsSite /arguments/hdfs-site.xml"
+    - "--coreSite /arguments/core-site.xml"
+    - "--tableName cycling-tripdata"
   driver:
     cores: 1
     coreLimit: "1200m"

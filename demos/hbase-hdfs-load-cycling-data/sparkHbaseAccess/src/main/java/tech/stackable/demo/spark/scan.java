@@ -16,16 +16,20 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.sql.SparkSession;
 import scala.Tuple2;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
-public class Main {
+public class scan {
 
     private static final String CMD_HBASE_SITE = "hbaseSite";
     private static final String CMD_CORE_SITE = "coreSite";
     private static final String CMD_HDFS_SITE = "hdfsSite";
 
     private static final String CMD_TABLENAME = "tableName";
+
+    private static final Logger LOGGER = LogManager.getLogger(scan.class);
 
     public static void main(String[] args) throws ParseException {
 
@@ -35,6 +39,11 @@ public class Main {
         final String coreSite = String.valueOf(commandLine.getOptionValue(CMD_CORE_SITE));
         final String hdfsSite = String.valueOf(commandLine.getOptionValue(CMD_HDFS_SITE));
         final String tableName = String.valueOf(commandLine.getOptionValue(CMD_TABLENAME));
+
+        LOGGER.info("*** inputPath ***: " + tableName);
+        LOGGER.info("*** hbaseSite ***: " + hbaseSite);
+        LOGGER.info("*** coreSite ***: " + coreSite);
+        LOGGER.info("*** hdfsSite ***: " + hdfsSite);
 
         Configuration config = HBaseConfiguration.create();
         config.addResource(new Path(hbaseSite));
@@ -60,7 +69,7 @@ public class Main {
 
             List<String> results = javaRdd.map(new ScanConvertFunction()).collect();
 
-            System.out.println("Result Size: " + results.size());
+            LOGGER.info("*** Result Size: ***: " + results.size());
         } finally {
             jsc.stop();
         }
