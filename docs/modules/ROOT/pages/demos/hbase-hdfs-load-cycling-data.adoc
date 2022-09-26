@@ -24,18 +24,32 @@ image::demo-hbase-hdfs-load-cycling-data/overview.png[]
 
 == List deployed Stackable services
 To list the installed Stackable services run the following command:
+`stackablectl services list --all-namespaces`
 
 [source,console]
 ----
- PRODUCT    NAME       NAMESPACE     ENDPOINTS                             EXTRA INFOS
+PRODUCT    NAME       NAMESPACE  ENDPOINTS                                               EXTRA INFOS
 
- hbase      hbase      stacks-demos  regionserver 172.18.0.3:30449
-                                     ui           http://172.18.0.3:31924
-                                     metrics      172.18.0.3:32317
+ hbase      hbase      default    regionserver                  172.18.0.5:32282
+                                  ui                            http://172.18.0.5:31527
+                                  metrics                       172.18.0.5:31081
 
- hdfs       hdfs       stacks-demos
+ hdfs       hdfs       default    datanode-default-0-metrics    172.18.0.2:31441
+                                  datanode-default-0-data       172.18.0.2:32432
+                                  datanode-default-0-http       http://172.18.0.2:30758
+                                  datanode-default-0-ipc        172.18.0.2:32323
+                                  journalnode-default-0-metrics 172.18.0.5:31123
+                                  journalnode-default-0-http    http://172.18.0.5:30038
+                                  journalnode-default-0-https   https://172.18.0.5:31996
+                                  journalnode-default-0-rpc     172.18.0.5:30080
+                                  namenode-default-0-metrics    172.18.0.2:32753
+                                  namenode-default-0-http       http://172.18.0.2:32475
+                                  namenode-default-0-rpc        172.18.0.2:31639
+                                  namenode-default-1-metrics    172.18.0.4:32202
+                                  namenode-default-1-http       http://172.18.0.4:31486
+                                  namenode-default-1-rpc        172.18.0.4:31874
 
- zookeeper  zookeeper  stacks-demos  zk           172.18.0.4:30169
+ zookeeper  zookeeper  default    zk                            172.18.0.4:32469
 ----
 
 [NOTE]
@@ -119,3 +133,33 @@ COLUMN FAMILIES DESCRIPTION
 {NAME => 'start_station_name', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
 {NAME => 'started_at', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', COMPRESSION => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', BLOCKCACHE => 'true', BLOCKSIZE => '65536', REPLICATION_SCOPE => '0'}
 ----
+
+== The Hbase UI
+The Hbase web UI will give you information on status and metrics of your Hbase cluster. See below for the startpage.
+
+image::demo-hbase-hdfs-load-cycling-data/hbase-ui-start-page.png[]
+
+From the startpage you can check more details. For example details on the created table.
+
+image::demo-hbase-hdfs-load-cycling-data/hbase-table-ui.png[]
+
+== The HDFS UI
+You can also see HDFS details via a UI. Below you will see the overview of your HDFS cluster
+
+image::demo-hbase-hdfs-load-cycling-data/hdfs-overview.png[]
+
+The UI will give you information on the datanodes via the datanodes tab.
+
+image::demo-hbase-hdfs-load-cycling-data/hdfs-datanode.png[]
+
+You can also browse the directory with the UI.
+
+image::demo-hbase-hdfs-load-cycling-data/hdfs-data.png[]
+
+The raw data from the distcp job can be found here.
+
+image::demo-hbase-hdfs-load-cycling-data/hdfs-data-raw.png[]
+
+The structure of the Hilfes can be seen here.
+
+image::demo-hbase-hdfs-load-cycling-data/hdfs-data-hfile.png[]
