@@ -12,7 +12,7 @@ _templates:
         rootPassword: rootroot
         mode: standalone
         persistence:
-          size: 10Gi
+          size: 15Gi
         users:
           - accessKey: druid
             secretKey: druiddruid
