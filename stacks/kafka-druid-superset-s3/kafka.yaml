@@ -30,3 +30,6 @@ spec:
     roleGroups:
       default:
         replicas: 1
+        configOverrides:
+          server.properties:
+            log.retention.bytes: "4294967296" # 4Gi, as this is for every partition and the demos/users might add multiple topics

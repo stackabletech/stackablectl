@@ -9,7 +9,7 @@ spec:
       containers:
         - name: setup-superset
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
-          command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/superset-assets.zip && python -u /tmp/script/script.py"]
+          command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/improve-water-levels-demo/demos/nifi-kafka-druid-water-level-data/superset-assets.zip && python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script

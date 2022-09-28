@@ -18,17 +18,17 @@ spec:
     config:
       resources:
         memory:
-          limit: '4Gi'
+          limit: '6Gi'
         cpu:
           min: "500m"
           max: "4"
         storage:
           contentRepo:
-            capacity: "5Gi"
+            capacity: "10Gi"
           databaseRepo:
             capacity: "5Gi"
           flowfileRepo:
-            capacity: "10Gi"
+            capacity: "5Gi"
           provenanceRepo:
             capacity: "5Gi"
           stateRepo:
