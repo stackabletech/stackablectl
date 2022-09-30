@@ -40,7 +40,7 @@ spec:
           runtime.properties:
             druid.processing.numThreads: "4" # As we are on 22.09 we can't set any resources requests or limits
             # See https://github.com/stackabletech/druid-operator/issues/306
-            druid.segmentCache.locations: '[{"path":"/stackable/var/druid/segment-cache","maxSize":"5g","freeSpacePercent":"5.0"}]'
+            druid.segmentCache.locations: '[{"path":"/stackable/var/druid/segment-cache","maxSize":"8g","freeSpacePercent":"5.0"}]'
   middleManagers:
     roleGroups:
       default:

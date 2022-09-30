@@ -51,7 +51,7 @@ demos:
       - water-levels
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-nifi-ingestion-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml
+      - plainYaml: demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml
       - plainYaml: demos/nifi-kafka-druid-water-level-data/setup-superset.yaml
   trino-taxi-data:
     description: Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
