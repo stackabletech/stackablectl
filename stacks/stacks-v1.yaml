@@ -163,8 +163,8 @@ stacks:
       - helmChart: *template-minio-druid
       - helmChart: *template-postgresql-superset
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/zookeeper.yaml # Reuse
-      - plainYaml: stacks/kafka-druid-superset-s3/kafka.yaml # Reuse
-      - plainYaml: stacks/kafka-druid-superset-s3/druid.yaml # Reuse
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/kafka.yaml # Reuse
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/druid.yaml # Reuse
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
       - plainYaml: stacks/nifi-kafka-druid-superset-s3/nifi.yaml
   trino-superset-s3:
