@@ -10,9 +10,9 @@ NAMESPACE=${1}
 
 # get dependencies
 #cd $PROJECT_DIR/tmp
-curl -O https://repo.stackable.tech/repository/misc/hbase-spark-k8s/hbase-spark-protocol-shaded-1.0.1-SNAPSHOT.jar
-curl -O https://repo.stackable.tech/repository/misc/hbase-spark-k8s/hbase-spark-1.0.1-SNAPSHOT.jar
-curl -O https://repo.stackable.tech/repository/misc/hbase-spark-k8s/scala-library-2.12.14.jar
+#curl -O https://repo.stackable.tech/repository/misc/hbase-spark-k8s/hbase-spark-protocol-shaded-1.0.1-SNAPSHOT.jar
+#curl -O https://repo.stackable.tech/repository/misc/hbase-spark-k8s/hbase-spark-1.0.1-SNAPSHOT.jar
+#curl -O https://repo.stackable.tech/repository/misc/hbase-spark-k8s/scala-library-2.12.14.jar
 
 
 # set envs

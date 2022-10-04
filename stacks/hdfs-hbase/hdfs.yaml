@@ -3,7 +3,7 @@ kind: HdfsCluster
 metadata:
   name: hdfs
 spec:
-  version: 3.3.3-stackable0.99.0
+  version: 3.3.3-stackable0.1.0
   zookeeperConfigMapName: hdfs-znode
   dfsReplication: 1
   log4j: |-
@@ -25,7 +25,7 @@ spec:
       resources:
         storage:
           data:
-            capacity: 2Gi
+            capacity: 5Gi
     roleGroups:
       default:
         replicas: 2
@@ -34,7 +34,7 @@ spec:
       resources:
         storage:
           data:
-            capacity: 2Gi
+            capacity: 5Gi
     roleGroups:
       default:
         replicas: 1
@@ -43,7 +43,7 @@ spec:
       resources:
         storage:
           data:
-            capacity: 2Gi
+            capacity: 5Gi
     roleGroups:
       default:
         replicas: 1

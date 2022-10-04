@@ -5,7 +5,7 @@ metadata:
   name: spark-hbase-connection
 spec:
   version: "1.0"
-  sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.99.0 #local ARM version
+  sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.2.0 #local ARM version
   sparkImagePullPolicy: IfNotPresent
   mode: cluster
   mainClass: tech.stackable.demo.spark

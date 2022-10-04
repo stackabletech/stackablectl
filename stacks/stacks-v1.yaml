@@ -112,6 +112,41 @@ _templates:
           password: airflow
         replica:
           replicaCount: 1
+  - helmChart: &template-minio-spark
+      releaseName: minio-trino
+      name: minio
+      repo:
+        name: minio
+        url: https://charts.min.io/
+      version: 4.0.5
+      options:
+        rootUser: root
+        rootPassword: rootroot
+        mode: standalone
+        persistence:
+          size: 10Gi
+        users:
+          - accessKey: spark
+            secretKey: sparkspark
+            policy: readwrite
+          - accessKey: hbase
+            secretKey: hbasehbase
+            policy: readwrite
+          - accessKey: demo
+            secretKey: demodemo
+            policy: readwrite
+        buckets:
+          - name: demo
+            policy: public
+        resources:
+          requests:
+            memory: 5Gi
+        service:
+          type: NodePort
+          nodePort: null
+        consoleService:
+          type: NodePort
+          nodePort: null
 
 stacks:
   airflow:
@@ -125,11 +160,12 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
-    stackableRelease: 22.09-arm-minimal
+    stackableRelease: 22.09
     labels:
       - hbase
       - hdfs
     manifests:
+      - helmChart: *template-minio-spark
       - plainYaml: stacks/hdfs-hbase/zookeeper.yaml
       - plainYaml: stacks/hdfs-hbase/hdfs.yaml
       - plainYaml: stacks/hdfs-hbase/hbase.yaml

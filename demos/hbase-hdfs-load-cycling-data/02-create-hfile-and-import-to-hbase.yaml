@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: create-hfile-and-import-to-hbase # this jobs create Hfiles first (=dedicated Hbase file format with metadata for the HCatalog.) Afterwards executing a bulkload to Hbase.
+  name: create-hfile-and-import-to-hbase-4 # this jobs create Hfiles first (=dedicated Hbase file format with metadata for the HCatalog.) Afterwards executing a bulkload to Hbase.
 spec:
   template:
     spec:
