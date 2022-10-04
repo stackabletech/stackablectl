@@ -138,7 +138,9 @@ COLUMN FAMILIES DESCRIPTION
 ----
 
 == The Hbase UI
-The Hbase web UI will give you information on status and metrics of your Hbase cluster. See below for the startpage.
+The Hbase web UI will give you information on status and metrics of your Hbase cluster.
+If the UI is not available please do a port-forward `kubectl -n stacks-demos port-forward hbase-master-default-0 16010`
+See below for the startpage.
 
 image::demo-hbase-hdfs-load-cycling-data/hbase-ui-start-page.png[]
 
@@ -147,6 +149,10 @@ From the startpage you can check more details. For example details on the create
 image::demo-hbase-hdfs-load-cycling-data/hbase-table-ui.png[]
 
 == The HDFS UI
+[NOTE]
+====
+The hdfs services will be available with the next release 22-11.
+====
 You can also see HDFS details via a UI. Below you will see the overview of your HDFS cluster
 
 image::demo-hbase-hdfs-load-cycling-data/hdfs-overview.png[]
