@@ -25,7 +25,7 @@ spec:
       resources:
         storage:
           data:
-            capacity: 2Gi
+            capacity: 5Gi
     roleGroups:
       default:
         replicas: 2
@@ -34,7 +34,7 @@ spec:
       resources:
         storage:
           data:
-            capacity: 2Gi
+            capacity: 5Gi
     roleGroups:
       default:
         replicas: 1
@@ -43,7 +43,7 @@ spec:
       resources:
         storage:
           data:
-            capacity: 2Gi
+            capacity: 5Gi
     roleGroups:
       default:
         replicas: 1
