@@ -9,7 +9,7 @@ spec:
       containers:
         - name: create-druid-ingestion-job
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
-          command: ["bash", "-c", "curl -X POST -H 'Content-Type: application/json' -d @/tmp/ingestion-job-spec/stations-ingestion-job-spec.json http://druid-coordinator:8081/druid/indexer/v1/supervisor && curl -X POST -H 'Content-Type: application/json' -d @/tmp/ingestion-job-spec/measurements-ingestion-job-spec.json http://druid-coordinator:8081/druid/indexer/v1/supervisor"]
+          command: ["bash", "-c", "curl -X POST -H 'Content-Type: application/json' -d @/tmp/ingestion-job-spec/stations-ingestion-job-spec.json http://druid-coordinator:8081/druid/indexer/v1/supervisor && curl -X POST -H 'Content-Type: application/json' -d @/tmp/ingestion-job-spec/measurements-ingestion-job-spec.json http://druid-coordinator:8081/druid/indexer/v1/supervisor && curl -X POST -H 'Content-Type: application/json' -d @/tmp/ingestion-job-spec/measurements-compaction-job-spec.json http://druid-coordinator:8081/druid/coordinator/v1/config/compaction"]
           volumeMounts:
             - name: ingestion-job-spec
               mountPath: /tmp/ingestion-job-spec
@@ -65,9 +65,9 @@ data:
           },
           "dimensionsSpec": {
             "dimensions": [
+              "uuid",
               "water_longname",
               "water_shortname",
-              "uuid",
               {
                 "type": "long",
                 "name": "number"
@@ -124,11 +124,11 @@ data:
           "transformSpec": {},
           "dimensionsSpec": {
             "dimensions": [
+              "station_uuid",
               {
                 "type": "long",
                 "name": "value"
-              },
-              "station_uuid"
+              }
             ]
           },
           "granularitySpec": {
@@ -136,6 +136,23 @@ data:
             "rollup": false,
             "segmentGranularity": "day"
           }
+        }
+      }
+    }
+  measurements-compaction-job-spec.json: |
+    {
+      "dataSource": "measurements",
+      "skipOffsetFromLatest": "PT1H",
+      "granularitySpec": {
+        "segmentGranularity": "DAY"
+      },
+      "tuningConfig": {
+        "partitionsSpec": {
+          "type": "range",
+          "partitionDimensions": [
+            "station_uuid"
+          ],
+          "targetRowsPerSegment": 5000000
         }
       }
     }
