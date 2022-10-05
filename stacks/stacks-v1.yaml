@@ -113,7 +113,7 @@ _templates:
         replica:
           replicaCount: 1
   - helmChart: &template-minio-spark
-      releaseName: minio-trino
+      releaseName: minio-spark
       name: minio
       repo:
         name: minio
@@ -126,13 +126,7 @@ _templates:
         persistence:
           size: 10Gi
         users:
-          - accessKey: spark
-            secretKey: sparkspark
-            policy: readwrite
-          - accessKey: hbase
-            secretKey: hbasehbase
-            policy: readwrite
-          - accessKey: demo
+          - accessKey: demo-minio
             secretKey: demodemo
             policy: readwrite
         buckets:
@@ -140,7 +134,7 @@ _templates:
             policy: public
         resources:
           requests:
-            memory: 5Gi
+            memory: 2Gi
         service:
           type: NodePort
           nodePort: null
