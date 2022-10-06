@@ -5,11 +5,23 @@ metadata:
   name: spark-hbase-connection
 spec:
   version: "1.0"
-  sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.2.0 #local ARM version
+  sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.2.0
   sparkImagePullPolicy: IfNotPresent
   mode: cluster
-  mainClass: tech.stackable.demo.spark
-  mainApplicationFile: local:////Users/Simon/Repo/stackable/stackablectl/demos/hbase-hdfs-load-cycling-data/sparkHbaseAccess/target/sparkHbaseAccess-1.0-SNAPSHOT.jar
+  mainClass: tech.stackable.demo.spark.scan
+  mainApplicationFile: s3a://my-bucket/hbase-hdfs-cycling-data/lib/sparkHbaseAccess-1.0-SNAPSHOT.jar
+  s3bucket:
+    inline:
+      bucketName: my-bucket
+      connection:
+        inline:
+          host: demo-minio
+          port: 9000
+          accessStyle: Path
+          credentials:
+            secretClass: s3-credentials-class
+  sparkConf:
+    spark.hadoop.fs.s3a.aws.credentials.provider: "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
   volumes:
     - name: config-volume-hbase
       configMap:
@@ -24,8 +36,6 @@ spec:
     volumeMounts:
       - name: config-volume-hbase
         mountPath: /arguments
-    nodeSelector:
-      node: "1"
   executor:
     cores: 1
     instances: 3
@@ -33,7 +43,3 @@ spec:
     volumeMounts:
       - name: config-volume-hbase
         mountPath: /arguments
-    nodeSelector:
-      node: "1"
-
-
