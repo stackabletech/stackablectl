@@ -35,7 +35,7 @@ spec:
             capacity: "1Gi"
     configOverrides:
       nifi.properties:
-        nifi.ui.autorefresh.interval: "5s"
+        # Can be removed once https://github.com/stackabletech/nifi-operator/issues/354 is fixed
         nifi.content.repository.archive.max.usage.percentage: "80%"
         nifi.provenance.repository.max.storage.size: "3 GB"
     roleGroups:
