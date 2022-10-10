@@ -8,42 +8,84 @@
     <artifactId>sparkHbaseAccess</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <spark.version>3.1.2</spark.version>
+        <hbase.version>2.4.8</hbase.version>
+        <!-- The following version is in sync with Spark's choice
+             Please take caution when this version is modified -->
+        <scala.version>2.12.10</scala.version>
+        <scala.binary.version>2.12</scala.binary.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <layout>default</layout>
+            <url>https://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+<!--        <repository>-->
+<!--            <id>stackable-nexus-releases</id>-->
+<!--            <name>stackable nexus</name>-->
+<!--            <url>https://repo.stackable.tech/#browse/search/maven</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+    </repositories>
+
+
+
     <dependencies>
 
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.12</artifactId>
-            <version>3.3.0</version>
+            <version>${spark.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
-            <version>3.3.0</version>
+            <version>${spark.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-mllib_2.12</artifactId>
-            <version>3.3.0</version>
+            <version>${spark.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-client</artifactId>
-            <version>2.4.11</version>
+            <version>${hbase.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
-            <version>2.4.11</version>
+            <version>${hbase.version}</version>
             <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-common</artifactId>
-            <version>2.4.11</version>
+            <version>${hbase.version}</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.hbase.connectors</groupId>-->
+<!--            <artifactId>spark</artifactId>-->
+<!--            <version>1.0.1-SNAPSHOT</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-spark</artifactId>
@@ -53,13 +95,31 @@
         </dependency>
 
 
-
     </dependencies>
 
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <!--
+                Disable verification of signed jars: https://zhentao-li.blogspot.com/2012/06/maven-shade-plugin-invalid-signature.html
+                -->
+                <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
