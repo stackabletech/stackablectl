@@ -153,6 +153,7 @@ data:
             "station_uuid"
           ],
           "targetRowsPerSegment": 5000000
-        }
+        },
+        "maxNumSegmentsToMerge": 500,
       }
     }
