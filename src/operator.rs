@@ -281,7 +281,7 @@ impl Operator {
     pub fn new(name: String, version: Option<String>) -> Result<Self, String> {
         if !AVAILABLE_OPERATORS.contains(&name.as_str()) {
             Err(format!(
-                "The operator {name} does not exist or stackablectl is to old to know the operator"
+                "The operator {name} does not exist or stackablectl is too old to know the operator"
             ))
         } else {
             Ok(Operator { name, version })
