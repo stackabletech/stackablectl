@@ -1,0 +1,210 @@
+# We can't simply create the SparkApplication object here as we have to wait for Kafka to be ready because
+# * We currently don't restart failed Spark applications (see https://github.com/stackabletech/spark-k8s-operator/issues/157)
+# * We currently auto-create topics and we need all the brokers to be available so that the topic is distributed among all the brokers
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-spark-ingestion-job
+spec:
+  template:
+    spec:
+      serviceAccountName: demo-serviceaccount
+      initContainers:
+        - name: wait-for-testdata 
+          image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
+          command: ["bash", "-c", "echo 'Waiting for all kafka brokers to be ready' && kubectl wait --for=condition=ready --timeout=30m pod -l app.kubernetes.io/instance=kafka -l app.kubernetes.io/name=kafka"]
+      containers:
+        - name: create-spark-ingestion-job
+          image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
+          command: ["bash", "-c", "echo 'Submitting Spark job' && kubectl apply -f /tmp/manifest/spark-ingestion-job.yaml"]
+          volumeMounts:
+            - name: manifest
+              mountPath: /tmp/manifest
+      volumes:
+      - name: manifest
+        configMap:
+          name: create-spark-ingestion-job-manifest
+      restartPolicy: OnFailure
+  backoffLimit: 50
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-spark-ingestion-job-manifest
+data:
+  spark-ingestion-job.yaml: |
+    ---
+    apiVersion: spark.stackable.tech/v1alpha1
+    kind: SparkApplication
+    metadata:
+      name: write-iceberg-table
+    spec:
+      version: "1.0"
+      sparkImage: docker.stackable.tech/sbernauer/pyspark-k8s-with-iceberg:latest3 # docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable0.2.0
+      mode: cluster
+      mainApplicationFile: local:///stackable/spark/jobs/write-iceberg-table.py
+      # deps:
+      #   packages:
+      #     - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:0.14.1
+      #     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0
+      sparkConf:
+        spark.executor.instances: "4"
+        spark.driver.cores: "2"
+        spark.driver.memory: "2g"
+        spark.kubernetes.driver.request.cores: "1"
+        spark.kubernetes.driver.limit.cores: "2"
+        spark.executor.cores: "4"
+        spark.executor.memory: "8g"
+        spark.kubernetes.executor.request.cores: "2"
+        spark.kubernetes.executor.limit.cores: "4"
+
+        spark.hadoop.fs.s3a.endpoint: http://minio-trino:9000
+        spark.hadoop.fs.s3a.path.style.access: "true"
+        spark.hadoop.fs.s3a.access.key: trino
+        spark.hadoop.fs.s3a.secret.key: trinotrino
+        spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
+        spark.sql.catalog.warehouse: org.apache.iceberg.spark.SparkCatalog
+        spark.sql.catalog.warehouse.type: hive
+        spark.sql.catalog.warehouse.uri: thrift://hive-iceberg:9083
+      volumes:
+        - name: script
+          configMap:
+            name: write-iceberg-table-script
+      job:
+        resources:
+          cpu:
+            min: 100m
+            max: "1"
+          memory:
+            limit: 1Gi
+      driver:
+        volumeMounts:
+          - name: script
+            mountPath: /stackable/spark/jobs
+      executor:
+        volumeMounts:
+          - name: script
+            mountPath: /stackable/spark/jobs
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: write-iceberg-table-script
+data:
+  write-iceberg-table.py: |
+    from pyspark.sql import SparkSession
+    from pyspark.sql.types import StructType, StructField, StringType, ShortType, FloatType, TimestampType
+    from pyspark.sql.functions import col, from_json, expr
+    import time
+    from datetime import datetime, timedelta
+
+    spark = SparkSession.builder.appName("write-iceberg-table").getOrCreate()
+    # spark.sparkContext.setLogLevel("DEBUG")
+
+    spark.sql("CREATE SCHEMA IF NOT EXISTS warehouse.water_levels LOCATION 's3a://warehouse/water-levels/'")
+
+    # Todo add PARTITIONED BY (days(timestamp))
+    # Currently fails with org.apache.spark.sql.AnalysisException: days(timestamp) ASC NULLS FIRST is not currently supported
+    # Don't forget to add option("fanout-enabled", "true") to iceberg sink as well
+    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.water_levels.measurements (station_uuid string, timestamp timestamp, value float, kafka_key string, kafka_topic string, kafka_partition integer, kafka_offset long, kafka_timestamp timestamp, kafka_timestamp_type integer) USING iceberg")
+
+    measurements = spark \
+      .readStream \
+      .format("kafka") \
+      .option("kafka.bootstrap.servers", "kafka:9092") \
+      .option("subscribe", "measurements") \
+      .option("startingOffsets", "earliest") \
+      .option("maxOffsetsPerTrigger", 15000000) \
+      .load()
+    measurements.printSchema()
+    measurements = measurements \
+        .selectExpr( \
+            "cast(key as string) kafka_key", \
+            "cast(value as string) as kafka_value", \
+            "topic as kafka_topic", \
+            "partition as kafka_partition", \
+            "offset as kafka_offset", \
+            "timestamp as kafka_timestamp", \
+            "timestampType as kafka_timestamp_type" \
+        )
+    measurements.printSchema()
+
+    schema = StructType([ 
+      StructField("station_uuid", StringType(), True), 
+      StructField("timestamp", TimestampType(), True), 
+      StructField("value", FloatType(), True), 
+    ])
+    measurements = measurements \
+        .withColumn("json", from_json(col("kafka_value"), schema)) \
+        .select("json.*", \
+            "kafka_key",
+            "kafka_topic",
+            "kafka_partition",
+            "kafka_offset",
+            "kafka_timestamp",
+            "kafka_timestamp_type"
+        )
+    measurements.printSchema()
+
+    ingest_job = measurements \
+        .writeStream \
+        .format("iceberg") \
+        .outputMode("append") \
+        .trigger(processingTime='1 minutes') \
+        .option("path", "warehouse.water_levels.measurements") \
+        .option("checkpointLocation", "s3a://warehouse/water-levels/measurements/checkpoints") \
+        .start()
+
+    while True:
+      print(f"Ingest job status: {ingest_job.status}")
+
+      expire_before = (datetime.now() - timedelta(hours=4)).strftime("%Y-%m-%d %H:%M:%S")
+      print("Expiring snapshots older than 4 hours ()")
+      spark.sql(f"CALL warehouse.system.expire_snapshots(table => 'water_levels.measurements', older_than => TIMESTAMP '{expire_before}', retain_last => 50, stream_results => true)")
+
+      print("Removing orphaned files")
+      spark.sql("CALL warehouse.system.remove_orphan_files(table => 'water_levels.measurements')")
+
+      print("Starting compaction")
+      # spark.sql("CALL warehouse.system.rewrite_data_files(table => 'water_levels.measurements')")
+      spark.sql("CALL warehouse.system.rewrite_data_files(table => 'water_levels.measurements', strategy => 'sort', sort_order => 'station_uuid ASC NULLS LAST,timestamp DESC NULLS LAST')")
+      print("Compaction finished. Waiting 15min to schedule next run")
+      time.sleep(15 * 60)
+
+    ingest_job.awaitTermination()
+# ---
+# apiVersion: s3.stackable.tech/v1alpha1
+# kind: S3Connection
+# metadata:
+#   name: spark
+# spec:
+#   host: minio-trino
+#   port: 9000
+#   accessStyle: Path
+#   credentials:
+#     secretClass: spark-s3-credentials
+# ---
+# apiVersion: secrets.stackable.tech/v1alpha1
+# kind: SecretClass
+# metadata:
+#   name: spark-s3-credentials
+# spec:
+#   backend:
+#     k8sSearch:
+#       searchNamespace:
+#         pod: {}
+# ---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: spark-s3-credentials
+#   labels:
+#     secrets.stackable.tech/class: spark-s3-credentials
+# stringData:
+# # TODO bug in spark-k8s
+#   accessKeyId: trino
+#   secretAccessKey: trinotrino
+# # Should be
+#   accessKey: trino
+#   secretKey: trinotrino
