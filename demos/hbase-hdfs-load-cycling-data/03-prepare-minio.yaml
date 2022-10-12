@@ -8,8 +8,38 @@ spec:
         spec:
             containers:
                 - name: prepare-minio-load-jar
-                  image: "bitnami/minio:2022-debian-10"
-                  command: ["bash", "-c", "cd /tmp && curl -O https://repo.stackable.tech/repository/misc/hbase-spark-k8s/sparkHbaseAccess-1.0-SNAPSHOT.jar && mc --insecure alias set minio http://minio-spark:9000 demo-minio demodemo && mc cp sparkHbaseAccess-1.0-SNAPSHOT.jar minio/demo/hbase-hdfs-cycling-data/lib/"]
+                  image: docker.io/bitnami/minio-client:2022.8.11-debian-11-r3
+                  command: ["bash", "-c", "cd /tmp && \ 
+                                           curl -O https://repo.stackable.tech/repository/misc/hbase-spark-k8s/sparkHbaseAccess-1.0-SNAPSHOT.jar && \                                           
+                                           mc alias set $MINIO_ALIAS $MINIO_SERVER_SCHEME://$MINIO_SERVER_HOST:$MINIO_SERVER_PORT_NUMBER $MINIO_SERVER_ACCESS_KEY $MINIO_SERVER_SECRET_KEY && \
+                                           mc mb $MINIO_ALIAS/$MINIO_BUCKET_NAME && \
+                                           mc cp sparkHbaseAccess-1.0-SNAPSHOT.jar $MINIO_ALIAS/$MINIO_BUCKET_NAME"]
+                  args: ["$(MINIO_SERVER_ACCESS_KEY) $(MINIO_SERVER_SECRET_KEY) $(MINIO_SERVER_HOST) $(MINIO_SERVER_PORT_NUMBER) $(MINIO_SERVER_SCHEME)"]
+                  stdin: true
+                  tty: true
+                  env:
+                    - name: MINIO_SERVER_ACCESS_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: spark-s3-credentials
+                          key: accessKey
+                          optional: false
+                    - name: MINIO_SERVER_SECRET_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: spark-s3-credentials
+                          key: secretKey
+                          optional: false
+                    - name: MINIO_SERVER_HOST
+                      value: demo-minio-spark
+                    - name: MINIO_SERVER_PORT_NUMBER
+                      value: "9000"
+                    - name: MINIO_SERVER_SCHEME
+                      value: http
+                    - name: MINIO_ALIAS
+                      value: "demo-minio"
+                    - name: MINIO_BUCKET_NAME
+                      value: "demo-bucket"
             restartPolicy: OnFailure
     backoffLimit: 50
 
