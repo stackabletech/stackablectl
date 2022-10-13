@@ -107,6 +107,7 @@ data:
     # Todo add PARTITIONED BY (days(timestamp))
     # Currently fails with org.apache.spark.sql.AnalysisException: days(timestamp) ASC NULLS FIRST is not currently supported
     # Don't forget to add option("fanout-enabled", "true") to iceberg sink as well
+    # see https://github.com/apache/iceberg/issues/5625
     spark.sql("CREATE TABLE IF NOT EXISTS warehouse.water_levels.measurements (station_uuid string, timestamp timestamp, value float, kafka_key string, kafka_topic string, kafka_partition integer, kafka_offset long, kafka_timestamp timestamp, kafka_timestamp_type integer) USING iceberg")
 
     measurements = spark \
