@@ -94,118 +94,211 @@ metadata:
 data:
   write-iceberg-table.py: |
     from pyspark.sql import SparkSession
-    from pyspark.sql.types import StructType, StructField, StringType, ShortType, FloatType, TimestampType
+    from pyspark.sql.types import StructType, StructField, StringType, LongType, ShortType, FloatType, DoubleType, BooleanType, TimestampType, MapType, ArrayType
     from pyspark.sql.functions import col, from_json, expr
     import time
     from datetime import datetime, timedelta
 
-    spark = SparkSession.builder.appName("write-iceberg-table").getOrCreate()
+    spark = SparkSession.builder.appName("spark-ingest-into-warehouse").getOrCreate()
     # spark.sparkContext.setLogLevel("DEBUG")
 
     spark.sql("CREATE SCHEMA IF NOT EXISTS warehouse.water_levels LOCATION 's3a://warehouse/water-levels/'")
+    spark.sql("CREATE SCHEMA IF NOT EXISTS warehouse.smart_city LOCATION 's3a://warehouse/smart-city/'")
 
     # Todo add PARTITIONED BY (days(timestamp))
     # Currently fails with org.apache.spark.sql.AnalysisException: days(timestamp) ASC NULLS FIRST is not currently supported
     # Don't forget to add option("fanout-enabled", "true") to iceberg sink as well
     # see https://github.com/apache/iceberg/issues/5625
-    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.water_levels.measurements (station_uuid string, timestamp timestamp, value float, kafka_key string, kafka_topic string, kafka_partition integer, kafka_offset long, kafka_timestamp timestamp, kafka_timestamp_type integer) USING iceberg")
-
-    measurements = spark \
-      .readStream \
-      .format("kafka") \
-      .option("kafka.bootstrap.servers", "kafka:9092") \
-      .option("subscribe", "measurements") \
-      .option("startingOffsets", "earliest") \
-      .option("maxOffsetsPerTrigger", 50000000) \
-      .load()
-    measurements.printSchema()
-    measurements = measurements \
-        .selectExpr( \
-            "cast(key as string) kafka_key", \
-            "cast(value as string) as kafka_value", \
-            "topic as kafka_topic", \
-            "partition as kafka_partition", \
-            "offset as kafka_offset", \
-            "timestamp as kafka_timestamp", \
-            "timestampType as kafka_timestamp_type" \
-        )
-    measurements.printSchema()
+    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.water_levels.measurements (station_uuid string, timestamp timestamp, value float) USING iceberg")
+    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.water_levels.stations (uuid string, number bigint, short_name string, long_name string, km float, agency string, latitude double, longitude double, water_short_name string, water_long_name string) USING iceberg")
+    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.smart_city.shared_bikes_bike_status (bike_id string, vehicle_type_id string, latitude double, longitude double, is_reserved boolean, is_disabled boolean, last_reported timestamp) USING iceberg")
+    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.smart_city.shared_bikes_station_information (station_id string, name string, latitude double, longitude double) USING iceberg")
+    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.smart_city.shared_bikes_station_status (station_id string, num_bikes_available short, is_installed boolean, is_renting boolean, is_returning boolean, vehicle_types_available map<string,short>, last_reported timestamp) USING iceberg")
 
     schema = StructType([ 
-      StructField("station_uuid", StringType(), True), 
-      StructField("timestamp", TimestampType(), True), 
-      StructField("value", FloatType(), True), 
+        StructField("station_uuid", StringType(), True), 
+        StructField("timestamp", TimestampType(), True), 
+        StructField("value", FloatType(), True), 
     ])
-    measurements = measurements \
-        .withColumn("json", from_json(col("kafka_value"), schema)) \
-        .select("json.*", \
-            "kafka_key",
-            "kafka_topic",
-            "kafka_partition",
-            "kafka_offset",
-            "kafka_timestamp",
-            "kafka_timestamp_type"
-        )
-    measurements.printSchema()
+    spark \
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("subscribe", "water_levels_measurements") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 50000000) \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .withColumn("json", from_json(col("value"), schema)) \
+    .select("json.station_uuid", "json.timestamp", "json.value") \
+    .writeStream \
+    .queryName("ingest water_level measurements") \
+    .format("iceberg") \
+    .outputMode("append") \
+    .trigger(processingTime='2 minutes') \
+    .option("path", "warehouse.water_levels.measurements") \
+    .option("checkpointLocation", "s3a://warehouse/water-levels/measurements/checkpoints") \
+    .start()
 
-    ingest_job = measurements \
-        .writeStream \
-        .format("iceberg") \
-        .outputMode("append") \
-        .trigger(processingTime='2 minutes') \
-        .option("path", "warehouse.water_levels.measurements") \
-        .option("checkpointLocation", "s3a://warehouse/water-levels/measurements/checkpoints") \
-        .start()
+    schema = StructType([ \
+        StructField("uuid", StringType(), True), \
+        StructField("number", StringType(), True),  \
+        StructField("shortname", StringType(), True), \
+        StructField("longname", StringType(), True), \
+        StructField("km", FloatType(), True), \
+        StructField("agency", StringType(), True), \
+        StructField("latitude", DoubleType(), True), \
+        StructField("longitude", DoubleType(), True), \
+        StructField("water", \
+            StructType([StructField("shortname", StringType(), True), StructField("longname", StringType(), True)]), \
+        True), \
+    ])
+    spark \
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("subscribe", "water_levels_stations") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 10000) \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .withColumn("json", from_json(col("value"), schema)) \
+    .selectExpr( \
+        "json.uuid", \
+        "cast(json.number as bigint) as number", \
+        "json.shortname as short_name", \
+        "json.longname as long_name", \
+        "json.km", "json.agency", \
+        "json.latitude", \
+        "json.longitude", \
+        "json.water.shortname as water_short_name", \
+        "json.water.longname as water_long_name" \
+    ) \
+    .writeStream \
+    .queryName("ingest water_level stations") \
+    .format("iceberg") \
+    .outputMode("append") \
+    .trigger(processingTime='2 minutes') \
+    .option("path", "warehouse.water_levels.stations") \
+    .option("checkpointLocation", "s3a://warehouse/water-levels/stations/checkpoints") \
+    .start()
+
+    schema = StructType([ \
+        StructField("station_id", StringType(), True), \
+        StructField("lat", DoubleType(), True), \
+        StructField("lon", DoubleType(), True), \
+        StructField("name", StringType(), True), \
+    ])
+    spark \
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("subscribe", "shared_bikes_station_information") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 10000) \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .withColumn("json", from_json(col("value"), schema)) \
+    .selectExpr("json.station_id", "json.name as name", "json.lat as latitude", "json.lon as longitude") \
+    .writeStream \
+    .queryName("ingest smart_city shared_bikes_station_information") \
+    .format("iceberg") \
+    .outputMode("append") \
+    .trigger(processingTime='2 minutes') \
+    .option("path", "warehouse.smart_city.shared_bikes_station_information") \
+    .option("checkpointLocation", "s3a://warehouse/smart-city/shared_bikes_station_information/checkpoints") \
+    .start()
+
+    schema = StructType([ \
+        StructField("station_id", StringType(), True), \
+        StructField("is_installed", BooleanType(), True), \
+        StructField("last_reported", TimestampType(), True), \
+        StructField("num_bikes_available", ShortType(), True), \
+        StructField("is_renting", BooleanType(), True), \
+        StructField("is_returning", BooleanType(), True), \
+        StructField("vehicle_types_available", ArrayType(StructType([StructField("count", ShortType(), True), StructField("vehicle_type_id", StringType(), True)]), True), True), \
+    ])
+    spark \
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("subscribe", "shared_bikes_station_status") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 10000) \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .withColumn("json", from_json(col("value"), schema)) \
+    .selectExpr( \
+        "json.station_id", \
+        "json.num_bikes_available", \
+        "json.is_installed", \
+        "json.is_renting", \
+        "json.is_returning", \
+        "map_from_arrays(json.vehicle_types_available.vehicle_type_id, json.vehicle_types_available.count) as vehicle_types_available", \
+        "json.last_reported" \
+    ) \
+    .writeStream \
+    .queryName("ingest smart_city shared_bikes_station_status") \
+    .format("iceberg") \
+    .outputMode("append") \
+    .trigger(processingTime='2 minutes') \
+    .option("path", "warehouse.smart_city.shared_bikes_station_status") \
+    .option("checkpointLocation", "s3a://warehouse/smart-city/shared_bikes_station_status/checkpoints") \
+    .start()
+
+    schema = StructType([ \
+        StructField("lat", DoubleType(), True), \
+        StructField("lon", DoubleType(), True), \
+        StructField("bike_id", StringType(), True), \
+        StructField("is_reserved", BooleanType(), True), \
+        StructField("is_disabled", BooleanType(), True), \
+        StructField("vehicle_type_id", StringType(), True), \
+        StructField("last_reported", TimestampType(), True), \
+    ])
+    spark \
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("subscribe", "shared_bikes_bike_status") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 10000) \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .withColumn("json", from_json(col("value"), schema)) \
+    .selectExpr("json.bike_id", "json.vehicle_type_id", "json.lat as latitude", "json.lon as longitude", "json.is_reserved", "json.is_disabled", "json.last_reported") \
+    .writeStream \
+    .queryName("ingest smart_city shared_bikes_bike_status") \
+    .format("iceberg") \
+    .outputMode("append") \
+    .trigger(processingTime='2 minutes') \
+    .option("path", "warehouse.smart_city.shared_bikes_bike_status") \
+    .option("checkpointLocation", "s3a://warehouse/smart-city/shared_bikes_bike_status/checkpoints") \
+    .start()
+
+    # key: table name
+    # value: compaction strategy
+    tables_to_compact = {
+        "water_levels.measurements": ", strategy => 'sort', sort_order => 'station_uuid ASC NULLS LAST,timestamp DESC NULLS LAST'",
+        "water_levels.stations": "",
+        "warehouse.smart_city.shared_bikes_station_information": "",
+        "warehouse.smart_city.shared_bikes_station_status": "",
+        "warehouse.smart_city.shared_bikes_bike_status": "",
+    }
 
     while True:
-      print(f"Ingest job status: {ingest_job.status}")
+        expire_before = (datetime.now() - timedelta(hours=4)).strftime("%Y-%m-%d %H:%M:%S")
+        for table, table_compaction_strategy in tables_to_compact.items():
+            print(f"[{table}] Expiring snapshots older than 4 hours ({expire_before})")
+            spark.sql(f"CALL warehouse.system.expire_snapshots(table => '{table}', older_than => TIMESTAMP '{expire_before}', retain_last => 50, stream_results => true)")
 
-      expire_before = (datetime.now() - timedelta(hours=4)).strftime("%Y-%m-%d %H:%M:%S")
-      print("Expiring snapshots older than 4 hours ()")
-      spark.sql(f"CALL warehouse.system.expire_snapshots(table => 'water_levels.measurements', older_than => TIMESTAMP '{expire_before}', retain_last => 50, stream_results => true)")
+            print(f"[{table}] Removing orphaned files")
+            spark.sql(f"CALL warehouse.system.remove_orphan_files(table => '{table}')")
 
-      print("Removing orphaned files")
-      spark.sql("CALL warehouse.system.remove_orphan_files(table => 'water_levels.measurements')")
+            print(f"[{table}] Starting compaction")
+            # spark.sql("CALL warehouse.system.rewrite_data_files(table => 'water_levels.measurements')")
+            # spark.sql(f"CALL warehouse.system.rewrite_data_files(table => '{table}', strategy => 'sort', sort_order => 'station_uuid ASC NULLS LAST,timestamp DESC NULLS LAST')")
+            spark.sql(f"CALL warehouse.system.rewrite_data_files(table => '{table}'{table_compaction_strategy})")
+            print(f"[{table}] Finished compaction")
 
-      print("Starting compaction")
-      # spark.sql("CALL warehouse.system.rewrite_data_files(table => 'water_levels.measurements')")
-      spark.sql("CALL warehouse.system.rewrite_data_files(table => 'water_levels.measurements', strategy => 'sort', sort_order => 'station_uuid ASC NULLS LAST,timestamp DESC NULLS LAST')")
-      print("Compaction finished. Waiting 15min to schedule next run")
-      time.sleep(15 * 60)
-
-    ingest_job.awaitTermination()
-# ---
-# apiVersion: s3.stackable.tech/v1alpha1
-# kind: S3Connection
-# metadata:
-#   name: spark
-# spec:
-#   host: minio-trino
-#   port: 9000
-#   accessStyle: Path
-#   credentials:
-#     secretClass: spark-s3-credentials
-# ---
-# apiVersion: secrets.stackable.tech/v1alpha1
-# kind: SecretClass
-# metadata:
-#   name: spark-s3-credentials
-# spec:
-#   backend:
-#     k8sSearch:
-#       searchNamespace:
-#         pod: {}
-# ---
-# apiVersion: v1
-# kind: Secret
-# metadata:
-#   name: spark-s3-credentials
-#   labels:
-#     secrets.stackable.tech/class: spark-s3-credentials
-# stringData:
-# # TODO bug in spark-k8s
-#   accessKeyId: trino
-#   secretAccessKey: trinotrino
-# # Should be
-#   accessKey: trino
-#   secretKey: trinotrino
+        print("All tables compacted. Waiting 15min before scheduling next run...")
+        time.sleep(25 * 60) # Assuming compaction takes 5 min run every 30 minutes

@@ -197,6 +197,7 @@ stacks:
       - plainYaml: stacks/data-warehouse-iceberg-trino-spark/zookeeper.yaml
       - plainYaml: stacks/data-warehouse-iceberg-trino-spark/kafka.yaml
       - plainYaml: stacks/data-warehouse-iceberg-trino-spark/nifi.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
     stackableRelease: 22.09
