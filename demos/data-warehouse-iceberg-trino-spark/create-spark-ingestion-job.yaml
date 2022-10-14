@@ -38,12 +38,12 @@ data:
     apiVersion: spark.stackable.tech/v1alpha1
     kind: SparkApplication
     metadata:
-      name: write-iceberg-table
+      name: spark-ingest-into-warehouse
     spec:
       version: "1.0"
       sparkImage: docker.stackable.tech/sbernauer/pyspark-k8s-with-iceberg:latest3 # docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable0.2.0
       mode: cluster
-      mainApplicationFile: local:///stackable/spark/jobs/write-iceberg-table.py
+      mainApplicationFile: local:///stackable/spark/jobs/spark-ingest-into-warehouse.py
       # deps:
       #   packages:
       #     - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:0.14.1
@@ -92,7 +92,7 @@ kind: ConfigMap
 metadata:
   name: write-iceberg-table-script
 data:
-  write-iceberg-table.py: |
+  spark-ingest-into-warehouse.py: |
     from pyspark.sql import SparkSession
     from pyspark.sql.types import StructType, StructField, StringType, LongType, ShortType, FloatType, DoubleType, BooleanType, TimestampType, MapType, ArrayType
     from pyspark.sql.functions import col, from_json, expr
@@ -135,7 +135,7 @@ data:
     .queryName("ingest water_level measurements") \
     .format("iceberg") \
     .outputMode("append") \
-    .trigger(processingTime='2 minutes') \
+    .trigger(processingTime='5 minutes') \
     .option("path", "warehouse.water_levels.measurements") \
     .option("checkpointLocation", "s3a://warehouse/water-levels/measurements/checkpoints") \
     .start()
@@ -278,7 +278,8 @@ data:
     # key: table name
     # value: compaction strategy
     tables_to_compact = {
-        "water_levels.measurements": ", strategy => 'sort', sort_order => 'station_uuid ASC NULLS LAST,timestamp DESC NULLS LAST'",
+    #     "water_levels.measurements": ", strategy => 'sort', sort_order => 'station_uuid ASC NULLS LAST,timestamp DESC NULLS LAST'",
+        "water_levels.measurements": "",
         "water_levels.stations": "",
         "warehouse.smart_city.shared_bikes_station_information": "",
         "warehouse.smart_city.shared_bikes_station_status": "",
@@ -295,10 +296,8 @@ data:
             spark.sql(f"CALL warehouse.system.remove_orphan_files(table => '{table}')")
 
             print(f"[{table}] Starting compaction")
-            # spark.sql("CALL warehouse.system.rewrite_data_files(table => 'water_levels.measurements')")
-            # spark.sql(f"CALL warehouse.system.rewrite_data_files(table => '{table}', strategy => 'sort', sort_order => 'station_uuid ASC NULLS LAST,timestamp DESC NULLS LAST')")
             spark.sql(f"CALL warehouse.system.rewrite_data_files(table => '{table}'{table_compaction_strategy})")
             print(f"[{table}] Finished compaction")
 
-        print("All tables compacted. Waiting 15min before scheduling next run...")
+        print("All tables compacted. Waiting 25min before scheduling next run...")
         time.sleep(25 * 60) # Assuming compaction takes 5 min run every 30 minutes
