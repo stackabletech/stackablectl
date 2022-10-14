@@ -26,13 +26,18 @@ spec:
           contentRepo:
             capacity: "10Gi"
           databaseRepo:
-            capacity: "5Gi"
+            capacity: "1Gi"
           flowfileRepo:
-            capacity: "5Gi"
+            capacity: "2Gi"
           provenanceRepo:
-            capacity: "5Gi"
+            capacity: "4Gi"
           stateRepo:
-            capacity: "5Gi"
+            capacity: "1Gi"
+    configOverrides:
+      nifi.properties:
+        # Can be removed once https://github.com/stackabletech/nifi-operator/issues/354 is fixed
+        nifi.content.repository.archive.max.usage.percentage: "80%"
+        nifi.provenance.repository.max.storage.size: "3 GB"
     roleGroups:
       default:
         replicas: 1

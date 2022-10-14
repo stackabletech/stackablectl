@@ -24,6 +24,7 @@ const AVAILABLE_OPERATORS: &[&str] = &[
     "hdfs",
     "hive",
     "kafka",
+    "listener",
     "nifi",
     "opa",
     "secret",
