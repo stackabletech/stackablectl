@@ -1,0 +1,81 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: setup-superset
+spec:
+  template:
+    spec:
+      containers:
+        - name: setup-superset
+          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
+          command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/demo-data-warehouse-iceberg-trino-spark/demos/data-warehouse-iceberg-trino-spark/superset-assets.zip && python -u /tmp/script/script.py"]
+          volumeMounts:
+            - name: script
+              mountPath: /tmp/script
+      volumes:
+      - name: script
+        configMap:
+          name: setup-superset-script
+      restartPolicy: OnFailure
+  backoffLimit: 50
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: setup-superset-script
+data:
+  script.py: |
+    import logging
+    import requests
+
+    base_url = "http://superset-external:8088" # For local testing / developing replace it, afterwards change back to http://superset-external:8088
+    username = "admin"
+    password = "admin"
+
+    logging.basicConfig(level=logging.INFO)
+    logging.info("Starting setup of Superset")
+
+    logging.info("Getting access token from /api/v1/security/login")
+    session = requests.session()
+    access_token = session.post(f"{base_url}/api/v1/security/login", json={"username": username, "password": password, "provider": "db", "refresh": True}).json()['access_token']
+    # print(f"access_token: {access_token}")
+
+    logging.info("Getting csrf token from /api/v1/security/csrf_token")
+    csrf_token = session.get(f"{base_url}/api/v1/security/csrf_token", headers={"Authorization": f"Bearer {access_token}"}).json()["result"]
+    # print(f"csrf_token: {csrf_token}")
+
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {access_token}",
+        "X-CSRFToken": csrf_token,
+    }
+
+    # To retrieve all of the assets (datasources, datasets, charts and dashboards) run the following commands
+    # logging.info("Exporting all assets")
+    # result = session.get(f"{base_url}/api/v1/assets/export", headers=headers)
+    # assert result.status_code == 200
+    # with open("superset-assets.zip", "wb") as f:
+    #     f.write(result.content)
+
+
+    #########################
+    # IMPORTANT
+    #########################
+    # This will overwrite the created druid database from the DruidConnection object.
+    # This is intentional as the Datasets in the assets point to the uuid of the Database object.
+    # So we can not use the provisioned one, which will have a random uuid assigned.
+    #########################
+    logging.info("Importing all assets")
+    files = {
+        "bundle": ("superset-assets.zip", open("superset-assets.zip", "rb")),
+    }
+    data = {
+        "passwords": '{"databases/Trino_warehouse.yaml": "demo"}'
+    }
+    result = session.post(f"{base_url}/api/v1/assets/import", headers=headers, files=files, data=data)
+    print(result)
+    print(result.text)
+    assert result.status_code == 200
+
+    logging.info("Finished setup of Superset")
