@@ -44,9 +44,11 @@ public class scan {
         SparkSession spark = SparkSession.builder().appName("sparkHbase").getOrCreate();
 
         JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
-        // How to add HavaHbaseContext:
+        // How to add JavaHbaseContext:
         // clone repo: https://github.com/apache/hbase-connectors/tree/master/spark
-        // mvn -Dspark.version=3.3.0 -Dscala.version=2.12.14 -Dhadoop-three.version=3.3.2 -Dscala.binary.version=2.12 -Dhbase.version=2.4.12 -DrecompileMode=all -DskipTests clean package
+        // !!! Check your current Java version !!!
+        // As of october 2022 this only works for JAVA 8.
+        // mvn -Dspark.version=3.1.2 -Dscala.version=2.12.10 -Dhadoop-three.version=3.2.0 -Dscala.binary.version=2.12 -Dhbase.version=2.4.8 -DrecompileMode=all clean package
         // Intellij: Project Structure --> add library --> New Library --> Java --> hbase-spark-1.0.1-SNAPSHOT.jar
         JavaHBaseContext hbaseContext = new JavaHBaseContext(jsc, config);
 
