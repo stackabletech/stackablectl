@@ -9,19 +9,12 @@ spec:
   sparkImagePullPolicy: IfNotPresent
   mode: cluster
   mainClass: tech.stackable.demo.spark.scan
-  mainApplicationFile: s3a://my-bucket/hbase-hdfs-cycling-data/lib/sparkHbaseAccess-1.0-SNAPSHOT.jar
-  s3bucket:
-    inline:
-      bucketName: my-bucket
-      connection:
-        inline:
-          host: demo-minio
-          port: 9000
-          accessStyle: Path
-          credentials:
-            secretClass: s3-credentials-class
+  mainApplicationFile: s3a://demo-bucket/sparkHbaseAccess-1.0-SNAPSHOT.jar
   sparkConf:
-    spark.hadoop.fs.s3a.aws.credentials.provider: "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
+    spark.hadoop.fs.s3a.endpoint: http://demo-minio-spark:9000
+    spark.hadoop.fs.s3a.path.style.access: "true"
+    spark.hadoop.fs.s3a.access.key: demo
+    spark.hadoop.fs.s3a.secret.key: demodemo
   volumes:
     - name: config-volume-hbase
       configMap:
