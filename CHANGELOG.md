@@ -5,6 +5,7 @@
 ### Added
 
 - Added Listener operator to supported operators ([#143](https://github.com/stackabletech/stackablectl/pull/143))
+- Detect IONOS managed Stackable clusters and skip installing releases ([#147](https://github.com/stackabletech/stackablectl/pull/147))
 
 ## [0.5.0] - 2022-09-14
 

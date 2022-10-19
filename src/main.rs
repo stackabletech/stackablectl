@@ -9,6 +9,7 @@ mod arguments;
 mod demo;
 mod helm;
 mod helpers;
+mod ionos;
 mod kind;
 mod kube;
 mod operator;

@@ -1,4 +1,4 @@
-use crate::{arguments::OutputType, helpers, kind, operator, operator::Operator, CliArgs};
+use crate::{arguments::OutputType, helpers, ionos, kind, operator, operator::Operator, CliArgs};
 use cached::proc_macro::cached;
 use clap::{ArgGroup, Parser, ValueHint};
 use indexmap::IndexMap;
@@ -201,6 +201,15 @@ pub async fn install_release(
     include_products: &[String],
     exclude_products: &[String],
 ) -> Result<(), Box<dyn Error>> {
+    let managed_stackable_operators = ionos::detect_ionos_managed_stackable_operators().await?;
+    if !managed_stackable_operators.is_empty() {
+        warn!("stackablectl detected that you are running on a managed Stackable cluster operated by IONOS. \
+        As IONOS has installed the Stackable operators already, stackablectl is not going to install them a second time. \
+        Please make sure that your managed Stackable cluster uses the same Stackable operator versions as the release {release_name}. \
+        You can list the Stackable operator versions of the {release_name} release using `stackablectl release describe {release_name}`.");
+        return Ok(());
+    }
+
     info!("Installing release {release_name}");
     let release = get_release(release_name).await;
 
