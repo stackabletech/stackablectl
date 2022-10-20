@@ -5,6 +5,7 @@
 ### Added
 
 - Added Listener operator to supported operators ([#143](https://github.com/stackabletech/stackablectl/pull/143))
+- Support listing distributed MinIO instances ([#148](https://github.com/stackabletech/stackablectl/pull/148))
 
 ## [0.5.0] - 2022-09-14
 
