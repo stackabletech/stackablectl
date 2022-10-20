@@ -1,6 +1,6 @@
 ---
 releases:
-  22.09-trino-0.7.0:
+  22.09-latest-trino-spark:
     releaseDate: 2022-09-09
     description: Second release focusing on security and OpenShift support
     products:
@@ -29,6 +29,6 @@ releases:
       superset:
         operatorVersion: 0.6.0
       trino:
-        operatorVersion: 0.7.0 # Needed for iceberg
+        operatorVersion: 0.8.0-nightly # Needed for iceberg
       zookeeper:
         operatorVersion: 0.11.0

@@ -177,7 +177,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
   data-warehouse-iceberg-trino-spark:
     description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
-    stackableRelease: 22.09-trino-0.7.0
+    stackableRelease: 22.09-latest-trino-spark
     labels:
       - iceberg
       - trino
