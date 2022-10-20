@@ -182,3 +182,14 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
+  hbase-ycsb-benchmark:
+    description: Benchmark HBase cluster using YSCB benchmark
+    stackableRelease: nightly
+    labels:
+      - hbase
+      - hdfs
+      - ycsb
+    manifests:
+      - plainYaml: stacks/hbase-ycsb-benchmark/zookeeper.yaml
+      - plainYaml: stacks/hbase-ycsb-benchmark/hdfs.yaml
+      - plainYaml: stacks/hbase-ycsb-benchmark/hbase.yaml

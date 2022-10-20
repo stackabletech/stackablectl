@@ -1,0 +1,52 @@
+---
+apiVersion: hbase.stackable.tech/v1alpha1
+kind: HbaseCluster
+metadata:
+  name: hbase
+spec:
+  version: 2.4.12-stackable0.2.0
+  hdfsConfigMapName: hdfs
+  zookeeperConfigMapName: hbase-znode
+  config:
+    hbaseRootdir: /hbase
+  masters:
+    roleGroups:
+      default:
+        replicas: 2
+    config:
+      resources:
+        cpu:
+          min: 250m
+          max: 250m
+        memory:
+          limit: 2Gi
+  regionServers:
+    roleGroups:
+      default:
+        replicas: 5
+    config:
+      resources:
+        cpu:
+          min: 500m
+          max: 500m
+        memory:
+          limit: 5Gi
+  restServers:
+    roleGroups:
+      default:
+        replicas: 2
+    config:
+      resources:
+        cpu:
+          min: 250m
+          max: 250m
+        memory:
+          limit: 2Gi
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperZnode
+metadata:
+  name: hbase-znode
+spec:
+  clusterRef:
+    name: zookeeper
