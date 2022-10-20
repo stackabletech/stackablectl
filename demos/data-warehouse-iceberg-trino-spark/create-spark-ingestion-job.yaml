@@ -49,16 +49,6 @@ data:
       #     - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:0.14.1
       #     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0
       sparkConf:
-        spark.executor.instances: "4"
-        spark.driver.cores: "2"
-        spark.driver.memory: "2g"
-        spark.kubernetes.driver.request.cores: "1"
-        spark.kubernetes.driver.limit.cores: "2"
-        spark.executor.cores: "4"
-        spark.executor.memory: "8g"
-        spark.kubernetes.executor.request.cores: "2"
-        spark.kubernetes.executor.limit.cores: "4"
-
         spark.hadoop.fs.s3a.endpoint: http://minio-trino:9000
         spark.hadoop.fs.s3a.path.style.access: "true"
         spark.hadoop.fs.s3a.access.key: trino
@@ -74,15 +64,26 @@ data:
       job:
         resources:
           cpu:
-            min: 100m
+            min: "100m"
+            max: "1"
+      driver:
+        resources:
+          cpu:
+            min: "1"
             max: "1"
           memory:
-            limit: 1Gi
-      driver:
+            limit: "2Gi"
         volumeMounts:
           - name: script
             mountPath: /stackable/spark/jobs
       executor:
+        instances: 4
+        resources:
+          cpu:
+            min: "2"
+            max: "4"
+          memory:
+            limit: "12Gi"
         volumeMounts:
           - name: script
             mountPath: /stackable/spark/jobs
