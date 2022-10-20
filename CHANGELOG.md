@@ -6,6 +6,10 @@
 
 - Added Listener operator to supported operators ([#143](https://github.com/stackabletech/stackablectl/pull/143))
 
+### Changed
+
+- Bump go modules such as helm to v3.10.1 and k8s client to v0.25.3 ([#148](https://github.com/stackabletech/stackablectl/pull/148))
+
 ## [0.5.0] - 2022-09-14
 
 ### Added
