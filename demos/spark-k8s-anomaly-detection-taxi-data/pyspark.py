@@ -52,7 +52,8 @@ dfs2.show()
 
 # instantiate a scaler, an isolation forest classifier and convert the data into the appropriate form
 scaler = StandardScaler()
-classifier = IsolationForest(contamination=0.3, random_state=42, n_jobs=-1)
+#classifier = IsolationForest(contamination=0.3, random_state=42, n_jobs=-1)
+classifier = IsolationForest(contamination=0.005, n_estimators=200, max_samples=0.7, random_state=42, n_jobs=-1)
 
 dfs2 = dfs2.select(dfs2.hour, dfs2.year, dfs2.month, dfs2.dayofmonth, dfs2.dayofweek, dfs2.no_rides, dfs2.total_bill, dfs2.avg_bill, dfs2.lag)
 
@@ -81,46 +82,3 @@ dfs2 = dfs2.withColumn(
     udf_predict_using_broadcasts('hour', 'year', 'month', 'dayofmonth', 'dayofweek', 'no_rides', 'total_bill', 'avg_bill', 'lag')
 )
 dfs2.show()
-
-######################
-data = [
-    {'feature1': 1., 'feature2': 0., 'feature3': 0.3, 'feature4': 0.01},
-    {'feature1': 10., 'feature2': 3., 'feature3': 0.9, 'feature4': 0.1},
-    {'feature1': 101., 'feature2': 13., 'feature3': 0.9, 'feature4': 0.91},
-    {'feature1': 111., 'feature2': 11., 'feature3': 1.2, 'feature4': 1.91},
-]
-
-from pyspark.sql import functions, types
-from sklearn.ensemble import IsolationForest
-from sklearn.preprocessing import StandardScaler
-
-df = spark.createDataFrame(data)
-
-scaler = StandardScaler()
-classifier = IsolationForest(contamination=0.3, random_state=42, n_jobs=-1)
-
-x_train = scaler.fit_transform(x_train)
-clf = classifier.fit(x_train)
-
-SCL = spark_session.sparkContext.broadcast(scaler)
-CLF = spark_session.sparkContext.broadcast(clf)
-
-def predict_using_broadcasts(feature1, feature2, feature3, feature4):
-    prediction = 0
-    x_test = [[feature1, feature2, feature3, feature4]]
-    try:
-        x_test = SCL.value.transform(x_test)
-        prediction = CLF.value.predict(x_test)[0]
-    except ValueError:
-        import traceback
-        traceback.print_exc()
-        print('Cannot predict:', x_test)
-    return int(prediction)
-
-
-udf_predict_using_broadcasts = functions.udf(predict_using_broadcasts, types.IntegerType())
-
-df = df.withColumn(
-    'prediction',
-    udf_predict_using_broadcasts('feature1', 'feature2', 'feature3', 'feature4')
-)
