@@ -436,8 +436,16 @@ async fn get_minio_services(
     for deployment in deployments {
         let installed_product = get_minio_service(
             &deployment.name_unchecked(),
-            &deployment.namespace().unwrap(),
-            &deployment.spec.unwrap().template.spec.unwrap().containers,
+            &deployment
+                .namespace()
+                .ok_or("MinIO deployment has no namespace")?,
+            &deployment
+                .spec
+                .ok_or("MinIO deployment has no spec")?
+                .template
+                .spec
+                .ok_or("MinIO deployment has no template spec")?
+                .containers,
             client.clone(),
             redact_credentials,
         )
@@ -453,8 +461,16 @@ async fn get_minio_services(
     for statefulset in statefulsets {
         let installed_product = get_minio_service(
             &statefulset.name_unchecked(),
-            &statefulset.namespace().unwrap(),
-            &statefulset.spec.unwrap().template.spec.unwrap().containers,
+            &statefulset
+                .namespace()
+                .ok_or("MinIO statefulset has no namespace")?,
+            &statefulset
+                .spec
+                .ok_or("MinIO statefulset has no spec")?
+                .template
+                .spec
+                .ok_or("MinIO statefulset has no template spec")?
+                .containers,
             client.clone(),
             redact_credentials,
         )
