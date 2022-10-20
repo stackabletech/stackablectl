@@ -11,7 +11,7 @@ pub enum CliCommandOperator {
     /// List all the available operators
     #[clap(alias("ls"))]
     List {
-        #[clap(short, long, arg_enum, default_value = "text")]
+        #[clap(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
     /// Show details of a specific operator
@@ -21,7 +21,7 @@ pub enum CliCommandOperator {
         #[clap(required = true, value_hint = ValueHint::Other)]
         operator: String,
 
-        #[clap(short, long, arg_enum, default_value = "text")]
+        #[clap(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
     /// Install one or multiple operators
@@ -31,7 +31,7 @@ pub enum CliCommandOperator {
         /// Must have the form `name[=version]` e.g. `superset`, `superset=0.3.0`, `superset=0.3.0-nightly` or `superset=0.3.0-pr123`.
         /// If no version is specified the latest nightly version - build from the main branch - will be used.
         /// You can get the available versions with `stackablectl operator list` or `stackablectl operator describe superset`
-        #[clap(multiple_occurrences(true), required = true, value_hint = ValueHint::Other)]
+        #[clap(required = true, value_hint = ValueHint::Other)]
         operators: Vec<Operator>,
 
         /// If specified, a local Kubernetes cluster consisting of 4 nodes (1 for control-plane and 3 workers) for testing purposes will be created.
@@ -45,7 +45,7 @@ pub enum CliCommandOperator {
         #[clap(
             long,
             default_value = "stackable-data-platform",
-            requires = "kind-cluster",
+            requires = "kind_cluster",
             value_hint = ValueHint::Other,
         )]
         kind_cluster_name: String,
@@ -54,12 +54,12 @@ pub enum CliCommandOperator {
     #[clap(alias("un"))]
     Uninstall {
         /// Space separated list of operators to uninstall.
-        #[clap(multiple_occurrences(true), required = true, value_hint = ValueHint::Other)]
+        #[clap(required = true, value_hint = ValueHint::Other)]
         operators: Vec<String>,
     },
     /// List installed operators
     Installed {
-        #[clap(short, long, arg_enum, default_value = "text")]
+        #[clap(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
 }
@@ -271,7 +271,7 @@ fn list_installed_operators(output_type: &OutputType) -> Result<(), Box<dyn Erro
     Ok(())
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Operator {
     pub name: String,
     pub version: Option<String>,

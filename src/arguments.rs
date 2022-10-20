@@ -2,7 +2,7 @@ use crate::{
     demo::CliCommandDemo, operator::CliCommandOperator, release::CliCommandRelease,
     services::CliCommandServices, stack::CliCommandStack,
 };
-use clap::{ArgEnum, Command, Parser, ValueHint};
+use clap::{Command, Parser, ValueEnum, ValueHint};
 use clap_complete::{generate, Generator, Shell};
 use log::LevelFilter;
 use std::io;
@@ -14,7 +14,7 @@ pub struct CliArgs {
     pub cmd: CliCommand,
 
     /// Log level.
-    #[clap(short, long, arg_enum, default_value = "info")]
+    #[clap(short, long, value_enum, default_value = "info")]
     pub log_level: LogLevel,
 
     /// Namespace where to deploy the products and operators
@@ -60,7 +60,7 @@ pub struct CliArgs {
     /// Have a look at <https://raw.githubusercontent.com/stackabletech/release/main/releases.yaml> for the structure.
     /// Can either be a URL or a path to a file, e.g. `https://my.server/my-releases.yaml`, '/etc/my-releases.yaml' or `C:\Users\Bob\my-releases.yaml`.
     /// Can be specified multiple times.
-    #[clap(long, multiple_occurrences(true), value_hint = ValueHint::FilePath)]
+    #[clap(long, value_hint = ValueHint::FilePath)]
     pub additional_releases_file: Vec<String>,
 
     /// Adds a YAML file containing custom stacks
@@ -69,7 +69,7 @@ pub struct CliArgs {
     /// Have a look at <https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/stacks-v1.yaml> for the structure.
     /// Can either be a URL or a path to a file, e.g. `https://my.server/my-stacks.yaml`, '/etc/my-stacks.yaml' or `C:\Users\Bob\my-stacks.yaml`.
     /// Can be specified multiple times.
-    #[clap(long, multiple_occurrences(true), value_hint = ValueHint::FilePath)]
+    #[clap(long, value_hint = ValueHint::FilePath)]
     pub additional_stacks_file: Vec<String>,
 
     /// Adds a YAML file containing custom demos
@@ -78,7 +78,7 @@ pub struct CliArgs {
     /// Have a look at <https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/demos-v1.yaml> for the structure.
     /// Can either be a URL or a path to a file, e.g. `https://my.server/my-demos.yaml`, '/etc/my-demos.yaml' or `C:\Users\Bob\my-demos.yaml`.
     /// Can be specified multiple times.
-    #[clap(long, multiple_occurrences(true), value_hint = ValueHint::FilePath)]
+    #[clap(long, value_hint = ValueHint::FilePath)]
     pub additional_demos_file: Vec<String>,
 }
 
@@ -108,14 +108,14 @@ pub enum CliCommand {
     Completion(CliCommandCompletion),
 }
 
-#[derive(Clone, Parser, ArgEnum)]
+#[derive(Clone, Parser, ValueEnum)]
 pub enum OutputType {
     Text,
     Json,
     Yaml,
 }
 
-#[derive(Clone, Copy, Parser, Debug, ArgEnum)]
+#[derive(Clone, Copy, Parser, Debug, ValueEnum)]
 pub enum LogLevel {
     Error,
     Warn,
@@ -139,7 +139,7 @@ impl From<LogLevel> for LevelFilter {
 #[derive(Parser)]
 pub struct CliCommandCompletion {
     // Shell to generate the completions for
-    #[clap(arg_enum, value_parser)]
+    #[clap(value_enum, value_parser)]
     pub shell: Shell,
 }
 

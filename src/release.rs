@@ -18,7 +18,7 @@ pub enum CliCommandRelease {
     /// List all the available releases
     #[clap(alias("ls"))]
     List {
-        #[clap(short, long, arg_enum, default_value = "text")]
+        #[clap(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
     /// Show details of a specific release
@@ -28,15 +28,15 @@ pub enum CliCommandRelease {
         #[clap(required = true, value_hint = ValueHint::Other)]
         release: String,
 
-        #[clap(short, long, arg_enum, default_value = "text")]
+        #[clap(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
     /// Install a specific release
     #[clap(alias("in"))]
     #[clap(group(
-        ArgGroup::new("list-of-products")
+        ArgGroup::new("list_of_products")
             .required(false)
-            .args(&["include-products", "exclude-products"]),
+            .args(&["include_products", "exclude_products"]),
     ))]
     Install {
         /// Name of the release to install
@@ -64,7 +64,7 @@ pub enum CliCommandRelease {
         #[clap(
             long,
             default_value = "stackable-data-platform",
-            requires = "kind-cluster",
+            requires = "kind_cluster",
             value_hint = ValueHint::Other,
         )]
         kind_cluster_name: String,

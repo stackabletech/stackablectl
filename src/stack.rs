@@ -19,7 +19,7 @@ pub enum CliCommandStack {
     /// List all the available stacks
     #[clap(alias("ls"))]
     List {
-        #[clap(short, long, arg_enum, default_value = "text")]
+        #[clap(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
     /// Show details of a specific stack
@@ -29,7 +29,7 @@ pub enum CliCommandStack {
         #[clap(required = true, value_hint = ValueHint::Other)]
         stack: String,
 
-        #[clap(short, long, arg_enum, default_value = "text")]
+        #[clap(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
     /// Install a specific stack
@@ -50,7 +50,7 @@ pub enum CliCommandStack {
         #[clap(
             long,
             default_value = "stackable-data-platform",
-            requires = "kind-cluster",
+            requires = "kind_cluster",
             value_hint = ValueHint::Other,
         )]
         kind_cluster_name: String,

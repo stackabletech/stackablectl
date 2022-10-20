@@ -136,7 +136,7 @@ pub enum CliCommandServices {
         #[clap(long)]
         show_versions: bool,
 
-        #[clap(short, long, arg_enum, default_value = "text")]
+        #[clap(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
 }

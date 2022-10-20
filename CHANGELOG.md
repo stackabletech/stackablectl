@@ -6,6 +6,10 @@
 
 - Added Listener operator to supported operators ([#143](https://github.com/stackabletech/stackablectl/pull/143))
 
+### Changed
+
+- Bump to clap 4.0 ([#150](https://github.com/stackabletech/stackablectl/pull/150))
+
 ## [0.5.0] - 2022-09-14
 
 ### Added
