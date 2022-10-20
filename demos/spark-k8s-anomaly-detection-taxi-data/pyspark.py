@@ -15,49 +15,50 @@ from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 
 spark = SparkSession.builder.appName("NY TLC AD").getOrCreate()
-#df = spark.read.parquet("/home/andrew/Downloads/fhvhv_tripdata_2020-09.parquet")
 
 url = "https://repo.stackable.tech/repository/misc/ny-taxi-data/fhvhv_tripdata_2020-09.parquet"
 spark.sparkContext.addFile(url)
-df = spark.read.parquet("file://"+SparkFiles.get("fhvhv_tripdata_2020-09.parquet"))
+input_df = spark.read.parquet("file://"+SparkFiles.get("fhvhv_tripdata_2020-09.parquet"))
 
-dfs = df.select(
-    to_date(df.pickup_datetime).alias("day_date")
-    , hour(df.pickup_datetime).alias("hour")
-    , minute(df.pickup_datetime).alias("minute")
-    , df["driver_pay"]
+df = input_df.select(
+    to_date(input_df.pickup_datetime).alias("day_date")
+    , year(input_df.pickup_datetime).alias('year')
+    , month(input_df.pickup_datetime).alias('month')
+    , dayofmonth(input_df.pickup_datetime).alias("dayofmonth")
+    , dayofweek(input_df.pickup_datetime).alias("dayofweek")
+    , hour(input_df.pickup_datetime).alias("hour")
+    , minute(input_df.pickup_datetime).alias("minute")
+    , input_df.driver_pay
 )
 
-dfs = dfs.withColumn("minute_group", when(dfs.minute < 30, '00').otherwise('30'))
-dfs = dfs.withColumn("time_group",concat_ws(":", lpad(dfs.hour, 2, '0'), dfs.minute_group, lit('00')))
-dfs = dfs.withColumn("ts",concat_ws(" ", dfs.day_date, dfs.time_group))
+df = df.withColumn("minute_group", when(df.minute < 30, '00').otherwise('30'))
+df = df.withColumn("time_group",concat_ws(":", lpad(df.hour, 2, '0'), df.minute_group, lit('00')))
+df = df.withColumn("ts",concat_ws(" ", df.day_date, df.time_group))
 
-dfs2 = dfs.select(
-    date_format(dfs.ts, "yyyy-MM-dd HH:mm:ss").alias("date_group")
-    , year(dfs.ts).alias('year')
-    , month(dfs.ts).alias('month')
-    , dayofmonth(dfs.ts).alias("dayofmonth")
-    , dayofweek(dfs.ts).alias("dayofweek")
-    , dfs.hour
-    , dfs.driver_pay
+dfs = df.select(
+    date_format(df.ts, "yyyy-MM-dd HH:mm:ss").alias("date_group")
+    , df.year
+    , df.hour
+    , df.month
+    , df.dayofmonth
+    , df.dayofweek
+    , df.driver_pay
 ).groupby("date_group", "hour", "year", "month", "dayofmonth", "dayofweek").agg(functions.count('driver_pay').alias('no_rides'), functions.round(functions.sum('driver_pay'), 2).alias('total_bill'), functions.round(functions.avg('driver_pay'), 2).alias('avg_bill')).orderBy("date_group")
 
-dfs2.show()
+dfs.show()
 
 windowSpec  = Window.partitionBy("hour").orderBy("date_group")
 
-dfs2 = dfs2.withColumn("lag",lag("no_rides",2).over(windowSpec))
-dfs2 = dfs2.filter("lag IS NOT NULL")
-dfs2.show()
+dfs = dfs.withColumn("lag",lag("no_rides",2).over(windowSpec))
+dfs = dfs.filter("lag IS NOT NULL")
+dfs.show()
 
-# instantiate a scaler, an isolation forest classifier and convert the data into the appropriate form
 scaler = StandardScaler()
-#classifier = IsolationForest(contamination=0.3, random_state=42, n_jobs=-1)
 classifier = IsolationForest(contamination=0.005, n_estimators=200, max_samples=0.7, random_state=42, n_jobs=-1)
 
-dfs2 = dfs2.select(dfs2.hour, dfs2.year, dfs2.month, dfs2.dayofmonth, dfs2.dayofweek, dfs2.no_rides, dfs2.total_bill, dfs2.avg_bill, dfs2.lag)
+df_model = dfs.select(dfs.hour, dfs.year, dfs.month, dfs.dayofmonth, dfs.dayofweek, dfs.no_rides, dfs.total_bill, dfs.avg_bill, dfs.lag)
 
-x_train = scaler.fit_transform(dfs2.collect())
+x_train = scaler.fit_transform(df_model.collect())
 clf = classifier.fit(x_train)
 
 SCL = spark.sparkContext.broadcast(scaler)
@@ -77,8 +78,8 @@ def predict_using_broadcasts(hour, year, month, dayofmonth, dayofweek, no_rides,
 
 udf_predict_using_broadcasts = functions.udf(predict_using_broadcasts, types.IntegerType())
 
-dfs2 = dfs2.withColumn(
+df_pred = df_model.withColumn(
     'prediction',
     udf_predict_using_broadcasts('hour', 'year', 'month', 'dayofmonth', 'dayofweek', 'no_rides', 'total_bill', 'avg_bill', 'lag')
 )
-dfs2.show()
+df_pred.show()
