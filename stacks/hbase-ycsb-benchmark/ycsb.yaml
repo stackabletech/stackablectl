@@ -21,11 +21,11 @@ spec:
         imagePullPolicy: Always
         resources:
           limits:
-            cpu: 7500m
-            memory: 16Gi
+            cpu: "15"
+            memory: 12Gi
           requests:
-            cpu: 7500m
-            memory: 15Gi
+            cpu: "15"
+            memory: 12Gi
         volumeMounts:
         - mountPath: /stackable/ycsb-0.17.0/conf/hdfs-site.xml
           name: config-volume-hdfs
@@ -40,7 +40,12 @@ spec:
           name: config-volume-hbase
           subPath: hbase-env.sh
       nodeSelector:
-        app: ycsb
+        node.kubernetes.io/instance-type: e2-highcpu-16
+      tolerations:
+        - key: "app"
+          operator: "Equal"
+          value: "ycsb"
+          effect: "NoSchedule"
       volumes:
       - name: config-volume-hbase
         configMap:
