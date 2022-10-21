@@ -193,3 +193,4 @@ stacks:
       - plainYaml: stacks/hbase-ycsb-benchmark/zookeeper.yaml
       - plainYaml: stacks/hbase-ycsb-benchmark/hdfs.yaml
       - plainYaml: stacks/hbase-ycsb-benchmark/hbase.yaml
+      - plainYaml: stacks/hbase-ycsb-benchmark/benchmark.yaml

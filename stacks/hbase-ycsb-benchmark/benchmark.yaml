@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ycsb
+  labels:
+    app: ycsb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ycsb
+  template:
+    metadata:
+      labels:
+        app: ycsb
+    spec:
+      containers:
+      - name: ycsb
+        image: docker.stackable.tech/soenkeliebau/ycsb
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 7500m
+            memory: 16Gi
+          requests:
+            cpu: 7500m
+            memory: 15Gi
+        volumeMounts:
+        - mountPath: /stackable/ycsb-0.17.0/conf/hdfs-site.xml
+          name: config-volume-hdfs
+          subPath: hdfs-site.xml
+        - mountPath: /stackable/ycsb-0.17.0/conf/core-site.xml
+          name: config-volume-hdfs
+          subPath: core-site.xml
+        - mountPath: /stackable/ycsb-0.17.0/conf/hbase-site.xml
+          name: config-volume-hbase
+          subPath: hbase-site.xml
+        - mountPath: /stackable/ycsb-0.17.0/conf/hbase-env.sh
+          name: config-volume-hbase
+          subPath: hbase-env.sh
+      nodeSelector:
+        app: ycsb
+      volumes:
+      - name: config-volume-hbase
+        configMap:
+          name: hbase-master-default
+      - name: config-volume-hdfs
+        configMap:
+          name: hdfs
