@@ -146,3 +146,14 @@ pub struct CliCommandCompletion {
 pub fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
     generate(gen, cmd, cmd.get_name().to_string(), &mut io::stdout());
 }
+
+#[cfg(test)]
+mod test {
+    use crate::arguments::CliArgs;
+
+    #[test]
+    fn verify_cli() {
+        use clap::CommandFactory;
+        CliArgs::command().debug_assert()
+    }
+}
