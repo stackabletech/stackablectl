@@ -16,52 +16,52 @@ lazy_static! {
 #[derive(Parser)]
 pub enum CliCommandRelease {
     /// List all the available releases
-    #[clap(alias("ls"))]
+    #[command(alias("ls"))]
     List {
-        #[clap(short, long, value_enum, default_value = "text")]
+        #[arg(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
     /// Show details of a specific release
-    #[clap(alias("desc"))]
+    #[command(alias("desc"))]
     Describe {
         /// Name of the release to describe
-        #[clap(required = true, value_hint = ValueHint::Other)]
+        #[arg(required = true, value_hint = ValueHint::Other)]
         release: String,
 
-        #[clap(short, long, value_enum, default_value = "text")]
+        #[arg(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
     /// Install a specific release
-    #[clap(alias("in"))]
-    #[clap(group(
+    #[command(alias("in"))]
+    #[command(group(
         ArgGroup::new("list_of_products")
             .required(false)
             .args(&["include_products", "exclude_products"]),
     ))]
     Install {
         /// Name of the release to install
-        #[clap(required = true, value_hint = ValueHint::Other)]
+        #[arg(required = true, value_hint = ValueHint::Other)]
         release: String,
 
         /// Whitelist of product operators to install.
         /// Mutually exclusive with `--exclude-products`
-        #[clap(short, long, value_hint = ValueHint::Other)]
+        #[arg(short, long, value_hint = ValueHint::Other)]
         include_products: Vec<String>,
 
         /// Blacklist of product operators to install.
         /// Mutually exclusive with `--include-products`
-        #[clap(short, long, value_hint = ValueHint::Other)]
+        #[arg(short, long, value_hint = ValueHint::Other)]
         exclude_products: Vec<String>,
 
         /// If specified, a local Kubernetes cluster consisting of 4 nodes (1 for control-plane and 3 workers) for testing purposes will be created.
         /// Kind is a tool to spin up a local Kubernetes cluster running on Docker on your machine.
         /// You need to have `docker` and `kind` installed.
         /// Have a look at our documentation on how to install `kind` at <https://docs.stackable.tech/home/getting_started.html#_installing_kubernetes_using_kind>
-        #[clap(short, long)]
+        #[arg(short, long)]
         kind_cluster: bool,
 
         /// Name of the kind cluster created if `--kind-cluster` is specified
-        #[clap(
+        #[arg(
             long,
             default_value = "stackable-data-platform",
             requires = "kind_cluster",
@@ -70,10 +70,10 @@ pub enum CliCommandRelease {
         kind_cluster_name: String,
     },
     /// Uninstall a release
-    #[clap(alias("un"))]
+    #[command(alias("un"))]
     Uninstall {
         /// Name of the release to uninstall
-        #[clap(required = true, value_hint = ValueHint::Other)]
+        #[arg(required = true, value_hint = ValueHint::Other)]
         release: String,
     },
 }

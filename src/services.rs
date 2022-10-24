@@ -122,21 +122,21 @@ lazy_static! {
 #[derive(Parser)]
 pub enum CliCommandServices {
     /// List deployed services
-    #[clap(alias("ls"))]
+    #[command(alias("ls"))]
     List {
         /// If specified services of all namespaces will be shown, not only the namespace you're currently in
-        #[clap(short, long)]
+        #[arg(short, long)]
         all_namespaces: bool,
 
         /// Don't show credentials in the output
-        #[clap(short, long)]
+        #[arg(short, long)]
         redact_credentials: bool,
 
         /// Show the product versions in the output
-        #[clap(long)]
+        #[arg(long)]
         show_versions: bool,
 
-        #[clap(short, long, value_enum, default_value = "text")]
+        #[arg(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
 }
