@@ -30,7 +30,20 @@ spec:
           min: "5"
           max: "6"
         memory:
-          limit: 22Gi
+          limit: 14Gi
+    configOverrides:
+      # hbase-env.sh:
+      #   HBASE_OFFHEAPSIZE: 12G
+      hbase-site.xml:
+        hbase.regionserver.handler.count: "100"
+
+        # hbase.regionserver.global.memstore.size: "0.59"
+        # hbase.regionserver.global.memstore.size.lower.limit: "0.58"
+        # hbase.hregion.memstore.flush.size: "134217728" # default
+
+        # hbase.bucketcache.ioengine: offheap
+        # hfile.block.cache.size: "0.2"
+        # hbase.bucketcache.size: "4196" # measured in mb
   restServers:
     roleGroups:
       default:

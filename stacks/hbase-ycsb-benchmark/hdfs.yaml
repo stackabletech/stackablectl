@@ -3,7 +3,7 @@ kind: HdfsCluster
 metadata:
   name: hdfs
 spec:
-  version: 3.3.3-stackable0.1.0
+  version: 3.3.4-stackable0.1.0-dns-fix
   zookeeperConfigMapName: hdfs-znode
   dfsReplication: 3
   journalNodes:
@@ -28,8 +28,8 @@ spec:
     config:
       resources:
         cpu:
-          min: 250m
-          max: 250m
+          min: "1"
+          max: "1"
         memory:
           limit: 4Gi
         storage:
