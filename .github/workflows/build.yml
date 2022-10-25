@@ -63,6 +63,11 @@ jobs:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
         with:
           submodules: recursive
+      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # renovate: tag=v1.0.7
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
       - uses: EmbarkStudios/cargo-deny-action@ccfac4e084d1dedad50125be4550f87a21ba181e # tag=v1.2.15
         with:
           command: check ${{ matrix.checks }}
