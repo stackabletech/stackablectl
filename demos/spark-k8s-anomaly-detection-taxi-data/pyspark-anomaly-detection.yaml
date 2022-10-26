@@ -77,7 +77,11 @@ data:
         'prediction',
         udf_predict_using_broadcasts('hour', 'year', 'month', 'dayofmonth', 'dayofweek', 'no_rides', 'total_bill', 'avg_bill', 'lag')
     )
-    df_pred.show()
+
+    df_pred_agg = df_pred.select(
+        df_pred.prediction
+    ).groupby("prediction").agg(functions.count('prediction').alias('prediction_count'))
+    df_pred_agg.show()
 ---
 apiVersion: spark.stackable.tech/v1alpha1
 kind: SparkApplication
