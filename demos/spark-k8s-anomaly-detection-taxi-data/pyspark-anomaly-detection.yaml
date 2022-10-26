@@ -118,9 +118,9 @@ spec:
     spark.kubernetes.executor.request.cores: "2"
     spark.kubernetes.executor.limit.cores: "3"
     spark.executor.cores: "3"
-    spark.executor.memory: "2g"
+    spark.executor.memory: "4g"
     spark.executor.memoryOverheadFactor: "0.4"
-    spark.executor.instances: "4"
+    spark.executor.instances: "6"
     spark.hadoop.fs.s3a.aws.credentials.provider: "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
   s3bucket:
     inline:
