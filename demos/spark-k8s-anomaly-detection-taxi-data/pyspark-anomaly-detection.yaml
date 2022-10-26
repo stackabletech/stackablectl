@@ -19,14 +19,14 @@ data:
     input_df = spark.read.parquet("s3a://demo/ny-taxi-data/raw/")
     
     df = input_df.select(
-        to_date(input_df.tpep_pickup_datetime).alias("day_date")
-        , year(input_df.tpep_pickup_datetime).alias('year')
-        , month(input_df.tpep_pickup_datetime).alias('month')
-        , dayofmonth(input_df.tpep_pickup_datetime).alias("dayofmonth")
-        , dayofweek(input_df.tpep_pickup_datetime).alias("dayofweek")
-        , hour(input_df.tpep_pickup_datetime).alias("hour")
-        , minute(input_df.tpep_pickup_datetime).alias("minute")
-        , input_df.total_amount.alias("driver_pay")
+        to_date(input_df.pickup_datetime).alias("day_date")
+        , year(input_df.pickup_datetime).alias('year')
+        , month(input_df.pickup_datetime).alias('month')
+        , dayofmonth(input_df.pickup_datetime).alias("dayofmonth")
+        , dayofweek(input_df.pickup_datetime).alias("dayofweek")
+        , hour(input_df.pickup_datetime).alias("hour")
+        , minute(input_df.pickup_datetime).alias("minute")
+        , input_df.driver_pay
     )
   
     df = df.withColumn("minute_group", when(df.minute < 30, '00').otherwise('30'))
@@ -43,13 +43,10 @@ data:
         , df.driver_pay
     ).groupby("date_group", "hour", "year", "month", "dayofmonth", "dayofweek").agg(functions.count('driver_pay').alias('no_rides'), functions.round(functions.sum('driver_pay'), 2).alias('total_bill'), functions.round(functions.avg('driver_pay'), 2).alias('avg_bill')).orderBy("date_group")
     
-    dfs.show()
-    
     windowSpec  = Window.partitionBy("hour").orderBy("date_group")
     
     dfs = dfs.withColumn("lag",lag("no_rides",2).over(windowSpec))
     dfs = dfs.filter("lag IS NOT NULL")
-    dfs.show()
     
     scaler = StandardScaler()
     classifier = IsolationForest(contamination=0.005, n_estimators=200, max_samples=0.7, random_state=42, n_jobs=-1)
