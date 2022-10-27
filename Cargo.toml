@@ -19,7 +19,7 @@ kube = "0.74" # Using openssl (and not native-tls) as kube-rs team tries to move
 lazy_static = "1.4"
 log = "0.4"
 openssl = { version = "0.10.36", features = ["vendored"] } # Must match version from kube
-which = "4.2"
+which = "4.3"
 semver = "1.0"
 serde = { version = "1.0", features = ["derive"]}
 serde_json = "1.0"
