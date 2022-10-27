@@ -37,12 +37,14 @@ data:
       name: spark-ad
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable0.2.0
+      sparkImage: docker.stackable.tech/aken/pyspark-k8s-with-iceberg:0.1.0 #docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable0.2.0
       mode: cluster
       mainApplicationFile: local:///spark-scripts/spark-ad.py
       deps:
         requirements:
           - scikit-learn==0.24.2
+        #packages:
+        #  - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:0.14.1
       volumes:
         - name: cm-spark
           configMap:
@@ -75,6 +77,10 @@ data:
         spark.hadoop.fs.s3a.path.style.access: "true"
         spark.hadoop.fs.s3a.access.key: demo
         spark.hadoop.fs.s3a.secret.key: demodemo
+        spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
+        spark.sql.catalog.warehouse: org.apache.iceberg.spark.SparkCatalog
+        spark.sql.catalog.warehouse.type: hive
+        spark.sql.catalog.warehouse.uri: thrift://hive-iceberg:9083
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -92,7 +98,10 @@ data:
     from sklearn.ensemble import IsolationForest
     from sklearn.preprocessing import StandardScaler
     
-    spark = SparkSession.builder.appName("NY TLC AD").getOrCreate()
+    spark = SparkSession.builder.appName("ny-tlc-anomaly-detection").getOrCreate()
+    spark.sql("CREATE SCHEMA IF NOT EXISTS hive.demo LOCATION 's3a://demo/'")
+    spark.sql("CREATE TABLE IF NOT EXISTS hive.demo.predictions (pickup_hour INT, pickup_year INT, pickup_month INT, pickup_dayofmonth INT, pickup_dayofweek INT, norides INT, total_bill DOUBLE, avg_bill DOUBLE, norides_lag INT, pred INT) USING iceberg")
+    
     input_df = spark.read.parquet("s3a://demo/ny-taxi-data/raw/")
     
     df = input_df.select(

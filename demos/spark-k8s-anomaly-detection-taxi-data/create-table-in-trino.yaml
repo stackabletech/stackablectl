@@ -1,0 +1,55 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-ny-taxi-data-table-in-trino
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-ny-taxi-data-table-in-trino
+          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
+          command: ["bash", "-c", "python -u /tmp/script/script.py"]
+          volumeMounts:
+            - name: script
+              mountPath: /tmp/script
+      volumes:
+      - name: script
+        configMap:
+          name: create-ny-taxi-data-table-in-trino-script
+      restartPolicy: OnFailure
+  backoffLimit: 50
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-ny-taxi-data-table-in-trino-script
+data:
+  script.py: |
+    import sys
+    import trino
+
+    if not sys.warnoptions:
+        import warnings
+    warnings.simplefilter("ignore")
+
+    def get_connection():
+        connection = trino.dbapi.connect(
+            host="trino-coordinator",
+            port=8443,
+            user="demo",
+            http_scheme='https',
+            auth=trino.auth.BasicAuthentication("demo", "demo"),
+        )
+        connection._http_session.verify = False
+        return connection
+
+    def run_query(connection, query):
+        print(f"[DEBUG] Executing query {query}")
+        cursor = connection.cursor()
+        cursor.execute(query)
+        return cursor.fetchall()
+
+    connection = get_connection()
+
+    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS hive.demo WITH (location = 's3a://demo/')")[0][0] is True
