@@ -4,7 +4,7 @@ kind: HbaseCluster
 metadata:
   name: hbase
 spec:
-  version: 2.4.12-stackable0.2.0-jmx-conf # 2.4.12-stackable0.2.0
+  version: 2.4.12-stackable0.2.0-jmx-dns-snappy # 2.4.12-stackable0.2.0-jmx-conf # 2.4.12-stackable0.2.0
   hdfsConfigMapName: hdfs
   zookeeperConfigMapName: hbase-znode
   config:
@@ -23,14 +23,14 @@ spec:
   regionServers:
     roleGroups:
       default:
-        replicas: 9
+        replicas: 13
     config:
       resources:
         cpu:
-          min: "5"
+          min: "3500m"
           max: "6"
         memory:
-          limit: 14Gi
+          limit: 20Gi
     configOverrides:
       # hbase-env.sh:
       #   HBASE_OFFHEAPSIZE: 12G

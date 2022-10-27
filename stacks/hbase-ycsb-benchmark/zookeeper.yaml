@@ -14,8 +14,8 @@ spec:
     config:
       resources:
         cpu:
-          min: 500m
-          max: 500m
+          min: 250m
+          max: 250m
         memory:
           limit: 512Mi
         storage:
