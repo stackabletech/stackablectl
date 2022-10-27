@@ -64,8 +64,9 @@ demos:
       - s3
       - ny-taxi-data
     manifests:
+      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/serviceaccount.yaml
       - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/load-test-data.yaml
-      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/pyspark-anomaly-detection.yaml
+      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/create-spark-anomaly-detection-job.yaml
       #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/create-table-in-trino.yaml
       #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
   trino-taxi-data:
