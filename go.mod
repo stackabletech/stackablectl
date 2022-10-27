@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/mittwald/go-helm-client v0.11.5
 	helm.sh/helm/v3 v3.10.1
-	k8s.io/client-go v0.25.3
+	k8s.io/client-go/v11 v11.0.0+incompatible
 )
 
 require (
