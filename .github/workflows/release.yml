@@ -26,10 +26,10 @@ jobs:
             os: macos-latest
             file-suffix: ""
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
-      - uses: actions/setup-go@268d8c0ca0432bb2cf416faae41297df9d262d7f # tag=v3
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3
+      - uses: actions/setup-go@c4a742cab115ed795e34d4513e2cf7d472deb55f # tag=v3
         with:
-          go-version: '^1.18.3'
+          go-version: '^1.19.2'
       - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # tag=v1
         with:
           profile: minimal
@@ -41,7 +41,7 @@ jobs:
         run: sudo apt install -y musl-tools
       - name: Prepare Windows env
         if: matrix.os == 'windows-latest'
-        uses: msys2/setup-msys2@748079362df13449e0a970297aec1550c1c8de2d # tag=v2
+        uses: msys2/setup-msys2@493b5b9e37e67d55e3003f8d21519e07a1db266c # tag=v2
         with:
           msystem: MINGW64
           update: true

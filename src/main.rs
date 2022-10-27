@@ -1,6 +1,6 @@
 use crate::arguments::CliCommand;
 use arguments::CliArgs;
-use clap::{IntoApp, Parser};
+use clap::{CommandFactory, Parser};
 use lazy_static::lazy_static;
 use log::error;
 use std::{error::Error, process::exit, sync::Mutex};
