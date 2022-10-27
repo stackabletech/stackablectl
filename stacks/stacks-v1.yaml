@@ -65,8 +65,8 @@ _templates:
         consoleService:
           type: NodePort
           nodePort: null
-  - helmChart: &template-minio-trino-distributed
-      releaseName: minio-trino
+  - helmChart: &template-minio-distributed
+      releaseName: minio
       name: minio
       repo:
         name: minio
@@ -188,7 +188,7 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: *template-minio-trino-distributed
+      - helmChart: *template-minio-distributed
       - helmChart: *template-postgresql-hive
       - helmChart: *template-postgresql-hive-iceberg
       - helmChart: *template-postgresql-superset

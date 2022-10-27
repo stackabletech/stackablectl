@@ -42,7 +42,7 @@ kind: S3Connection
 metadata:
   name: hive
 spec:
-  host: minio-trino
+  host: minio
   port: 9000
   accessStyle: Path
   credentials:
