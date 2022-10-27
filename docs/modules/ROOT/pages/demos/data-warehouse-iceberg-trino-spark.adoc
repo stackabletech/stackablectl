@@ -36,3 +36,114 @@ This demo will
 You can see the deployed products as well as their relationship in the following diagram:
 
 image::demo-data-warehouse-iceberg-trino-spark/overview.png[]
+
+== List deployed Stackable services
+To list the installed installed Stackable services run the following command:
+
+[source,console]
+----
+$ stackablectl services list --all-namespaces
+ PRODUCT    NAME          NAMESPACE  ENDPOINTS                                          EXTRA INFOS                             
+                                                                                                                                
+ hive       hive          default    hive                212.227.224.138:31022                                                  
+                                     metrics             212.227.224.138:30459                                                  
+                                                                                                                                
+ hive       hive-iceberg  default    hive                212.227.233.131:31511                                                  
+                                     metrics             212.227.233.131:30003                                                  
+                                                                                                                                
+ kafka      kafka         default    metrics             217.160.118.190:32160                                                  
+                                     kafka               217.160.118.190:31736                                           
+                                                                                                                                
+ nifi       nifi          default    https               https://217.160.120.117:31499  Admin user: admin, password: adminadmin 
+                                                                                                                                
+ opa        opa           default    http                http://217.160.222.211:31767                                           
+                                                                                                                                
+ superset   superset      default    external-superset   http://212.227.233.47:32393    Admin user: admin, password: admin      
+                                                                                                                                
+ trino      trino         default    coordinator-metrics 212.227.224.138:30610                                                  
+                                     coordinator-https   https://212.227.224.138:30876                                          
+                                                                                                                                
+ zookeeper  zookeeper     default    zk                  212.227.224.138:32321                                                  
+                                                                                                                                
+ minio      minio         default    http                http://217.160.222.211:32031   Third party service                     
+                                     console-http        http://217.160.222.211:31429   Admin user: admin, password: adminadmin 
+----
+
+[NOTE]
+====
+When a product instance has not finished starting yet, the service will have no endpoint.
+Starting all of the product instances might take a considerable amount of time depending on your internet connectivity.
+In case the product is not ready yet a warning might be shown.
+====
+
+== MinIO
+=== List buckets
+The S3 provided by MinIO is used as persistent storage to store all the data used.
+Open the `minio` endpoint `console-http` retrieved by `stackablectl services list` in your browser (http://217.160.222.211:31429 in this case).
+
+image::demo-data-warehouse-iceberg-trino-spark/minio_1.png[]
+
+Log in with the username `admin` and password `adminadmin`.
+
+image::demo-data-warehouse-iceberg-trino-spark/minio_2.png[]
+
+Here you can see the two buckets the S3 is split into:
+
+1. `staging`: The demo loads static datasets into this area. It is stored in different formats, such as csv and parquet. It does contain actual data tables as well as lookup tables.
+2. `warehouse`: This bucket is where the cleaned and/or aggregated data resides. The data is stored in the https://iceberg.apache.org/[Apache Iceberg] table format.
+
+=== Inspect warehouse
+Click on the blue button `Browse` on the bucket `warehouse`.
+
+image::demo-data-warehouse-iceberg-trino-spark/minio_3.png[]
+
+You can see multiple folders (called prefixes in S3) - each containing a different dataset.
+
+Click on the folders `house-sales` afterwards the folder starting with `house-sales-*` afterwards 'data'.
+
+image::demo-data-warehouse-iceberg-trino-spark/minio_4.png[]
+
+As you can see the table `house-sales` is partitioned by day.
+Go ahead and click on any folder.
+
+image::demo-data-warehouse-iceberg-trino-spark/minio_5.png[]
+
+You can see that Trino has placed a single file here containing all the house sales of that particular year.
+
+== NiFi
+
+NiFi is used to fetch multiple datasources from the internet and ingest it into Kafka near-realtime.
+Some of the datasources are statically download (e.g. as csv) and others are fetch via APIs such as REST APIs.
+This includes the following datasources:
+
+* https://www.pegelonline.wsv.de/webservice/guideRestapi[Water level measurements in Germany] (real-time)
+* https://mobidata-bw.de/dataset/bikesh[Shared bikes in Germany] (real-time)
+* https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads[House sales in UK] (static)
+* https://www.usgs.gov/programs/earthquake-hazards/earthquakes[Registered earthquakes worldwide] (static)
+* https://mobidata-bw.de/dataset/e-ladesaulen[E-charging stations in Germany] (static)
+* https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page[NewYork taxi data] (static)
+
+=== View ingestion jobs
+You can have a look at the ingestion job running in NiFi by opening the given `nifi` endpoint `https` from your `stackablectl services list` command output (https://217.160.120.117:31499 in this case).
+If you get a warning regarding the self-signed certificate generated by the xref:secret-operator::index.adoc[Secret Operator] (e.g. `Warning: Potential Security Risk Ahead`), you have to tell your browser to trust the website and continue.
+
+image::demo-data-warehouse-iceberg-trino-spark/nifi_1.png[]
+
+Log in with the username `admin` and password `adminadmin`.
+
+image::demo-data-warehouse-iceberg-trino-spark/nifi_2.png[]
+
+As you can see, the NiFi workflow consists of lot's of components.
+You can zoom in by using your mouse and mouse wheel.
+On the left side are two strands, that
+
+1. Fetch the list of known water-level stations and ingests them into Kafka
+2. Continuously run a loop fetching the measurements of the last 30 for every measuring stations and ingesting the measurements into Kafka
+
+On the right side are three strands, that
+
+1. Fetch the current shred bike stations information
+2. Fetch the current shred bike stations status
+3. Fetch the current shred bike bike status
+
+For details on the NiFi workflow ingesting water-level data please read on the xref:demos/nifi-kafka-druid-water-level-data.adoc#_nifi[nifi-kafka-druid-water-level-data documentation on NiFi].
