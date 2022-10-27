@@ -9,7 +9,7 @@ spec:
   journalNodes:
     roleGroups:
       default:
-        replicas: 2
+        replicas: 1
     config:
       resources:
         cpu:
