@@ -112,6 +112,33 @@ _templates:
           password: airflow
         replica:
           replicaCount: 1
+  - helmChart: &template-minio-hbase-phoenix-trino
+      releaseName: demo-minio-hbase
+      name: minio
+      repo:
+        name: minio
+        url: https://charts.min.io/
+      version: 4.0.5
+      options:
+        mode: standalone
+        disableWebUI: false
+        auth:
+          existingSecret: hbase-s3-credentials
+        persistence:
+          size: 10Gi
+        users:
+          - accessKey: demo
+            secretKey: demodemo
+            policy: readwrite
+        resources:
+          requests:
+            memory: 2Gi
+        service:
+          type: NodePort
+          nodePort: null
+        consoleService:
+          type: NodePort
+          nodePort: null
 
 stacks:
   airflow:
@@ -182,3 +209,16 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
+  hdfs-hbase-phoenix-trino:
+    description: HBase cluster using HDFS as underlying storage. Using Phoenix and Trino to access data
+    stackableRelease: nightly
+    labels:
+      - hbase
+      - hdfs
+      - phoenix
+      - trino
+    manifests:
+      - helmChart: *template-minio-hbase-phoenix-trino
+      - plainYaml: stacks/hdfs-hbase/zookeeper.yaml
+      - plainYaml: stacks/hdfs-hbase/hdfs.yaml
+      - plainYaml: stacks/hdfs-hbase/hbase.yaml
