@@ -3,7 +3,7 @@
 [WARNING]
 ====
 This demos uses significant amount of resources. It will most likely not run on your workstation.
-It was developed and tested on 9 nodes with 4 cores (8 threads), 20GB RAM and 30GB hdd disks.
+It was developed and tested on 10 nodes with 4 cores (8 threads), 20GB RAM and 30GB hdd disks.
 Additionally persistent volumes with a total size of approx. 500GB will get created.
 A smaller version of this demo might be created in the future.
 ====
@@ -147,3 +147,63 @@ On the right side are three strands, that
 3. Fetch the current shred bike bike status
 
 For details on the NiFi workflow ingesting water-level data please read on the xref:demos/nifi-kafka-druid-water-level-data.adoc#_nifi[nifi-kafka-druid-water-level-data documentation on NiFi].
+
+== Spark
+
+https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html[Spark Structured Streaming] is used to stream data from Kafka into the warehouse.
+
+To have access to the Spark WebUI you need to run the following command to port-forward the Port 4040 to your local machine
+
+[source,console]
+----
+kubectl port-forward $(kubectl get pod -o name | grep 'spark-ingest-into-warehouse-.*-driver') 4040
+----
+
+Afterwards you can reach the Webinterface on http://localhost:4040.
+
+image::demo-data-warehouse-iceberg-trino-spark/spark_1.png[]
+
+On the UI the last jobs are shown.
+Each running Structured Streaming job creates lots of Spark jobs internally.
+
+Click on the tab `Structured Streaming` to see the running streaming jobs.
+
+image::demo-data-warehouse-iceberg-trino-spark/spark_2.png[]
+
+Five streaming jobs are currently running.
+The job with the highest throughput is the `ingest water_level measurements` job.
+Click on the bluely highlighted `Run ID` of it.
+
+image::demo-data-warehouse-iceberg-trino-spark/spark_3.png[]
+
+== Trino
+Trino is used to enable SQL access to the data.
+
+=== View WebUI
+Open up the the given `trino` endpoint `coordinator-https` from your `stackablectl services list` command output (https://212.227.224.138:30876 in this case).
+
+image::demo-data-warehouse-iceberg-trino-spark/trino_1.png[]
+
+Log in with the username `admin` and password `admin`.
+
+image::demo-data-warehouse-iceberg-trino-spark/trino_2.png[]
+
+=== Connect with DBeaver
+https://dbeaver.io/[DBeaver] is free multi-platform database tool that can be used to connect to Trino.
+Please have a look at the <TODO> trino-operator documentation on how to connect DBeaver to Trino.
+
+image::demo-data-warehouse-iceberg-trino-spark/dbeaver_1.png[]
+
+image::demo-data-warehouse-iceberg-trino-spark/dbeaver_2.png[]
+You need to modify the setting `TLS` to `true`.
+Additionally no need to add the setting `SSLVerification` and set it to `NONE`.
+
+image::demo-data-warehouse-iceberg-trino-spark/dbeaver_3.png[]
+
+Here you can see all the available Trino catalogs.
+
+* `staging`: The staging area containing raw data in various data formats such as csv or parquet
+* `system`: Internal catalog to retrieve Trino internals
+* `tpcds`: https://trino.io/docs/current/connector/tpcds.html[TPCDS connector] providing a set of schemas to support the http://www.tpc.org/tpcds/[TPC Benchmark™ DS]
+* `tpch`: https://trino.io/docs/current/connector/tpch.html[TPCH connector] providing a set of schemas to support the http://www.tpc.org/tpcds/[TPC Benchmark™ DS]
+* `warehouse`: The warehouse area containing the enriched and performant accessible data
