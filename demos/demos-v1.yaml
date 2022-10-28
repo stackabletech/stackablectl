@@ -56,7 +56,7 @@ demos:
   spark-k8s-anomaly-detection-taxi-data:
     description: Demo loading 2.5 years of New York taxi data into S3 bucket and carrying out an anomaly detection anlysis on it
     #documentation: https://docs.stackable.tech/stackablectl/stable/demos/spark-k8s-anomaly-detection-taxi-data.html
-    stackableStack: trino-superset-s3
+    stackableStack: spark-trino-superset-s3
     labels:
       - trino
       - superset
