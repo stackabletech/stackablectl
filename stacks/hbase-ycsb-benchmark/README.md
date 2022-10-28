@@ -1,11 +1,11 @@
 Their env: 13 Data Nodes 251GB RAM / 48 & 72 Cores / Max Heap: 20G / 161 Tabellen, 12 HDD per Node
 
 Important:
-* We used europe-west1-d
+* We used europe-west1-d in Google Cloud in this README
 * Enabled `Compact Placement`
-** Now we can only use A2, C2, C2D, N2 and N2D machine types
-* We also enable SSD persitent disk with 100gb capacity for every node
-* We also enable `NodeLocal DNSCache`. As the jvm caches dns already this *should* make no difference but better safe than sorry
+  * Now we can only use A2, C2, C2D, N2 and N2D machine types
+* We also enable SSD persistent disk with 100gb capacity for every node
+* We also enable `NodeLocal DNSCache`. As the jvm caches DNS already this *should* make no difference but better safe than sorry
 * After spinng up the cluster taint 1 node with `kubectl taint nodes gke-snocke-sbernauer-hba-default-pool-c252127f-zdfk app=ycsb:NoSchedule`
 * `stackablectl operator install commons secret zookeeper hdfs hbase`
 * `kubectl apply -f stacks/hbase-ycsb-benchmark/zookeeper.yaml # Wait until ready`
