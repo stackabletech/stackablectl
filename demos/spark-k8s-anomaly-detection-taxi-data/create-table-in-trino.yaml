@@ -52,4 +52,4 @@ data:
 
     connection = get_connection()
 
-    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS hive.demo WITH (location = 's3a://demo/')")[0][0] is True
+    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS prediction.ad WITH (location = 's3a://prediction/anomaly-detection')")[0][0] is True

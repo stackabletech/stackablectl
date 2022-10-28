@@ -1,40 +1,34 @@
 ---
 releases:
-  This version of stackablectl has been deprecated, please update:
-    releaseDate: 2022-06-02
-    description:
-    products:
-      commons:
-        operatorVersion: 0.1.0
-  22.06:
-    releaseDate: 2022-06-30
-    description: First official release of the Stackable Data Platform
+  22.09-latest-trino-spark:
+    releaseDate: 2022-09-09
+    description: Second release focusing on security and OpenShift support
     products:
       airflow:
-        operatorVersion: 0.4.0
+        operatorVersion: 0.5.0
       commons:
-        operatorVersion: 0.2.0
-      druid:
-        operatorVersion: 0.6.0
-      hbase:
         operatorVersion: 0.3.0
-      hdfs:
+      druid:
+        operatorVersion: 0.7.0
+      hbase:
         operatorVersion: 0.4.0
+      hdfs:
+        operatorVersion: 0.5.0
       hive:
-        operatorVersion: 0.6.0
+        operatorVersion: 0.7.0
       kafka:
-        operatorVersion: 0.6.0
+        operatorVersion: 0.7.0
       nifi:
-        operatorVersion: 0.6.0
+        operatorVersion: 0.7.0
       opa:
-        operatorVersion: 0.9.0
+        operatorVersion: 0.10.0
       secret:
         operatorVersion: 0.5.0
       spark-k8s:
-        operatorVersion: 0.3.0
+        operatorVersion: 0.6.0-nightly # Needed for resources
       superset:
-        operatorVersion: 0.5.0
+        operatorVersion: 0.6.0
       trino:
-        operatorVersion: 0.4.0
+        operatorVersion: 0.8.0-nightly # Needed for iceberg
       zookeeper:
-        operatorVersion: 0.10.0
+        operatorVersion: 0.11.0

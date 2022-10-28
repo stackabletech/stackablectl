@@ -9,6 +9,6 @@ spec:
       containers:
         - name: load-ny-taxi-data
           image: "bitnami/minio:2022-debian-10"
-          command: ["bash", "-c", "cd /tmp && for month in 2020-09 2020-10; do curl -O https://repo.stackable.tech/repository/misc/ny-taxi-data/fhvhv_tripdata_$month.parquet && mc --insecure alias set minio http://minio-trino:9000/ demo demodemo && mc cp fhvhv_tripdata_$month.parquet minio/demo/ny-taxi-data/raw/; done"]
+          command: ["bash", "-c", "cd /tmp && for month in 2020-09 2020-10; do curl -O https://repo.stackable.tech/repository/misc/ny-taxi-data/fhvhv_tripdata_$month.parquet && mc --insecure alias set minio http://minio-trino:9000/ demo demodemo && mc cp fhvhv_tripdata_$month.parquet minio/demo/ny-taxi-data/raw/ && mc mb --ignore-existing minio/prediction; done"]
       restartPolicy: OnFailure
   backoffLimit: 50

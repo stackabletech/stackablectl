@@ -4,7 +4,7 @@ kind: TrinoCluster
 metadata:
   name: trino
 spec:
-  version: 387-stackable0.1.0
+  version: 396-stackable0.1.0
   catalogLabelSelector:
     matchLabels:
       trino: trino
@@ -47,6 +47,25 @@ spec:
     hive:
       metastore:
         configMap: hive
+      s3:
+        inline:
+          host: minio-trino
+          port: 9000
+          accessStyle: Path
+          credentials:
+            secretClass: trino-s3-credentials
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: prediction
+  labels:
+    trino: trino
+spec:
+  connector:
+    iceberg:
+      metastore:
+        configMap: hive-iceberg
       s3:
         inline:
           host: minio-trino
