@@ -11,7 +11,7 @@
 
 - Bump to clap 4.0 ([#150](https://github.com/stackabletech/stackablectl/pull/150))
 - Bump go modules such as helm to v3.10.1 and k8s client to v0.25.3 ([#149](https://github.com/stackabletech/stackablectl/pull/149))
-- Bump kube to 0.75, k8s-openapi to 0.16 and openssl to 0.10.42 ([#154](https://github.com/stackabletech/stackablectl/pull/154))
+- Bump kube to 0.76, k8s-openapi to 0.16 and openssl to 0.10.42 ([#154](https://github.com/stackabletech/stackablectl/pull/154))
 
 ## [0.5.0] - 2022-09-14
 
