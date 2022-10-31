@@ -89,7 +89,7 @@ metadata:
 data:
   spark-ad.py: |
     from pyspark.sql import SparkSession
-    from pyspark.sql.functions import dayofweek, to_date, date_format, year, hour, minute, month, when, dayofmonth, dayofweek
+    from pyspark.sql.functions import dayofweek, to_date, to_timestamp, date_format, year, hour, minute, month, when, dayofmonth, dayofweek
     from pyspark.sql.functions import concat_ws, substring, concat, lpad, lit
     from pyspark.sql.functions import round, sum, count, avg
     from pyspark.sql.functions import lag
@@ -100,7 +100,7 @@ data:
     
     spark = SparkSession.builder.appName("ny-tlc-anomaly-detection").getOrCreate()
     spark.sql("CREATE SCHEMA IF NOT EXISTS prediction.ad LOCATION 's3a://prediction/anomaly-detection'")
-    spark.sql("CREATE TABLE IF NOT EXISTS prediction.ad.iforest (pickup_hour INT, pickup_year INT, pickup_month INT, pickup_dayofmonth INT, pickup_dayofweek INT, norides INT, total_bill DOUBLE, avg_bill DOUBLE, norides_lag INT, pred INT) USING iceberg")
+    spark.sql("CREATE TABLE IF NOT EXISTS prediction.ad.iforest (pickup_ts TIMESTAMP, pickup_minute_group VARCHAR(4), pickup_hour INT, pickup_year INT, pickup_month INT, pickup_dayofmonth INT, pickup_dayofweek INT, norides INT, total_bill DOUBLE, avg_bill DOUBLE, norides_lag INT, pred INT) USING iceberg")
     
     input_df = spark.read.parquet("s3a://demo/ny-taxi-data/raw/")
     
@@ -120,14 +120,15 @@ data:
     df = df.withColumn("ts",concat_ws(" ", df.day_date, df.time_group))
     
     dfs = df.select(
-        date_format(df.ts, "yyyy-MM-dd HH:mm:ss").alias("date_group")
+        to_timestamp(df.ts, "yyyy-MM-dd HH:mm:ss").alias("date_group")
+        , df.minute_group
         , df.year
         , df.hour
         , df.month
         , df.dayofmonth
         , df.dayofweek
         , df.driver_pay
-    ).groupby("date_group", "hour", "year", "month", "dayofmonth", "dayofweek").agg(functions.count('driver_pay').alias('no_rides'), functions.round(functions.sum('driver_pay'), 2).alias('total_bill'), functions.round(functions.avg('driver_pay'), 2).alias('avg_bill')).orderBy("date_group")
+    ).groupby("date_group", "minute_group", "hour", "year", "month", "dayofmonth", "dayofweek").agg(functions.count('driver_pay').alias('no_rides'), functions.round(functions.sum('driver_pay'), 2).alias('total_bill'), functions.round(functions.avg('driver_pay'), 2).alias('avg_bill')).orderBy("date_group")
     
     windowSpec  = Window.partitionBy("hour").orderBy("date_group")
     
@@ -137,7 +138,7 @@ data:
     scaler = StandardScaler()
     classifier = IsolationForest(contamination=0.005, n_estimators=200, max_samples=0.7, random_state=42, n_jobs=-1)
     
-    df_model = dfs.select(dfs.hour, dfs.year, dfs.month, dfs.dayofmonth, dfs.dayofweek, dfs.no_rides, dfs.total_bill, dfs.avg_bill, dfs.lag)
+    df_model = dfs.select(dfs.minute_group, dfs.hour, dfs.year, dfs.month, dfs.dayofmonth, dfs.dayofweek, dfs.no_rides, dfs.total_bill, dfs.avg_bill, dfs.lag)
     
     x_train = scaler.fit_transform(df_model.collect())
     clf = classifier.fit(x_train)
@@ -145,9 +146,9 @@ data:
     SCL = spark.sparkContext.broadcast(scaler)
     CLF = spark.sparkContext.broadcast(clf)
     
-    def predict_using_broadcasts(hour, year, month, dayofmonth, dayofweek, no_rides, total_bill, avg_bill, lag):
+    def predict_using_broadcasts(minute_group, hour, year, month, dayofmonth, dayofweek, no_rides, total_bill, avg_bill, lag):
         prediction = 0
-        x_test = [[hour, year, month, dayofmonth, dayofweek, no_rides, total_bill, avg_bill, lag]]
+        x_test = [[minute_group, hour, year, month, dayofmonth, dayofweek, no_rides, total_bill, avg_bill, lag]]
         try:
             x_test = SCL.value.transform(x_test)
             prediction = CLF.value.predict(x_test)[0]
@@ -159,14 +160,16 @@ data:
     
     udf_predict_using_broadcasts = functions.udf(predict_using_broadcasts, types.IntegerType())
     
-    df_pred = df_model.withColumn(
+    df_pred = dfs.withColumn(
         'prediction',
-        udf_predict_using_broadcasts('hour', 'year', 'month', 'dayofmonth', 'dayofweek', 'no_rides', 'total_bill', 'avg_bill', 'lag')
+        udf_predict_using_broadcasts('minute_group', 'hour', 'year', 'month', 'dayofmonth', 'dayofweek', 'no_rides', 'total_bill', 'avg_bill', 'lag')
     )
     
     # map to table columns
     df_out = df_pred.select(
-        df_pred.hour.alias("pickup_hour")
+        df_pred.date_group.alias("pickup_ts")
+        , df_pred.minute_group.alias("pickup_minute_group")
+        , df_pred.hour.alias("pickup_hour")
         , df_pred.year.alias("pickup_year")
         , df_pred.month.alias("pickup_month")
         , df_pred.dayofmonth.alias("pickup_dayofmonth")
@@ -180,8 +183,3 @@ data:
     
     # write via iceberg
     df_out.writeTo("prediction.ad.iforest").append()
-
-    df_pred_agg = df_out.select(
-        df_out.pred
-    ).groupby("pred").agg(functions.count('pred').alias('prediction_count'))
-    df_pred_agg.show()
