@@ -17,40 +17,40 @@ lazy_static! {
 #[derive(Parser)]
 pub enum CliCommandStack {
     /// List all the available stacks
-    #[clap(alias("ls"))]
+    #[command(alias("ls"))]
     List {
-        #[clap(short, long, arg_enum, default_value = "text")]
+        #[arg(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
     /// Show details of a specific stack
-    #[clap(alias("desc"))]
+    #[command(alias("desc"))]
     Describe {
         /// Name of the stack to describe
-        #[clap(required = true, value_hint = ValueHint::Other)]
+        #[arg(required = true, value_hint = ValueHint::Other)]
         stack: String,
 
-        #[clap(short, long, arg_enum, default_value = "text")]
+        #[arg(short, long, value_enum, default_value = "text")]
         output: OutputType,
     },
     /// Install a specific stack
-    #[clap(alias("in"))]
+    #[command(alias("in"))]
     Install {
         /// Name of the stack to install
-        #[clap(required = true, value_hint = ValueHint::Other)]
+        #[arg(required = true, value_hint = ValueHint::Other)]
         stack: String,
 
         /// If specified, a local Kubernetes cluster consisting of 4 nodes (1 for control-plane and 3 workers) for testing purposes will be created.
         /// Kind is a tool to spin up a local Kubernetes cluster running on Docker on your machine.
         /// You need to have `docker` and `kind` installed.
         /// Have a look at our documentation on how to install `kind` at <https://docs.stackable.tech/home/getting_started.html#_installing_kubernetes_using_kind>
-        #[clap(short, long)]
+        #[arg(short, long)]
         kind_cluster: bool,
 
         /// Name of the kind cluster created if `--kind-cluster` is specified
-        #[clap(
+        #[arg(
             long,
             default_value = "stackable-data-platform",
-            requires = "kind-cluster",
+            requires = "kind_cluster",
             value_hint = ValueHint::Other,
         )]
         kind_cluster_name: String,
