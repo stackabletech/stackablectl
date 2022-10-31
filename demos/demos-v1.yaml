@@ -54,8 +54,8 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/setup-superset.yaml
   spark-k8s-anomaly-detection-taxi-data:
-    description: Demo loading 2.5 years of New York taxi data into S3 bucket and carrying out an anomaly detection anlysis on it
-    #documentation: https://docs.stackable.tech/stackablectl/stable/demos/spark-k8s-anomaly-detection-taxi-data.html
+    description: Demo loading New York taxi data into an S3 bucket and carrying out an anomaly detection anlysis on it
+    documentation: https://docs.stackable.tech/stackablectl/stable/demos/spark-k8s-anomaly-detection-taxi-data.html
     stackableStack: spark-trino-superset-s3
     labels:
       - trino
