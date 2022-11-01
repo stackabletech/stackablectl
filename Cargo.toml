@@ -8,7 +8,7 @@ license = "OSL-3.0"
 repository = "https://github.com/stackabletech/stackablectl"
 
 [dependencies]
-cached = "0.39"
+cached = "0.40"
 clap = { version = "4.0", features = ["derive", "cargo"] }
 clap_complete = "4.0"
 cli-table = "0.4"
