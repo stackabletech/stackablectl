@@ -219,6 +219,10 @@ stacks:
       - trino
     manifests:
       - helmChart: *template-minio-hbase-phoenix-trino
-      - plainYaml: stacks/hdfs-hbase/zookeeper.yaml
-      - plainYaml: stacks/hdfs-hbase/hdfs.yaml
-      - plainYaml: stacks/hdfs-hbase/hbase.yaml
+      - helmChart: *template-postgresql-hive
+      - plainYaml: stacks/hdfs-hbase-phoenix-trino/zookeeper.yaml
+      - plainYaml: stacks/hdfs-hbase-phoenix-trino/hdfs.yaml
+      - plainYaml: stacks/hdfs-hbase-phoenix-trino/hbase.yaml
+      - plainYaml: stacks/hdfs-hbase-phoenix-trino/s3-secret.yaml
+      - plainYaml: stacks/hdfs-hbase-phoenix-trino/trino.yaml
+      - plainYaml: stacks/hdfs-hbase-phoenix-trino/hive-metastore.yaml
