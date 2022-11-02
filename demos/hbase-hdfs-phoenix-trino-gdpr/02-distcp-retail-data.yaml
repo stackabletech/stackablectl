@@ -2,12 +2,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: distcp-retail-data
+  name: distcp-cycling-data
 spec:
   template:
     spec:
       containers:
-        - name: distcp-retail-data
+        - name: distcp-cycling-data
           image: docker.stackable.tech/stackable/hadoop:3.3.3-stackable0.1.0
           env:
             - name: HADOOP_CONF_DIR
@@ -40,7 +40,11 @@ spec:
               value: "demo-minio"
             - name: MINIO_BUCKET_NAME
               value: "demo-bucket"
-          command: ["bash", "-c", "sleep infinity"] # need to add property for anonymous authentication
+          command: ["bash", "-c", "bin/hdfs dfs -mkdir -p /data/raw \
+                                  && bin/hadoop distcp -D fs.s3a.aws.credentials.provider=org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider \
+                                     $MINIO_SERVER_SCHEME://$MINIO_SERVER_HOST:$MINIO_SERVER_PORT_NUMBER $MINIO_SERVER_ACCESS_KEY $MINIO_SERVER_SECRET_KEY \                                     
+                                     hdfs://hdfs/data/raw"] # need to add property for anonymous authentication
+          args: ["$(MINIO_SERVER_ACCESS_KEY) $(MINIO_SERVER_SECRET_KEY) $(MINIO_SERVER_HOST) $(MINIO_SERVER_PORT_NUMBER) $(MINIO_SERVER_SCHEME)"]
           volumeMounts:
             - name: config-volume-hdfs
               mountPath: /stackable/conf/hdfs
@@ -50,11 +54,3 @@ spec:
             name: hdfs
       restartPolicy: OnFailure
   backoffLimit: 50
-
-#bin/hdfs dfs -mkdir -p /data/raw \
-#&& bin/hadoop distcp -D fs.s3a.aws.credentials.provider=org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider \
-#$MINIO_SERVER_SCHEME://$MINIO_SERVER_HOST:$MINIO_SERVER_PORT_NUMBER $MINIO_SERVER_ACCESS_KEY $MINIO_SERVER_SECRET_KEY \
-#hdfs://hdfs/data/raw
-  
-# bin/hadoop distcp -D fs.s3a.access.key=demo -D fs.s3a.secret.key=demodemo s3a:///demo-bucket/*.tgz hdfs://hdfs/data/raw
-# bin/hdfs dfs -D fs.s3a.aws.credentials.provider=org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider -ls s3a://demo-bucket/*.tgz
