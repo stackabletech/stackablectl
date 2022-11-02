@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.6.0] - 2022-10-28
+
 ### Added
 
 - Added Listener operator to supported operators ([#143](https://github.com/stackabletech/stackablectl/pull/143))
