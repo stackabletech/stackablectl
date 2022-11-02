@@ -2,13 +2,13 @@
 name = "stackablectl"
 description = "Command line tool to interact with a Stackable Data Platform"
 authors = ["Stackable GmbH <info@stackable.tech>"]
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 license = "OSL-3.0"
 repository = "https://github.com/stackabletech/stackablectl"
 
 [dependencies]
-cached = "0.39"
+cached = { version = "0.40", features = ['async_tokio_rt_multi_thread'] }
 clap = { version = "4.0", features = ["derive", "cargo"] }
 clap_complete = "4.0"
 cli-table = "0.4"
