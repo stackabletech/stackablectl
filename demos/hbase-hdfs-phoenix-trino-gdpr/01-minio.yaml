@@ -16,7 +16,9 @@ spec:
                                    curl -O https://repo.stackable.tech/repository/misc/datasets/retail-store-sales-transactions/item_properties_part2.tgz && \
                                    mc alias set $MINIO_ALIAS $MINIO_SERVER_SCHEME://$MINIO_SERVER_HOST:$MINIO_SERVER_PORT_NUMBER $MINIO_SERVER_ACCESS_KEY $MINIO_SERVER_SECRET_KEY && \
                                    mc mb $MINIO_ALIAS/$MINIO_BUCKET_NAME && \
-                                   mc cp *.tgz $MINIO_ALIAS/$MINIO_BUCKET_NAME"]
+                                   mc policy set public $MINIO_ALIAS/$MINIO_BUCKET_NAME && \
+                                   mc cp *.tgz $MINIO_ALIAS/$MINIO_BUCKET_NAME && \
+                                   sleep infinity"]
           stdin: true
           tty: true
           env:
