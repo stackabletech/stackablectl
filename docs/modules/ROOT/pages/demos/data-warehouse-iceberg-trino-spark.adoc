@@ -37,6 +37,13 @@ You can see the deployed products as well as their relationship in the following
 
 image::demo-data-warehouse-iceberg-trino-spark/overview.png[]
 
+== Apache iceberg
+As Apache iceberg states on their https://iceberg.apache.org/docs/latest/[website]:
+
+> Apache Iceberg is an open table format for huge analytic datasets. Iceberg adds tables to compute engines including Spark, Trino, PrestoDB, Flink, Hive and Impala using a high-performance table format that works just like a SQL table.
+
+This demos uses Iceberg as it plays along nicely with Object storages as well as having a Trino and Spark integration.
+
 == List deployed Stackable services
 To list the installed installed Stackable services run the following command:
 
