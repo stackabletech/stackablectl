@@ -207,3 +207,62 @@ Here you can see all the available Trino catalogs.
 * `tpcds`: https://trino.io/docs/current/connector/tpcds.html[TPCDS connector] providing a set of schemas to support the http://www.tpc.org/tpcds/[TPC Benchmark™ DS]
 * `tpch`: https://trino.io/docs/current/connector/tpch.html[TPCH connector] providing a set of schemas to support the http://www.tpc.org/tpcds/[TPC Benchmark™ DS]
 * `warehouse`: The warehouse area containing the enriched and performant accessible data
+
+== Superset
+Superset provides the ability to execute SQL queries and build dashboards.
+Open the `superset` endpoint `external-superset` in your browser (http://212.227.233.47:32393 in this case).
+
+image::demo-data-warehouse-iceberg-trino-spark/superset_1.png[]
+
+Log in with the username `admin` and password `admin`.
+
+image::demo-data-warehouse-iceberg-trino-spark/superset_2.png[]
+
+=== View dashboard
+The demo has created Dashboards to visualize the different datasources.
+To the dashboards click on the tab `Dashboards` at the top.
+
+image::demo-data-warehouse-iceberg-trino-spark/superset_3.png[]
+
+Click on the dashboard called `House sales`.
+It might take some time until the dashboards renders all the included charts.
+
+image::demo-data-warehouse-iceberg-trino-spark/superset_4.png[]
+
+Another Dashboard to look at is `Earthquakes`.
+
+image::demo-data-warehouse-iceberg-trino-spark/superset_5.png[]
+
+Another Dashboard to look at is `Taxi trips`.
+
+image::demo-data-warehouse-iceberg-trino-spark/superset_6.png[]
+
+There are multiple other Dashboards you can explore on you own.
+
+=== View charts
+
+The dashboards consists of multiple charts.
+To list the charts click on the tab `Charts` at the top.
+
+=== Execute arbitrary SQL statements
+Within Superset you can not only create dashboards but also run arbitrary SQL statements.
+On the top click on the tab `SQL Lab` -> `SQL Editor`.
+
+image::demo-data-warehouse-iceberg-trino-spark/superset_7.png[]
+
+On the left select the database `Trino warehouse`, the schema `house_sales` and set `See table schema` to `house_sales`.
+
+image::demo-data-warehouse-iceberg-trino-spark/superset_8.png[]
+
+On the right textbox enter the desired SQL statement.
+If you do not want to make one up, you can use the following:
+
+[source,sql]
+----
+select city, sum(price) as sales
+from house_sales
+group by 1
+order by 2 desc
+----
+
+image::demo-data-warehouse-iceberg-trino-spark/superset_9.png[]
