@@ -4,7 +4,7 @@
 ====
 This demos uses significant amount of resources. It will most likely not run on your workstation.
 It was developed and tested on 10 nodes with 4 cores (8 threads), 20GB RAM and 30GB hdd disks.
-Additionally persistent volumes with a total size of approx. 500GB will get created.
+Additionally persistent volumes with a total size of approx. 1TB will get created.
 A smaller version of this demo might be created in the future.
 ====
 

@@ -78,7 +78,7 @@ _templates:
         mode: distributed
         replicas: 5
         persistence:
-          size: 75Gi
+          size: 250Gi
         users:
           - accessKey: trino
             secretKey: trinotrino
