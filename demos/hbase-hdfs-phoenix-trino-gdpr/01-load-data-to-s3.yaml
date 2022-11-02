@@ -2,12 +2,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: prepare-minio-load-data
+  name: load-data-to-s3.yaml
 spec:
   template:
     spec:
       containers:
-        - name: prepare-minio-load-data
+        - name: load-data-to-s3.yaml
           image: docker.io/bitnami/minio-client:2022.8.11-debian-11-r3
           command: ["bash", "-c", "cd /tmp && \
                                    curl -O https://repo.stackable.tech/repository/misc/datasets/retail-store-sales-transactions/events.tgz && \
