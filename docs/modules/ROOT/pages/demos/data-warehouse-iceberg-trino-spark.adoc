@@ -10,7 +10,7 @@ A smaller version of this demo might be created in the future.
 
 [NOTE]
 ====
-This guide assumes you already have the demo `data-warehouse-iceberg-trino-spark` installed.
+This guide assumes that you already have the demo `data-warehouse-iceberg-trino-spark` installed.
 If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
 To put it simply you have to run `stackablectl demo install data-warehouse-iceberg-trino-spark`.
 ====
