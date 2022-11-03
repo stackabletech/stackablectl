@@ -32,7 +32,7 @@ demos:
       - superset
       - minio
       - s3
-      - earthquake
+      - earthquakes
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-nifi-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
@@ -67,3 +67,26 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/load-test-data.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/create-table-in-trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
+  data-warehouse-iceberg-trino-spark:
+    description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization. Multiple datasources like taxi data, water levels in Germany, earthquakes, e-charging stations and more are loaded.
+    documentation: https://docs.stackable.tech/stackablectl/stable/demos/data-warehouse-with-trin.html
+    stackableStack: data-warehouse-iceberg-trino-spark
+    labels:
+      - iceberg
+      - trino
+      - spark
+      - superset
+      - kafka
+      - nifi
+      - minio
+      - s3
+      - ny-taxi-data
+      - water-levels
+      - earthquakes
+    manifests:
+      - plainYaml: demos/data-warehouse-iceberg-trino-spark/serviceaccount.yaml
+      - plainYaml: demos/data-warehouse-iceberg-trino-spark/load-test-data.yaml
+      - plainYaml: demos/data-warehouse-iceberg-trino-spark/create-trino-tables.yaml
+      - plainYaml: demos/data-warehouse-iceberg-trino-spark/create-nifi-ingestion-job.yaml
+      - plainYaml: demos/data-warehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
+      - plainYaml: demos/data-warehouse-iceberg-trino-spark/setup-superset.yaml

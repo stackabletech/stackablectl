@@ -2,7 +2,7 @@
 
 [NOTE]
 ====
-This guide assumes you already have the demo `nifi-kafka-druid-water-level-data` installed.
+This guide assumes that you already have the demo `nifi-kafka-druid-water-level-data` installed.
 If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
 To put it simply you have to run `stackablectl demo install nifi-kafka-druid-water-level-data`.
 ====
@@ -57,7 +57,7 @@ $ stackablectl services list --all-namespaces
 [NOTE]
 ====
 When a product instance has not finished starting yet, the service will have no endpoint.
-Starting all of the product instances might take a considerable amount of time depending on your internet connectivity.
+Starting all the product instances might take a considerable amount of time depending on your internet connectivity.
 In case the product is not ready yet a warning might be shown.
 ====
 

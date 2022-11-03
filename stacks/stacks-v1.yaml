@@ -6,7 +6,7 @@ _templates:
       repo:
         name: minio
         url: https://charts.min.io/
-      version: 4.0.2
+      version: 4.0.15
       options:
         rootUser: root
         rootPassword: rootroot
@@ -35,7 +35,7 @@ _templates:
       repo:
         name: minio
         url: https://charts.min.io/
-      version: 4.0.5
+      version: 4.0.15
       options:
         rootUser: root
         rootPassword: rootroot
@@ -57,6 +57,46 @@ _templates:
             policy: public
         resources:
           requests:
+            cpu: 500m
+            memory: 1Gi
+        service:
+          type: NodePort
+          nodePort: null
+        consoleService:
+          type: NodePort
+          nodePort: null
+  - helmChart: &template-minio-distributed
+      releaseName: minio
+      name: minio
+      repo:
+        name: minio
+        url: https://charts.min.io/
+      version: 4.0.15
+      options:
+        rootUser: admin
+        rootPassword: adminadmin
+        mode: distributed
+        replicas: 5
+        persistence:
+          size: 250Gi
+        users:
+          - accessKey: trino
+            secretKey: trinotrino
+            policy: readwrite
+          - accessKey: hive
+            secretKey: hivehive
+            policy: readwrite
+          - accessKey: demo
+            secretKey: demodemo
+            policy: readwrite
+        buckets:
+          - name: staging
+            policy: public
+          - name: warehouse
+            policy: public
+        resources:
+          requests:
+            cpu: 500m
             memory: 2Gi
         service:
           type: NodePort
@@ -66,6 +106,18 @@ _templates:
           nodePort: null
   - helmChart: &template-postgresql-hive
       releaseName: postgresql-hive
+      name: postgresql
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 10.16.2
+      options:
+        # Old version (10) of helm-charts has old way of setting credentials
+        postgresqlUsername: hive
+        postgresqlPassword: hive
+        postgresqlDatabase: hive
+  - helmChart: &template-postgresql-hive-iceberg
+      releaseName: postgresql-hive-iceberg
       name: postgresql
       repo:
         name: bitnami
@@ -123,6 +175,29 @@ stacks:
       - helmChart: *template-postgresql-airflow
       - helmChart: *template-redis-airflow
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
+  data-warehouse-iceberg-trino-spark:
+    description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
+    stackableRelease: 22.09-latest-trino-spark
+    labels:
+      - iceberg
+      - trino
+      - spark
+      - superset
+      - kafka
+      - nifi
+      - minio
+      - s3
+    manifests:
+      - helmChart: *template-minio-distributed
+      - helmChart: *template-postgresql-hive
+      - helmChart: *template-postgresql-hive-iceberg
+      - helmChart: *template-postgresql-superset
+      - plainYaml: stacks/data-warehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: stacks/data-warehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: stacks/data-warehouse-iceberg-trino-spark/zookeeper.yaml
+      - plainYaml: stacks/data-warehouse-iceberg-trino-spark/kafka.yaml
+      - plainYaml: stacks/data-warehouse-iceberg-trino-spark/nifi.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
     stackableRelease: 22.09
