@@ -203,7 +203,7 @@ image::demo-data-warehouse-iceberg-trino-spark/dbeaver_1.png[]
 
 image::demo-data-warehouse-iceberg-trino-spark/dbeaver_2.png[]
 You need to modify the setting `TLS` to `true`.
-Additionally no need to add the setting `SSLVerification` and set it to `NONE`.
+Additionally you need to add the setting `SSLVerification` and set it to `NONE`.
 
 image::demo-data-warehouse-iceberg-trino-spark/dbeaver_3.png[]
 
