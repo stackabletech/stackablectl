@@ -236,15 +236,15 @@ It might take some time until the dashboards renders all the included charts.
 
 image::demo-data-warehouse-iceberg-trino-spark/superset_4.png[]
 
-Another Dashboard to look at is `Earthquakes`.
+Another dashboard to look at is `Earthquakes`.
 
 image::demo-data-warehouse-iceberg-trino-spark/superset_5.png[]
 
-Another Dashboard to look at is `Taxi trips`.
+Another dashboard to look at is `Taxi trips`.
 
 image::demo-data-warehouse-iceberg-trino-spark/superset_6.png[]
 
-There are multiple other Dashboards you can explore on you own.
+There are multiple other dashboards you can explore on you own.
 
 === View charts
 
