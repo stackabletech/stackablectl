@@ -89,3 +89,4 @@ demos:
       - plainYaml: demos/data-warehouse-iceberg-trino-spark/create-trino-tables.yaml
       - plainYaml: demos/data-warehouse-iceberg-trino-spark/create-nifi-ingestion-job.yaml
       - plainYaml: demos/data-warehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
+      - plainYaml: demos/data-warehouse-iceberg-trino-spark/setup-superset.yaml
