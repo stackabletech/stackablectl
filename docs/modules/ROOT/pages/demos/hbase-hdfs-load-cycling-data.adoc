@@ -55,7 +55,7 @@ PRODUCT    NAME       NAMESPACE  ENDPOINTS                                      
 [NOTE]
 ====
 When a product instance has not finished starting yet, the service will have no endpoint.
-Starting all of the product instances might take a considerable amount of time depending on your internet connectivity.
+Starting all the product instances might take a considerable amount of time depending on your internet connectivity.
 In case the product is not ready yet a warning might be shown.
 ====
 
