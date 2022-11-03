@@ -25,7 +25,7 @@ This demo will
 ** *Kafka*: A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as an event streaming platform to stream the data in near real-time
 ** *NiFi*: An easy-to-use, powerful system to process and distribute data. This demos uses it to fetch multiple online real-time data sources and ingest it into Kafka
 ** *Hive metastore*: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino and Spark
-** *Open policy agent* (OPA): A open source, general-purpose policy engine that unifies policy enforcement across the stack. This demo uses it as the authorizer for Trino, which decides which user is able to query which data.
+** *Open policy agent* (OPA): An open source, general-purpose policy engine that unifies policy enforcement across the stack. This demo uses it as the authorizer for Trino, which decides which user is able to query which data.
 ** *Superset*: A modern data exploration and visualization platform. This demo utilizes Superset to retrieve data from Trino via SQL queries and build dashboards on top of that data
 * Copy multiple data sources in CSV and Parquet format into the S3 staging area
 * Let Trino copy the data from staging area into the warehouse area. During the copy transformations such as validating, casting, parsing timestamps and enriching the data by joining lookup-tables are done
