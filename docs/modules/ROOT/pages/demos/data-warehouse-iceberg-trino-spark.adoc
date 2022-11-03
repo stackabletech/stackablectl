@@ -3,8 +3,8 @@
 [WARNING]
 ====
 This demos uses significant amount of resources. It will most likely not run on your workstation.
-It was developed and tested on 10 nodes with 4 cores (8 threads), 20GB RAM and 30GB hdd disks.
-Additionally persistent volumes with a total size of approx. 1TB will get created.
+It was developed and tested on 10 nodes with each 4 cores (8 threads), 20GB RAM and 30GB HDD.
+Additionally, persistent volumes with a total size of approximately 1TB will get created.
 A smaller version of this demo might be created in the future.
 ====
 
@@ -22,14 +22,14 @@ This demo will
 ** *Trino*: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
 ** *Spark*: A multi-language engine for executing data engineering, data science, and machine learning. This demo uses it to stream data from Kafka into the warehouse
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage to store all the data used
-** *Kafka*:  A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as an event streaming platform to stream the data in near real-time
-** *NiFi*:  An easy-to-use, powerful system to process and distribute data. This demos uses it to fetch multiple online real-time datasources and ingest it into Kafka
+** *Kafka*: A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as an event streaming platform to stream the data in near real-time
+** *NiFi*: An easy-to-use, powerful system to process and distribute data. This demos uses it to fetch multiple online real-time data sources and ingest it into Kafka
 ** *Hive metastore*: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino and Spark
 ** *Open policy agent* (OPA): A open source, general-purpose policy engine that unifies policy enforcement across the stack. This demo uses it as the authorizer for Trino, which decides which user is able to query which data.
 ** *Superset*: A modern data exploration and visualization platform. This demo utilizes Superset to retrieve data from Trino via SQL queries and build dashboards on top of that data
-* Copy multiple datasources in csv and parquet format into the s3 staging area
+* Copy multiple data sources in CSV and Parquet format into the S3 staging area
 * Let Trino copy the data from staging area into the warehouse area. During the copy transformations such as validating, casting, parsing timestamps and enriching the data by joining lookup-tables are done
-* Simultaneously start a NiFi workflow, which fetches real-time datasets via the internet and ingests the data as json records into Kafka
+* Simultaneously start a NiFi workflow, which fetches datasets in real-time via the internet and ingests the data as JSON records into Kafka
 * Spark structured streaming job is started, which streams the data out of Kafka into the warehouse
 * Create Superset dashboards for visualization of the different datasets
 
@@ -42,7 +42,7 @@ As Apache iceberg states on their https://iceberg.apache.org/docs/latest/[websit
 
 > Apache Iceberg is an open table format for huge analytic datasets. Iceberg adds tables to compute engines including Spark, Trino, PrestoDB, Flink, Hive and Impala using a high-performance table format that works just like a SQL table.
 
-This demos uses Iceberg as it plays along nicely with Object storages as well as having a Trino and Spark integration.
+This demos uses Iceberg as it plays along nicely with object storage as well as having a Trino and Spark integration.
 
 == List deployed Stackable services
 To list the installed installed Stackable services run the following command:
@@ -94,9 +94,9 @@ Log in with the username `admin` and password `adminadmin`.
 
 image::demo-data-warehouse-iceberg-trino-spark/minio_2.png[]
 
-Here you can see the two buckets the S3 is split into:
+Here you can see the two buckets contained in the S3:
 
-1. `staging`: The demo loads static datasets into this area. It is stored in different formats, such as csv and parquet. It does contain actual data tables as well as lookup tables.
+1. `staging`: The demo loads static datasets into this area. It is stored in different formats, such as CSV and Parquet. It does contain actual data tables as well as lookup tables.
 2. `warehouse`: This bucket is where the cleaned and/or aggregated data resides. The data is stored in the https://iceberg.apache.org/[Apache Iceberg] table format.
 
 === Inspect warehouse
@@ -120,8 +120,8 @@ You can see that Trino has placed a single file here containing all the house sa
 == NiFi
 
 NiFi is used to fetch multiple datasources from the internet and ingest it into Kafka near-realtime.
-Some of the datasources are statically download (e.g. as csv) and others are fetch via APIs such as REST APIs.
-This includes the following datasources:
+Some data sources are statically downloaded (e.g. as CSV) and others are dynamically fetched via APIs such as REST APIs.
+This includes the following data sources:
 
 * https://www.pegelonline.wsv.de/webservice/guideRestapi[Water level measurements in Germany] (real-time)
 * https://mobidata-bw.de/dataset/bikesh[Shared bikes in Germany] (real-time)
@@ -140,18 +140,18 @@ Log in with the username `admin` and password `adminadmin`.
 
 image::demo-data-warehouse-iceberg-trino-spark/nifi_2.png[]
 
-As you can see, the NiFi workflow consists of lot's of components.
+As you can see, the NiFi workflow consists of lots of components.
 You can zoom in by using your mouse and mouse wheel.
 On the left side are two strands, that
 
-1. Fetch the list of known water-level stations and ingests them into Kafka
-2. Continuously run a loop fetching the measurements of the last 30 for every measuring stations and ingesting the measurements into Kafka
+1. Fetch the list of known water-level stations and ingest them into Kafka
+2. Continuously run a loop fetching the measurements of the last 30 for every measuring station and ingesting the measurements into Kafka
 
 On the right side are three strands, that
 
-1. Fetch the current shred bike stations information
-2. Fetch the current shred bike stations status
-3. Fetch the current shred bike bike status
+1. Fetch the current shared bike stations information
+2. Fetch the current shared bike stations status
+3. Fetch the current shared bike bike status
 
 For details on the NiFi workflow ingesting water-level data please read on the xref:demos/nifi-kafka-druid-water-level-data.adoc#_nifi[nifi-kafka-druid-water-level-data documentation on NiFi].
 
@@ -179,7 +179,7 @@ image::demo-data-warehouse-iceberg-trino-spark/spark_2.png[]
 
 Five streaming jobs are currently running.
 The job with the highest throughput is the `ingest water_level measurements` job.
-Click on the bluely highlighted `Run ID` of it.
+Click on the `Run ID` highlighted in blue.
 
 image::demo-data-warehouse-iceberg-trino-spark/spark_3.png[]
 
@@ -209,7 +209,7 @@ image::demo-data-warehouse-iceberg-trino-spark/dbeaver_3.png[]
 
 Here you can see all the available Trino catalogs.
 
-* `staging`: The staging area containing raw data in various data formats such as csv or parquet
+* `staging`: The staging area containing raw data in various data formats such as CSV or Parquet
 * `system`: Internal catalog to retrieve Trino internals
 * `tpcds`: https://trino.io/docs/current/connector/tpcds.html[TPCDS connector] providing a set of schemas to support the http://www.tpc.org/tpcds/[TPC Benchmark™ DS]
 * `tpch`: https://trino.io/docs/current/connector/tpch.html[TPCH connector] providing a set of schemas to support the http://www.tpc.org/tpcds/[TPC Benchmark™ DS]
