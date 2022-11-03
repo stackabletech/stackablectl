@@ -49,7 +49,7 @@ data:
       #     - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:0.14.1
       #     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0
       sparkConf:
-        spark.hadoop.fs.s3a.endpoint: http://minio-trino:9000
+        spark.hadoop.fs.s3a.endpoint: http://minio:9000
         spark.hadoop.fs.s3a.path.style.access: "true"
         spark.hadoop.fs.s3a.access.key: trino
         spark.hadoop.fs.s3a.secret.key: trinotrino
