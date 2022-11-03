@@ -517,7 +517,7 @@ data:
 
 
     assert run_query(connection, """
-        create or replace materialized view warehouse.taxi.yellow_tripdata_daily_agg as
+      create or replace materialized view warehouse.taxi.yellow_tripdata_daily_agg as
       select
             date_trunc('day', tpep_pickup_datetime) as day,
             pickup_borough,
@@ -560,3 +560,16 @@ data:
     assert run_query(connection, """
         REFRESH MATERIALIZED VIEW warehouse.taxi.yellow_tripdata_monthly_agg
     """)[0][0] >= 0
+
+
+
+
+
+
+    # At this point Spark should have created the warehouse.smart_city.shared_bikes_* tables
+
+    assert run_query(connection, """
+        create or replace view warehouse.smart_city.shared_bikes_station_status_joined as
+        select i.name, s.*, i.latitude, i.longitude from warehouse.smart_city.shared_bikes_station_status as s
+        left join warehouse.smart_city.shared_bikes_station_information as i on s.station_id = i.station_id
+    """)[0][0] == True
