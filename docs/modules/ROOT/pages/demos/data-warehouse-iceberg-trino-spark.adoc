@@ -226,7 +226,7 @@ Log in with the username `admin` and password `admin`.
 image::demo-data-warehouse-iceberg-trino-spark/superset_2.png[]
 
 === View dashboard
-The demo has created Dashboards to visualize the different datasources.
+The demo has created dashboards to visualize the different data sources.
 To the dashboards click on the tab `Dashboards` at the top.
 
 image::demo-data-warehouse-iceberg-trino-spark/superset_3.png[]
