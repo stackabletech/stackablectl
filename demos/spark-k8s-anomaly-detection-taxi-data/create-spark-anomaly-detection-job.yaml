@@ -43,17 +43,34 @@ data:
       deps:
         requirements:
           - scikit-learn==0.24.2
-        #packages:
-        #  - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:0.14.1
       volumes:
         - name: cm-spark
           configMap:
             name: cm-spark
+      job:
+        resources:
+          cpu:
+            min: "100m"
+            max: "500m"
+          memory:
+            limit: "1Gi"
       driver:
+        resources:
+          cpu:
+            min: "2"
+            max: "3"
+          memory:
+            limit: "2Gi"
         volumeMounts:
           - name: cm-spark
             mountPath: /spark-scripts
       executor:
+        resources:
+          cpu:
+            min: "2"
+            max: "3"
+          memory:
+            limit: "5Gi"
         volumeMounts:
           - name: cm-spark
             mountPath: /spark-scripts
@@ -61,16 +78,6 @@ data:
         spark.kubernetes.submission.waitAppCompletion: "false"
         spark.kubernetes.driver.pod.name: "spark-ad-driver"
         spark.kubernetes.executor.podNamePrefix: "spark-ad"
-        spark.kubernetes.driver.request.cores: "2"
-        spark.kubernetes.driver.limit.cores: "3"
-        spark.driver.cores: "3"
-        spark.driver.memory: "1g"
-        spark.driver.memoryOverheadFactor: "0.4"
-        spark.kubernetes.executor.request.cores: "2"
-        spark.kubernetes.executor.limit.cores: "3"
-        spark.executor.cores: "3"
-        spark.executor.memory: "4g"
-        spark.executor.memoryOverheadFactor: "0.4"
         spark.executor.instances: "6"
         spark.hadoop.fs.s3a.aws.credentials.provider: "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
         spark.hadoop.fs.s3a.endpoint: http://minio-trino:9000
