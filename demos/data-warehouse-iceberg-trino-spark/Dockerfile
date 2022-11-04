@@ -1,3 +1,5 @@
+# docker build . -t docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0
+
 FROM docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable0.2.0
 
 RUN curl -L -O http://search.maven.org/remotecontent?filepath=org/apache/ivy/ivy/2.5.0/ivy-2.5.0.jar
