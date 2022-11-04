@@ -2,7 +2,7 @@
 
 [NOTE]
 ====
-This guide assumes you already have the demo `trino-taxi-data` installed.
+This guide assumes that you already have the demo `trino-taxi-data` installed.
 If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
 To put it simply you have to run `stackablectl demo install trino-taxi-data`.
 ====
@@ -15,7 +15,7 @@ This demo will
 ** *Trino*: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage to store all the data used
 ** *Hive metastore*: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino
-** *Open policy agent* (OPA): A open source, general-purpose policy engine that unifies policy enforcement across the stack. This demo uses it as the authorizer for Trino, which decides which user is able to query which data.
+** *Open policy agent* (OPA): An open source, general-purpose policy engine that unifies policy enforcement across the stack. This demo uses it as the authorizer for Trino, which decides which user is able to query which data.
 * Load testdata into S3. It contains 2.5 years of https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page[New York City taxi trips]
 * Make data accessible via SQL in Trino
 * Create Superset dashboards for visualization of the data
@@ -50,7 +50,7 @@ $ stackablectl services list --all-namespaces
 [NOTE]
 ====
 When a product instance has not finished starting yet, the service will have no endpoint.
-Starting all of the product instances might take an considerable amount of time depending on your internet connectivity.
+Starting all the product instances might take an considerable amount of time depending on your internet connectivity.
 In case the product is not ready yet a warning might be shown.
 ====
 

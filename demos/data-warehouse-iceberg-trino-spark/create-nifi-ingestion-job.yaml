@@ -1,0 +1,72 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-nifi-ingestion-job
+spec:
+  template:
+    spec:
+      serviceAccountName: demo-serviceaccount
+      initContainers:
+        - name: wait-for-testdata 
+          image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
+          command: ["bash", "-c", "echo 'Waiting for all kafka brokers to be ready' && kubectl wait --for=condition=ready --timeout=30m pod -l app.kubernetes.io/instance=kafka -l app.kubernetes.io/name=kafka"]
+      containers:
+        - name: create-nifi-ingestion-job
+          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
+          command: ["bash", "-c", "curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/WarehouseKafkaIngest.xml && python -u /tmp/script/script.py"]
+          volumeMounts:
+            - name: script
+              mountPath: /tmp/script
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+      volumes:
+      - name: script
+        configMap:
+          name: create-nifi-ingestion-job-script
+      restartPolicy: OnFailure
+  backoffLimit: 50
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-nifi-ingestion-job-script
+data:
+  script.py: |
+    from nipyapi.canvas import get_root_pg_id, schedule_process_group, list_all_controllers, schedule_controller
+    from nipyapi.security import service_login
+    from nipyapi.templates import get_template, upload_template, deploy_template
+    import nipyapi
+    import os
+    import urllib3
+
+    # As of 2022-08-29 we cant use "https://nifi:8443" here because <h2>The request contained an invalid host header [<code>nifi:8443</code>] in the request [<code>/nifi-api</code>]. Check for request manipulation or third-party intercept.</h2>
+    ENDPOINT = f"https://nifi-node-default-0.nifi-node-default.{os.environ['NAMESPACE']}.svc.cluster.local:8443" # For local testing / developing replace it, afterwards change back to f"https://nifi-node-default-0.nifi-node-default.{os.environ['NAMESPACE']}.svc.cluster.local:8443"
+    USERNAME = "admin"
+    PASSWORD = "adminadmin"
+    TEMPLATE_NAME = "WarehouseKafkaIngest"
+    TEMPLATE_FILE = f"{TEMPLATE_NAME}.xml"
+
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    nipyapi.config.nifi_config.host = f"{ENDPOINT}/nifi-api"
+    nipyapi.config.nifi_config.verify_ssl = False
+
+    print("Logging in")
+    service_login(username=USERNAME, password=PASSWORD)
+    print("Logged in")
+
+    pg_id = get_root_pg_id()
+
+    upload_template(pg_id, TEMPLATE_FILE)
+
+    template_id = get_template(TEMPLATE_NAME).id
+    deploy_template(pg_id, template_id, 200, 0)
+
+    for controller in list_all_controllers():
+        schedule_controller(controller, scheduled=True)
+
+    schedule_process_group(pg_id, scheduled=True)
