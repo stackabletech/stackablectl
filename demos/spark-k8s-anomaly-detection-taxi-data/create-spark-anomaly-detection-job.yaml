@@ -37,7 +37,7 @@ data:
       name: spark-ad
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/aken/pyspark-k8s-with-iceberg:0.1.0 #docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable0.2.0
+      sparkImage: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0 # docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable0.2.0
       mode: cluster
       mainApplicationFile: local:///spark-scripts/spark-ad.py
       deps:
