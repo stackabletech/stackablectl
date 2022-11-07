@@ -242,6 +242,22 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/druid.yaml # Reuse
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+  spark-trino-superset-s3:
+    description: Stack containing MinIO, Trino and Superset for data visualization
+    stackableRelease: 22.09-latest-trino-spark
+    labels:
+      - trino
+      - superset
+      - minio
+      - s3
+    manifests:
+      - helmChart: *template-minio-trino
+      - helmChart: *template-postgresql-hive
+      - helmChart: *template-postgresql-hive-iceberg
+      - helmChart: *template-postgresql-superset
+      - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/trino.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/superset.yaml
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
     stackableRelease: 22.09
