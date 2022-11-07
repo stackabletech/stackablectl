@@ -1,0 +1,47 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-hfile-and-import-to-hbase # this jobs create Hfiles first (=dedicated Hbase file format with metadata for the HCatalog.) Afterwards executing a bulkload to Hbase.
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-hfile-and-import-to-hbase
+          image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.2.0
+          env:
+            - name: HBASE_CONF_DIR
+              value: "/stackable/conf/"
+          volumeMounts:
+            - mountPath: /stackable/conf/hdfs-site.xml
+              name: config-volume-hdfs
+              subPath: hdfs-site.xml
+            - mountPath: /stackable/conf/core-site.xml
+              name: config-volume-hdfs
+              subPath: core-site.xml
+            - mountPath: /stackable/conf/hbase-site.xml
+              name: config-volume-hbase
+              subPath: hbase-site.xml
+            - mountPath: /stackable/conf/hbase-env.sh
+              name: config-volume-hbase
+              subPath: hbase-env.sh
+          command: [ "bash", "-c", "/stackable/hbase/bin/hbase \
+                                    org.apache.hadoop.hbase.mapreduce.ImportTsv \
+                                    -Dimporttsv.separator=, \
+                                    -Dimporttsv.skip.bad.lines=true \
+                                    -Dimporttsv.columns=HBASE_ROW_KEY, cf:timestamp, cf:event, cf:itemid, cf:transactionid \
+                                    -Dimporttsv.bulk.output=hdfs://hdfs/data/hfile \
+                                    events hdfs://hdfs/data/raw/events.tgz \
+                                    && /stackable/hbase/bin/hbase \
+                                    org.apache.hadoop.hbase.tool.LoadIncrementalHFiles \
+                                    hdfs://hdfs/data/hfile \
+                                    events" ] #https://hbase.apache.org/book.html#tools
+      volumes:
+        - name: config-volume-hbase
+          configMap:
+            name: hbase-master-default
+        - name: config-volume-hdfs
+          configMap:
+            name: hdfs
+      restartPolicy: OnFailure
+  backoffLimit: 50
