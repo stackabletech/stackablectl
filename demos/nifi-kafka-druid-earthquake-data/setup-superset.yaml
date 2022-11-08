@@ -31,7 +31,7 @@ data:
 
     base_url = "http://superset-external:8088" # For local testing / developing replace it, afterwards change back to http://superset-external:8088
     username = "admin"
-    password = "admin"
+    password = "adminadmin"
 
     logging.basicConfig(level=logging.INFO)
     logging.info("Starting setup of Superset")
