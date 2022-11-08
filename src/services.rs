@@ -90,6 +90,14 @@ lazy_static! {
                 }
             ),
             (
+                "opensearch-dashboards",
+                GroupVersionKind {
+                    group: "apps".to_string(),
+                    version: "v1".to_string(),
+                    kind: "Deployment".to_string(),
+                }
+            ),
+            (
                 "superset",
                 GroupVersionKind {
                     group: "superset.stackable.tech".to_string(),
@@ -175,6 +183,10 @@ async fn list_services(
     output.insert(
         "minio".to_string(),
         get_minio_services(!all_namespaces, redact_credentials).await?,
+    );
+    output.insert(
+        "opensearch-dashboards".to_string(),
+        get_opensearch_dashboards_services(!all_namespaces, redact_credentials).await?,
     );
 
     match output_type {
@@ -543,6 +555,60 @@ pub async fn get_minio_service(
             }
         }
     }
+
+    Ok(InstalledProduct {
+        name: name.to_string(),
+        namespace: Some(namespace.to_string()),
+        endpoints,
+        extra_infos,
+    })
+}
+
+async fn get_opensearch_dashboards_services(
+    namespaced: bool,
+    redact_credentials: bool,
+) -> Result<Vec<InstalledProduct>, Box<dyn Error>> {
+    let client = get_client().await?;
+    let list_params = ListParams::default().labels("app.kubernetes.io/name=opensearch-dashboards");
+
+    let mut result = Vec::new();
+
+    let deployment_api: Api<Deployment> = match namespaced {
+        true => Api::namespaced(client.clone(), NAMESPACE.lock()?.as_str()),
+        false => Api::all(client.clone()),
+    };
+    let deployments = deployment_api.list(&list_params).await?;
+    for deployment in deployments {
+        let installed_product = get_opensearch_dashboards_service(
+            &deployment.name_unchecked(),
+            &deployment
+                .namespace()
+                .ok_or("OpenSearch Dashboards deployment has no namespace")?,
+            client.clone(),
+            redact_credentials,
+        )
+        .await?;
+        result.push(installed_product);
+    }
+
+    Ok(result)
+}
+
+pub async fn get_opensearch_dashboards_service(
+    name: &str,
+    namespace: &str,
+    client: Client,
+    _redact_credentials: bool,
+) -> Result<InstalledProduct, Box<dyn Error>> {
+    let service_api: Api<Service> = Api::namespaced(client.clone(), namespace);
+
+    let service = service_api.get(name).await?;
+    let endpoints = get_service_endpoint_urls(&service, name, client.clone()).await?;
+
+    let extra_infos = vec![
+        "Third party service".to_string(),
+        "Admin user: admin, password: admin".to_string(),
+    ];
 
     Ok(InstalledProduct {
         name: name.to_string(),
