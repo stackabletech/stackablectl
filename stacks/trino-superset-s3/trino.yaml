@@ -31,10 +31,9 @@ metadata:
   name: trino-users
 type: kubernetes.io/opaque
 stringData:
-  # admin:admin
-  # htpasswd -n -B -C 10 admin
+  # htpasswd -n -B -C 10 admin # pass adminadmin
   admin: $2y$10$6eXlCsbvSNsLaeClkOeRZujIM4aKIFuSXbwGUej7eEOFbkeo.BQBO
-  # demo:demo
+  # htpasswd -n -B -C 10 demo # pass demo
   demo: $2y$10$mMRoIKfWtAuycEQnKiDCeOlCSYiWkvbs0WsMFLkaSnNO0ZnFKVRXm
 ---
 apiVersion: trino.stackable.tech/v1alpha1

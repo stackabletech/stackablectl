@@ -177,7 +177,7 @@ stacks:
       - plainYaml: stacks/airflow/airflow.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
   data-warehouse-iceberg-trino-spark:
     description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
-    stackableRelease: 22.09-latest-trino-spark
+    stackableRelease: 22.11-rc0
     labels:
       - iceberg
       - trino
@@ -244,7 +244,7 @@ stacks:
       - plainYaml: stacks/nifi-kafka-druid-superset-s3/nifi.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
   spark-trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 22.09-latest-trino-spark
+    stackableRelease: 22.11-rc0
     labels:
       - trino
       - superset
@@ -255,9 +255,9 @@ stacks:
       - helmChart: *template-postgresql-hive
       - helmChart: *template-postgresql-hive-iceberg
       - helmChart: *template-postgresql-superset
-      - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
-      - plainYaml: stacks/spark-trino-superset-s3/trino.yaml
-      - plainYaml: stacks/spark-trino-superset-s3/superset.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml # TODO
+      - plainYaml: stacks/spark-trino-superset-s3/trino.yaml # TODO
+      - plainYaml: stacks/spark-trino-superset-s3/superset.yaml # TODO
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
     stackableRelease: 22.11-rc0
