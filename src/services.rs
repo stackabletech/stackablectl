@@ -573,10 +573,12 @@ async fn get_opensearch_dashboards_services(
 
     let mut result = Vec::new();
 
-    let deployment_api: Api<Deployment> = match namespaced {
-        true => Api::namespaced(client.clone(), NAMESPACE.lock()?.as_str()),
-        false => Api::all(client.clone()),
+    let deployment_api: Api<Deployment> = if namespaced {
+        Api::namespaced(client.clone(), NAMESPACE.lock()?.as_str())
+    } else {
+        Api::all(client.clone())
     };
+
     let deployments = deployment_api.list(&list_params).await?;
     for deployment in deployments {
         let installed_product = get_opensearch_dashboards_service(
@@ -598,7 +600,7 @@ pub async fn get_opensearch_dashboards_service(
     name: &str,
     namespace: &str,
     client: Client,
-    _redact_credentials: bool,
+    redact_credentials: bool,
 ) -> Result<InstalledProduct, Box<dyn Error>> {
     let service_api: Api<Service> = Api::namespaced(client.clone(), namespace);
 
@@ -607,7 +609,15 @@ pub async fn get_opensearch_dashboards_service(
 
     let extra_infos = vec![
         "Third party service".to_string(),
-        "Admin user: admin, password: admin".to_string(),
+        format!(
+            "Admin user: {username}, password: {password}",
+            username = "admin",
+            password = if redact_credentials {
+                REDACTED_PASSWORD
+            } else {
+                "admin"
+            }
+        ),
     ];
 
     Ok(InstalledProduct {
