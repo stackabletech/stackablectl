@@ -200,7 +200,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
-    stackableRelease: 22.09
+    stackableRelease: 22.11-rc0
     labels:
       - hbase
       - hdfs
