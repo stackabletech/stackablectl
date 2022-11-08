@@ -168,13 +168,13 @@ _templates:
 stacks:
   airflow:
     description: Stack containing Airflow scheduling platform
-    stackableRelease: 22.09
+    stackableRelease: 22.11-rc0
     labels:
       - airflow
     manifests:
       - helmChart: *template-postgresql-airflow
       - helmChart: *template-redis-airflow
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
+      - plainYaml: stacks/airflow/airflow.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
   data-warehouse-iceberg-trino-spark:
     description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
     stackableRelease: 22.09-latest-trino-spark
