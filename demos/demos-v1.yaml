@@ -81,7 +81,7 @@ demos:
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/load-test-data.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/create-table-in-trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
+      - plainYaml: demos/trino-taxi-data/setup-superset.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
   data-warehouse-iceberg-trino-spark:
     description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization. Multiple datasources like taxi data, water levels in Germany, earthquakes, e-charging stations and more are loaded.
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/data-warehouse-with-trin.html

@@ -4,7 +4,7 @@ kind: TrinoCluster
 metadata:
   name: trino
 spec:
-  version: 387-stackable0.1.0
+  version: 396-stackable0.1.0
   catalogLabelSelector:
     matchLabels:
       trino: trino
@@ -32,7 +32,8 @@ metadata:
 type: kubernetes.io/opaque
 stringData:
   # admin:admin
-  admin: $2y$10$89xReovvDLacVzRGpjOyAOONnayOgDAyIS2nW9bs5DJT98q17Dy5i
+  # htpasswd -n -B -C 10 admin
+  admin: $2y$10$6eXlCsbvSNsLaeClkOeRZujIM4aKIFuSXbwGUej7eEOFbkeo.BQBO
   # demo:demo
   demo: $2y$10$mMRoIKfWtAuycEQnKiDCeOlCSYiWkvbs0WsMFLkaSnNO0ZnFKVRXm
 ---
@@ -80,7 +81,7 @@ kind: OpaCluster
 metadata:
   name: opa
 spec:
-  version: 0.41.0-stackable0.1.0
+  version: 0.45.0-stackable0.1.0
   servers:
     roleGroups:
       default:

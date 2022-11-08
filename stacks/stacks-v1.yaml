@@ -8,8 +8,8 @@ _templates:
         url: https://charts.min.io/
       version: 4.0.15
       options:
-        rootUser: root
-        rootPassword: rootroot
+        rootUser: admin
+        rootPassword: adminadmin
         mode: standalone
         persistence:
           size: 15Gi
@@ -37,8 +37,8 @@ _templates:
         url: https://charts.min.io/
       version: 4.0.15
       options:
-        rootUser: root
-        rootPassword: rootroot
+        rootUser: admin
+        rootPassword: adminadmin
         mode: standalone
         persistence:
           size: 10Gi
@@ -260,7 +260,7 @@ stacks:
       - plainYaml: stacks/spark-trino-superset-s3/superset.yaml
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 22.09
+    stackableRelease: 22.11-rc0
     labels:
       - trino
       - superset
@@ -271,5 +271,5 @@ stacks:
       - helmChart: *template-postgresql-hive
       - helmChart: *template-postgresql-superset
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
+      - plainYaml: stacks/trino-superset-s3/trino.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
+      - plainYaml: stacks/trino-superset-s3/superset.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
