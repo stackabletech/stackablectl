@@ -8,12 +8,18 @@ spec:
     spec:
       containers:
         - name: create-hbase-row-key
-          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
-          command: ["bash", "-c", "python -u /tmp/script/script.py"]
+          image: "bitnami/python:latest"
+          env:
+            - name: INPUT_FILE_NAME
+              value: "events.csv"
+            - name: OUTPUT_FILE_NAME
+              value: "hashed_events.csv"
+          command: ["bash", "-c", "pip install pandas, minio && \
+                                   python -u /tmp/script/script.py -i $INPUT_FILE_NAME -o $OUTPUT_FILE_NAME && \
+                                   sleep infinity"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
-          args: ["$(INPUT_FILE_NAME)"]
       volumes:
         - name: script
           configMap:
@@ -27,52 +33,71 @@ metadata:
   name: generate-hash-row-key
 data:
   script.py: |
-  
-      import argparse
-      import hashlib
-      import pandas as pd
+    import argparse
+    import hashlib
+    import pandas as pd
+    from minio import Minio
+    import tarfile
     
     
     def parse_args():
-      parser = argparse.ArgumentParser(
-      description=""
-      )
-      
-      parser.add_argument(
-      "-i",
-      "--input_file",
-      type=str,
-      help="Name of the CSV input file.",
-      required=True
-      )
-      
-      parser.add_argument(
-      "-o",
-      "--output_file",
-      type=str,
-      help="Name of the CSV output file.",
-      required=True
-      )
-      
-      return parser.parse_args()
+    parser = argparse.ArgumentParser(
+    description=""
+    )
+    
+    parser.add_argument(
+    "-i",
+    "--input_file",
+    type=str,
+    help="Name of the CSV input file.",
+    required=True
+    )
+    
+    parser.add_argument(
+    "-o",
+    "--output_file",
+    type=str,
+    help="Name of the CSV output file.",
+    required=True
+    )
+    
+    return parser.parse_args()
     
     
     def main():
-      args = parse_args()
-      
-      output_file_dir = args.output_file
-      
-      df = pd.read_csv(args.input_file)
-      
-      df['visitorid'].astype(str) + df['timestamp'].astype(str)
-      
-      df2 = df.assign(concat_col=lambda x: (x.visitorid).astype(str) + (x.timestamp).astype(str) )
-      
-      df2['hash_col'] = df2['concat_col'].apply(lambda x:hashlib.sha256(x.encode()).hexdigest())
-      
-      df3 = df2[ ['hash_col'] + [ col for col in df2.columns if col != 'hash_col' ]]
-      
-      df3.to_csv(output_file_dir,columns=['hash_col','timestamp','visitorid','event','itemid','transactionid'] , sep=';', encoding='utf-8', index=False, na_rep='N/A')
+    
+    LOCAL_FILE_PATH = '/tmp'
+    ACCESS_KEY = 'demo'
+    SECRET_KEY = 'demodemo'
+    MINIO_API_HOST = 'http://demo-minio-hbase:9000'
+    BUCKET_NAME = 'demo-bucket'
+    OBJECT_NAME = args.input_file
+    OUTPUT_FILE_DIR = args.output_file
+    MINIO_CLIENT = Minio("demo-minio-hbase:9000", access_key=ACCESS_KEY, secret_key=SECRET_KEY, secure=False)
+
+    try:
+        MINIO_CLIENT.fget_object(BUCKET_NAME, OBJECT_NAME, LOCAL_FILE_PATH + OBJECT_NAME )
+        file = tarfile.open(LOCAL_FILE_PATH + OBJECT_NAME)
+        file.extractall()
+        df = pd.read_csv(LOCAL_FILE_PATH + '/events.csv')
+
+    finally:
+        response.close()
+        response.release_conn()
+    
+    args = parse_args()
+    
+    df = pd.read_csv(OBJECT_NAME)
+    
+    df['visitorid'].astype(str) + df['timestamp'].astype(str)
+    
+    df2 = df.assign(concat_col=lambda x: (x.visitorid).astype(str) + (x.timestamp).astype(str) )
+    
+    df2['hash_col'] = df2['concat_col'].apply(lambda x:hashlib.sha256(x.encode()).hexdigest())
+    
+    df3 = df2[ ['hash_col'] + [ col for col in df2.columns if col != 'hash_col' ]]
+    
+    df3.to_csv(OUTPUT_FILE_DIR,columns=['hash_col','timestamp','visitorid','event','itemid','transactionid'] , sep=';', encoding='utf-8', index=False, na_rep='N/A')
     
     if __name__ == "__main__":
-      main()
+    main()
