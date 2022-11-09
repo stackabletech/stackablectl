@@ -11,12 +11,14 @@ spec:
           image: "bitnami/python:latest"
           env:
             - name: INPUT_FILE_NAME
-              value: "events.csv"
+              value: "events.tgz"
             - name: OUTPUT_FILE_NAME
-              value: "hashed_events.csv"
-          command: ["bash", "-c", "pip install pandas, minio && \
-                                   python -u /tmp/script/script.py -i $INPUT_FILE_NAME -o $OUTPUT_FILE_NAME && \
-                                   sleep infinity"]
+              value: "hashed_events.tgz"
+            - name: CSV_FILE_NAME
+              value: "events.csv"
+          command: ["bash", "-c", "pip install pandas minio && \  
+                                   python -u /tmp/script/script.py -i $INPUT_FILE_NAME -o $OUTPUT_FILE_NAME -c $CSV_FILE_NAME && \                                    
+                                    sleep infinity"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
@@ -38,66 +40,72 @@ data:
     import pandas as pd
     from minio import Minio
     import tarfile
-    
-    
+  
     def parse_args():
-    parser = argparse.ArgumentParser(
-    description=""
-    )
-    
-    parser.add_argument(
-    "-i",
-    "--input_file",
-    type=str,
-    help="Name of the CSV input file.",
-    required=True
-    )
-    
-    parser.add_argument(
-    "-o",
-    "--output_file",
-    type=str,
-    help="Name of the CSV output file.",
-    required=True
-    )
-    
-    return parser.parse_args()
+      parser = argparse.ArgumentParser(
+      description=""
+      )
+      
+      parser.add_argument(
+      "-i",
+      "--input_file",
+      type=str,
+      help="Name of the CSV input file.",
+      required=True
+      )
+      
+      parser.add_argument(
+      "-o",
+      "--output_file_name",
+      type=str,
+      help="Name of the compressed CSV output file.",
+      required=True
+      )
+      
+      parser.add_argument(
+      "-c",
+      "--csv_file_name",
+      type=str,
+      help="Name of the CSV file.",
+      required=True
+      )
+      
+      return parser.parse_args()
     
     
     def main():
-    
-    LOCAL_FILE_PATH = '/tmp'
-    ACCESS_KEY = 'demo'
-    SECRET_KEY = 'demodemo'
-    MINIO_API_HOST = 'http://demo-minio-hbase:9000'
-    BUCKET_NAME = 'demo-bucket'
-    OBJECT_NAME = args.input_file
-    OUTPUT_FILE_DIR = args.output_file
-    MINIO_CLIENT = Minio("demo-minio-hbase:9000", access_key=ACCESS_KEY, secret_key=SECRET_KEY, secure=False)
-
-    try:
-        MINIO_CLIENT.fget_object(BUCKET_NAME, OBJECT_NAME, LOCAL_FILE_PATH + OBJECT_NAME )
-        file = tarfile.open(LOCAL_FILE_PATH + OBJECT_NAME)
-        file.extractall()
-        df = pd.read_csv(LOCAL_FILE_PATH + '/events.csv')
-
-    finally:
-        response.close()
-        response.release_conn()
-    
-    args = parse_args()
-    
-    df = pd.read_csv(OBJECT_NAME)
-    
-    df['visitorid'].astype(str) + df['timestamp'].astype(str)
-    
-    df2 = df.assign(concat_col=lambda x: (x.visitorid).astype(str) + (x.timestamp).astype(str) )
-    
-    df2['hash_col'] = df2['concat_col'].apply(lambda x:hashlib.sha256(x.encode()).hexdigest())
-    
-    df3 = df2[ ['hash_col'] + [ col for col in df2.columns if col != 'hash_col' ]]
-    
-    df3.to_csv(OUTPUT_FILE_DIR,columns=['hash_col','timestamp','visitorid','event','itemid','transactionid'] , sep=';', encoding='utf-8', index=False, na_rep='N/A')
+      
+      args = parse_args()
+      
+      LOCAL_FILE_PATH = '/tmp/'
+      ACCESS_KEY = 'demo'
+      SECRET_KEY = 'demodemo'
+      BUCKET_NAME = 'demo-bucket'
+      CSV_FILE_NAME = args.csv_file_name
+      OBJECT_NAME = args.input_file
+      OUTPUT_FILE_NAME = args.output_file_name
+      MINIO_HOST = 'demo-minio-hbase'
+      MINIO_PORT = '9000'
+      MINIO_CLIENT = Minio(MINIO_HOST + ':' + MINIO_PORT, access_key=ACCESS_KEY, secret_key=SECRET_KEY, secure=False)
+      
+      MINIO_CLIENT.fget_object(BUCKET_NAME, OBJECT_NAME, LOCAL_FILE_PATH + OBJECT_NAME )
+      
+      file = tarfile.open(LOCAL_FILE_PATH + OBJECT_NAME)
+      file.extractall(LOCAL_FILE_PATH)
+      df = pd.read_csv(LOCAL_FILE_PATH + CSV_FILE_NAME)
+      
+      df2 = df.assign(concat_col=lambda x: (x.visitorid).astype(str) + (x.timestamp).astype(str) )
+      
+      df2['hash_col'] = df2['concat_col'].apply(lambda x:hashlib.sha256(x.encode()).hexdigest())
+      
+      df3 = df2[ ['hash_col'] + [ col for col in df2.columns if col != 'hash_col' ]]
+      
+      df3.to_csv(LOCAL_FILE_PATH + OUTPUT_FILE_NAME,columns=['hash_col','timestamp','visitorid','event','itemid','transactionid'], compression='gzip', sep=';', encoding='utf-8', index=False, na_rep='N/A')
+      
+      result = MINIO_CLIENT.fput_object(BUCKET_NAME, OUTPUT_FILE_NAME, LOCAL_FILE_PATH + OUTPUT_FILE_NAME)
+      
+      print("created {0} object; etag: {1}, version-id: {2}".format(
+            result.object_name, result.etag, result.version_id,),)
     
     if __name__ == "__main__":
-    main()
+      main()
