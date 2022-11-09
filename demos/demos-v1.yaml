@@ -103,5 +103,5 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/load-test-data.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/create-trino-tables.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/create-nifi-ingestion-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
+      - plainYaml: demos/data-warehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
       - plainYaml: demos/data-warehouse-iceberg-trino-spark/setup-superset.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/setup-superset.yaml

@@ -193,11 +193,11 @@ stacks:
       - helmChart: *template-postgresql-hive-iceberg
       - helmChart: *template-postgresql-superset
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/hive-metastores.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: stacks/data-warehouse-iceberg-trino-spark/trino.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/zookeeper.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/kafka.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/nifi.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
+      - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
     stackableRelease: 22.11-rc0
