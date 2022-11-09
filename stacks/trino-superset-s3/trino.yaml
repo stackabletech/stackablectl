@@ -21,6 +21,13 @@ spec:
       default:
         replicas: 1
   workers:
+    config:
+      resources:
+        cpu:
+          min: "1"
+          max: "4"
+        memory:
+          limit: '4Gi'
     roleGroups:
       default:
         replicas: 1
