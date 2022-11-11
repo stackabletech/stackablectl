@@ -43,4 +43,4 @@ The argument to `--additional-releases-file` can be either a path to a file on t
 By using an URL the releases file can be put into a central Git repository and referenced by all teams or clients.
 Multiple `--additional-releases-file` flags can be specified to include multiple releases files.
 
-Every additional release will we added to the already existing releases in `stackablectl`, so all the available releases files will be merged.
+Every additional release will be added to the already existing releases in `stackablectl`, so all the available releases files will be merged.
