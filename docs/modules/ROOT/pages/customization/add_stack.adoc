@@ -48,7 +48,7 @@ The argument to `--additional-stacks-file` can be either a path to a file on the
 By using an URL the stacks file can be put into a central Git repository and referenced by all teams or clients.
 Multiple `--additional-stacks-file` flags can be specified to include multiple stacks files.
 
-Every additional stack will we added to the already existing stacks in `stackablectl`, so all the available stacks files will be merged.
+Every additional stack will be added to the already existing stacks in `stackablectl`, so all the available stacks files will be merged.
 
 == Working with feature branches
 See xref:customization/working_with_feature_branches.adoc[]
