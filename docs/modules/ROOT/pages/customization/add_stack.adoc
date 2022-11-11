@@ -1,0 +1,54 @@
+= Add a stack
+
+== Motivation
+If your company or clients have multiple similar setups or reference architectures, it could make sense to make them easily available to all employees or clients.
+In the custom defined stack all product versions are pinned as well, so you can easily spin up a stack containing the exact same versions as your production setup.
+You can use your defined stack to give it to colleagues or potential customers to show the overall architecture of the Data Platform you're going to build.
+
+Please keep in mind that a stack requires a release to run on.
+In the most cases the stackable provided release should work absolutely fine, but you can also have a look at the chapter xref:customization/add_release.adoc[] on how to create your own release.
+
+== 1. Create a stacks.yaml
+For a custom stack you need to create a `mycorp-stacks.yaml` containing stacks according to the format defined by https://github.com/stackabletech/stackablectl/blob/main/stacks/stacks-v1.yaml[the Stackable provided stacks].
+
+As of writing a `stacks.yaml` file could look as follows:
+
+[source,yaml]
+----
+stacks:
+   mycorp-warehouse:
+    description: Internal stack we use to build our warehouses
+    stackableRelease: 22.09 # or use your custom release mycorp-release1
+    labels:
+      - mycorp
+      - warehouse
+    manifests:
+      # We have Superset in out Stack, which needs a postgressql instance
+      # So let's install that first
+      - helmChart: &template-postgresql-superset
+        releaseName: postgresql-superset
+        name: postgresql
+        repo:
+            name: bitnami
+            url: https://charts.bitnami.com/bitnami/
+        version: 11.0.0
+        options:
+            auth:
+            username: superset
+            password: superset
+            database: superset
+      - plainYaml: https://my.corp/stacks/mycorp-warehouse/trino.yaml
+      - plainYaml: https://my.corp/stacks/mycorp-warehouse/superset.yaml
+----
+
+== 2. Add stacks.yaml to stackablectl invocation
+After creating the `mycorp-stacks.yaml` file it can be added to the available stacks in `stackablectl` via the CLI argument `--additional-stacks-file mycorp-stacks.yaml`.
+
+The argument to `--additional-stacks-file` can be either a path to a file on the local filesystem or an URL.
+By using an URL the stacks file can be put into a central Git repository and referenced by all teams or clients.
+Multiple `--additional-stacks-file` flags can be specified to include multiple stacks files.
+
+Every additional stack will we added to the already existing stacks in `stackablectl`, so all the available stacks files will be merged.
+
+== Working with feature branches
+See xref:customization/working_with_feature_branches.adoc[]

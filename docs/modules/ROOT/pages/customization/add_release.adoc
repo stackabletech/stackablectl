@@ -1,0 +1,46 @@
+= Add a release
+
+== Motivation
+If advanced users of the Stackable Platform want to define their own internal release within their company, they can easily add their own release.
+This has the following benefits:
+
+- Same operator versions across the whole company. This produces more uniform environments and makes debugging and helping other teams easier.
+- If the company is only interested in a subset of the available operators you can only add your relevant operators into your release and not install all the other operators.
+
+== 1. Create a releases.yaml
+For a custom release you need to create a `mycorp-releases.yaml` containing releases according to the format defined by https://github.com/stackabletech/release/blob/main/releases.yaml[the Stackable provided releases].
+You can pick any number of operators in arbitrary versions.
+
+As of writing a `releases.yaml` file could look as follows:
+
+[source,yaml]
+----
+releases:
+  mycorp-release1:
+    releaseDate: 2022-11-10
+    description: Internal release of the SDP
+    products:
+      commons:
+        operatorVersion: 0.4.0
+      hive:
+        operatorVersion: 0.8.0
+      opa:
+        operatorVersion: 0.11.0
+      secret:
+        operatorVersion: 0.6.0
+      spark-k8s:
+        operatorVersion: 0.6.0
+      superset:
+        operatorVersion: 0.7.0
+      trino:
+        operatorVersion: 0.8.0
+----
+
+== 2. Add releases.yaml to stackablectl invocation
+After creating the `mycorp-releases.yaml` file it can be added to the available releases in `stackablectl` via the CLI argument `--additional-releases-file mycorp-release.yaml`.
+
+The argument to `--additional-releases-file` can be either a path to a file on the local filesystem or an URL.
+By using an URL the releases file can be put into a central Git repository and referenced by all teams or clients.
+Multiple `--additional-releases-file` flags can be specified to include multiple releases files.
+
+Every additional release will we added to the already existing releases in `stackablectl`, so all the available releases files will be merged.
