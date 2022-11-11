@@ -37,14 +37,14 @@ $ stackablectl services list --all-namespaces
                                                                                                                       
  opa       opa          default    http                http://172.18.0.5:30316                                        
                                                                                                                       
- superset  superset     default    external-superset   http://172.18.0.4:32295   Admin user: admin, password: admin   
+ superset  superset     default    external-superset   http://172.18.0.4:32295   Admin user: admin, password: adminadmin   
                                                                                                                       
  trino     trino        default    coordinator-http    http://172.18.0.3:30167                                        
                                    coordinator-metrics 172.18.0.3:31818                                               
                                    coordinator-https   https://172.18.0.3:30141                                       
                                                                                                                       
  minio     minio-trino  default    http                http://172.18.0.3:31062   Third party service                  
-                                   console-http        http://172.18.0.3:30503   Admin user: root, password: rootroot
+                                   console-http        http://172.18.0.3:30503   Admin user: admin, password: adminadmin
 ----
 
 [NOTE]
@@ -62,7 +62,7 @@ Open it with your favorite browser.
 
 image::demo-trino-taxi-data/minio_1.png[]
 
-Log in with the username `root` and password `rootroot`.
+Log in with the username `admin` and password `adminadmin`.
 
 image::demo-trino-taxi-data/minio_2.png[]
 
@@ -82,7 +82,7 @@ If you get a warning regarding the self signed certificate (e.g. `Warning: Poten
 
 image::demo-trino-taxi-data/trino_1.png[]
 
-Log in with the username `admin` and password `admin`.
+Log in with the username `admin` and password `adminadmin`.
 
 image::demo-trino-taxi-data/trino_2.png[]
 
@@ -94,7 +94,7 @@ Open the `superset` endpoint `external-superset` in your browser (`http://172.18
 
 image::demo-trino-taxi-data/superset_1.png[]
 
-Log in with the username `admin` and password `admin`.
+Log in with the username `admin` and password `adminadmin`.
 
 image::demo-trino-taxi-data/superset_2.png[]
 

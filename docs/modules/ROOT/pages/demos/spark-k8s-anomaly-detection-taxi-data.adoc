@@ -41,13 +41,13 @@ PRODUCT   NAME          NAMESPACE               ENDPOINTS                       
 
  opa       opa           spark-k8s-ad-taxi-data  http                http://172.18.0.3:31450
 
- superset  superset      spark-k8s-ad-taxi-data  external-superset   http://172.18.0.2:31339   Admin user: admin, password: admin
+ superset  superset      spark-k8s-ad-taxi-data  external-superset   http://172.18.0.2:31339   Admin user: admin, password: adminadmin
 
  trino     trino         spark-k8s-ad-taxi-data  coordinator-metrics 172.18.0.3:32168
                                                  coordinator-https   https://172.18.0.3:31408
 
  minio     minio-trino   spark-k8s-ad-taxi-data  http                http://172.18.0.3:30589   Third party service
-                                                 console-http        http://172.18.0.3:31452   Admin user: root, password: rootroot
+                                                 console-http        http://172.18.0.3:31452   Admin user: admin, password: adminadmin
 ----
 
 [NOTE]
@@ -64,7 +64,7 @@ Open the `minio-trino` endpoint `console-http` retrieved by `stackablectl servic
 
 image::spark-k8s-anomaly-detection-taxi-data/minio_0.png[]
 
-Log in with the username `root` and password `rootroot`.
+Log in with the username `admin` and password `adminadmin`.
 
 image::spark-k8s-anomaly-detection-taxi-data/minio_2.png[]
 
