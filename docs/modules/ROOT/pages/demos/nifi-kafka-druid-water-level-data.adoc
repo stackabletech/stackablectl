@@ -279,7 +279,7 @@ Click on the `Remote URL` property.
 
 image::demo-nifi-kafka-druid-water-level-data/nifi_9.png[]
 
-The `Remote URL` does contain the `${station_uuid}` placeholder, which get's replaced for every station.
+The `Remote URL` does contain the `$\{station_uuid\}` placeholder, which get's replaced for every station.
 
 Double-click the `PublishKafkaRecord_2_6` processor.
 
