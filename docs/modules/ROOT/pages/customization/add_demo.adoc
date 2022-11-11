@@ -37,7 +37,7 @@ The argument to `--additional-demos-file` can be either a path to a file on the 
 By using an URL the demos file can be put into a central Git repository and referenced by all teams or clients.
 Multiple `--additional-demos-file` flags can be specified to include multiple demos files.
 
-Every additional demo will we added to the already existing demos in `stackablectl`, so all the available demos files will be merged.
+Every additional demo will be added to the already existing demos in `stackablectl`, so all the available demos files will be merged.
 
 == Working with feature branches
 See xref:customization/working_with_feature_branches.adoc[]
