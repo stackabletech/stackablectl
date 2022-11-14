@@ -9,8 +9,8 @@ demos:
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/01-airflow-spark-clusterrole.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/02-airflow-spark-clusterrolebinding.yaml
-      - plainYaml: demos/airflow-scheduled-job/03-enable-and-run-spark-dag.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/03-enable-and-run-spark-dag.yaml
-      - plainYaml: demos/airflow-scheduled-job/04-enable-and-run-date-dag.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/04-enable-and-run-date-dag.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/03-enable-and-run-spark-dag.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/04-enable-and-run-date-dag.yaml
   hbase-hdfs-load-cycling-data:
     description: Copy data from S3 bucket to an HBase table
     stackableStack: hdfs-hbase
@@ -36,7 +36,7 @@ demos:
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-nifi-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
-      - plainYaml: demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml
   nifi-kafka-druid-water-level-data:
     description:  Demo ingesting water level data into Kafka using NiFi, streaming it into Druid and creating a Superset dashboard
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/nifi-kafka-druid-water-level-data.html
@@ -52,7 +52,7 @@ demos:
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-nifi-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml
-      - plainYaml: demos/nifi-kafka-druid-water-level-data/setup-superset.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/setup-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/setup-superset.yaml
   spark-k8s-anomaly-detection-taxi-data:
     description: Demo loading New York taxi data into an S3 bucket and carrying out an anomaly detection analysis on it
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/spark-k8s-anomaly-detection-taxi-data.html
@@ -64,10 +64,10 @@ demos:
       - s3
       - ny-taxi-data
     manifests:
-      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/serviceaccount.yaml # TODO
-      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/load-test-data.yaml # TODO
-      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/create-spark-anomaly-detection-job.yaml # TODO
-      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/setup-superset.yaml # TODO
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/serviceaccount.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/load-test-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/create-spark-anomaly-detection-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/setup-superset.yaml
   trino-taxi-data:
     description: Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/trino-taxi-data.html
@@ -81,7 +81,7 @@ demos:
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/load-test-data.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/create-table-in-trino.yaml
-      - plainYaml: demos/trino-taxi-data/setup-superset.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
   data-warehouse-iceberg-trino-spark:
     description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization. Multiple datasources like taxi data, water levels in Germany, earthquakes, e-charging stations and more are loaded.
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/data-warehouse-with-trin.html
@@ -103,5 +103,5 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/load-test-data.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/create-trino-tables.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/create-nifi-ingestion-job.yaml
-      - plainYaml: demos/data-warehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
-      - plainYaml: demos/data-warehouse-iceberg-trino-spark/setup-superset.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/setup-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-warehouse-iceberg-trino-spark/setup-superset.yaml
