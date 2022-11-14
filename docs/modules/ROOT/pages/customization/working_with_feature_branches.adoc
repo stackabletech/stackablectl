@@ -1,0 +1,53 @@
+= Working with feature branches
+
+When working withing a repository that contains multiple stacks and demos https://github.com/stackabletech/stackablectl[as we at Stackable have] it is recommended to develop and test stacks ands demos in a feature branch before merging them into main.
+
+The following sections covers stacks but it works exactly the same way for demos.
+
+The workflow is as follows:
+
+== 1. Change plainYaml attribute to local
+Modify you stack to use local files.
+If you have the follow stack:
+
+[source,yaml]
+----
+stacks:
+   data-warehouse-iceberg-trino-spark:
+    description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
+    stackableRelease: 22.11
+    labels:
+      - foo
+    manifests:
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/zookeeper.yaml
+----
+
+change it to
+
+[source,yaml]
+----
+stacks:
+   data-warehouse-iceberg-trino-spark:
+    description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
+    stackableRelease: 22.11
+    labels:
+      - foo
+    manifests:
+      - plainYaml: stacks/data-warehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: main/stacks/data-warehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: main/stacks/data-warehouse-iceberg-trino-spark/zookeeper.yaml
+----
+
+Afterwards **always** add the stacks.yaml to your stackablectl invocations, to use the local stacks.yaml, which in turn uses the local files for spinning up the stack.
+
+You can do this by using the flag `--additional-releases-file`, `--additional-stacks-file` or `--additional-demos-file`.
+
+== 2. Do actual changes
+Develop and test you demo.
+If someone else wants to test your demo, the need to checkout the feature branch and run the exact same command as you did.
+It is recommended to add the `stackable <flags> stack install` command to the PullRequest description.
+
+== 3. Merge into main
+**Before** merging the PullRequest don't forget to point the `plainYaml`s back to URLs, so that the stack can be installed from arbitrary machines and directories.
