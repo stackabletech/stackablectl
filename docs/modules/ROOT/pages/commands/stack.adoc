@@ -110,14 +110,14 @@ $ stackablectl services list --all-namespaces
                                                                                                                       
  opa       opa          default    http                http://172.18.0.2:31324                                        
                                                                                                                       
- superset  superset     default    external-superset   http://172.18.0.2:32716   Admin user: admin, password: admin   
+ superset  superset     default    external-superset   http://172.18.0.2:32716   Admin user: admin, password: adminadmin   
                                                                                                                       
  trino     trino        default    coordinator-http    http://172.18.0.5:32128                                        
                                    coordinator-metrics 172.18.0.5:31199                                               
                                    coordinator-https   https://172.18.0.5:32721                                       
                                                                                                                       
  minio     minio-trino  default    http                http://172.18.0.4:31026   Third party service                  
-                                   console-http        http://172.18.0.4:30354   Admin user: root, password: rootroot
+                                   console-http        http://172.18.0.4:30354   Admin user: admin, password: adminadmin
 ----
 
 == Uninstall stack

@@ -8,8 +8,8 @@ _templates:
         url: https://charts.min.io/
       version: 4.0.15
       options:
-        rootUser: root
-        rootPassword: rootroot
+        rootUser: admin
+        rootPassword: adminadmin
         mode: standalone
         persistence:
           size: 15Gi
@@ -37,8 +37,8 @@ _templates:
         url: https://charts.min.io/
       version: 4.0.15
       options:
-        rootUser: root
-        rootPassword: rootroot
+        rootUser: admin
+        rootPassword: adminadmin
         mode: standalone
         persistence:
           size: 10Gi
@@ -168,7 +168,7 @@ _templates:
 stacks:
   airflow:
     description: Stack containing Airflow scheduling platform
-    stackableRelease: 22.09
+    stackableRelease: 22.11
     labels:
       - airflow
     manifests:
@@ -177,7 +177,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
   data-warehouse-iceberg-trino-spark:
     description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
-    stackableRelease: 22.09-latest-trino-spark
+    stackableRelease: 22.11
     labels:
       - iceberg
       - trino
@@ -200,7 +200,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
-    stackableRelease: 22.09
+    stackableRelease: 22.11
     labels:
       - hbase
       - hdfs
@@ -210,7 +210,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hbase.yaml
   kafka-druid-superset-s3:
     description: Stack containing Kafka, MinIO, Druid and Superset for data visualization
-    stackableRelease: 22.09
+    stackableRelease: 22.11
     labels:
       - kafka
       - druid
@@ -226,7 +226,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml
   nifi-kafka-druid-superset-s3:
     description: Stack containing NiFi, Kafka, Druid, MinIO and Superset for data visualization
-    stackableRelease: 22.09
+    stackableRelease: 22.11
     labels:
       - nifi
       - kafka
@@ -244,7 +244,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
   spark-trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 22.09-latest-trino-spark
+    stackableRelease: 22.11
     labels:
       - trino
       - superset
@@ -255,12 +255,12 @@ stacks:
       - helmChart: *template-postgresql-hive
       - helmChart: *template-postgresql-hive-iceberg
       - helmChart: *template-postgresql-superset
-      - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
-      - plainYaml: stacks/spark-trino-superset-s3/trino.yaml
-      - plainYaml: stacks/spark-trino-superset-s3/superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/hive-metastore.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/superset.yaml
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 22.09
+    stackableRelease: 22.11
     labels:
       - trino
       - superset

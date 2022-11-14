@@ -44,12 +44,12 @@ $ stackablectl services list --all-namespaces
 
  nifi       nifi         default    https              https://172.18.0.3:32558  Admin user: admin, password: adminadmin
                                                                                                                      
- superset   superset     default    external-superset  http://172.18.0.3:32108   Admin user: admin, password: admin   
+ superset   superset     default    external-superset  http://172.18.0.3:32108   Admin user: admin, password: adminadmin   
                                                                                                                      
  zookeeper  zookeeper    default    zk                 172.18.0.2:32309                                              
                                                                                                                      
  minio      minio-druid  default    http               http://172.18.0.4:32306   Third party service                  
-                                    console-http       http://172.18.0.4:31664   Admin user: root, password: rootroot
+                                    console-http       http://172.18.0.4:31664   Admin user: admin, password: adminadmin
 ----
 
 [NOTE]
@@ -213,7 +213,7 @@ Open the `superset` endpoint `external-superset` in your browser (http://172.18.
 
 image::demo-nifi-kafka-druid-earthquake-data/superset_1.png[]
 
-Log in with the username `admin` and password `admin`.
+Log in with the username `admin` and password `adminadmin`.
 
 image::demo-nifi-kafka-druid-earthquake-data/superset_2.png[]
 
@@ -291,7 +291,7 @@ Open the `minio` endpoint `console-http` in your browser (http://172.18.0.4:3166
 
 image::demo-nifi-kafka-druid-earthquake-data/minio_1.png[]
 
-Log in with the username `root` and password `rootroot`.
+Log in with the username `admin` and password `adminadmin`.
 
 image::demo-nifi-kafka-druid-earthquake-data/minio_2.png[]
 

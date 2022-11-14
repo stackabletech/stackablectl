@@ -65,7 +65,7 @@ $ stackablectl services list --all-namespaces
                                                                                                                                 
  opa        opa           default    http                http://217.160.222.211:31767                                           
                                                                                                                                 
- superset   superset      default    external-superset   http://212.227.233.47:32393    Admin user: admin, password: admin      
+ superset   superset      default    external-superset   http://212.227.233.47:32393    Admin user: admin, password: adminadmin      
                                                                                                                                 
  trino      trino         default    coordinator-metrics 212.227.224.138:30610                                                  
                                      coordinator-https   https://212.227.224.138:30876                                          
@@ -191,7 +191,7 @@ Open up the the given `trino` endpoint `coordinator-https` from your `stackablec
 
 image::demo-data-warehouse-iceberg-trino-spark/trino_1.png[]
 
-Log in with the username `admin` and password `admin`.
+Log in with the username `admin` and password `adminadmin`.
 
 image::demo-data-warehouse-iceberg-trino-spark/trino_2.png[]
 
@@ -221,7 +221,7 @@ Open the `superset` endpoint `external-superset` in your browser (http://212.227
 
 image::demo-data-warehouse-iceberg-trino-spark/superset_1.png[]
 
-Log in with the username `admin` and password `admin`.
+Log in with the username `admin` and password `adminadmin`.
 
 image::demo-data-warehouse-iceberg-trino-spark/superset_2.png[]
 

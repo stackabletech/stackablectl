@@ -30,7 +30,7 @@ To list the installed Stackable services run the following command:
 $ stackablectl services list
  PRODUCT  NAME     NAMESPACE  ENDPOINTS                                  EXTRA INFOS
 
- airflow  airflow  default    webserver-airflow http://172.18.0.2:31979  Admin user: airflow, password: airflow
+ airflow  airflow  default    webserver-airflow http://172.18.0.2:31979  Admin user: admin, password: adminadmin
 
 ----
 
@@ -47,7 +47,7 @@ Open the `airflow` endpoint `webserver-airflow` in your browser (`http://172.18.
 
 image::demo-airflow-scheduled-job/airflow_1.png[]
 
-Log in with the username `airflow` and password `airflow`. The overview screen shows the DAGs that have been mounted during the demo set-up (`date_demo`).
+Log in with the username `admin` and password `adminadmin`. The overview screen shows the DAGs that have been mounted during the demo set-up (`date_demo`).
 
 image::demo-airflow-scheduled-job/airflow_2.png[]
 

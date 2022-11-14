@@ -4,7 +4,7 @@ kind: NifiCluster
 metadata:
   name: nifi
 spec:
-  version: 1.16.3-stackable0.1.0
+  version: 1.18.0-stackable0.1.0
   zookeeperConfigMapName: nifi-znode
   config:
     authentication:
