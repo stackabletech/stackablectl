@@ -168,7 +168,7 @@ _templates:
 stacks:
   airflow:
     description: Stack containing Airflow scheduling platform
-    stackableRelease: 22.11-rc0
+    stackableRelease: 22.11
     labels:
       - airflow
     manifests:
@@ -177,7 +177,7 @@ stacks:
       - plainYaml: stacks/airflow/airflow.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
   data-warehouse-iceberg-trino-spark:
     description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
-    stackableRelease: 22.11-rc0
+    stackableRelease: 22.11
     labels:
       - iceberg
       - trino
@@ -200,7 +200,7 @@ stacks:
       - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
-    stackableRelease: 22.11-rc0
+    stackableRelease: 22.11
     labels:
       - hbase
       - hdfs
@@ -210,7 +210,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hbase.yaml
   kafka-druid-superset-s3:
     description: Stack containing Kafka, MinIO, Druid and Superset for data visualization
-    stackableRelease: 22.11-rc0
+    stackableRelease: 22.11
     labels:
       - kafka
       - druid
@@ -226,7 +226,7 @@ stacks:
       - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml
   nifi-kafka-druid-superset-s3:
     description: Stack containing NiFi, Kafka, Druid, MinIO and Superset for data visualization
-    stackableRelease: 22.11-rc0
+    stackableRelease: 22.11
     labels:
       - nifi
       - kafka
@@ -244,7 +244,7 @@ stacks:
       - plainYaml: stacks/nifi-kafka-druid-superset-s3/nifi.yaml # TODO https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
   spark-trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 22.11-rc0
+    stackableRelease: 22.11
     labels:
       - trino
       - superset
@@ -260,7 +260,7 @@ stacks:
       - plainYaml: stacks/spark-trino-superset-s3/superset.yaml # TODO
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 22.11-rc0
+    stackableRelease: 22.11
     labels:
       - trino
       - superset
