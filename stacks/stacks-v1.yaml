@@ -450,3 +450,4 @@ stacks:
       - helmChart: *template-opensearch
       - helmChart: *template-opensearch-dashboards
       - helmChart: *template-vector-aggregator
+      - plainYaml: stacks/logging/vector-aggregator-discovery.yaml
