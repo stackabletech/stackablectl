@@ -1,4 +1,4 @@
-= data-warehouse-iceberg-trino-spark
+= data-lakehouse-iceberg-trino-spark
 
 [WARNING]
 ====
@@ -10,9 +10,9 @@ A smaller version of this demo might be created in the future.
 
 [NOTE]
 ====
-This guide assumes that you already have the demo `data-warehouse-iceberg-trino-spark` installed.
+This guide assumes that you already have the demo `data-lakehouse-iceberg-trino-spark` installed.
 If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
-To put it simply you have to run `stackablectl demo install data-warehouse-iceberg-trino-spark`.
+To put it simply you have to run `stackablectl demo install data-lakehouse-iceberg-trino-spark`.
 ====
 
 This demo will
@@ -20,7 +20,7 @@ This demo will
 * Install the required Stackable operators
 * Spin up the following data products
 ** *Trino*: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
-** *Spark*: A multi-language engine for executing data engineering, data science, and machine learning. This demo uses it to stream data from Kafka into the warehouse
+** *Spark*: A multi-language engine for executing data engineering, data science, and machine learning. This demo uses it to stream data from Kafka into the lakehouse
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage to store all the data used
 ** *Kafka*: A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as an event streaming platform to stream the data in near real-time
 ** *NiFi*: An easy-to-use, powerful system to process and distribute data. This demos uses it to fetch multiple online real-time data sources and ingest it into Kafka
@@ -28,14 +28,14 @@ This demo will
 ** *Open policy agent* (OPA): An open source, general-purpose policy engine that unifies policy enforcement across the stack. This demo uses it as the authorizer for Trino, which decides which user is able to query which data.
 ** *Superset*: A modern data exploration and visualization platform. This demo utilizes Superset to retrieve data from Trino via SQL queries and build dashboards on top of that data
 * Copy multiple data sources in CSV and Parquet format into the S3 staging area
-* Let Trino copy the data from staging area into the warehouse area. During the copy transformations such as validating, casting, parsing timestamps and enriching the data by joining lookup-tables are done
+* Let Trino copy the data from staging area into the lakehouse area. During the copy transformations such as validating, casting, parsing timestamps and enriching the data by joining lookup-tables are done
 * Simultaneously start a NiFi workflow, which fetches datasets in real-time via the internet and ingests the data as JSON records into Kafka
-* Spark structured streaming job is started, which streams the data out of Kafka into the warehouse
+* Spark structured streaming job is started, which streams the data out of Kafka into the lakehouse
 * Create Superset dashboards for visualization of the different datasets
 
 You can see the deployed products as well as their relationship in the following diagram:
 
-image::demo-data-warehouse-iceberg-trino-spark/overview.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/overview.png[]
 
 == Apache iceberg
 As Apache iceberg states on their https://iceberg.apache.org/docs/latest/[website]:
@@ -88,32 +88,32 @@ In case the product is not ready yet a warning might be shown.
 The S3 provided by MinIO is used as persistent storage to store all the data used.
 Open the `minio` endpoint `console-http` retrieved by `stackablectl services list` in your browser (http://217.160.222.211:31429 in this case).
 
-image::demo-data-warehouse-iceberg-trino-spark/minio_1.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/minio_1.png[]
 
 Log in with the username `admin` and password `adminadmin`.
 
-image::demo-data-warehouse-iceberg-trino-spark/minio_2.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/minio_2.png[]
 
 Here you can see the two buckets contained in the S3:
 
 1. `staging`: The demo loads static datasets into this area. It is stored in different formats, such as CSV and Parquet. It does contain actual data tables as well as lookup tables.
-2. `warehouse`: This bucket is where the cleaned and/or aggregated data resides. The data is stored in the https://iceberg.apache.org/[Apache Iceberg] table format.
+2. `lakehouse`: This bucket is where the cleaned and/or aggregated data resides. The data is stored in the https://iceberg.apache.org/[Apache Iceberg] table format.
 
-=== Inspect warehouse
-Click on the blue button `Browse` on the bucket `warehouse`.
+=== Inspect lakehouse
+Click on the blue button `Browse` on the bucket `lakehouse`.
 
-image::demo-data-warehouse-iceberg-trino-spark/minio_3.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/minio_3.png[]
 
 You can see multiple folders (called prefixes in S3) - each containing a different dataset.
 
 Click on the folders `house-sales` afterwards the folder starting with `house-sales-*` afterwards 'data'.
 
-image::demo-data-warehouse-iceberg-trino-spark/minio_4.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/minio_4.png[]
 
 As you can see the table `house-sales` is partitioned by day.
 Go ahead and click on any folder.
 
-image::demo-data-warehouse-iceberg-trino-spark/minio_5.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/minio_5.png[]
 
 You can see that Trino has placed a single file here containing all the house sales of that particular year.
 
@@ -134,11 +134,11 @@ This includes the following data sources:
 You can have a look at the ingestion job running in NiFi by opening the given `nifi` endpoint `https` from your `stackablectl services list` command output (https://217.160.120.117:31499 in this case).
 If you get a warning regarding the self-signed certificate generated by the xref:secret-operator::index.adoc[Secret Operator] (e.g. `Warning: Potential Security Risk Ahead`), you have to tell your browser to trust the website and continue.
 
-image::demo-data-warehouse-iceberg-trino-spark/nifi_1.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/nifi_1.png[]
 
 Log in with the username `admin` and password `adminadmin`.
 
-image::demo-data-warehouse-iceberg-trino-spark/nifi_2.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/nifi_2.png[]
 
 As you can see, the NiFi workflow consists of lots of components.
 You can zoom in by using your mouse and mouse wheel.
@@ -157,31 +157,31 @@ For details on the NiFi workflow ingesting water-level data please read on the x
 
 == Spark
 
-https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html[Spark Structured Streaming] is used to stream data from Kafka into the warehouse.
+https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html[Spark Structured Streaming] is used to stream data from Kafka into the lakehouse.
 
 To have access to the Spark WebUI you need to run the following command to port-forward the Port 4040 to your local machine
 
 [source,console]
 ----
-kubectl port-forward $(kubectl get pod -o name | grep 'spark-ingest-into-warehouse-.*-driver') 4040
+kubectl port-forward $(kubectl get pod -o name | grep 'spark-ingest-into-lakehouse-.*-driver') 4040
 ----
 
 Afterwards you can reach the Webinterface on http://localhost:4040.
 
-image::demo-data-warehouse-iceberg-trino-spark/spark_1.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/spark_1.png[]
 
 On the UI the last jobs are shown.
 Each running Structured Streaming job creates lots of Spark jobs internally.
 
 Click on the tab `Structured Streaming` to see the running streaming jobs.
 
-image::demo-data-warehouse-iceberg-trino-spark/spark_2.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/spark_2.png[]
 
 Five streaming jobs are currently running.
 The job with the highest throughput is the `ingest water_level measurements` job.
 Click on the `Run ID` highlighted in blue.
 
-image::demo-data-warehouse-iceberg-trino-spark/spark_3.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/spark_3.png[]
 
 == Trino
 Trino is used to enable SQL access to the data.
@@ -189,23 +189,23 @@ Trino is used to enable SQL access to the data.
 === View WebUI
 Open up the the given `trino` endpoint `coordinator-https` from your `stackablectl services list` command output (https://212.227.224.138:30876 in this case).
 
-image::demo-data-warehouse-iceberg-trino-spark/trino_1.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/trino_1.png[]
 
 Log in with the username `admin` and password `adminadmin`.
 
-image::demo-data-warehouse-iceberg-trino-spark/trino_2.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/trino_2.png[]
 
 === Connect with DBeaver
 https://dbeaver.io/[DBeaver] is free multi-platform database tool that can be used to connect to Trino.
 Please have a look at the <TODO> trino-operator documentation on how to connect DBeaver to Trino.
 
-image::demo-data-warehouse-iceberg-trino-spark/dbeaver_1.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/dbeaver_1.png[]
 
-image::demo-data-warehouse-iceberg-trino-spark/dbeaver_2.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/dbeaver_2.png[]
 You need to modify the setting `TLS` to `true`.
 Additionally you need to add the setting `SSLVerification` and set it to `NONE`.
 
-image::demo-data-warehouse-iceberg-trino-spark/dbeaver_3.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/dbeaver_3.png[]
 
 Here you can see all the available Trino catalogs.
 
@@ -213,36 +213,36 @@ Here you can see all the available Trino catalogs.
 * `system`: Internal catalog to retrieve Trino internals
 * `tpcds`: https://trino.io/docs/current/connector/tpcds.html[TPCDS connector] providing a set of schemas to support the http://www.tpc.org/tpcds/[TPC Benchmark™ DS]
 * `tpch`: https://trino.io/docs/current/connector/tpch.html[TPCH connector] providing a set of schemas to support the http://www.tpc.org/tpcds/[TPC Benchmark™ DS]
-* `warehouse`: The warehouse area containing the enriched and performant accessible data
+* `lakehouse`: The lakehouse area containing the enriched and performant accessible data
 
 == Superset
 Superset provides the ability to execute SQL queries and build dashboards.
 Open the `superset` endpoint `external-superset` in your browser (http://212.227.233.47:32393 in this case).
 
-image::demo-data-warehouse-iceberg-trino-spark/superset_1.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/superset_1.png[]
 
 Log in with the username `admin` and password `adminadmin`.
 
-image::demo-data-warehouse-iceberg-trino-spark/superset_2.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/superset_2.png[]
 
 === View dashboard
 The demo has created dashboards to visualize the different data sources.
 To the dashboards click on the tab `Dashboards` at the top.
 
-image::demo-data-warehouse-iceberg-trino-spark/superset_3.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/superset_3.png[]
 
 Click on the dashboard called `House sales`.
 It might take some time until the dashboards renders all the included charts.
 
-image::demo-data-warehouse-iceberg-trino-spark/superset_4.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/superset_4.png[]
 
 Another dashboard to look at is `Earthquakes`.
 
-image::demo-data-warehouse-iceberg-trino-spark/superset_5.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/superset_5.png[]
 
 Another dashboard to look at is `Taxi trips`.
 
-image::demo-data-warehouse-iceberg-trino-spark/superset_6.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/superset_6.png[]
 
 There are multiple other dashboards you can explore on you own.
 
@@ -255,11 +255,11 @@ To list the charts click on the tab `Charts` at the top.
 Within Superset you can not only create dashboards but also run arbitrary SQL statements.
 On the top click on the tab `SQL Lab` -> `SQL Editor`.
 
-image::demo-data-warehouse-iceberg-trino-spark/superset_7.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/superset_7.png[]
 
-On the left select the database `Trino warehouse`, the schema `house_sales` and set `See table schema` to `house_sales`.
+On the left select the database `Trino lakehouse`, the schema `house_sales` and set `See table schema` to `house_sales`.
 
-image::demo-data-warehouse-iceberg-trino-spark/superset_8.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/superset_8.png[]
 
 On the right textbox enter the desired SQL statement.
 If you do not want to make one up, you can use the following:
@@ -272,4 +272,4 @@ group by 1
 order by 2 desc
 ----
 
-image::demo-data-warehouse-iceberg-trino-spark/superset_9.png[]
+image::demo-data-lakehouse-iceberg-trino-spark/superset_9.png[]
