@@ -2,9 +2,17 @@
 
 [WARNING]
 ====
-This demos uses significant amount of resources. It will most likely not run on your workstation.
-It was developed and tested on 10 nodes with each 4 cores (8 threads), 20GB RAM and 30GB HDD.
-Additionally, persistent volumes with a total size of approximately 1TB will get created.
+This demo shows a data workload with real world data volumes and uses significant amount of resources to ensure acceptable response times.
+It will most likely not run on your workstation. It was developed and tested on a kubernetes cluster with 10 nodes (4 cores (8 threads), 20GB RAM and 30GB HDD).
+
+Instance types that loosely correspond to this on the Hyperscalers are:
+
+- *Google*: e2-standard-8
+- *Azure*: Standard_D4_v2
+- *AWS*: m5.2xlarge
+
+In addition to these nodes the operators will request multiple persistent volumes with a total capacity of about 1TB.
+
 A smaller version of this demo might be created in the future.
 ====
 
@@ -20,13 +28,13 @@ This demo will
 * Install the required Stackable operators
 * Spin up the following data products
 ** *Trino*: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
-** *Spark*: A multi-language engine for executing data engineering, data science, and machine learning. This demo uses it to stream data from Kafka into the lakehouse
+** *Apache Spark*: A multi-language engine for executing data engineering, data science, and machine learning. This demo uses it to stream data from Kafka into the lakehouse
 ** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage to store all the data used
-** *Kafka*: A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as an event streaming platform to stream the data in near real-time
-** *NiFi*: An easy-to-use, powerful system to process and distribute data. This demos uses it to fetch multiple online real-time data sources and ingest it into Kafka
-** *Hive metastore*: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino and Spark
+** *Apache Kafka*: A distributed event streaming platform for high-performance data pipelines, streaming analytics and data integration. This demos uses it as an event streaming platform to stream the data in near real-time
+** *Apache NiFi*: An easy-to-use, powerful system to process and distribute data. This demos uses it to fetch multiple online real-time data sources and ingest it into Kafka
+** *Apache Hive metastore*: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino and Spark
 ** *Open policy agent* (OPA): An open source, general-purpose policy engine that unifies policy enforcement across the stack. This demo uses it as the authorizer for Trino, which decides which user is able to query which data.
-** *Superset*: A modern data exploration and visualization platform. This demo utilizes Superset to retrieve data from Trino via SQL queries and build dashboards on top of that data
+** *Apache Superset*: A modern data exploration and visualization platform. This demo utilizes Superset to retrieve data from Trino via SQL queries and build dashboards on top of that data
 * Copy multiple data sources in CSV and Parquet format into the S3 staging area
 * Let Trino copy the data from staging area into the lakehouse area. During the copy transformations such as validating, casting, parsing timestamps and enriching the data by joining lookup-tables are done
 * Simultaneously start a NiFi workflow, which fetches datasets in real-time via the internet and ingests the data as JSON records into Kafka
@@ -37,8 +45,8 @@ You can see the deployed products as well as their relationship in the following
 
 image::demo-data-lakehouse-iceberg-trino-spark/overview.png[]
 
-== Apache iceberg
-As Apache iceberg states on their https://iceberg.apache.org/docs/latest/[website]:
+== Apache Iceberg
+As Apache Iceberg states on their https://iceberg.apache.org/docs/latest/[website]:
 
 > Apache Iceberg is an open table format for huge analytic datasets. Iceberg adds tables to compute engines including Spark, Trino, PrestoDB, Flink, Hive and Impala using a high-performance table format that works just like a SQL table.
 
