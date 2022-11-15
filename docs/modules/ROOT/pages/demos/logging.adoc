@@ -1,0 +1,47 @@
+= logging
+
+[source,console]
+----
+$ stackablectl \
+    --additional-releases-file https://raw.githubusercontent.com/stackabletech/stackablectl/logging/releases/releases.yaml \
+    --additional-stacks-file https://raw.githubusercontent.com/stackabletech/stackablectl/logging/stacks/stacks-v1.yaml \
+    --additional-demos-file https://raw.githubusercontent.com/stackabletech/stackablectl/logging/demos/demos-v1.yaml \
+    demo install logging \
+    --kind-cluster
+[INFO ] Creating kind cluster stackable-data-platform
+Creating cluster "stackable-data-platform" ...
+ ✓ Ensuring node image (kindest/node:v1.24.0) 🖼
+ ✓ Preparing nodes 📦 📦 📦 📦
+ ✓ Writing configuration 📜
+ ✓ Starting control-plane 🕹️
+ ✓ Installing CNI 🔌
+ ✓ Installing StorageClass 💾
+ ✓ Joining worker nodes 🚜
+Set kubectl context to "kind-stackable-data-platform"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-stackable-data-platform
+
+Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+[INFO ] Installing demo logging
+[INFO ] Installing stack logging
+[INFO ] Installing release 22.11-logging
+[INFO ] Installing commons operator in version 0.4.0
+[INFO ] Installing secret operator in version 0.6.0
+[INFO ] Installing zookeeper operator in version 0.13.0-pr588
+[INFO ] Installing components of stack logging
+[INFO ] Installed stack logging
+[INFO ] Installing components of demo logging
+[INFO ] Installed demo logging. Use "stackablectl services list" to list the installed services
+$ cd path/to/stackablectl_source_code
+$ git switch logging
+$ cargo run services list
+    Finished dev [unoptimized + debuginfo] target(s) in 0.12s
+     Running `target/debug/stackablectl services list`
+ PRODUCT                NAME                   NAMESPACE  ENDPOINTS                     EXTRA INFOS
+
+ opensearch-dashboards  opensearch-dashboards  default    http http://172.18.0.4:30561  Third party service
+                                                                                        Admin user: admin, password: admin
+
+ zookeeper              simple-zk              default    zk   172.18.0.2:32746
+----
