@@ -38,12 +38,12 @@ data:
     apiVersion: spark.stackable.tech/v1alpha1
     kind: SparkApplication
     metadata:
-      name: spark-ingest-into-warehouse
+      name: spark-ingest-into-lakehouse
     spec:
       version: "1.0"
       sparkImage: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0 # docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable0.2.0
       mode: cluster
-      mainApplicationFile: local:///stackable/spark/jobs/spark-ingest-into-warehouse.py
+      mainApplicationFile: local:///stackable/spark/jobs/spark-ingest-into-lakehouse.py
       # deps:
       #   packages:
       #     - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:0.14.1
@@ -54,9 +54,9 @@ data:
         spark.hadoop.fs.s3a.access.key: trino
         spark.hadoop.fs.s3a.secret.key: trinotrino
         spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
-        spark.sql.catalog.warehouse: org.apache.iceberg.spark.SparkCatalog
-        spark.sql.catalog.warehouse.type: hive
-        spark.sql.catalog.warehouse.uri: thrift://hive-iceberg:9083
+        spark.sql.catalog.lakehouse: org.apache.iceberg.spark.SparkCatalog
+        spark.sql.catalog.lakehouse.type: hive
+        spark.sql.catalog.lakehouse.uri: thrift://hive-iceberg:9083
       volumes:
         - name: script
           configMap:
@@ -93,28 +93,28 @@ kind: ConfigMap
 metadata:
   name: write-iceberg-table-script
 data:
-  spark-ingest-into-warehouse.py: |
+  spark-ingest-into-lakehouse.py: |
     from pyspark.sql import SparkSession
     from pyspark.sql.types import StructType, StructField, StringType, LongType, ShortType, FloatType, DoubleType, BooleanType, TimestampType, MapType, ArrayType
     from pyspark.sql.functions import col, from_json, expr
     import time
     from datetime import datetime, timedelta
 
-    spark = SparkSession.builder.appName("spark-ingest-into-warehouse").getOrCreate()
+    spark = SparkSession.builder.appName("spark-ingest-into-lakehouse").getOrCreate()
     # spark.sparkContext.setLogLevel("DEBUG")
 
-    spark.sql("CREATE SCHEMA IF NOT EXISTS warehouse.water_levels LOCATION 's3a://warehouse/water-levels/'")
-    spark.sql("CREATE SCHEMA IF NOT EXISTS warehouse.smart_city LOCATION 's3a://warehouse/smart-city/'")
+    spark.sql("CREATE SCHEMA IF NOT EXISTS lakehouse.water_levels LOCATION 's3a://lakehouse/water-levels/'")
+    spark.sql("CREATE SCHEMA IF NOT EXISTS lakehouse.smart_city LOCATION 's3a://lakehouse/smart-city/'")
 
     # Todo add PARTITIONED BY (days(timestamp))
     # Currently fails with org.apache.spark.sql.AnalysisException: days(timestamp) ASC NULLS FIRST is not currently supported
     # Don't forget to add option("fanout-enabled", "true") to iceberg sink as well
     # see https://github.com/apache/iceberg/issues/5625
-    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.water_levels.measurements (station_uuid string, timestamp timestamp, value float) USING iceberg")
-    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.water_levels.stations (uuid string, number bigint, short_name string, long_name string, km float, agency string, latitude double, longitude double, water_short_name string, water_long_name string) USING iceberg")
-    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.smart_city.shared_bikes_bike_status (bike_id string, vehicle_type_id string, latitude double, longitude double, is_reserved boolean, is_disabled boolean, last_reported timestamp) USING iceberg")
-    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.smart_city.shared_bikes_station_information (station_id string, name string, latitude double, longitude double) USING iceberg")
-    spark.sql("CREATE TABLE IF NOT EXISTS warehouse.smart_city.shared_bikes_station_status (station_id string, num_bikes_available short, is_installed boolean, is_renting boolean, is_returning boolean, vehicle_types_available map<string,short>, last_reported timestamp) USING iceberg")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.water_levels.measurements (station_uuid string, timestamp timestamp, value float) USING iceberg")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.water_levels.stations (uuid string, number bigint, short_name string, long_name string, km float, agency string, latitude double, longitude double, water_short_name string, water_long_name string) USING iceberg")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_bike_status (bike_id string, vehicle_type_id string, latitude double, longitude double, is_reserved boolean, is_disabled boolean, last_reported timestamp) USING iceberg")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_information (station_id string, name string, latitude double, longitude double) USING iceberg")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_status (station_id string, num_bikes_available short, is_installed boolean, is_renting boolean, is_returning boolean, vehicle_types_available map<string,short>, last_reported timestamp) USING iceberg")
 
     schema = StructType([ 
         StructField("station_uuid", StringType(), True), 
@@ -137,8 +137,8 @@ data:
     .format("iceberg") \
     .outputMode("append") \
     .trigger(processingTime='5 minutes') \
-    .option("path", "warehouse.water_levels.measurements") \
-    .option("checkpointLocation", "s3a://warehouse/water-levels/measurements/checkpoints") \
+    .option("path", "lakehouse.water_levels.measurements") \
+    .option("checkpointLocation", "s3a://lakehouse/water-levels/measurements/checkpoints") \
     .start()
 
     schema = StructType([ \
@@ -180,8 +180,8 @@ data:
     .format("iceberg") \
     .outputMode("append") \
     .trigger(processingTime='2 minutes') \
-    .option("path", "warehouse.water_levels.stations") \
-    .option("checkpointLocation", "s3a://warehouse/water-levels/stations/checkpoints") \
+    .option("path", "lakehouse.water_levels.stations") \
+    .option("checkpointLocation", "s3a://lakehouse/water-levels/stations/checkpoints") \
     .start()
 
     schema = StructType([ \
@@ -206,8 +206,8 @@ data:
     .format("iceberg") \
     .outputMode("append") \
     .trigger(processingTime='2 minutes') \
-    .option("path", "warehouse.smart_city.shared_bikes_station_information") \
-    .option("checkpointLocation", "s3a://warehouse/smart-city/shared_bikes_station_information/checkpoints") \
+    .option("path", "lakehouse.smart_city.shared_bikes_station_information") \
+    .option("checkpointLocation", "s3a://lakehouse/smart-city/shared_bikes_station_information/checkpoints") \
     .start()
 
     schema = StructType([ \
@@ -243,8 +243,8 @@ data:
     .format("iceberg") \
     .outputMode("append") \
     .trigger(processingTime='2 minutes') \
-    .option("path", "warehouse.smart_city.shared_bikes_station_status") \
-    .option("checkpointLocation", "s3a://warehouse/smart-city/shared_bikes_station_status/checkpoints") \
+    .option("path", "lakehouse.smart_city.shared_bikes_station_status") \
+    .option("checkpointLocation", "s3a://lakehouse/smart-city/shared_bikes_station_status/checkpoints") \
     .start()
 
     schema = StructType([ \
@@ -272,8 +272,8 @@ data:
     .format("iceberg") \
     .outputMode("append") \
     .trigger(processingTime='2 minutes') \
-    .option("path", "warehouse.smart_city.shared_bikes_bike_status") \
-    .option("checkpointLocation", "s3a://warehouse/smart-city/shared_bikes_bike_status/checkpoints") \
+    .option("path", "lakehouse.smart_city.shared_bikes_bike_status") \
+    .option("checkpointLocation", "s3a://lakehouse/smart-city/shared_bikes_bike_status/checkpoints") \
     .start()
 
     # key: table name
@@ -282,22 +282,22 @@ data:
     #     "water_levels.measurements": ", strategy => 'sort', sort_order => 'station_uuid ASC NULLS LAST,timestamp DESC NULLS LAST'",
         "water_levels.measurements": "",
         "water_levels.stations": "",
-        "warehouse.smart_city.shared_bikes_station_information": "",
-        "warehouse.smart_city.shared_bikes_station_status": "",
-        "warehouse.smart_city.shared_bikes_bike_status": "",
+        "lakehouse.smart_city.shared_bikes_station_information": "",
+        "lakehouse.smart_city.shared_bikes_station_status": "",
+        "lakehouse.smart_city.shared_bikes_bike_status": "",
     }
 
     while True:
         expire_before = (datetime.now() - timedelta(hours=4)).strftime("%Y-%m-%d %H:%M:%S")
         for table, table_compaction_strategy in tables_to_compact.items():
             print(f"[{table}] Expiring snapshots older than 4 hours ({expire_before})")
-            spark.sql(f"CALL warehouse.system.expire_snapshots(table => '{table}', older_than => TIMESTAMP '{expire_before}', retain_last => 50, stream_results => true)")
+            spark.sql(f"CALL lakehouse.system.expire_snapshots(table => '{table}', older_than => TIMESTAMP '{expire_before}', retain_last => 50, stream_results => true)")
 
             print(f"[{table}] Removing orphaned files")
-            spark.sql(f"CALL warehouse.system.remove_orphan_files(table => '{table}')")
+            spark.sql(f"CALL lakehouse.system.remove_orphan_files(table => '{table}')")
 
             print(f"[{table}] Starting compaction")
-            spark.sql(f"CALL warehouse.system.rewrite_data_files(table => '{table}'{table_compaction_strategy})")
+            spark.sql(f"CALL lakehouse.system.rewrite_data_files(table => '{table}'{table_compaction_strategy})")
             print(f"[{table}] Finished compaction")
 
         print("All tables compacted. Waiting 25min before scheduling next run...")

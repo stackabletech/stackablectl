@@ -13,15 +13,15 @@ If you have the follow stack:
 [source,yaml]
 ----
 stacks:
-   data-warehouse-iceberg-trino-spark:
-    description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
+   data-lakehouse-iceberg-trino-spark:
+    description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
     stackableRelease: 22.11
     labels:
       - foo
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/hive-metastores.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-warehouse-iceberg-trino-spark/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
 ----
 
 change it to
@@ -29,15 +29,15 @@ change it to
 [source,yaml]
 ----
 stacks:
-   data-warehouse-iceberg-trino-spark:
-    description: Data warehouse using Iceberg warehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
+   data-lakehouse-iceberg-trino-spark:
+    description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
     stackableRelease: 22.11
     labels:
       - foo
     manifests:
-      - plainYaml: stacks/data-warehouse-iceberg-trino-spark/hive-metastores.yaml
-      - plainYaml: main/stacks/data-warehouse-iceberg-trino-spark/trino.yaml
-      - plainYaml: main/stacks/data-warehouse-iceberg-trino-spark/zookeeper.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: main/stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: main/stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
 ----
 
 Afterwards **always** add the stacks.yaml to your stackablectl invocations, to use the local stacks.yaml, which in turn uses the local files for spinning up the stack.
