@@ -1,0 +1,12 @@
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: simple-zk
+spec:
+  version: 3.8.0-stackable0.8.0
+  vectorAggregatorConfigMapName: vector-aggregator-discovery
+  servers:
+    roleGroups:
+      default:
+        replicas: 3

@@ -440,7 +440,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
   logging:
     description: Stack containing OpenSearch, OpenSearch Dashboards, and Vector
-    stackableRelease: 22.11
+    stackableRelease: 22.11-logging
     labels:
       - logging
       - opensearch
@@ -450,4 +450,4 @@ stacks:
       - helmChart: *template-opensearch
       - helmChart: *template-opensearch-dashboards
       - helmChart: *template-vector-aggregator
-      - plainYaml: stacks/logging/vector-aggregator-discovery.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/logging/stacks/logging/vector-aggregator-discovery.yaml
