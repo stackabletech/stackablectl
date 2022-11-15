@@ -38,10 +38,15 @@ $ git switch logging
 $ cargo run services list
     Finished dev [unoptimized + debuginfo] target(s) in 0.12s
      Running `target/debug/stackablectl services list`
- PRODUCT                NAME                   NAMESPACE  ENDPOINTS                     EXTRA INFOS
+ PRODUCT                NAME                   NAMESPACE  ENDPOINTS                                             EXTRA INFOS
 
- opensearch-dashboards  opensearch-dashboards  default    http http://172.18.0.4:30561  Third party service
-                                                                                        Admin user: admin, password: admin
+ opensearch-dashboards  opensearch-dashboards  default    http http://172.18.0.4:32261                          Third party service
+                                                          logs http://172.18.0.4:32261/app/discover#/view/logs  Admin user: admin, password: admin
 
- zookeeper              simple-zk              default    zk   172.18.0.2:32746
+ zookeeper              simple-zk              default    zk   172.18.0.4:31381
 ----
+
+1. Open the logs endpoint of the OpenSearch Dashboards in your browser.
+2. Log in with the shown credentials.
+3. Select the "Global" tenant.
+4. Inspect the logs.

@@ -605,7 +605,14 @@ pub async fn get_opensearch_dashboards_service(
     let service_api: Api<Service> = Api::namespaced(client.clone(), namespace);
 
     let service = service_api.get(name).await?;
-    let endpoints = get_service_endpoint_urls(&service, name, client.clone()).await?;
+    let mut endpoints = get_service_endpoint_urls(&service, name, client.clone()).await?;
+
+    if let Some(http_endpoint) = endpoints.get("http") {
+        endpoints.insert(
+            "logs".into(),
+            format!("{http_endpoint}/app/discover#/view/logs"),
+        );
+    }
 
     let extra_infos = vec![
         "Third party service".to_string(),
