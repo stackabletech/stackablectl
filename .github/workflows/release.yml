@@ -41,7 +41,7 @@ jobs:
         run: sudo apt install -y musl-tools
       - name: Prepare Windows env
         if: matrix.os == 'windows-latest'
-        uses: msys2/setup-msys2@493b5b9e37e67d55e3003f8d21519e07a1db266c # tag=v2
+        uses: msys2/setup-msys2@d40200dc2db4c351366b048a9565ad82919e1c24 # v2
         with:
           msystem: MINGW64
           update: true
