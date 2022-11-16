@@ -266,7 +266,7 @@ _templates:
                       --data '{
                                 "attributes": {
                                   "title":"Logs",
-                                  "columns": ["host", "logger", "level", "message"],
+                                  "columns": ["pod", "container", "logger", "level", "message"],
                                   "kibanaSavedObjectMeta": {
                                     "searchSourceJSON": "{\"indexRefName\": \"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
                                   }
