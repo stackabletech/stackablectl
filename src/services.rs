@@ -610,7 +610,7 @@ pub async fn get_opensearch_dashboards_service(
     if let Some(http_endpoint) = endpoints.get("http") {
         endpoints.insert(
             "logs".into(),
-            format!("{http_endpoint}/app/discover#/view/logs"),
+            format!("{http_endpoint}/app/discover?security_tenant=global#/view/logs"),
         );
     }
 

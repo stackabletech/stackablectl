@@ -10,3 +10,18 @@ spec:
     roleGroups:
       default:
         replicas: 3
+        config:
+          logging:
+            enableVectorAgent: true
+            containers:
+              vector:
+                console:
+                  levelThreshold: INFO
+                file:
+                  levelThreshold: WARN
+              zookeeper:
+                loggers:
+                  ROOT:
+                    level: INFO
+                  org.apache.zookeeper.server.NettyServerCnxn:
+                    level: WARN
