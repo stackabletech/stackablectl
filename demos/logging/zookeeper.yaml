@@ -15,13 +15,15 @@ spec:
             enableVectorAgent: true
             containers:
               vector:
-                console:
-                  levelThreshold: INFO
                 file:
                   levelThreshold: WARN
               zookeeper:
+                console:
+                  levelThreshold: INFO
+                file:
+                  levelThreshold: INFO
                 loggers:
                   ROOT:
                     level: INFO
                   org.apache.zookeeper.server.NettyServerCnxn:
-                    level: WARN
+                    level: NONE
