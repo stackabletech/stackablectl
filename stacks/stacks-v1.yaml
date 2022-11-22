@@ -294,6 +294,10 @@ stacks:
               extraEnv:
                 # basic notation (for literal values only)
                 HADOOP_CONF_DIR: "/home/jovyan/hdfs"
+              initContainers:
+                - name: download-notebook
+                  image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
+                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-hdfs/notebook.ipynb -o /home/jovyan/notebook.ipynb']
               storage:
                 extraVolumes:
                   - name: hdfs-discovery-configmap
