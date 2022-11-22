@@ -98,10 +98,12 @@ from your command output, in this case it is
 http://172.18.0.4:31973/app/discover?security_tenant=global#/view/logs. Open it
 with your favorite browser.
 
-image::logging/login.png[]
+// image::logging/login.png[]
+image::https://raw.githubusercontent.com/stackabletech/stackablectl/logging/docs/modules/ROOT/images/logging/login.png[]
 
 Log in with the username `admin` and password `admin`.
 
-image::logging/logs.png[]
+// image::logging/logs.png[]
+image::https://raw.githubusercontent.com/stackabletech/stackablectl/logging/docs/modules/ROOT/images/logging/logs.png[]
 
 Inspect the logs.
