@@ -15,6 +15,8 @@ spec:
             enableVectorAgent: true
             containers:
               vector:
+                console:
+                  levelThreshold: INFO
                 file:
                   levelThreshold: WARN
               zookeeper:
