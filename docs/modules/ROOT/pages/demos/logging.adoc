@@ -1,5 +1,57 @@
 = logging
 
+This demo will
+
+* Install the required Stackable operators
+* Spin up the follow data products
+** *Apache ZooKeeper*: A centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. This demo makes its log data observable in OpenSearch Dashboards.
+** *Vector*: A tool for building observability pipelines. This demo uses Vector as an log agent to gather and transform the logs and as an aggregator to forward the collected logs to OpenSearch.
+** *OpenSearch*: A data store and search engine. This demo uses it to store and index the log data.
+** *OpenSearch Dashboards*: A visualization and user interface. This demo uses it to make the log data easily accessible to the user.
+* Create a view in OpenSearch Dashboards for convenient browsing the log data.
+
+== OpenSearch prerequisites
+
+OpenSearch uses a mmapfs directory by default to store its indices. The default
+operating system limits on mmap counts is likely to be too low – usually 65530,
+which may result in out of memory exceptions. So the Linux setting
+`vm.max_map_count` on the host machine where kind is running, must be set to at
+least 262144.
+
+[NOTE]
+====
+If you are on a Mac, the commands in this section won’t work for you. You can
+skip it, and continue with the rest of the tutorial. They are not strictly
+necessary to get a working prototype going.
+====
+
+To check the current value, run this command:
+
+[source,console]
+----
+sysctl vm.max_map_count
+----
+
+The limit can be temporarily increased with:
+
+[source,console]
+----
+sudo sysctl --write vm.max_map_count=262144
+----
+
+To permanently increase the value, add the following line to `/etc/sysctl.conf`:
+
+[source,.properties]
+----
+vm.max_map_count=262144
+----
+
+Then run `sudo sysctl --load` to reload.
+
+== Run the demo
+
+This demo is work in progress and therefore additional parameters are necessary to run it.
+
 [source,console]
 ----
 $ stackablectl \
@@ -8,45 +60,48 @@ $ stackablectl \
     --additional-demos-file https://raw.githubusercontent.com/stackabletech/stackablectl/logging/demos/demos-v1.yaml \
     demo install logging \
     --kind-cluster
-[INFO ] Creating kind cluster stackable-data-platform
-Creating cluster "stackable-data-platform" ...
- ✓ Ensuring node image (kindest/node:v1.24.0) 🖼
- ✓ Preparing nodes 📦 📦 📦 📦
- ✓ Writing configuration 📜
- ✓ Starting control-plane 🕹️
- ✓ Installing CNI 🔌
- ✓ Installing StorageClass 💾
- ✓ Joining worker nodes 🚜
-Set kubectl context to "kind-stackable-data-platform"
-You can now use your cluster with:
+----
 
-kubectl cluster-info --context kind-stackable-data-platform
+== List deployed Stackable services
 
-Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
-[INFO ] Installing demo logging
-[INFO ] Installing stack logging
-[INFO ] Installing release 22.11-logging
-[INFO ] Installing commons operator in version 0.4.0
-[INFO ] Installing secret operator in version 0.6.0
-[INFO ] Installing zookeeper operator in version 0.13.0-pr588
-[INFO ] Installing components of stack logging
-[INFO ] Installed stack logging
-[INFO ] Installing components of demo logging
-[INFO ] Installed demo logging. Use "stackablectl services list" to list the installed services
+To list the installed Stackable services run the following command:
+
+[source,console]
+----
 $ cd path/to/stackablectl_source_code
 $ git switch logging
 $ cargo run services list
     Finished dev [unoptimized + debuginfo] target(s) in 0.12s
      Running `target/debug/stackablectl services list`
- PRODUCT                NAME                   NAMESPACE  ENDPOINTS                                             EXTRA INFOS
+ PRODUCT                NAME                   NAMESPACE  ENDPOINTS                                                                    EXTRA INFOS
 
- opensearch-dashboards  opensearch-dashboards  default    http http://172.18.0.4:32261                          Third party service
-                                                          logs http://172.18.0.4:32261/app/discover#/view/logs  Admin user: admin, password: admin
+ opensearch-dashboards  opensearch-dashboards  default    http http://172.18.0.4:31973                                                 Third party service
+                                                          logs http://172.18.0.4:31973/app/discover?security_tenant=global#/view/logs  Admin user: admin, password: admin
 
- zookeeper              simple-zk              default    zk   172.18.0.4:31381
+ zookeeper              simple-zk              default    zk   172.18.0.5:30256
 ----
 
-1. Open the logs endpoint of the OpenSearch Dashboards in your browser.
-2. Log in with the shown credentials.
-3. Select the "Global" tenant.
-4. Inspect the logs.
+[NOTE]
+====
+When a product instance has not finished starting yet, the service will have no
+endpoint. Starting all the product instances might take a considerable amount
+of time depending on your internet connectivity. In case the product is not
+ready yet, a warning might be shown.
+====
+
+== Inspect the log data
+
+You can have a look at the log data within the OpenSearch Dashboards web
+interface by opening the given `opensearch-dashboards` endpoint `logs` from
+your `stackablectl services list` command output. You have to use the endpoint
+from your command output, in this case it is
+http://172.18.0.4:31973/app/discover?security_tenant=global#/view/logs. Open it
+with your favorite browser.
+
+image::logging/login.png[]
+
+Log in with the username `admin` and password `admin`.
+
+image::logging/logs.png[]
+
+Inspect the logs.
