@@ -273,3 +273,43 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
+  jupyter-hdfs:
+    description: Jupyterhub with HDFS integration
+    stackableRelease: 22.11
+    labels:
+      - jupyterhub
+      - hdfs
+    manifests:
+      - plainYaml: stacks/jupyterhub-hdfs/zookeeper.yaml
+      - plainYaml: stacks/jupyterhub-hdfs/hdfs.yaml
+      - helmChart:
+          releaseName: jupyterhub
+          name: jupyterhub
+          repo:
+            name: jupyterhub
+            url: https://jupyterhub.github.io/helm-chart/
+          version: 2.0.0
+          options:
+            singleuser:
+              extraEnv:
+                # basic notation (for literal values only)
+                HADOOP_CONF_DIR: "/home/jovyan/hdfs"
+              storage:
+                extraVolumes:
+                  - name: hdfs-discovery-configmap
+                    configMap:
+                      name: hdfs
+                extraVolumeMounts:
+                  - name: hdfs-discovery-configmap
+                    mountPath: /home/jovyan/hdfs
+              image:
+                # You should replace the "latest" tag with a fixed version from:
+                # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
+                # Inspect the Dockerfile at:
+                # https://github.com/jupyter/docker-stacks/tree/HEAD/datascience-notebook/Dockerfile
+                name: jupyter/all-spark-notebook
+                tag: latest
+              # `cmd: null` allows the custom CMD of the Jupyter docker-stacks to be used
+              # which performs further customization on startup.
+              cmd: null
+ 
