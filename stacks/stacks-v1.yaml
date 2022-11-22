@@ -297,15 +297,23 @@ stacks:
               initContainers:
                 - name: download-notebook
                   image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
-                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-hdfs/notebook.ipynb -o /home/jovyan/notebook.ipynb']
+                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-hdfs/notebook.ipynb -o /notebook/notebook.ipynb']
+                  volumeMounts:
+                    - mountPath: /notebook
+                      name: notebook
               storage:
                 extraVolumes:
                   - name: hdfs-discovery-configmap
                     configMap:
                       name: hdfs
+                  - emptyDir:
+                      sizeLimit: 500Mi
+                    name: notebook
                 extraVolumeMounts:
                   - name: hdfs-discovery-configmap
                     mountPath: /home/jovyan/hdfs
+                  - name: notebook
+                    mountPath: /home/jovyan/notebook
               image:
                 # You should replace the "latest" tag with a fixed version from:
                 # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
