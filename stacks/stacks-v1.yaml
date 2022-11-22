@@ -319,8 +319,7 @@ stacks:
                 # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
                 # Inspect the Dockerfile at:
                 # https://github.com/jupyter/docker-stacks/tree/HEAD/datascience-notebook/Dockerfile
-                name: jupyter/all-spark-notebook
-                tag: latest
+                name: jupyter/all-spark-notebook@sha256:9488685545969a368e60774e94478164e899b75a97a30787a689f6490b8643a0
               # `cmd: null` allows the custom CMD of the Jupyter docker-stacks to be used
               # which performs further customization on startup.
               cmd: null
