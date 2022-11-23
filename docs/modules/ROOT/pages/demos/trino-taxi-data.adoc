@@ -25,7 +25,7 @@ You can see the deployed products as well as their relationship in the following
 image::demo-trino-taxi-data/overview.png[]
 
 == List deployed Stackable services
-To list the installed installed Stackable services run the following command:
+To list the installed Stackable services run the following command:
 
 [source,console]
 ----
