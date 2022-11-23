@@ -1,0 +1,122 @@
+= jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
+
+[NOTE]
+====
+This guide assumes you already have the demo `jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data` installed.
+If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you have to run `kubectl create namespace jupyterhub-demo && stackablectl demo install --namespace jupyterhub-demo jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data`.
+====
+
+This demo will
+
+* Install the required Stackable operators and Helm charts
+* Spin up the following data products
+** *JupyterHub*: A multi-user server for Jupyter notebooks
+** *HDFS*: A distributed file system used to store the taxi dataset
+* Copy the taxi data in parquet format into HDFS
+* Provide a predefined notebook in JupyterHub for anomaly detection
+* Utilize PySpark for required anomaly computations
+* TODO: Visualize?
+
+== List deployed Stackable services
+
+To list the installed Stackable services run the following command:
+----
+$ kubectl --namespace jupyterhub-demo get services
+NAME                         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                       AGE
+hdfs-datanode-default        ClusterIP      None            <none>        8082/TCP,9866/TCP,9864/TCP,9867/TCP                           4m47s
+hdfs-datanode-default-0      NodePort       10.96.149.72    <none>        8082:30540/TCP,9866:31932/TCP,9864:32353/TCP,9867:32447/TCP   4m47s
+hdfs-journalnode-default     ClusterIP      None            <none>        8081/TCP,8480/TCP,8481/TCP,8485/TCP                           4m47s
+hdfs-journalnode-default-0   NodePort       10.96.173.183   <none>        8081:31961/TCP,8480:30962/TCP,8481:31064/TCP,8485:30768/TCP   4m47s
+hdfs-namenode-default        ClusterIP      None            <none>        8183/TCP,9870/TCP,8020/TCP                                    4m47s
+hdfs-namenode-default-0      NodePort       10.96.236.4     <none>        8183:32039/TCP,9870:30197/TCP,8020:32040/TCP                  4m47s
+hdfs-namenode-default-1      NodePort       10.96.204.142   <none>        8183:30713/TCP,9870:32223/TCP,8020:31512/TCP                  3m37s
+hub                          ClusterIP      10.96.32.190    <none>        8081/TCP                                                      4m31s
+proxy-api                    ClusterIP      10.96.160.234   <none>        8001/TCP                                                      4m31s
+proxy-public                 LoadBalancer   10.96.134.99    <pending>     80:30637/TCP                                                  4m31s
+zookeeper                    NodePort       10.96.101.213   <none>        2282:32638/TCP                                                4m48s
+zookeeper-server-default     ClusterIP      None            <none>        2282/TCP,9505/TCP                                             4m48s
+----
+
+
+[NOTE]
+====
+When a product instance has not finished starting yet, the service will have no endpoint.
+Starting all the product instances might take a considerable amount of time depending on your internet connectivity. In case the product is not ready yet a warning might be shown.
+====
+
+== HDFS
+
+The Stackable Operator for Apache HDFS will spin up a HDFS cluster in order to store the taxi dataset in parquet format. This will be read by and processed via PySpark.
+
+Before trying out the notebook example in Jupyter, check if the taxi data was loaded to HDFS successfully:
+
+----
+kubectl --namespace jupyterhub-demo exec -c namenode -it hdfs-namenode-default-0 -- /bin/bash -c "./bin/hdfs dfs -ls /ny-taxi-data/raw"
+Found 1 items
+-rw-r--r--   3 stackable supergroup  314689382 2022-11-23 15:01 /ny-taxi-data/raw/fhvhv_tripdata_2020-09.parquet
+----
+
+There should be one parquet file containing taxi trip data from September 2020.
+
+== JupyterHub
+
+Have a look at the available Pods before logging in (operator pods are left out for clarity, you will see more Pods):
+
+----
+$ kubectl get pods --namespace jupyterhub-demo
+NAME                                             READY   STATUS      RESTARTS   AGE
+continuous-image-puller-87dzk                    1/1     Running     0          29m
+continuous-image-puller-8qq7m                    1/1     Running     0          29m
+continuous-image-puller-9xbss                    1/1     Running     0          29m
+hdfs-datanode-default-0                          1/1     Running     0          29m
+hdfs-journalnode-default-0                       1/1     Running     0          29m
+hdfs-namenode-default-0                          2/2     Running     0          29m
+hdfs-namenode-default-1                          2/2     Running     0          28m
+hub-66c6798b9c-q877t                             1/1     Running     0          29m
+load-test-data-wsqpk                             0/1     Completed   0          11m
+proxy-65955f56cf-tf4ns                           1/1     Running     0          29m
+user-scheduler-8d888c6d4-jb4mm                   1/1     Running     0          29m
+user-scheduler-8d888c6d4-qbqkq                   1/1     Running     0          29m
+----
+
+JupyterHub will create a Pod for each active user. In order to reach the JupyterHub web interface, create a port-forward:
+
+----
+kubectl --namespace=jupyterhub-demo port-forward service/proxy-public 8080:http
+----
+
+Now access the JupyterHub web interface via:
+
+----
+http://localhost:8080
+----
+
+image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_login.png[]
+
+Log in with any username and password combination e.g. admin:admin.
+
+There should appear a new pod called `jupyter-admin` or `jupyter-<your-login-name>` if you choose a different login (operator pods are left out for clarity, you will see more Pods):
+----
+$ kubectl get pods --namespace jupyterhub-demo
+NAME                                             READY   STATUS      RESTARTS   AGE
+continuous-image-puller-87dzk                    1/1     Running     0          29m
+continuous-image-puller-8qq7m                    1/1     Running     0          29m
+continuous-image-puller-9xbss                    1/1     Running     0          29m
+hdfs-datanode-default-0                          1/1     Running     0          29m
+hdfs-journalnode-default-0                       1/1     Running     0          29m
+hdfs-namenode-default-0                          2/2     Running     0          29m
+hdfs-namenode-default-1                          2/2     Running     0          28m
+hub-66c6798b9c-q877t                             1/1     Running     0          29m
+jupyter-admin                                    1/1     Running     0          20m
+load-test-data-wsqpk                             0/1     Completed   0          25m
+proxy-65955f56cf-tf4ns                           1/1     Running     0          29m
+user-scheduler-8d888c6d4-jb4mm                   1/1     Running     0          29m
+user-scheduler-8d888c6d4-qbqkq                   1/1     Running     0          29m
+----
+
+You should arrive at your workspace:
+
+image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_workspace.png[]
+
+Now you can click on the `notebooks` folder on the left and open the contained file and run it.
