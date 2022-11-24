@@ -313,8 +313,8 @@ stacks:
                 HADOOP_CONF_DIR: "/home/jovyan/hdfs"
               initContainers:
                 - name: download-notebook
-                  image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
-                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-pyspark-hdfs/notebook.ipynb -o /notebook/notebook.ipynb && curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-pyspark-hdfs/notebook.py -o /notebook/notebook.py']
+                  image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.4.0
+                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-pyspark-hdfs/notebook.ipynb -o /notebook/notebook.ipynb']
                   volumeMounts:
                     - mountPath: /notebook
                       name: notebook
