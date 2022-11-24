@@ -129,7 +129,9 @@ X = scaler.fit_transform(dfplt)
 X_reduce = pca.fit_transform(X)
 
 # %% [markdown]
-# The data has a fairly simple set of features (or dimensions): some data describing the transaction, different elements of the timestamp, plus one windowed value to add a time-series aspect. We can visualize the anomlies by using a Principle Component Analysis to reduce these features to a dimensionality that that be plotted. Here is a 3-D representation, that shows the outliers in red:
+# The data has a fairly simple set of features (or dimensions): some data describing the transaction, different elements of the timestamp,
+# plus one windowed value to add a time-series aspect. We can visualize the anomalies by using a Principal Component Analysis to reduce
+# these features to a dimensionality that can be plotted. Here is a 3-D representation, that shows the outliers in red:
 
 # %%
 fig = plt.figure(figsize=(12, 12))
@@ -157,5 +159,3 @@ _ = plt.scatter(res.iloc[inlier_index,0], res.iloc[inlier_index,1], c='green', s
 _ = plt.scatter(res.iloc[outlier_index,0], res.iloc[outlier_index,1], c='red', s=20, edgecolor="red", label="outliers")
 _ = plt.legend()
 plt.show();
-
-
