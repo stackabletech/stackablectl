@@ -154,7 +154,7 @@ plot_metrics(df[-240:])
 # %% [markdown]
 # The plots above display the outliers mapped onto a particular metric (number of rides), although the anomaly itself is based on all available features. We should really define outliers in terms of the whole feature space, but this is then difficult to visualize due to the *number* of features, each of which is a separate dimension (and this feature set is fairly simple set - some data describing the transaction, different elements of the timestamp, plus one windowed value to add a time-series aspect).
 # 
-# We can visualize the outliers by using a Principle Component Analysis to first reduce these features to a dimensionality that that be plotted. Here is a 3-D representation, that shows the outliers in red:
+# We can visualize the outliers by using the Principal Component Analysis (PCA) to first reduce these features to a dimensionality that can be plotted. Here is a 3-D representation, that shows the outliers in red:
 
 # %%
 df_pca = dfp.copy()
