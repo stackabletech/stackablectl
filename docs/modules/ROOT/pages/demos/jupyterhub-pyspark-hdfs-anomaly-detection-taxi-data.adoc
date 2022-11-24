@@ -7,19 +7,11 @@ This demo shows how to deploy https://jupyter.org/hub[JupyterHub] to a Kubernete
 This guide assumes that the demo `jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data` is already installed.
 If it is not installed yet, please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
 To put it simply you have to run:
+
+[source,bash]
 ----
 $ kubectl create namespace jupyterhub-demo && \
 stackablectl demo install --namespace jupyterhub-demo jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
-----
-====
-
-It is recommended for the Kubernetes cluster to natively support load-balancing.
-
-[WARNING]
-====
-If you use a cluster that does not support load-balancers out of the box (e.g. Kind), the `stackablectl` command will run into a timeout. This is due to a load-balancing service that is unable to become ready (because no external IP can be provided). This means that e.g. the taxi dataset is not loaded into the HDFS cluster. This can be circumvented by running the `stackablectl` install command again to finish the ingestion:
-----
-$ stackablectl demo install --namespace jupyterhub-demo jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
 ----
 ====
 
@@ -34,11 +26,13 @@ This demo will:
 * Copy the taxi data in parquet format into HDFS
 * Provide a predefined notebook in JupyterHub for anomaly detection
 * Utilize PySpark for required anomaly computations
-* TODO: Visualize?
+* Visualize the anomalies in the Jupyter notebook
 
 == List deployed Stackable services
 
 To list the installed Stackable services run the following command:
+
+[source,bash]
 ----
 $ kubectl --namespace jupyterhub-demo get services
 NAMESPACE         NAME                         TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                                                       AGE
@@ -51,7 +45,7 @@ jupyterhub-demo   hdfs-namenode-default-0      NodePort       10.15.254.187   <n
 jupyterhub-demo   hdfs-namenode-default-1      NodePort       10.15.248.18    <none>           8183:31134/TCP,9870:32212/TCP,8020:32485/TCP                  13m
 jupyterhub-demo   hub                          ClusterIP      10.15.253.187   <none>           8081/TCP                                                      7m12s
 jupyterhub-demo   proxy-api                    ClusterIP      10.15.250.69    <none>           8001/TCP                                                      7m12s
-jupyterhub-demo   proxy-public                 LoadBalancer   10.15.241.45    ***.***.***.***   80:31331/TCP                                                  7m12s
+jupyterhub-demo   proxy-public                 Nodeport       10.15.241.45    ***.***.***.***   80:31331/TCP                                                  7m12s
 jupyterhub-demo   zookeeper                    NodePort       10.15.245.181   <none>           2282:30161/TCP                                                15m
 jupyterhub-demo   zookeeper-server-default     ClusterIP      None            <none>           2282/TCP,9505/TCP                                             15m
 ----
@@ -68,6 +62,7 @@ The Stackable Operator for Apache HDFS will spin up a HDFS cluster in order to s
 
 Before trying out the notebook example in Jupyter, check if the taxi data was loaded to HDFS successfully:
 
+[source,bash]
 ----
 $ kubectl --namespace jupyterhub-demo exec -c namenode -it hdfs-namenode-default-0 -- /bin/bash -c "./bin/hdfs dfs -ls /ny-taxi-data/raw"
 Found 1 items
@@ -80,6 +75,7 @@ There should be one parquet file containing taxi trip data from September 2020.
 
 Have a look at the available Pods before logging in (operator pods are left out for clarity, you will see more Pods):
 
+[source,bash]
 ----
 $ kubectl get pods --namespace jupyterhub-demo
 NAME                                             READY   STATUS      RESTARTS   AGE
@@ -91,7 +87,7 @@ hdfs-journalnode-default-0                       1/1     Running     0          
 hdfs-namenode-default-0                          2/2     Running     0          29m
 hdfs-namenode-default-1                          2/2     Running     0          28m
 hub-66c6798b9c-q877t                             1/1     Running     0          29m
-load-test-data-wsqpk                             0/1     Completed   0          11m
+load-test-data-wsqpk                             0/1     Completed   0          25m
 proxy-65955f56cf-tf4ns                           1/1     Running     0          29m
 user-scheduler-8d888c6d4-jb4mm                   1/1     Running     0          29m
 user-scheduler-8d888c6d4-qbqkq                   1/1     Running     0          29m
@@ -99,8 +95,9 @@ user-scheduler-8d888c6d4-qbqkq                   1/1     Running     0          
 
 JupyterHub will create a Pod for each active user. In order to reach the JupyterHub web interface, create a port-forward:
 
+[source,bash]
 ----
-$ kubectl --namespace=jupyterhub-demo port-forward service/proxy-public 8080:http
+$ kubectl --namespace jupyterhub-demo port-forward service/proxy-public 8080:http
 ----
 
 Now access the JupyterHub web interface via:
@@ -113,9 +110,11 @@ You should see the JupyterHub login page.
 
 image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_login.png[]
 
-Log in with any username and password combination e.g. admin:admin.
+Log in with username `demo` and password `demo`.
 
-There should appear a new pod called `jupyter-admin` or `jupyter-<your-login-name>` if you choose a different login (operator pods are left out for clarity, you will see more Pods):
+There should appear a new pod called `jupyter-demo` (operator pods are left out for clarity, you will see more Pods):
+
+[source,bash]
 ----
 $ kubectl get pods --namespace jupyterhub-demo
 NAME                                             READY   STATUS      RESTARTS   AGE
@@ -127,7 +126,7 @@ hdfs-journalnode-default-0                       1/1     Running     0          
 hdfs-namenode-default-0                          2/2     Running     0          29m
 hdfs-namenode-default-1                          2/2     Running     0          28m
 hub-66c6798b9c-q877t                             1/1     Running     0          29m
-jupyter-admin                                    1/1     Running     0          20m
+jupyter-demo                                     1/1     Running     0          20m
 load-test-data-wsqpk                             0/1     Completed   0          25m
 proxy-65955f56cf-tf4ns                           1/1     Running     0          29m
 user-scheduler-8d888c6d4-jb4mm                   1/1     Running     0          29m
@@ -144,7 +143,10 @@ image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_run_
 
 == Visualization
 
-After the script finished successfully, two plots should be displayed on the bottom. Both show the same data in 2D and 3D representation:
+After the script finished successfully, several plots should be displayed on the bottom. Both show the same data in 2D and 3D representation. The 3D plot should look like this:
 
 image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_3d_isolation_forest.png[]
 
+The anomaly detection uses the https://en.wikipedia.org/wiki/Isolation_forest[Isolation Forest] model. This model attempts to isolate each data point by continually partitioning the data. Data closely packed together will require more partitioning to separate everything. Outliers just need up to two partitions. So the number of partitions is inversely proportional to the amount of anomaly.
+
+TODO: this needs more explanation
