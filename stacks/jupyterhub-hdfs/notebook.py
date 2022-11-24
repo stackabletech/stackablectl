@@ -52,9 +52,6 @@ dfs = df.select(
 ).groupby("date_group", "minute_group", "hour", "year", "month", "dayofmonth", "dayofweek").agg(functions.count('driver_pay').alias('no_rides'), functions.round(functions.sum('driver_pay'), 2).alias('total_bill'), functions.round(functions.avg('driver_pay'), 2).alias('avg_bill')).orderBy("date_group")
 
 # %%
-dfs.show()
-
-# %%
 
 windowSpec  = Window.partitionBy("hour").orderBy("date_group")
     
@@ -111,29 +108,72 @@ df_out = df_pred.select(
 df_out.show()
 
 # %%
-df = df_out.toPandas()
+dfp = df_out.toPandas()
 
-outliers = df.loc[df['pred']==-1]
+# %% [markdown]
+# Let's display this data by plotting some metrics against time.
+
+# %%
+def plot_metrics(df_line):
+    df_outliers = df_line[df_line["pred"]==-1]
+
+    plt.figure(figsize=(24, 4))
+    ax1 = plt.subplot()
+    plt.plot(df_line.pickup_ts, df_line.norides, linewidth = 1.4)
+    plt.plot(df_outliers.pickup_ts, df_outliers.norides, 'o', markersize=12, color='black')
+    plt.xlabel('Date')
+    plt.ylabel('number of rides',color='b')
+
+    ax2 = ax1.twinx()
+    ax2.plot(df_line.pickup_ts, df_line.avg_bill, 'g-', linewidth = 0.9)
+    ax2.spines['right'].set_position(('outward', 60))
+    plt.ylabel('average bill', color='g')
+
+    ax3 = ax1.twinx()
+    ax3.plot(df_line.pickup_ts, df_line.total_bill, 'r-', linewidth = 1.2)
+    ax3.spines['right'].set_position(('outward', 120))
+    plt.ylabel('total bill', color='r')
+
+    plt.title('Taxi metrics per 30-minute slot')
+    plt.show()
+
+# %% [markdown]
+# First, we will plot three metrics (number of rides, total and average bill) for all time slots. The outliers are marked by the black circles:
+
+# %%
+df = dfp.copy()
+df.sort_values(by='pickup_ts', inplace=True)
+plot_metrics(df)
+
+# %% [markdown]
+# Let's zoom in on those outliers:
+
+# %%
+plot_metrics(df[-240:])
+
+# %% [markdown]
+# The plots above display the outliers mapped onto a particular metric (number of rides), although the anomaly itself is based on all available features. We should really define outliers in terms of the whole feature space, but this is then difficult to visualize due to the *number* of features, each of which is a separate dimension (and this feature set is fairly simple set - some data describing the transaction, different elements of the timestamp, plus one windowed value to add a time-series aspect).
+# 
+# We can visualize the outliers by using a Principle Component Analysis to first reduce these features to a dimensionality that that be plotted. Here is a 3-D representation, that shows the outliers in red:
+
+# %%
+df_pca = dfp.copy()
+
+outliers = df_pca.loc[df_pca['pred']==-1]
 outlier_index=list(outliers.index)
-inliers = df.loc[df['pred']==1]
+inliers = df_pca.loc[df_pca['pred']==1]
 inlier_index=list(inliers.index)
-print(df['pred'].value_counts())
+print(df_pca['pred'].value_counts())
 
 pca = PCA(n_components=3)  # Reduce to k=3 dimensions
 scaler = StandardScaler()
 
 # remove the date column so we can use PCA
-dfplt = df.drop(['pickup_ts'], axis=1)
+dfplt = df_pca.drop(['pickup_ts'], axis=1)
 
 X = scaler.fit_transform(dfplt)
 X_reduce = pca.fit_transform(X)
 
-# %% [markdown]
-# The data has a fairly simple set of features (or dimensions): some data describing the transaction, different elements of the timestamp,
-# plus one windowed value to add a time-series aspect. We can visualize the anomalies by using a Principal Component Analysis to reduce
-# these features to a dimensionality that can be plotted. Here is a 3-D representation, that shows the outliers in red:
-
-# %%
 fig = plt.figure(figsize=(12, 12))
 _ = ax = fig.add_subplot(111, projection='3d')
 _ = ax.set_xlabel("IsolationForest - 3D")
@@ -159,3 +199,5 @@ _ = plt.scatter(res.iloc[inlier_index,0], res.iloc[inlier_index,1], c='green', s
 _ = plt.scatter(res.iloc[outlier_index,0], res.iloc[outlier_index,1], c='red', s=20, edgecolor="red", label="outliers")
 _ = plt.legend()
 plt.show();
+
+
