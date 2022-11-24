@@ -11,8 +11,9 @@ To put it simply you have to run:
 [source,bash]
 ----
 $ kubectl create namespace jupyterhub-demo && \
-stackablectl demo install --namespace jupyterhub-demo jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
+stackablectl --namespace jupyterhub-demo demo install jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
 ----
+
 ====
 
 == Overview
@@ -45,7 +46,7 @@ jupyterhub-demo   hdfs-namenode-default-0      NodePort       10.15.254.187   <n
 jupyterhub-demo   hdfs-namenode-default-1      NodePort       10.15.248.18    <none>           8183:31134/TCP,9870:32212/TCP,8020:32485/TCP                  13m
 jupyterhub-demo   hub                          ClusterIP      10.15.253.187   <none>           8081/TCP                                                      7m12s
 jupyterhub-demo   proxy-api                    ClusterIP      10.15.250.69    <none>           8001/TCP                                                      7m12s
-jupyterhub-demo   proxy-public                 Nodeport       10.15.241.45    ***.***.***.***   80:31331/TCP                                                  7m12s
+jupyterhub-demo   proxy-public                 Nodeport       10.15.241.45    <none>           80:31331/TCP                                                  7m12s
 jupyterhub-demo   zookeeper                    NodePort       10.15.245.181   <none>           2282:30161/TCP                                                15m
 jupyterhub-demo   zookeeper-server-default     ClusterIP      None            <none>           2282/TCP,9505/TCP                                             15m
 ----
