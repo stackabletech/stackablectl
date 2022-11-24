@@ -27,19 +27,19 @@ This demo will
 To list the installed Stackable services run the following command:
 ----
 $ kubectl --namespace jupyterhub-demo get services
-NAME                         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                       AGE
-hdfs-datanode-default        ClusterIP      None            <none>        8082/TCP,9866/TCP,9864/TCP,9867/TCP                           4m47s
-hdfs-datanode-default-0      NodePort       10.96.149.72    <none>        8082:30540/TCP,9866:31932/TCP,9864:32353/TCP,9867:32447/TCP   4m47s
-hdfs-journalnode-default     ClusterIP      None            <none>        8081/TCP,8480/TCP,8481/TCP,8485/TCP                           4m47s
-hdfs-journalnode-default-0   NodePort       10.96.173.183   <none>        8081:31961/TCP,8480:30962/TCP,8481:31064/TCP,8485:30768/TCP   4m47s
-hdfs-namenode-default        ClusterIP      None            <none>        8183/TCP,9870/TCP,8020/TCP                                    4m47s
-hdfs-namenode-default-0      NodePort       10.96.236.4     <none>        8183:32039/TCP,9870:30197/TCP,8020:32040/TCP                  4m47s
-hdfs-namenode-default-1      NodePort       10.96.204.142   <none>        8183:30713/TCP,9870:32223/TCP,8020:31512/TCP                  3m37s
-hub                          ClusterIP      10.96.32.190    <none>        8081/TCP                                                      4m31s
-proxy-api                    ClusterIP      10.96.160.234   <none>        8001/TCP                                                      4m31s
-proxy-public                 LoadBalancer   10.96.134.99    <pending>     80:30637/TCP                                                  4m31s
-zookeeper                    NodePort       10.96.101.213   <none>        2282:32638/TCP                                                4m48s
-zookeeper-server-default     ClusterIP      None            <none>        2282/TCP,9505/TCP                                             4m48s
+NAMESPACE         NAME                         TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                                                       AGE
+jupyterhub-demo   hdfs-datanode-default        ClusterIP      None            <none>           8082/TCP,9866/TCP,9864/TCP,9867/TCP                           14m
+jupyterhub-demo   hdfs-datanode-default-0      NodePort       10.15.254.165   <none>           8082:31190/TCP,9866:32102/TCP,9864:30970/TCP,9867:31002/TCP   14m
+jupyterhub-demo   hdfs-journalnode-default     ClusterIP      None            <none>           8081/TCP,8480/TCP,8481/TCP,8485/TCP                           14m
+jupyterhub-demo   hdfs-journalnode-default-0   NodePort       10.15.245.232   <none>           8081:31657/TCP,8480:32028/TCP,8481:31966/TCP,8485:31403/TCP   14m
+jupyterhub-demo   hdfs-namenode-default        ClusterIP      None            <none>           8183/TCP,9870/TCP,8020/TCP                                    14m
+jupyterhub-demo   hdfs-namenode-default-0      NodePort       10.15.254.187   <none>           8183:31835/TCP,9870:30753/TCP,8020:31491/TCP                  14m
+jupyterhub-demo   hdfs-namenode-default-1      NodePort       10.15.248.18    <none>           8183:31134/TCP,9870:32212/TCP,8020:32485/TCP                  13m
+jupyterhub-demo   hub                          ClusterIP      10.15.253.187   <none>           8081/TCP                                                      7m12s
+jupyterhub-demo   proxy-api                    ClusterIP      10.15.250.69    <none>           8001/TCP                                                      7m12s
+jupyterhub-demo   proxy-public                 LoadBalancer   10.15.241.45    ***.***.***.***   80:31331/TCP                                                  7m12s
+jupyterhub-demo   zookeeper                    NodePort       10.15.245.181   <none>           2282:30161/TCP                                                15m
+jupyterhub-demo   zookeeper-server-default     ClusterIP      None            <none>           2282/TCP,9505/TCP                                             15m
 ----
 
 
@@ -129,4 +129,12 @@ image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_run_
 
 == Visualization
 
-dada
+After the script finished successfully, two plots should be displayed on the bottom. Both show the same data in 2D and 3D representation:
+
+=== 2D plot
+
+image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_2d_isolation_forest.png[]
+
+=== 3D plot
+
+image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_3d_isolation_forest.png[]
