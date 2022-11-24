@@ -297,7 +297,7 @@ stacks:
               initContainers:
                 - name: download-notebook
                   image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
-                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-hdfs/notebook.ipynb -o /notebook/notebook.ipynb']
+                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-hdfs/notebook.ipynb -o /notebook/notebook.ipynb && curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-hdfs/notebook.py -o /notebook/notebook.py']
                   volumeMounts:
                     - mountPath: /notebook
                       name: notebook
@@ -319,7 +319,8 @@ stacks:
                 # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
                 # Inspect the Dockerfile at:
                 # https://github.com/jupyter/docker-stacks/tree/HEAD/datascience-notebook/Dockerfile
-                name: jupyter/all-spark-notebook@sha256:9488685545969a368e60774e94478164e899b75a97a30787a689f6490b8643a0
+                name: jupyter/pyspark-notebook
+                tag: 2022-11-21
               # `cmd: null` allows the custom CMD of the Jupyter docker-stacks to be used
               # which performs further customization on startup.
               cmd: null

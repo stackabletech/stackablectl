@@ -19,11 +19,3 @@ metadata:
 spec:
   clusterRef:
     name: zookeeper
----
-apiVersion: zookeeper.stackable.tech/v1alpha1
-kind: ZookeeperZnode
-metadata:
-  name: hbase-znode
-spec:
-  clusterRef:
-    name: zookeeper

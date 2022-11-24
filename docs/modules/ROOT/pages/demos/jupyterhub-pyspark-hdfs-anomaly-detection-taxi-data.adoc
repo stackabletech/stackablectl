@@ -4,7 +4,11 @@
 ====
 This guide assumes you already have the demo `jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data` installed.
 If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
-To put it simply you have to run `kubectl create namespace jupyterhub-demo && stackablectl demo install --namespace jupyterhub-demo jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data`.
+To put it simply you have to run:
+----
+kubectl create namespace jupyterhub-demo && \
+stackablectl demo install --namespace jupyterhub-demo jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
+----
 ====
 
 This demo will
@@ -119,4 +123,10 @@ You should arrive at your workspace:
 
 image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_workspace.png[]
 
-Now you can click on the `notebooks` folder on the left and open the contained file and run it.
+Now you can click on the `notebooks` folder on the left and open the contained file and run it. Click on the double arrow to execute the Python scripts.
+
+image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_run_notebook.png[]
+
+== Visualization
+
+dada
