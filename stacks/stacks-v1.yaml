@@ -291,6 +291,22 @@ stacks:
             url: https://jupyterhub.github.io/helm-chart/
           version: 2.0.0
           options:
+            proxy:
+              service:
+                type: NodePort
+            hub:
+              config:
+                Authenticator:
+                  admin_users:
+                    - admin
+                  allowed_users:
+                    - demo
+                DummyAuthenticator:
+                  password: demo
+                JupyterHub:
+                  authenticator_class: dummy
+            rbac:
+              create: true
             singleuser:
               extraEnv:
                 # basic notation (for literal values only)
