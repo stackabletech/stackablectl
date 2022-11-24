@@ -2,7 +2,7 @@
 apiVersion: secrets.stackable.tech/v1alpha1
 kind: SecretClass
 metadata:
-  name: simple-hive-s3-secret-class
+  name: hive-s3-secret-class
 spec:
   backend:
     k8sSearch:
@@ -18,14 +18,14 @@ spec:
   port: 9000
   accessStyle: Path
   credentials:
-    secretClass: simple-hive-s3-secret-class
+    secretClass: hive-s3-secret-class
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: simple-hive-s3-secret
+  name: hive-s3-secret
   labels:
-    secrets.stackable.tech/class: simple-hive-s3-secret-class
+    secrets.stackable.tech/class: hive-s3-secret-class
 stringData:
   accessKey: minio-access-key
   secretKey: minio-secret-key
@@ -37,7 +37,7 @@ metadata:
 spec:
   version: 2.3.9-stackable0.6.0
   hdfs:
-    configMap: simple-hdfs
+    configMap: hdfs
   metastore:
     roleGroups:
       default:
@@ -72,9 +72,6 @@ spec:
   metastore:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         replicas: 1
         config:
           database:

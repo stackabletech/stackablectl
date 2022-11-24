@@ -8,28 +8,28 @@ spec:
   port: 9000
   accessStyle: Path
   credentials:
-    secretClass: simple-hive-s3-secret-class
+    secretClass: hive-s3-secret-class
 ---
 apiVersion: trino.stackable.tech/v1alpha1
 kind: TrinoCatalog
 metadata:
   name: hivehdfs
   labels:
-    trino: simple-trino
+    trino: trino
 spec:
   connector:
     hive:
       metastore:
         configMap: hive-hdfs
       hdfs:
-        configMap: simple-hdfs
+        configMap: hdfs
 ---
 apiVersion: trino.stackable.tech/v1alpha1
 kind: TrinoCatalog
 metadata:
   name: hives3
   labels:
-    trino: simple-trino
+    trino: trino
 spec:
   connector:
     hive:
@@ -43,7 +43,7 @@ kind: TrinoCatalog
 metadata:
   name: tpcds
   labels:
-    trino: simple-trino
+    trino: trino
 spec:
   connector:
     tpcds: {}
@@ -51,12 +51,12 @@ spec:
 apiVersion: trino.stackable.tech/v1alpha1
 kind: TrinoCluster
 metadata:
-  name: simple-trino
+  name: trino
 spec:
   version: 396-stackable0.1.0
   catalogLabelSelector:
     matchLabels:
-      trino: simple-trino
+      trino: trino
   coordinators:
     roleGroups:
       default:
