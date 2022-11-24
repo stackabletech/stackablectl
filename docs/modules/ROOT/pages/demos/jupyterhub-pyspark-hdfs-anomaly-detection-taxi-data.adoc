@@ -1,6 +1,6 @@
 = jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
 
-This demo shows how to deploy https://jupyter.org/hub[JupyterHub] to a Kubernetes cluster using its https://github.com/jupyterhub/zero-to-jupyterhub-k8s[Helm] chart and connect it to a Stackable HDFS cluster. The HDFS cluster will contain https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[NYC taxi trip record] data that will be analyzed for anomalies via a Jupyter notebook and https://spark.apache.org/docs/latest/api/python/[PySpark].
+This demo showcases the integration between https://jupyter.org[Jupyter] and https://hadoop.apache.org/[Apache Hadoop] deployed on the Stackable Data Platform (SDP) Kubernetes cluster. https://jupyterlab.readthedocs.io/en/stable/[JupyterLab] is deployed using the https://github.com/jupyterhub/zero-to-jupyterhub-k8s[pyspark-notebook stack] provided by the Jupyter community. The SDP makes this integration easy by publishing a discovery `ConfigMap` for the HDFS cluster. This `ConfigMap` is then mounted in all `Pods`` running https://spark.apache.org/docs/latest/api/python/getting_started/index.html[PySpark] notebooks so that these have access to HDFS data. For this demo, the HDFS cluster is provisioned with a small sample of the https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[NYC taxi trip dataset] which is analyzed with a notebook that is provisioned automatically in the JupyterLab interface .
 
 [NOTE]
 ====
@@ -20,42 +20,14 @@ stackablectl --namespace jupyterhub-demo demo install jupyterhub-pyspark-hdfs-an
 
 This demo will:
 
-* Install the required Stackable operators and Helm charts
+* Install the required Stackable Data Platform operators
 * Spin up the following data products
 ** *JupyterHub*: A multi-user server for Jupyter notebooks
 ** *HDFS*: A distributed file system used to store the taxi dataset
-* Copy the taxi data in parquet format into HDFS
-* Provide a predefined notebook in JupyterHub for anomaly detection
-* Utilize PySpark for required anomaly computations
-* Visualize the anomalies in the Jupyter notebook
-
-== List deployed Stackable services
-
-To list the installed Stackable services run the following command:
-
-[source,bash]
-----
-$ kubectl --namespace jupyterhub-demo get services
-NAMESPACE         NAME                         TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                                                       AGE
-jupyterhub-demo   hdfs-datanode-default        ClusterIP      None            <none>           8082/TCP,9866/TCP,9864/TCP,9867/TCP                           14m
-jupyterhub-demo   hdfs-datanode-default-0      NodePort       10.15.254.165   <none>           8082:31190/TCP,9866:32102/TCP,9864:30970/TCP,9867:31002/TCP   14m
-jupyterhub-demo   hdfs-journalnode-default     ClusterIP      None            <none>           8081/TCP,8480/TCP,8481/TCP,8485/TCP                           14m
-jupyterhub-demo   hdfs-journalnode-default-0   NodePort       10.15.245.232   <none>           8081:31657/TCP,8480:32028/TCP,8481:31966/TCP,8485:31403/TCP   14m
-jupyterhub-demo   hdfs-namenode-default        ClusterIP      None            <none>           8183/TCP,9870/TCP,8020/TCP                                    14m
-jupyterhub-demo   hdfs-namenode-default-0      NodePort       10.15.254.187   <none>           8183:31835/TCP,9870:30753/TCP,8020:31491/TCP                  14m
-jupyterhub-demo   hdfs-namenode-default-1      NodePort       10.15.248.18    <none>           8183:31134/TCP,9870:32212/TCP,8020:32485/TCP                  13m
-jupyterhub-demo   hub                          ClusterIP      10.15.253.187   <none>           8081/TCP                                                      7m12s
-jupyterhub-demo   proxy-api                    ClusterIP      10.15.250.69    <none>           8001/TCP                                                      7m12s
-jupyterhub-demo   proxy-public                 Nodeport       10.15.241.45    <none>           80:31331/TCP                                                  7m12s
-jupyterhub-demo   zookeeper                    NodePort       10.15.245.181   <none>           2282:30161/TCP                                                15m
-jupyterhub-demo   zookeeper-server-default     ClusterIP      None            <none>           2282/TCP,9505/TCP                                             15m
-----
-
-[NOTE]
-====
-When a product instance has not finished starting yet, the service will have no endpoint.
-Starting all the product instances might take a considerable amount of time depending on your internet connectivity. In case the product is not ready yet a warning might be shown.
-====
+* Download a sample of the NY taxi dataset into HDFS
+* Install Jupyter notebook
+* Train an anomaly detection model using PySpark on the data available in HDFS
+* Perform some predictions and visualize anomalies
 
 == HDFS
 
