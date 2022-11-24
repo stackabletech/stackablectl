@@ -273,15 +273,16 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
-  jupyterhub-hdfs:
-    description: Jupyterhub with HDFS integration
+  jupyterhub-pyspark-hdfs:
+    description: Jupyterhub with PySpark and HDFS integration
     stackableRelease: 22.11
     labels:
       - jupyterhub
       - hdfs
+      - pyspark
     manifests:
-      - plainYaml: stacks/jupyterhub-hdfs/zookeeper.yaml
-      - plainYaml: stacks/jupyterhub-hdfs/hdfs.yaml
+      - plainYaml: stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
+      - plainYaml: stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
       - helmChart:
           releaseName: jupyterhub
           name: jupyterhub
@@ -297,7 +298,7 @@ stacks:
               initContainers:
                 - name: download-notebook
                   image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
-                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-hdfs/notebook.ipynb -o /notebook/notebook.ipynb && curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-hdfs/notebook.py -o /notebook/notebook.py']
+                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-pyspark-hdfs/notebook.ipynb -o /notebook/notebook.ipynb && curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-pyspark-hdfs/notebook.py -o /notebook/notebook.py']
                   volumeMounts:
                     - mountPath: /notebook
                       name: notebook

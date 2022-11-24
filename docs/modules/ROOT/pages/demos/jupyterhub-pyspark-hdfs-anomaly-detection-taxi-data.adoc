@@ -1,5 +1,7 @@
 = jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
 
+This demo shows how to deploy https://jupyter.org/hub[JupyterHub] to a Kubernetes cluster using its https://github.com/jupyterhub/zero-to-jupyterhub-k8s[Helm] chart and connect it to a Stackable HDFS cluster. The HDFS cluster will contain https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[NYC taxi trip record] data that will be analyzed for anomalies via a Jupyter notebook and https://spark.apache.org/docs/latest/api/python/[PySpark].
+
 [NOTE]
 ====
 This guide assumes you already have the demo `jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data` installed.
@@ -11,7 +13,19 @@ stackablectl demo install --namespace jupyterhub-demo jupyterhub-pyspark-hdfs-an
 ----
 ====
 
-This demo will
+It is recommended for the Kubernetes cluster to natively support load-balancing.
+
+[WARNING]
+====
+If you use a cluster that does not support load-balancers out of the box (e.g. Kind), the `stackablectl` command will run into a timeout. This is due to a load-balancing service that is unable to become ready (because no external IP can be provided). This means that e.g. the taxi dataset is not loaded into the HDFS cluster. This can be circumvented by running the same `stackablectl` command again to finish the ingestion:
+----
+stackablectl demo install --namespace jupyterhub-demo jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
+----
+====
+
+== Overview
+
+This demo will:
 
 * Install the required Stackable operators and Helm charts
 * Spin up the following data products
