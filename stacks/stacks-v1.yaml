@@ -345,9 +345,9 @@ stacks:
                   - name: hdfs-discovery-configmap
                     configMap:
                       name: hdfs
-                  - emptyDir:
+                  - name: notebook
+                    emptyDir:
                       sizeLimit: 500Mi
-                    name: notebook
                 extraVolumeMounts:
                   - name: hdfs-discovery-configmap
                     mountPath: /home/jovyan/hdfs
