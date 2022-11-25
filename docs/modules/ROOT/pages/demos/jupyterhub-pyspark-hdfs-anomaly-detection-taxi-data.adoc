@@ -35,7 +35,7 @@ This demo will:
 
 == HDFS
 
-The Stackable Operator for Apache HDFS will spin up a HDFS cluster in order to store the taxi dataset in parquet format. This dataset will be read and processed via PySpark.
+The Stackable Operator for Apache HDFS will spin up a HDFS cluster in order to store the taxi dataset in https://parquet.apache.org/[Apache Parquet] format. This dataset will be read and processed via PySpark.
 
 Before trying out the notebook example in Jupyter, check if the taxi data was loaded to HDFS successfully:
 
