@@ -165,6 +165,29 @@ _templates:
         replica:
           replicaCount: 1
 
+  - helmChart: &template-postgresql-hivehdfs
+      releaseName: hivehdfs
+      name: postgresql
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 10.16.2
+      options:
+        postgresqlUsername: hive
+        postgresqlPassword: hive
+        postgresqlDatabase: hivehdfs
+  - helmChart: &template-postgresql-hives3
+      releaseName: hives3
+      name: postgresql
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 10.16.2
+      options:
+        postgresqlUsername: hive
+        postgresqlPassword: hive
+        postgresqlDatabase: hives3
+
 stacks:
   airflow:
     description: Stack containing Airflow scheduling platform
@@ -341,4 +364,19 @@ stacks:
               # `cmd: null` allows the custom CMD of the Jupyter docker-stacks to be used
               # which performs further customization on startup.
               cmd: null
- 
+  dual-hive-hdfs-s3:
+    description: Dual stack Hive on HDFS and S3 for Hadoop/Hive to Trino migration
+    stackableRelease: 22.11
+    labels:
+      - trino
+      - hive
+      - hdfs
+      - s3
+    manifests:
+      - helmChart: *template-postgresql-hivehdfs
+      - helmChart: *template-postgresql-hives3
+      - helmChart: *template-minio-trino
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hive.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
+

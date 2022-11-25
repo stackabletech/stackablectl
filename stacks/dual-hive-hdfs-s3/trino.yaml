@@ -1,0 +1,111 @@
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Connection
+metadata:
+  name: minio
+spec:
+  host: minio
+  port: 9000
+  accessStyle: Path
+  credentials:
+    secretClass: hive-s3-secret-class
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: hivehdfs
+  labels:
+    trino: trino
+spec:
+  connector:
+    hive:
+      metastore:
+        configMap: hive-hdfs
+      hdfs:
+        configMap: hdfs
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: hives3
+  labels:
+    trino: trino
+spec:
+  connector:
+    hive:
+      metastore:
+        configMap: hive-s3
+      s3:
+        reference: minio
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: tpcds
+  labels:
+    trino: trino
+spec:
+  connector:
+    tpcds: {}
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  version: 396-stackable0.2.0
+  catalogLabelSelector:
+    matchLabels:
+      trino: trino
+  coordinators:
+    roleGroups:
+      default:
+        replicas: 1
+  workers:
+    roleGroups:
+      default:
+        replicas: 1
+  opa:
+    configMapName: opa
+    package: trino
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trino-users
+type: kubernetes.io/opaque
+stringData:
+  # admin:admin
+  admin: $2y$10$89xReovvDLacVzRGpjOyAOONnayOgDAyIS2nW9bs5DJT98q17Dy5i
+  # demo:demo
+  demo: $2y$10$mMRoIKfWtAuycEQnKiDCeOlCSYiWkvbs0WsMFLkaSnNO0ZnFKVRXm
+---
+apiVersion: opa.stackable.tech/v1alpha1
+kind: OpaCluster
+metadata:
+  name: opa
+spec:
+  version: 0.41.0-stackable0.1.0
+  servers:
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trino-opa-bundle
+  labels:
+    opa.stackable.tech/bundle: "trino"
+data:
+  trino.rego: |
+    package trino
+    default allow = false
+    allow {
+      input.context.identity.user == "admin"
+    }
+    allow {
+      input.context.identity.user == "demo"
+    }
