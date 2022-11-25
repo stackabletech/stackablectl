@@ -27,7 +27,7 @@ This demo will:
 * Install the required Stackable Data Platform operators
 * Spin up the following data products
 ** *JupyterHub*: A multi-user server for Jupyter notebooks
-** *HDFS*: A distributed file system used to store the taxi dataset
+** *Apache HDFS*: A distributed file system used to store the taxi dataset
 * Download a sample of the NY taxi dataset into HDFS
 * Install Jupyter notebook
 * Train an anomaly detection model using PySpark on the data available in HDFS
