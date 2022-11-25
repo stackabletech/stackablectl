@@ -114,12 +114,17 @@ Now you can click on the `notebooks` folder on the left and open the contained f
 
 image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_run_notebook.png[]
 
+== Model details
+
+The job uses an implementation of the Isolation Forest https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf[algorithm] provided by the scikit-learn https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html[library]: the model is trained in a single task, but is then distributed to each executor from where it is invoked by a user-defined function (see https://towardsdatascience.com/isolation-forest-and-spark-b88ade6c63ff[this article] for how to call the sklearn library with a pyspark UDF). This type of model attempts to isolate each data point by continually partitioning the data. Data closely packed together will require more partitions to separate data points, whereas any outliers will require less: the number of required partitions for a particular data point is thus inversely proportional to the anomaly "score".
+
 == Visualization
 
-After the script finished successfully, several plots should be displayed on the bottom. Both show the same data in 2D and 3D representation. The 3D plot should look like this:
+The notebook shows how to plot the outliers against a particular metric (e.g. "number of rides"). However, this is mainly for convenience - the anomaly score is derived from the *_entire_* feature space i.e. it takes all dimensions (or features/columns) into account when scoring data. This means that not only are the results difficult to visualize (how can multidimensional data be represented in only 3-D dimensional space?), but that a root cause analysis has to be a separate process. It would be tempting to look at just one metric and assume causal affects, but the model "sees" all features as a set of numerical values and derives patterns accordingly.
+
+We can tackle the first of these issues by collapsing - or projecting - our data down into a manageable number of dimensions that can be plotted: once the script has finished successfully, plots should be displayed on the bottom that show the same data in 2D and 3D representation. The 3D plot should look like this:
 
 image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_3d_isolation_forest.png[]
 
-The anomaly detection uses the https://en.wikipedia.org/wiki/Isolation_forest[Isolation Forest] model. This model attempts to isolate each data point by continually partitioning the data. Data closely packed together will require more partitioning to separate everything. Outliers just need up to two partitions. So the number of partitions is inversely proportional to the amount of anomaly.
+It is clear that the model has detected outliers even though that would not have been immediately apparent from the time-series representation alone.
 
-TODO: this needs more explanation
