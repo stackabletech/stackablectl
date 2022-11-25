@@ -107,6 +107,7 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/setup-superset.yaml
   jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data:
     description: Jupyterhub with PySpark and HDFS integration
+    documentation: https://docs.stackable.tech/stackablectl/stable/demos/jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data.html
     stackableStack: jupyterhub-pyspark-hdfs
     labels:
       - jupyterhub
