@@ -332,7 +332,6 @@ stacks:
               create: true
             singleuser:
               extraEnv:
-                # basic notation (for literal values only)
                 HADOOP_CONF_DIR: "/home/jovyan/hdfs"
               initContainers:
                 - name: download-notebook
