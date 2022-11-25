@@ -7,9 +7,9 @@ It will most likely not run on your workstation. It was developed and tested on 
 
 Instance types that loosely correspond to this on the Hyperscalers are:
 
-- *Google*: e2-standard-8
-- *Azure*: Standard_D4_v2
-- *AWS*: m5.2xlarge
+- *Google*: `e2-standard-8`
+- *Azure*: `Standard_D4_v2`
+- *AWS*: `m5.2xlarge`
 
 In addition to these nodes the operators will request multiple persistent volumes with a total capacity of about 1TB.
 
@@ -51,6 +51,28 @@ As Apache Iceberg states on their https://iceberg.apache.org/docs/latest/[websit
 > Apache Iceberg is an open table format for huge analytic datasets. Iceberg adds tables to compute engines including Spark, Trino, PrestoDB, Flink, Hive and Impala using a high-performance table format that works just like a SQL table.
 
 This demos uses Iceberg as it plays along nicely with object storage as well as having a Trino and Spark integration.
+In also provides the following benefits among other things over simply putting https://parquet.apache.org/[Apache Parquet] files in S3 using the https://trino.io/docs/current/connector/hive.html[Hive connector]:
+
+* *Standardized specification how to store tables:*
+Using this standardized specification multiple tools such as Trino, Spark and Flink and read and write Iceberg tables.
+
+* *Versioned tables with snapshots, time travel and rollback mechanisms*
+
+* *Row level updates and deletes:*
+Deletes will be written as separate files for best performance and will be compacted with the mechanism described below.
+
+* *Built in compaction:*
+It is recommended to run some table maintenance functions such as compacting smaller files (including delete files) into larger files for best query performance.
+Iceberg offers out-of-the-box tools for this.
+
+* *Hidden partitioning:*
+Image you have a table `sales (day varchar, ts timestamp)` partitioned by `day`.
+Lot's of times users would run a statement such as `select count(\*) where ts > now() - interval 1 day` resulting in a full table scan as the partition column `day` was not filtered in the query?
+Iceberg resolves this problem by using hidden partitions.
+In Iceberg your table would look like `sales (ts timestamp) with (partitioning = ARRAY['day(ts)'])`.
+The column `day` is not needed anymore, and the query `select count(\*) where ts > now() - interval 1 day` would use partition pruning as expected to only read one the partitions from today and yesterday.
+
+If you want to read more on the motivation and the working principles on Iceberg, please have a read on there https://iceberg.apache.org[website] or https://github.com/apache/iceberg/[GitHub repo].
 
 == List deployed Stackable services
 To list the installed installed Stackable services run the following command:
