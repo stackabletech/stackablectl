@@ -2,11 +2,7 @@
 
 This demo showcases the integration between https://jupyter.org[Jupyter] and https://hadoop.apache.org/[Apache Hadoop] deployed on the Stackable Data Platform (SDP) Kubernetes cluster. https://jupyterlab.readthedocs.io/en/stable/[JupyterLab] is deployed using the https://github.com/jupyterhub/zero-to-jupyterhub-k8s[pyspark-notebook stack] provided by the Jupyter community. The SDP makes this integration easy by publishing a discovery `ConfigMap` for the HDFS cluster. This `ConfigMap` is then mounted in all `Pods`` running https://spark.apache.org/docs/latest/api/python/getting_started/index.html[PySpark] notebooks so that these have access to HDFS data. For this demo, the HDFS cluster is provisioned with a small sample of the https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[NYC taxi trip dataset] which is analyzed with a notebook that is provisioned automatically in the JupyterLab interface .
 
-[NOTE]
-====
-This guide assumes that the demo `jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data` is already installed.
-If it is not installed yet, please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
-To put it simply you have to run:
+This demo can be installed on most cloud managed Kubernetes clusters as well as on premise or on a reasonably provisioned laptop. Install this demo on an existing Kubernetes cluster:
 
 [source,bash]
 ----
@@ -14,6 +10,14 @@ $ kubectl create namespace jupyterhub-demo && \
 stackablectl --namespace jupyterhub-demo demo install jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
 ----
 
+[NOTE]
+====
+Some container images used by this demo are quite large and some steps may take several minutes to complete. If you install this demo locally, on a developer laptop for example, this can lead to timeouts during the installation. If this happens, it's safe to rerun the `stackablectl` command from above:
+----
+stackablectl --namespace jupyterhub-demo demo install jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
+----
+
+For more details on how to install Stackable demos see the xref:commands/demo.adoc#_install_demo[documentation].
 ====
 
 == Overview
