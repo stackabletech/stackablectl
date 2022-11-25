@@ -324,6 +324,88 @@ Afterwards the `MERGE INTO` statement is used to add the new records to the lake
 The incoming records are first de-duplicated (using `SELECT DISTINCT * FROM waterLevelsMeasurementsUpserts`), so that the data from Kafka does not contain duplicates.
 Afterwards the - now duplication free - records get added to the `lakehouse.water_levels.measurements`, but **only** if they are not already present.
 
+=== Upsert mechanism
+The `MERGE INTO` statement can not only be used for de-duplicating data but also for updating existing rows in the lakehouse table.
+The `ingest water_level stations` streaming job uses the following `MERGE INTO` statement:
+
+[source,sql]
+----
+MERGE INTO lakehouse.water_levels.stations as t
+USING
+    (
+    SELECT station_uuid, number, short_name, long_name, km, agency, latitude, longitude, water_short_name, water_long_name
+    FROM waterLevelsStationInformationUpserts
+    WHERE (station_uuid, kafka_timestamp) IN (SELECT station_uuid, max(kafka_timestamp) FROM waterLevelsStationInformationUpserts GROUP BY station_uuid)
+    ) as u
+ON u.station_uuid = t.station_uuid
+WHEN MATCHED THEN UPDATE SET *
+WHEN NOT MATCHED THEN INSERT *
+----
+
+First of the data within a batch is de-deduplicated as well.
+The record containing station update with the highest Kafka timestamp is the freshest update and will be used during Upsert.
+
+In case a record for a station (detected by the same `station_uud`) already exists, it's contents will be updated.
+In case the station is not known yet, it will be simply inserted.
+The `MERGE INTO` also supports updating a subsets of fields and more complex calculation e.g. incrementing a counter.
+For details have a look at the https://iceberg.apache.org/docs/latest/spark-writes/#merge-into[Iceberg MERGE INTO documentation].
+
+=== Delete mechanism
+The `MERGE INTO` statement also supports deleting rows from the lakehouse tables.
+For details have a look at the https://iceberg.apache.org/docs/latest/spark-writes/#merge-into[Iceberg MERGE INTO documentation].
+
+=== Table maintenance
+As mentioned in the beginning, Iceberg supports out-of-the-box https://iceberg.apache.org/docs/latest/spark-procedures/#metadata-management[table maintenance] such as compaction.
+
+This demos executes some maintenance functions in a very basic Python loop with sleeps in between.
+For production the maintenance can be scheduled using Kubernetes https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/[CronJobs] or using https://airflow.apache.org/[Apache Airflow], which is also supported by the Stackable Data Platform.
+
+[source,python]
+----
+# key: table name
+# value: compaction strategy
+tables_to_compact = {
+    "lakehouse.water_levels.stations": "",
+    "lakehouse.water_levels.measurements": ", strategy => 'sort', sort_order => 'timestamp DESC NULLS LAST,station_uuid ASC NULLS LAST'",
+    "lakehouse.smart_city.shared_bikes_station_information": "",
+    "lakehouse.smart_city.shared_bikes_station_status": ", strategy => 'sort', sort_order => 'last_reported DESC NULLS LAST,station_id ASC NULLS LAST'",
+    "lakehouse.smart_city.shared_bikes_bike_status": "",
+}
+
+while True:
+    expire_before = (datetime.now() - timedelta(hours=12)).strftime("%Y-%m-%d %H:%M:%S")
+    for table, table_compaction_strategy in tables_to_compact.items():
+        print(f"[{table}] Expiring snapshots older than 12 hours ({expire_before})")
+        spark.sql(f"CALL lakehouse.system.expire_snapshots(table => '{table}', older_than => TIMESTAMP '{expire_before}', retain_last => 50, stream_results => true)")
+
+        print(f"[{table}] Removing orphaned files")
+        spark.sql(f"CALL lakehouse.system.remove_orphan_files(table => '{table}')")
+
+        print(f"[{table}] Starting compaction")
+        spark.sql(f"CALL lakehouse.system.rewrite_data_files(table => '{table}'{table_compaction_strategy})")
+        print(f"[{table}] Finished compaction")
+
+    print("All tables compacted. Waiting 25min before scheduling next run...")
+    time.sleep(25 * 60) # Assuming compaction takes 5 min run every 30 minutes
+----
+
+The scripts has a dictionary of all the tables to run maintenance on.
+The following procedures are run:
+
+==== https://iceberg.apache.org/docs/latest/spark-procedures/#expire_snapshots[expire_snapshots]
+
+> Each write/update/delete/upsert/compaction in Iceberg produces a new snapshot while keeping the old data and metadata around for snapshot isolation and time travel. The expire_snapshots procedure can be used to remove older snapshots and their files which are no longer needed.
+
+==== https://iceberg.apache.org/docs/latest/spark-procedures/#remove_orphan_files[remove_orphan_files]
+
+> Used to remove files which are not referenced in any metadata files of an Iceberg table and can thus be considered “orphaned”.
+
+==== https://iceberg.apache.org/docs/latest/spark-procedures/#rewrite_data_files[rewrite_data_files]
+
+> Iceberg tracks each data file in a table. More data files leads to more metadata stored in manifest files, and small data files causes an unnecessary amount of metadata and less efficient queries from file open costs. Iceberg can compact data files in parallel using Spark with the rewriteDataFiles action. This will combine small files into larger files to reduce metadata overhead and runtime file open cost.
+
+Some tables will also be sorted during rewrite, please have a look at the https://iceberg.apache.org/docs/latest/spark-procedures/#rewrite_data_files[documentation on rewrite_data_files].
+
 == Trino
 Trino is used to enable SQL access to the data.
 

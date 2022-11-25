@@ -397,8 +397,8 @@ data:
     # key: table name
     # value: compaction strategy
     tables_to_compact = {
-        "lakehouse.water_levels.measurements": ", strategy => 'sort', sort_order => 'timestamp DESC NULLS LAST,station_uuid ASC NULLS LAST'",
         "lakehouse.water_levels.stations": "",
+        "lakehouse.water_levels.measurements": ", strategy => 'sort', sort_order => 'timestamp DESC NULLS LAST,station_uuid ASC NULLS LAST'",
         "lakehouse.smart_city.shared_bikes_station_information": "",
         "lakehouse.smart_city.shared_bikes_station_status": ", strategy => 'sort', sort_order => 'last_reported DESC NULLS LAST,station_id ASC NULLS LAST'",
         "lakehouse.smart_city.shared_bikes_bike_status": "",
