@@ -1,8 +1,5 @@
 use clap::Parser;
-use cli_table::{
-    format::{Border, HorizontalLine, Separator},
-    Cell, Table,
-};
+use comfy_table::{presets::UTF8_FULL, Cell, ContentArrangement, Table};
 use indexmap::IndexMap;
 use k8s_openapi::api::{
     apps::v1::{Deployment, StatefulSet},
@@ -182,7 +179,17 @@ async fn list_services(
 
     match output_type {
         OutputType::Text => {
-            let mut table = vec![];
+            let mut table = Table::new();
+            table
+                .load_preset(UTF8_FULL)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .set_header(vec![
+                    Cell::new("Product"),
+                    Cell::new("Name"),
+                    Cell::new("Namespace"),
+                    Cell::new("Endpoints"),
+                    Cell::new("Extra infos"),
+                ]);
 
             let max_endpoint_name_length = output
                 .values()
@@ -208,36 +215,17 @@ async fn list_services(
                         .collect::<Vec<_>>()
                         .join("\n");
 
-                    table.push(vec![
-                        (&product_name).cell(),
-                        installed_product.name.as_str().cell(),
-                        installed_product
-                            .namespace
-                            .clone()
-                            .unwrap_or_default()
-                            .cell(),
-                        endpoints.cell(),
-                        installed_product.extra_infos.join("\n").cell(),
+                    table.add_row(vec![
+                        Cell::new(&product_name),
+                        Cell::new(installed_product.name),
+                        Cell::new(installed_product.namespace.unwrap_or_default()),
+                        Cell::new(endpoints),
+                        Cell::new(installed_product.extra_infos.join("\n")),
                     ]);
                 }
             }
-            let table = table
-                .table()
-                .title(vec![
-                    "PRODUCT".cell(),
-                    "NAME".cell(),
-                    "NAMESPACE".cell(),
-                    "ENDPOINTS".cell(),
-                    "EXTRA INFOS".cell(),
-                ])
-                .border(Border::builder().build())
-                .separator(
-                    Separator::builder()
-                        .row(Some(HorizontalLine::new(' ', ' ', ' ', ' ')))
-                        .build(),
-                );
 
-            print!("{}", table.display()?);
+            println!("{table}");
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output)?);

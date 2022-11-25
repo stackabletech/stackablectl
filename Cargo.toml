@@ -11,7 +11,7 @@ repository = "https://github.com/stackabletech/stackablectl"
 cached = { version = "0.40", features = ['async_tokio_rt_multi_thread'] }
 clap = { version = "4.0", features = ["derive", "cargo"] }
 clap_complete = "4.0"
-cli-table = "0.4"
+comfy-table = "6.1"
 env_logger = "0.9"
 indexmap = { version = "1.9", features = ["serde"] }
 k8s-openapi = { version = "0.16", default-features = false, features = ["v1_24"] }

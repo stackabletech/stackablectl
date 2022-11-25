@@ -1,6 +1,10 @@
 use crate::{arguments::OutputType, helpers, kind, operator, operator::Operator, CliArgs};
 use cached::proc_macro::cached;
 use clap::{ArgGroup, Parser, ValueHint};
+use comfy_table::{
+    presets::{NOTHING, UTF8_FULL},
+    Cell, ContentArrangement, Table,
+};
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{error, info, warn};
@@ -131,13 +135,23 @@ async fn list_releases(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     let output = get_releases().await;
     match output_type {
         OutputType::Text => {
-            println!("RELEASE            RELEASE DATE   DESCRIPTION");
-            for (release_name, release_entry) in output.releases {
-                println!(
-                    "{:18} {:14} {}",
-                    release_name, release_entry.release_date, release_entry.description,
-                );
+            let mut table = Table::new();
+            table
+                .load_preset(UTF8_FULL)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .set_header(vec![
+                    Cell::new("Release"),
+                    Cell::new("Release date"),
+                    Cell::new("Description"),
+                ]);
+            for (release_name, release) in output.releases {
+                table.add_row(vec![
+                    Cell::new(release_name),
+                    Cell::new(release.release_date),
+                    Cell::new(release.description),
+                ]);
             }
+            println!("{table}");
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output)?);
@@ -173,15 +187,35 @@ async fn describe_release(
 
     match output_type {
         OutputType::Text => {
-            println!("Release:            {}", output.release);
-            println!("Release date:       {}", output.release_date);
-            println!("Description:        {}", output.description);
-            println!("Included products:");
-            println!();
-            println!("PRODUCT             OPERATOR VERSION");
+            let mut table = Table::new();
+            table
+                .load_preset(NOTHING)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .add_row(vec![Cell::new("Release"), Cell::new(output.release)])
+                .add_row(vec![
+                    Cell::new("Release date"),
+                    Cell::new(output.release_date),
+                ])
+                .add_row(vec![
+                    Cell::new("Description"),
+                    Cell::new(output.description),
+                ])
+                .add_row(vec![Cell::new("Included products")])
+                .add_row(vec![""]);
+            println!("{table}");
+
+            let mut table = Table::new();
+            table
+                .load_preset(UTF8_FULL)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .set_header(vec![Cell::new("Product"), Cell::new("Operator version")]);
             for (product_name, product) in output.products {
-                println!("{:19} {}", product_name, product.operator_version);
+                table.add_row(vec![
+                    Cell::new(product_name),
+                    Cell::new(product.operator_version),
+                ]);
             }
+            println!("{table}");
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output)?);
