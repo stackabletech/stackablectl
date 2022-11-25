@@ -114,5 +114,5 @@ demos:
       - pyspark
       - ny-taxi-data
     manifests:
-      - plainYaml: demos/jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/load-test-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/load-test-data.yaml
  

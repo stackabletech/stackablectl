@@ -304,8 +304,8 @@ stacks:
       - hdfs
       - pyspark
     manifests:
-      - plainYaml: stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
-      - plainYaml: stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
       - helmChart:
           releaseName: jupyterhub
           name: jupyterhub
