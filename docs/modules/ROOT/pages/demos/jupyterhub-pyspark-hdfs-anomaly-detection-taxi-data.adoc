@@ -6,16 +6,12 @@ This demo can be installed on most cloud managed Kubernetes clusters as well as 
 
 [source,bash]
 ----
-$ kubectl create namespace jupyterhub-demo && \
-stackablectl --namespace jupyterhub-demo demo install jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
+stackablectl demo install jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
 ----
 
 [NOTE]
 ====
-Some container images used by this demo are quite large and some steps may take several minutes to complete. If you install this demo locally, on a developer laptop for example, this can lead to timeouts during the installation. If this happens, it's safe to rerun the `stackablectl` command from above:
-----
-stackablectl --namespace jupyterhub-demo demo install jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
-----
+Some container images used by this demo are quite large and some steps may take several minutes to complete. If you install this demo locally, on a developer laptop for example, this can lead to timeouts during the installation. If this happens, it's safe to rerun the `stackablectl` command from above.
 
 For more details on how to install Stackable demos see the xref:commands/demo.adoc#_install_demo[documentation].
 ====
@@ -41,7 +37,7 @@ Before trying out the notebook example in Jupyter, check if the taxi data was lo
 
 [source,bash]
 ----
-$ kubectl --namespace jupyterhub-demo exec -c namenode -it hdfs-namenode-default-0 -- /bin/bash -c "./bin/hdfs dfs -ls /ny-taxi-data/raw"
+$ kubectl exec -c namenode -it hdfs-namenode-default-0 -- /bin/bash -c "./bin/hdfs dfs -ls /ny-taxi-data/raw"
 Found 1 items
 -rw-r--r--   3 stackable supergroup  314689382 2022-11-23 15:01 /ny-taxi-data/raw/fhvhv_tripdata_2020-09.parquet
 ----
@@ -54,7 +50,7 @@ Have a look at the available Pods before logging in (operator pods are left out 
 
 [source,bash]
 ----
-$ kubectl get pods --namespace jupyterhub-demo
+$ kubectl get pods
 NAME                                             READY   STATUS      RESTARTS   AGE
 continuous-image-puller-87dzk                    1/1     Running     0          29m
 continuous-image-puller-8qq7m                    1/1     Running     0          29m
@@ -74,7 +70,7 @@ JupyterHub will create a Pod for each active user. In order to reach the Jupyter
 
 [source,bash]
 ----
-$ kubectl --namespace jupyterhub-demo port-forward service/proxy-public 8080:http
+$ kubectl port-forward service/proxy-public 8080:http
 ----
 
 Now access the JupyterHub web interface via:
@@ -87,13 +83,13 @@ You should see the JupyterHub login page.
 
 image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_login.png[]
 
-Log in with username `demo` and password `demo`.
+Log in with username `admin` and password `admin`.
 
-There should appear a new pod called `jupyter-demo` (operator pods are left out for clarity, you will see more Pods):
+There should appear a new pod called `jupyter-admin` (operator pods are left out for clarity, you will see more Pods):
 
 [source,bash]
 ----
-$ kubectl get pods --namespace jupyterhub-demo
+$ kubectl get pods
 NAME                                             READY   STATUS      RESTARTS   AGE
 continuous-image-puller-87dzk                    1/1     Running     0          29m
 continuous-image-puller-8qq7m                    1/1     Running     0          29m
@@ -103,7 +99,7 @@ hdfs-journalnode-default-0                       1/1     Running     0          
 hdfs-namenode-default-0                          2/2     Running     0          29m
 hdfs-namenode-default-1                          2/2     Running     0          28m
 hub-66c6798b9c-q877t                             1/1     Running     0          29m
-jupyter-demo                                     1/1     Running     0          20m
+jupyter-admin                                    1/1     Running     0          20m
 load-test-data-wsqpk                             0/1     Completed   0          25m
 proxy-65955f56cf-tf4ns                           1/1     Running     0          29m
 user-scheduler-8d888c6d4-jb4mm                   1/1     Running     0          29m
