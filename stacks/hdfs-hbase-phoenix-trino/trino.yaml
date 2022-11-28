@@ -13,6 +13,17 @@ spec:
       multiUser:
         userCredentialsSecret:
           name: trino-users
+  env:
+    - name: HBASE_CONF_DIR
+      value: "/stackable/conf/"
+  volumeMounts:
+    - mountPath: /stackable/conf/hdfs-site.xml
+      name: config-volume-hdfs
+      subPath: hdfs-site.xml
+  volumes:
+    - name: config-volume-hbase
+      configMap:
+        name: hbase-master-default
   opa:
     configMapName: opa
     package: trino
