@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: create-hfile-and-import-to-hbase # this jobs create Hfiles first (=dedicated Hbase file format with metadata for the HCatalog.) Afterwards executing a bulkload to Hbase.
+  name: create-hfile-and-import-to-hbase-4 # this jobs create Hfiles first (=dedicated Hbase file format with metadata for the HCatalog.) Afterwards executing a bulkload to Hbase.
 spec:
   template:
     spec:
@@ -25,13 +25,11 @@ spec:
             - mountPath: /stackable/conf/hbase-env.sh
               name: config-volume-hbase
               subPath: hbase-env.sh
-          command: [ "bash", "-c", "/stackable/hbase/bin/hbase \
-                                    org.apache.hadoop.hbase.mapreduce.ImportTsv \
-                                    -Dimporttsv.separator=, \
-                                    -Dimporttsv.skip.bad.lines=true \
-                                    -Dimporttsv.columns=HBASE_ROW_KEY, cf:timestamp, cf:event, cf:itemid, cf:transactionid \
+          command: [ "bash", "-c", "/stackable/hbase/bin/hbase org.apache.hadoop.hbase.mapreduce.ImportTsv \
+                                    -Dimporttsv.columns=HBASE_ROW_KEY,timestamp,visitorid,event,itemid,transactionid \
+                                    -Dimporttsv.separator=';' \
                                     -Dimporttsv.bulk.output=hdfs://hdfs/data/hfile \
-                                    events hdfs://hdfs/data/raw/events.tgz \
+                                    events hdfs://hdfs/data/raw/hashed_events.gz \
                                     && /stackable/hbase/bin/hbase \
                                     org.apache.hadoop.hbase.tool.LoadIncrementalHFiles \
                                     hdfs://hdfs/data/hfile \

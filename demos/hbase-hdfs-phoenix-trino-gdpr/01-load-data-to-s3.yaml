@@ -18,7 +18,7 @@ spec:
                                    mc mb $MINIO_ALIAS/$MINIO_BUCKET_NAME && \
                                    mc policy set public $MINIO_ALIAS/$MINIO_BUCKET_NAME && \
                                    mc cp *.tgz $MINIO_ALIAS/$MINIO_BUCKET_NAME && \
-                                   sleep infinity"]
+                                   sleep infinity"] #https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset?select=events.csv
           stdin: true
           tty: true
           env:

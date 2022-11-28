@@ -47,7 +47,7 @@ spec:
                                   -D fs.s3a.access.key=$MINIO_SERVER_ACCESS_KEY \
                                   -D fs.s3a.secret.key=$MINIO_SERVER_SECRET_KEY \
                                   -D fs.s3a.aws.credentials.provider=org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider \
-                                  s3a://$MINIO_BUCKET_NAME/hashed_events.tgz \
+                                  s3a://$MINIO_BUCKET_NAME/hashed_events.gz \
                                   hdfs://hdfs/data/raw"]
           volumeMounts:
             - name: config-volume-hdfs
