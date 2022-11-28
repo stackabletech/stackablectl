@@ -41,7 +41,7 @@ data:
       name: spark-ingest-into-lakehouse
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/sandbox/sbernauer/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0 # docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0 # docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable0.2.0
+      sparkImage: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0-1.1.0
       mode: cluster
       mainApplicationFile: local:///stackable/spark/jobs/spark-ingest-into-lakehouse.py
       # deps:
@@ -117,11 +117,11 @@ data:
     # TODO add Iceberg option 'write.object-storage.enabled' = true
     # Currently drop tables in Trino won't remove all the data files in that case...
 
-    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.water_levels.measurements (station_uuid string, timestamp timestamp, value float) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.water_levels.measurements (station_uuid string, timestamp timestamp, value float) USING iceberg PARTITIONED BY (days(timestamp)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.water_levels.stations (station_uuid string, number bigint, short_name string, long_name string, km float, agency string, latitude double, longitude double, water_short_name string, water_long_name string) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
-    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_bike_status (bike_id string, vehicle_type_id string, latitude double, longitude double, is_reserved boolean, is_disabled boolean, last_reported timestamp) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_bike_status (bike_id string, vehicle_type_id string, latitude double, longitude double, is_reserved boolean, is_disabled boolean, last_reported timestamp) USING iceberg PARTITIONED BY (days(last_reported)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_information (station_id string, name string, latitude double, longitude double) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
-    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_status (station_id string, num_bikes_available short, is_installed boolean, is_renting boolean, is_returning boolean, last_reported timestamp) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_status (station_id string, num_bikes_available short, is_installed boolean, is_renting boolean, is_returning boolean, last_reported timestamp) USING iceberg PARTITIONED BY (days(last_reported)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
 
 
 
