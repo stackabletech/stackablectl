@@ -2,7 +2,7 @@ use crate::{arguments::OutputType, helm, helm::HELM_REPOS, helpers, kind, kube, 
 use cached::proc_macro::cached;
 use clap::{Parser, ValueHint};
 use comfy_table::{
-    presets::{ASCII_HORIZONTAL_ONLY, NOTHING},
+    presets::{NOTHING, UTF8_FULL},
     Cell, ContentArrangement, Table,
 };
 use indexmap::IndexMap;
@@ -127,7 +127,7 @@ async fn list_stacks(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
         OutputType::Text => {
             let mut table = Table::new();
             table
-                .load_preset(ASCII_HORIZONTAL_ONLY)
+                .load_preset(UTF8_FULL)
                 .set_content_arrangement(ContentArrangement::Dynamic)
                 .set_header(vec![
                     Cell::new("Stack"),
