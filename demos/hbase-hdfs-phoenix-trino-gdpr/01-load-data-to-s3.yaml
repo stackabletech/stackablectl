@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: load-data-to-s3.yaml
+  name: load-data-to-s3
 spec:
   template:
     spec:
