@@ -3798,7 +3798,7 @@
                     </entry>
                     <entry>
                         <key>Remote URL</key>
-                        <value>https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/${station_uuid}/W/measurements.json?start=PT15M</value>
+                        <value>https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/${station_uuid}/W/measurements.json?start=PT30M</value>
                     </entry>
                     <entry>
                         <key>disable-http2</key>
@@ -3939,7 +3939,7 @@
                 <yieldDuration>1 sec</yieldDuration>
             </config>
             <executionNodeRestricted>false</executionNodeRestricted>
-            <name>Get 15 minutes of historic data</name>
+            <name>Get 30 minutes of historic data</name>
             <relationships>
                 <autoTerminate>true</autoTerminate>
                 <name>Failure</name>
