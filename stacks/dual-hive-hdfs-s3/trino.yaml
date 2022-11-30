@@ -26,6 +26,24 @@ spec:
         configMap: hive-s3
       s3:
         reference: minio
+  configOverrides:
+    hive.iceberg-catalog-name: iceberg
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: iceberg
+  labels:
+    trino: trino
+spec:
+  connector:
+    iceberg:
+      metastore:
+        configMap: hive-s3
+      s3:
+        reference: minio
+  configOverrides:
+    iceberg.hive-catalog-name: hives3
 ---
 apiVersion: trino.stackable.tech/v1alpha1
 kind: TrinoCatalog
