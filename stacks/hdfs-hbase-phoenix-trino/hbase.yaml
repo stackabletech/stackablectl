@@ -12,6 +12,11 @@ spec:
   masters:
     roleGroups:
       default:
+        configOverrides:
+          hbase-site.xml:
+            phoenix.log.saltBuckets: "2"
+            hbase.regionserver.wal.codec: "org.apache.hadoop.hbase.regionserver.wal.IndexedWALEditCodec"
+            phoenix.schema.isNamespaceMappingEnabled: "true"
         replicas: 1
     config:
       resources:
@@ -23,6 +28,11 @@ spec:
   regionServers:
     roleGroups:
       default:
+        configOverrides:
+          hbase-site.xml:
+            phoenix.log.saltBuckets: "2"
+            hbase.regionserver.wal.codec: "org.apache.hadoop.hbase.regionserver.wal.IndexedWALEditCodec"
+            phoenix.schema.isNamespaceMappingEnabled: "true"
         replicas: 2
     config:
       resources:
@@ -34,6 +44,11 @@ spec:
   restServers:
     roleGroups:
       default:
+        configOverrides:
+          hbase-site.xml:
+            phoenix.log.saltBuckets: "2"
+            hbase.regionserver.wal.codec: "org.apache.hadoop.hbase.regionserver.wal.IndexedWALEditCodec"
+            phoenix.schema.isNamespaceMappingEnabled: "true"
         replicas: 1
     config:
       resources:

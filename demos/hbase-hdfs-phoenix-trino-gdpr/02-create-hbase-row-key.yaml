@@ -17,8 +17,7 @@ spec:
             - name: CSV_FILE_NAME
               value: "events.csv"
           command: ["bash", "-c", "pip install pandas minio && \  
-                                   python -u /tmp/script/script.py -i $INPUT_FILE_NAME -o $OUTPUT_FILE_NAME -c $CSV_FILE_NAME && \                                    
-                                    sleep infinity"]
+                                   python -u /tmp/script/script.py -i $INPUT_FILE_NAME -o $OUTPUT_FILE_NAME -c $CSV_FILE_NAME"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
