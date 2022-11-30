@@ -46,7 +46,7 @@ data:
       mainApplicationFile: local:///stackable/spark/jobs/spark-ingest-into-lakehouse.py
       # deps:
       #   packages:
-      #     - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:1.0.0
+      #     - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:1.1.0
       #     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0
       sparkConf:
         spark.hadoop.fs.s3a.endpoint: http://minio:9000
