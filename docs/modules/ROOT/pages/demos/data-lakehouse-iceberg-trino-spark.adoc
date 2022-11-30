@@ -67,7 +67,7 @@ Iceberg offers out-of-the-box tools for this.
 
 * *Hidden partitioning:*
 Image you have a table `sales (day varchar, ts timestamp)` partitioned by `day`.
-Lot's of times users would run a statement such as `select count(\*) where ts > now() - interval 1 day` resulting in a full table scan as the partition column `day` was not filtered in the query?
+Lot's of times users would run a statement such as `select count(\*) where ts > now() - interval 1 day` resulting in a full table scan as the partition column `day` was not filtered in the query.
 Iceberg resolves this problem by using hidden partitions.
 In Iceberg your table would look like `sales (ts timestamp) with (partitioning = ARRAY['day(ts)'])`.
 The column `day` is not needed anymore, and the query `select count(\*) where ts > now() - interval 1 day` would use partition pruning as expected to only read one the partitions from today and yesterday.
