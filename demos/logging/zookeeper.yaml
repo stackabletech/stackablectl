@@ -4,7 +4,10 @@ kind: ZookeeperCluster
 metadata:
   name: simple-zk
 spec:
-  version: 3.8.0-stackable0.9.0
+  image:
+    productVersion: 3.8.0
+    stackableVersion: 0.9.0
+    repo: docker.stackable.tech/sandbox/logging
   vectorAggregatorConfigMapName: vector-aggregator-discovery
   servers:
     roleGroups:
