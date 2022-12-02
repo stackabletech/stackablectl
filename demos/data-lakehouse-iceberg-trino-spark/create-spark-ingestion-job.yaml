@@ -165,7 +165,7 @@ data:
     .option("subscribe", "water_levels_stations") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 10000) \
-    .option("failOnDataLoss", "true") \
+    .option("failOnDataLoss", "false") \
     .load() \
     .selectExpr("cast(key as string)", "cast(value as string)", "timestamp") \
     .withColumn("json", from_json(col("value"), schema)) \
@@ -217,7 +217,7 @@ data:
     .option("subscribe", "water_levels_measurements") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 50000000) \
-    .option("failOnDataLoss", "true") \
+    .option("failOnDataLoss", "false") \
     .load() \
     .selectExpr("cast(key as string)", "cast(value as string)") \
     .withColumn("json", from_json(col("value"), schema)) \
@@ -270,7 +270,7 @@ data:
     .option("subscribe", "shared_bikes_station_information") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 10000000) \
-    .option("failOnDataLoss", "true") \
+    .option("failOnDataLoss", "false") \
     .load() \
     .selectExpr("cast(key as string)", "cast(value as string)", "timestamp") \
     .withColumn("json", from_json(col("value"), schema)) \
@@ -321,7 +321,7 @@ data:
     .option("subscribe", "shared_bikes_station_status") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 10000000) \
-    .option("failOnDataLoss", "true") \
+    .option("failOnDataLoss", "false") \
     .load() \
     .selectExpr("cast(key as string)", "cast(value as string)") \
     .withColumn("json", from_json(col("value"), schema)) \
@@ -373,7 +373,7 @@ data:
     .option("subscribe", "shared_bikes_bike_status") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 10000) \
-    .option("failOnDataLoss", "true") \
+    .option("failOnDataLoss", "false") \
     .load() \
     .selectExpr("cast(key as string)", "cast(value as string)") \
     .withColumn("json", from_json(col("value"), schema)) \
