@@ -61,6 +61,6 @@ jobs:
       - name: Rename binary file
         run: mv target/${{ matrix.target }}/release/stackablectl${{ matrix.file-suffix }} stackablectl-${{ matrix.target }}${{ matrix.file-suffix }}
       - name: Upload Release binaries
-        uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5 # tag=v1
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1
         with:
           files: stackablectl-${{ matrix.target }}${{ matrix.file-suffix }}
