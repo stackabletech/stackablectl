@@ -1,5 +1,9 @@
 use crate::{arguments::OutputType, helm, helm::HELM_REPOS, kind, AVAILABLE_OPERATORS};
 use clap::{Parser, ValueHint};
+use comfy_table::{
+    presets::{NOTHING, UTF8_FULL},
+    Cell, ContentArrangement, Table,
+};
 use indexmap::IndexMap;
 use log::{info, warn};
 use semver::Version;
@@ -114,14 +118,18 @@ async fn list_operators(output_type: &OutputType) -> Result<(), Box<dyn Error>> 
 
     match output_type {
         OutputType::Text => {
-            println!("OPERATOR           STABLE VERSIONS");
-            for (operator, operator_entry) in output {
-                println!(
-                    "{:18} {}",
-                    operator,
-                    operator_entry.stable_versions.join(", ")
-                );
+            let mut table = Table::new();
+            table
+                .load_preset(UTF8_FULL)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .set_header(vec![Cell::new("Operator"), Cell::new("Stable versions")]);
+            for (operator_name, operator) in output {
+                table.add_row(vec![
+                    Cell::new(operator_name),
+                    Cell::new(operator.stable_versions.join(", ")),
+                ]);
             }
+            println!("{table}");
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output)?);
@@ -152,10 +160,24 @@ async fn describe_operator(operator: &str, output_type: &OutputType) -> Result<(
 
     match output_type {
         OutputType::Text => {
-            println!("Operator:           {}", output.operator);
-            println!("Stable versions:    {}", output.stable_versions.join(", "));
-            println!("Test versions:      {}", output.test_versions.join(", "));
-            println!("Dev versions:       {}", output.dev_versions.join(", "));
+            let mut table = Table::new();
+            table
+                .load_preset(NOTHING)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .add_row(vec![Cell::new("Operator"), Cell::new(output.operator)])
+                .add_row(vec![
+                    Cell::new("Stable versions"),
+                    Cell::new(output.stable_versions.join(", ")),
+                ])
+                .add_row(vec![
+                    Cell::new("Test versions"),
+                    Cell::new(output.test_versions.join(", ")),
+                ])
+                .add_row(vec![
+                    Cell::new("Dev versions"),
+                    Cell::new(output.dev_versions.join(", ")),
+                ]);
+            println!("{table}");
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output)?);
