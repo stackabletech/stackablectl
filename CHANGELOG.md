@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Print CLI tables using [comfy-table](https://crates.io/crates/comfy-table) ([#176](https://github.com/stackabletech/stackablectl/pull/176))
+
 ## [0.6.0] - 2022-10-28
 
 ### Added
