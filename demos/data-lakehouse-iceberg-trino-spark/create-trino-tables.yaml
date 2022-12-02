@@ -566,10 +566,27 @@ data:
 
 
 
-    # At this point Spark should have created the lakehouse.smart_city.shared_bikes_* tables
+    # At this point Spark should have created the needed underlying tables
+    assert run_query(connection, """
+        create or replace view lakehouse.smart_city.shared_bikes_station_status_latest as
+        select * from lakehouse.smart_city.shared_bikes_station_status
+        where (station_id, last_reported) in (select station_id, max(last_reported) from lakehouse.smart_city.shared_bikes_station_status group by station_id)
+    """)[0][0] == True
 
     assert run_query(connection, """
         create or replace view lakehouse.smart_city.shared_bikes_station_status_joined as
         select i.name, s.*, i.latitude, i.longitude from lakehouse.smart_city.shared_bikes_station_status as s
         left join lakehouse.smart_city.shared_bikes_station_information as i on s.station_id = i.station_id
+    """)[0][0] == True
+
+    assert run_query(connection, """
+        create or replace view lakehouse.smart_city.shared_bikes_station_status_latest_joined as
+        select i.name, s.*, i.latitude, i.longitude from lakehouse.smart_city.shared_bikes_station_status_latest as s
+        left join lakehouse.smart_city.shared_bikes_station_information as i on s.station_id = i.station_id
+    """)[0][0] == True
+
+    assert run_query(connection, """
+        create or replace view lakehouse.water_levels.measurements_joined as
+        select s.short_name, m.*, s.number, s.long_name, s.km, s.agency, s.latitude, s.longitude, s.water_short_name, s.water_long_name
+        from lakehouse.water_levels.measurements as m left join lakehouse.water_levels.stations as s on m.station_uuid = s.station_uuid
     """)[0][0] == True

@@ -41,12 +41,12 @@ data:
       name: spark-ingest-into-lakehouse
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0 # docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable0.2.0
+      sparkImage: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0-1.1.0
       mode: cluster
       mainApplicationFile: local:///stackable/spark/jobs/spark-ingest-into-lakehouse.py
       # deps:
       #   packages:
-      #     - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:0.14.1
+      #     - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:1.1.0
       #     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0
       sparkConf:
         spark.hadoop.fs.s3a.endpoint: http://minio:9000
@@ -57,6 +57,9 @@ data:
         spark.sql.catalog.lakehouse: org.apache.iceberg.spark.SparkCatalog
         spark.sql.catalog.lakehouse.type: hive
         spark.sql.catalog.lakehouse.uri: thrift://hive-iceberg:9083
+        # Every merge into statements creates 8 files.
+        # Paralleling is enough for the demo, might need to be increased (or omitted entirely) when merge larger data volumes
+        spark.sql.shuffle.partitions: "8"
       volumes:
         - name: script
           configMap:
@@ -72,7 +75,7 @@ data:
             min: "1"
             max: "1"
           memory:
-            limit: "2Gi"
+            limit: "4Gi"
         volumeMounts:
           - name: script
             mountPath: /stackable/spark/jobs
@@ -106,40 +109,41 @@ data:
     spark.sql("CREATE SCHEMA IF NOT EXISTS lakehouse.water_levels LOCATION 's3a://lakehouse/water-levels/'")
     spark.sql("CREATE SCHEMA IF NOT EXISTS lakehouse.smart_city LOCATION 's3a://lakehouse/smart-city/'")
 
-    # Todo add PARTITIONED BY (days(timestamp))
+    # TODO add PARTITIONED BY (days(timestamp))
     # Currently fails with org.apache.spark.sql.AnalysisException: days(timestamp) ASC NULLS FIRST is not currently supported
     # Don't forget to add option("fanout-enabled", "true") to iceberg sink as well
     # see https://github.com/apache/iceberg/issues/5625
-    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.water_levels.measurements (station_uuid string, timestamp timestamp, value float) USING iceberg")
-    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.water_levels.stations (uuid string, number bigint, short_name string, long_name string, km float, agency string, latitude double, longitude double, water_short_name string, water_long_name string) USING iceberg")
-    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_bike_status (bike_id string, vehicle_type_id string, latitude double, longitude double, is_reserved boolean, is_disabled boolean, last_reported timestamp) USING iceberg")
-    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_information (station_id string, name string, latitude double, longitude double) USING iceberg")
-    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_status (station_id string, num_bikes_available short, is_installed boolean, is_renting boolean, is_returning boolean, vehicle_types_available map<string,short>, last_reported timestamp) USING iceberg")
 
-    schema = StructType([ 
-        StructField("station_uuid", StringType(), True), 
-        StructField("timestamp", TimestampType(), True), 
-        StructField("value", FloatType(), True), 
-    ])
-    spark \
-    .readStream \
-    .format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:9092") \
-    .option("subscribe", "water_levels_measurements") \
-    .option("startingOffsets", "earliest") \
-    .option("maxOffsetsPerTrigger", 50000000) \
-    .load() \
-    .selectExpr("cast(key as string)", "cast(value as string)") \
-    .withColumn("json", from_json(col("value"), schema)) \
-    .select("json.station_uuid", "json.timestamp", "json.value") \
-    .writeStream \
-    .queryName("ingest water_level measurements") \
-    .format("iceberg") \
-    .outputMode("append") \
-    .trigger(processingTime='5 minutes') \
-    .option("path", "lakehouse.water_levels.measurements") \
-    .option("checkpointLocation", "s3a://lakehouse/water-levels/measurements/checkpoints") \
-    .start()
+    # TODO add Iceberg option 'write.object-storage.enabled' = true
+    # Currently drop tables in Trino won't remove all the data files in that case...
+
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.water_levels.measurements (station_uuid string, timestamp timestamp, value float) USING iceberg PARTITIONED BY (days(timestamp)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.water_levels.stations (station_uuid string, number bigint, short_name string, long_name string, km float, agency string, latitude double, longitude double, water_short_name string, water_long_name string) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_bike_status (bike_id string, vehicle_type_id string, latitude double, longitude double, is_reserved boolean, is_disabled boolean, last_reported timestamp) USING iceberg PARTITIONED BY (days(last_reported)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_information (station_id string, name string, latitude double, longitude double) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_status (station_id string, num_bikes_available short, is_installed boolean, is_renting boolean, is_returning boolean, last_reported timestamp) USING iceberg PARTITIONED BY (days(last_reported)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+
+
+
+
+
+
+
+    def upsertWaterLevelsStationInformation(microBatchOutputDF, batchId):
+      microBatchOutputDF.createOrReplaceTempView("waterLevelsStationInformationUpserts")
+
+      microBatchOutputDF._jdf.sparkSession().sql("""
+        MERGE INTO lakehouse.water_levels.stations as t
+        USING
+          (
+            SELECT station_uuid, number, short_name, long_name, km, agency, latitude, longitude, water_short_name, water_long_name
+            FROM waterLevelsStationInformationUpserts
+            WHERE (station_uuid, kafka_timestamp) IN (SELECT station_uuid, max(kafka_timestamp) FROM waterLevelsStationInformationUpserts GROUP BY station_uuid)
+          ) as u
+        ON u.station_uuid = t.station_uuid
+        WHEN MATCHED THEN UPDATE SET *
+        WHEN NOT MATCHED THEN INSERT *
+      """)
 
     schema = StructType([ \
         StructField("uuid", StringType(), True), \
@@ -161,28 +165,97 @@ data:
     .option("subscribe", "water_levels_stations") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 10000) \
+    .option("failOnDataLoss", "true") \
     .load() \
-    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .selectExpr("cast(key as string)", "cast(value as string)", "timestamp") \
     .withColumn("json", from_json(col("value"), schema)) \
     .selectExpr( \
-        "json.uuid", \
+        "json.uuid as station_uuid", \
         "cast(json.number as bigint) as number", \
         "json.shortname as short_name", \
         "json.longname as long_name", \
-        "json.km", "json.agency", \
+        "json.km", \
+        "json.agency", \
         "json.latitude", \
         "json.longitude", \
         "json.water.shortname as water_short_name", \
-        "json.water.longname as water_long_name" \
+        "json.water.longname as water_long_name", \
+        "timestamp as kafka_timestamp" \
     ) \
     .writeStream \
     .queryName("ingest water_level stations") \
     .format("iceberg") \
-    .outputMode("append") \
+    .foreachBatch(upsertWaterLevelsStationInformation) \
+    .outputMode("update") \
     .trigger(processingTime='2 minutes') \
-    .option("path", "lakehouse.water_levels.stations") \
-    .option("checkpointLocation", "s3a://lakehouse/water-levels/stations/checkpoints") \
+    .option("checkpointLocation", "s3a://lakehouse/water-levels/checkpoints/stations") \
     .start()
+
+
+
+
+
+    def upsertWaterLevelsMeasurements(microBatchOutputDF, batchId):
+      microBatchOutputDF.createOrReplaceTempView("waterLevelsMeasurementsUpserts")
+
+      microBatchOutputDF._jdf.sparkSession().sql("""
+        MERGE INTO lakehouse.water_levels.measurements as t
+        USING (SELECT DISTINCT * FROM waterLevelsMeasurementsUpserts) as u
+        ON u.station_uuid = t.station_uuid AND u.timestamp = t.timestamp
+        WHEN NOT MATCHED THEN INSERT *
+      """)
+
+    schema = StructType([ \
+        StructField("station_uuid", StringType(), True), \
+        StructField("timestamp", TimestampType(), True), \
+        StructField("value", FloatType(), True), \
+    ])
+    spark \
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("subscribe", "water_levels_measurements") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 50000000) \
+    .option("failOnDataLoss", "true") \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .withColumn("json", from_json(col("value"), schema)) \
+    .select("json.station_uuid", "json.timestamp", "json.value") \
+    .writeStream \
+    .queryName("ingest water_level measurements") \
+    .format("iceberg") \
+    .foreachBatch(upsertWaterLevelsMeasurements) \
+    .outputMode("update") \
+    .trigger(processingTime='2 minutes') \
+    .option("checkpointLocation", "s3a://lakehouse/water-levels/checkpoints/measurements") \
+    .start()
+
+
+
+
+
+
+
+
+    def upsertSharedBikesStationInformation(microBatchOutputDF, batchId):
+      microBatchOutputDF.createOrReplaceTempView("sharedBikesStationInformationUpserts")
+
+      # We have to remove all station_id with less than 5 characters as they contain duplicates
+      # This causes org.apache.spark.SparkException: The ON search condition of the MERGE statement matched a single row from the target table with multiple rows of the source table. This could result in the target row being operated on more than once with an update or delete operation and is not allowed.
+      microBatchOutputDF._jdf.sparkSession().sql("""
+        MERGE INTO lakehouse.smart_city.shared_bikes_station_information as t
+        USING
+          (
+            SELECT station_id, name, latitude, longitude
+            FROM sharedBikesStationInformationUpserts
+            WHERE LENGTH(station_id) >= 5
+              AND (station_id, kafka_timestamp) IN (SELECT station_id, max(kafka_timestamp) FROM sharedBikesStationInformationUpserts GROUP BY station_id)
+          ) as u
+        ON u.station_id = t.station_id
+        WHEN MATCHED THEN UPDATE SET *
+        WHEN NOT MATCHED THEN INSERT *
+      """)
 
     schema = StructType([ \
         StructField("station_id", StringType(), True), \
@@ -196,19 +269,41 @@ data:
     .option("kafka.bootstrap.servers", "kafka:9092") \
     .option("subscribe", "shared_bikes_station_information") \
     .option("startingOffsets", "earliest") \
-    .option("maxOffsetsPerTrigger", 10000) \
+    .option("maxOffsetsPerTrigger", 10000000) \
+    .option("failOnDataLoss", "true") \
     .load() \
-    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .selectExpr("cast(key as string)", "cast(value as string)", "timestamp") \
     .withColumn("json", from_json(col("value"), schema)) \
-    .selectExpr("json.station_id", "json.name as name", "json.lat as latitude", "json.lon as longitude") \
+    .selectExpr("json.station_id", "json.name as name", "json.lat as latitude", "json.lon as longitude", "timestamp as kafka_timestamp") \
     .writeStream \
     .queryName("ingest smart_city shared_bikes_station_information") \
     .format("iceberg") \
-    .outputMode("append") \
+    .foreachBatch(upsertSharedBikesStationInformation) \
+    .outputMode("update") \
     .trigger(processingTime='2 minutes') \
-    .option("path", "lakehouse.smart_city.shared_bikes_station_information") \
-    .option("checkpointLocation", "s3a://lakehouse/smart-city/shared_bikes_station_information/checkpoints") \
+    .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/shared_bikes_station_information") \
     .start()
+
+
+
+
+
+
+    def upsertSharedBikesStationStatus(microBatchOutputDF, batchId):
+      microBatchOutputDF.createOrReplaceTempView("sharedBikesStationStatusUpserts")
+
+      # Upsert into the shared_bikes_station_status table, only inserting records if they don't already exist.
+      # In case they don't exist, we only insert the new records instead of replacing the old to keep the history,
+      # thus enabling to build reports on the usage change over time
+      # 
+      # We have to remove all station_id with less than 5 characters as they contain duplicates
+      # This causes org.apache.spark.SparkException: The ON search condition of the MERGE statement matched a single row from the target table with multiple rows of the source table. This could result in the target row being operated on more than once with an update or delete operation and is not allowed.
+      microBatchOutputDF._jdf.sparkSession().sql("""
+        MERGE INTO lakehouse.smart_city.shared_bikes_station_status as t
+        USING (SELECT DISTINCT station_id, num_bikes_available, is_installed, is_renting, is_returning, last_reported FROM sharedBikesStationStatusUpserts WHERE LENGTH(station_id) >= 5) as u
+        ON u.station_id = t.station_id AND u.last_reported = t.last_reported
+        WHEN NOT MATCHED THEN INSERT *
+      """)
 
     schema = StructType([ \
         StructField("station_id", StringType(), True), \
@@ -225,7 +320,8 @@ data:
     .option("kafka.bootstrap.servers", "kafka:9092") \
     .option("subscribe", "shared_bikes_station_status") \
     .option("startingOffsets", "earliest") \
-    .option("maxOffsetsPerTrigger", 10000) \
+    .option("maxOffsetsPerTrigger", 10000000) \
+    .option("failOnDataLoss", "true") \
     .load() \
     .selectExpr("cast(key as string)", "cast(value as string)") \
     .withColumn("json", from_json(col("value"), schema)) \
@@ -235,17 +331,31 @@ data:
         "json.is_installed", \
         "json.is_renting", \
         "json.is_returning", \
-        "map_from_arrays(json.vehicle_types_available.vehicle_type_id, json.vehicle_types_available.count) as vehicle_types_available", \
         "json.last_reported" \
     ) \
     .writeStream \
     .queryName("ingest smart_city shared_bikes_station_status") \
     .format("iceberg") \
-    .outputMode("append") \
+    .foreachBatch(upsertSharedBikesStationStatus) \
+    .outputMode("update") \
     .trigger(processingTime='2 minutes') \
-    .option("path", "lakehouse.smart_city.shared_bikes_station_status") \
-    .option("checkpointLocation", "s3a://lakehouse/smart-city/shared_bikes_station_status/checkpoints") \
+    .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/shared_bikes_station_status") \
     .start()
+
+
+
+
+
+
+    def upsertSharedBikesBikeStatus(microBatchOutputDF, batchId):
+      microBatchOutputDF.createOrReplaceTempView("sharedBikesBikeStatusUpserts")
+
+      microBatchOutputDF._jdf.sparkSession().sql("""
+        MERGE INTO lakehouse.smart_city.shared_bikes_bike_status as t
+        USING (SELECT DISTINCT bike_id, vehicle_type_id, latitude, longitude, is_reserved, is_disabled, last_reported FROM sharedBikesBikeStatusUpserts) as u
+        ON u.bike_id = t.bike_id AND u.last_reported = t.last_reported
+        WHEN NOT MATCHED THEN INSERT *
+      """)
 
     schema = StructType([ \
         StructField("lat", DoubleType(), True), \
@@ -263,6 +373,7 @@ data:
     .option("subscribe", "shared_bikes_bike_status") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 10000) \
+    .option("failOnDataLoss", "true") \
     .load() \
     .selectExpr("cast(key as string)", "cast(value as string)") \
     .withColumn("json", from_json(col("value"), schema)) \
@@ -270,27 +381,33 @@ data:
     .writeStream \
     .queryName("ingest smart_city shared_bikes_bike_status") \
     .format("iceberg") \
-    .outputMode("append") \
+    .foreachBatch(upsertSharedBikesBikeStatus) \
+    .outputMode("update") \
     .trigger(processingTime='2 minutes') \
-    .option("path", "lakehouse.smart_city.shared_bikes_bike_status") \
-    .option("checkpointLocation", "s3a://lakehouse/smart-city/shared_bikes_bike_status/checkpoints") \
+    .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/shared_bikes_bike_status") \
     .start()
+
+
+
+
+
+
+
 
     # key: table name
     # value: compaction strategy
     tables_to_compact = {
-    #     "water_levels.measurements": ", strategy => 'sort', sort_order => 'station_uuid ASC NULLS LAST,timestamp DESC NULLS LAST'",
-        "water_levels.measurements": "",
-        "water_levels.stations": "",
+        "lakehouse.water_levels.stations": "",
+        "lakehouse.water_levels.measurements": ", strategy => 'sort', sort_order => 'timestamp DESC NULLS LAST,station_uuid ASC NULLS LAST'",
         "lakehouse.smart_city.shared_bikes_station_information": "",
-        "lakehouse.smart_city.shared_bikes_station_status": "",
+        "lakehouse.smart_city.shared_bikes_station_status": ", strategy => 'sort', sort_order => 'last_reported DESC NULLS LAST,station_id ASC NULLS LAST'",
         "lakehouse.smart_city.shared_bikes_bike_status": "",
     }
 
     while True:
-        expire_before = (datetime.now() - timedelta(hours=4)).strftime("%Y-%m-%d %H:%M:%S")
+        expire_before = (datetime.now() - timedelta(hours=12)).strftime("%Y-%m-%d %H:%M:%S")
         for table, table_compaction_strategy in tables_to_compact.items():
-            print(f"[{table}] Expiring snapshots older than 4 hours ({expire_before})")
+            print(f"[{table}] Expiring snapshots older than 12 hours ({expire_before})")
             spark.sql(f"CALL lakehouse.system.expire_snapshots(table => '{table}', older_than => TIMESTAMP '{expire_before}', retain_last => 50, stream_results => true)")
 
             print(f"[{table}] Removing orphaned files")

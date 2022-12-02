@@ -1,15 +1,4 @@
 ---
-apiVersion: s3.stackable.tech/v1alpha1
-kind: S3Connection
-metadata:
-  name: minio
-spec:
-  host: minio
-  port: 9000
-  accessStyle: Path
-  credentials:
-    secretClass: hive-s3-secret-class
----
 apiVersion: trino.stackable.tech/v1alpha1
 kind: TrinoCatalog
 metadata:
@@ -37,6 +26,24 @@ spec:
         configMap: hive-s3
       s3:
         reference: minio
+  configOverrides:
+    hive.iceberg-catalog-name: iceberg
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: iceberg
+  labels:
+    trino: trino
+spec:
+  connector:
+    iceberg:
+      metastore:
+        configMap: hive-s3
+      s3:
+        reference: minio
+  configOverrides:
+    iceberg.hive-catalog-name: hives3
 ---
 apiVersion: trino.stackable.tech/v1alpha1
 kind: TrinoCatalog
