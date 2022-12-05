@@ -5,32 +5,32 @@ releases:
     description: All the current operators in their nightly version
     products:
       #airflow:
-        #operatorVersion: 0.6.0-nightly
+        #operatorVersion: 0.6.0
       commons:
-        operatorVersion: 0.4.0-nightly
+        operatorVersion: 0.4.0
       #druid:
-        #operatorVersion: 0.8.0-nightly
+        #operatorVersion: 0.8.0
       hbase:
-        operatorVersion: 0.5.0-nightly
+        operatorVersion: 0.5.0
       hdfs:
-        operatorVersion: 0.6.0-nightly
+        operatorVersion: 0.6.0
       hive:
-        operatorVersion: 0.8.0-nightly
+        operatorVersion: 0.8.0
       #kafka:
-        #operatorVersion: 0.8.0-nightly
-      listener:
-        operatorVersion: 0.1.0-nightly
+        #operatorVersion: 0.8.0
+      #listener:
+        #operatorVersion: 0.1.0
       #nifi:
-        #operatorVersion: 0.8.0-nightly
+        #operatorVersion: 0.8.0
       opa:
-        operatorVersion: 0.11.0-nightly
+        operatorVersion: 0.11.0
       secret:
-        operatorVersion: 0.6.0-nightly
+        operatorVersion: 0.6.0
       #spark-k8s:
-        #operatorVersion: 0.6.0-nightly
+        #operatorVersion: 0.6.0
       #superset:
-        #operatorVersion: 0.7.0-nightly
-      trino:
-        operatorVersion: 0.8.0-nightly
+        #operatorVersion: 0.7.0
+      #trino:
+        #operatorVersion: 0.8.0
       zookeeper:
-        operatorVersion: 0.12.0-nightly
+        operatorVersion: 0.12.0
