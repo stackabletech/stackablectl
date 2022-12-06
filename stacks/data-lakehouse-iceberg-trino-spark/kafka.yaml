@@ -1,0 +1,42 @@
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperZnode
+metadata:
+  name: kafka-znode
+spec:
+  clusterRef:
+    name: zookeeper
+---
+apiVersion: kafka.stackable.tech/v1alpha1
+kind: KafkaCluster
+metadata:
+  name: kafka
+spec:
+  version: 3.3.1-stackable0.1.0
+  zookeeperConfigMapName: kafka-znode
+  config:
+    tls: null
+  brokers:
+    config:
+      resources:
+        storage:
+          logDirs:
+            capacity: 50Gi
+        cpu:
+          min: "1500m"
+          max: "3"
+        memory:
+          limit: 2Gi
+    roleGroups:
+      default:
+        replicas: 5
+        configOverrides:
+          server.properties:
+            num.partitions: "27"
+            # We have
+            # 5 brokers
+            # and 1 topic (with 27 partitions) with large volume of data
+            # 50Gi pvc * 5 brokers = 250Gi total disk size.
+            # Lets aim for 50% => 0.7 * 250Gi = 125Gi / 27 partitions = 4.6Gi
+            log.segment.bytes: "50000000" # 0.5GB
+            log.retention.bytes: "4000000000" # 4 GB. Should keep between 4.0 and 4.5GB

@@ -18,9 +18,9 @@ spec:
           && kubectl rollout status --watch statefulset/airflow-webserver-default
           && kubectl rollout status --watch statefulset/airflow-worker-default
           && kubectl rollout status --watch statefulset/airflow-scheduler-default
-          && curl -i -s --user airflow:airflow http://airflow-webserver-default:8080/api/v1/dags/date_demo
-          && curl -i -s --user airflow:airflow -H 'Content-Type:application/json' -XPATCH http://airflow-webserver-default:8080/api/v1/dags/date_demo -d '{\"is_paused\": false}'
-          && curl -i -s --user airflow:airflow -H 'Content-Type:application/json' -XPOST http://airflow-webserver-default:8080/api/v1/dags/date_demo/dagRuns -d '{}'
+          && curl -i -s --user admin:adminadmin http://airflow-webserver-default:8080/api/v1/dags/date_demo
+          && curl -i -s --user admin:adminadmin -H 'Content-Type:application/json' -XPATCH http://airflow-webserver-default:8080/api/v1/dags/date_demo -d '{\"is_paused\": false}'
+          && curl -i -s --user admin:adminadmin -H 'Content-Type:application/json' -XPOST http://airflow-webserver-default:8080/api/v1/dags/date_demo/dagRuns -d '{}'
           "]
       restartPolicy: OnFailure
   backoffLimit: 20 # give some time for the Airflow cluster to be available

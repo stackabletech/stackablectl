@@ -2,7 +2,7 @@
 
 [NOTE]
 ====
-This guide assumes you already have the demo `nifi-kafka-druid-water-level-data` installed.
+This guide assumes that you already have the demo `nifi-kafka-druid-water-level-data` installed.
 If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
 To put it simply you have to run `stackablectl demo install nifi-kafka-druid-water-level-data`.
 ====
@@ -46,18 +46,18 @@ $ stackablectl services list --all-namespaces
 
  nifi       nifi         default    https              https://172.18.0.3:32440  Admin user: admin, password: adminadmin
                                                                                                                      
- superset   superset     default    external-superset  http://172.18.0.4:32251   Admin user: admin, password: admin   
+ superset   superset     default    external-superset  http://172.18.0.4:32251   Admin user: admin, password: adminadmin   
                                                                                                                      
  zookeeper  zookeeper    default    zk                 172.18.0.3:31615                                              
                                                                                                                      
  minio      minio-druid  default    http               http://172.18.0.5:30016   Third party service                  
-                                    console-http       http://172.18.0.5:32595   Admin user: root, password: rootroot 
+                                    console-http       http://172.18.0.5:32595   Admin user: admin, password: adminadmin 
 ----
 
 [NOTE]
 ====
 When a product instance has not finished starting yet, the service will have no endpoint.
-Starting all of the product instances might take a considerable amount of time depending on your internet connectivity.
+Starting all the product instances might take a considerable amount of time depending on your internet connectivity.
 In case the product is not ready yet a warning might be shown.
 ====
 
@@ -279,7 +279,7 @@ Click on the `Remote URL` property.
 
 image::demo-nifi-kafka-druid-water-level-data/nifi_9.png[]
 
-The `Remote URL` does contain the `${station_uuid}` placeholder, which get's replaced for every station.
+The `Remote URL` does contain the `$\{station_uuid\}` placeholder, which get's replaced for every station.
 
 Double-click the `PublishKafkaRecord_2_6` processor.
 
@@ -370,7 +370,7 @@ Open the `superset` endpoint `external-superset` in your browser (http://172.18.
 
 image::demo-nifi-kafka-druid-water-level-data/superset_1.png[]
 
-Log in with the username `admin` and password `admin`.
+Log in with the username `admin` and password `adminadmin`.
 
 image::demo-nifi-kafka-druid-water-level-data/superset_2.png[]
 
@@ -476,7 +476,7 @@ Open the `minio` endpoint `console-http` retrieved by `stackablectl services lis
 
 image::demo-nifi-kafka-druid-water-level-data/minio_1.png[]
 
-Log in with the username `root` and password `rootroot`.
+Log in with the username `admin` and password `adminadmin`.
 
 image::demo-nifi-kafka-druid-water-level-data/minio_2.png[]
 

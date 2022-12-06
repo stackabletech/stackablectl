@@ -4,7 +4,7 @@ kind: AirflowCluster
 metadata:
   name: airflow
 spec:
-  version: 2.2.5-python39-stackable0.3.0
+  version: 2.4.1-stackable0.4.0
   statsdExporterVersion: v0.22.4
   executor: CeleryExecutor
   loadExamples: false
@@ -274,11 +274,11 @@ metadata:
   name: airflow-credentials
 type: Opaque
 stringData:
-  adminUser.username: airflow
+  adminUser.username: admin
   adminUser.firstname: Airflow
   adminUser.lastname: Admin
   adminUser.email: airflow@airflow.com
-  adminUser.password: airflow
+  adminUser.password: adminadmin
   connections.secretKey: thisISaSECRET_1234
   connections.sqlalchemyDatabaseUri: postgresql+psycopg2://airflow:airflow@postgresql-airflow/airflow
   connections.celeryResultBackend: db+postgresql://airflow:airflow@postgresql-airflow/airflow

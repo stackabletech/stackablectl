@@ -6,6 +6,10 @@ use crate::{
 };
 use cached::proc_macro::cached;
 use clap::{Parser, ValueHint};
+use comfy_table::{
+    presets::{NOTHING, UTF8_FULL},
+    Cell, ContentArrangement, Table,
+};
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{info, warn};
@@ -106,15 +110,23 @@ async fn list_demos(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     let output = get_demos().await;
     match output_type {
         OutputType::Text => {
-            println!(
-                "DEMO                                STACKABLE STACK              DESCRIPTION"
-            );
-            for (demo_name, demo) in output.demos.iter() {
-                println!(
-                    "{:35} {:28} {}",
-                    demo_name, demo.stackable_stack, demo.description,
-                );
+            let mut table = Table::new();
+            table
+                .load_preset(UTF8_FULL)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .set_header(vec![
+                    Cell::new("Demo"),
+                    Cell::new("Stackable stack"),
+                    Cell::new("Description"),
+                ]);
+            for (demo_name, demo) in output.demos {
+                table.add_row(vec![
+                    Cell::new(demo_name),
+                    Cell::new(demo.stackable_stack),
+                    Cell::new(demo.description),
+                ]);
             }
+            println!("{table}");
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output)?);
@@ -149,13 +161,28 @@ async fn describe_demo(demo_name: &str, output_type: &OutputType) -> Result<(), 
 
     match output_type {
         OutputType::Text => {
-            println!("Demo:               {}", output.demo);
-            println!("Description:        {}", output.description);
+            let mut table = Table::new();
+            table
+                .load_preset(NOTHING)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .add_row(vec![Cell::new("Demo"), Cell::new(output.demo)])
+                .add_row(vec![
+                    Cell::new("Description"),
+                    Cell::new(output.description),
+                ]);
             if let Some(documentation) = output.documentation {
-                println!("Documentation:      {}", documentation);
+                table.add_row(vec![Cell::new("Documentation"), Cell::new(documentation)]);
             }
-            println!("Stackable stack:    {}", output.stackable_stack);
-            println!("Labels:             {}", output.labels.join(", "));
+            table
+                .add_row(vec![
+                    Cell::new("Stackable stack"),
+                    Cell::new(output.stackable_stack),
+                ])
+                .add_row(vec![
+                    Cell::new("Labels"),
+                    Cell::new(output.labels.join(", ")),
+                ]);
+            println!("{table}");
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output).unwrap());

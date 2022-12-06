@@ -6,10 +6,10 @@ _templates:
       repo:
         name: minio
         url: https://charts.min.io/
-      version: 4.0.2
+      version: 4.0.15
       options:
-        rootUser: root
-        rootPassword: rootroot
+        rootUser: admin
+        rootPassword: adminadmin
         mode: standalone
         persistence:
           size: 15Gi
@@ -35,10 +35,10 @@ _templates:
       repo:
         name: minio
         url: https://charts.min.io/
-      version: 4.0.5
+      version: 4.0.15
       options:
-        rootUser: root
-        rootPassword: rootroot
+        rootUser: admin
+        rootPassword: adminadmin
         mode: standalone
         persistence:
           size: 10Gi
@@ -57,6 +57,46 @@ _templates:
             policy: public
         resources:
           requests:
+            cpu: 500m
+            memory: 1Gi
+        service:
+          type: NodePort
+          nodePort: null
+        consoleService:
+          type: NodePort
+          nodePort: null
+  - helmChart: &template-minio-distributed
+      releaseName: minio
+      name: minio
+      repo:
+        name: minio
+        url: https://charts.min.io/
+      version: 4.0.15
+      options:
+        rootUser: admin
+        rootPassword: adminadmin
+        mode: distributed
+        replicas: 5
+        persistence:
+          size: 250Gi
+        users:
+          - accessKey: trino
+            secretKey: trinotrino
+            policy: readwrite
+          - accessKey: hive
+            secretKey: hivehive
+            policy: readwrite
+          - accessKey: demo
+            secretKey: demodemo
+            policy: readwrite
+        buckets:
+          - name: staging
+            policy: public
+          - name: lakehouse
+            policy: public
+        resources:
+          requests:
+            cpu: 500m
             memory: 2Gi
         service:
           type: NodePort
@@ -66,6 +106,18 @@ _templates:
           nodePort: null
   - helmChart: &template-postgresql-hive
       releaseName: postgresql-hive
+      name: postgresql
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 10.16.2
+      options:
+        # Old version (10) of helm-charts has old way of setting credentials
+        postgresqlUsername: hive
+        postgresqlPassword: hive
+        postgresqlDatabase: hive
+  - helmChart: &template-postgresql-hive-iceberg
+      releaseName: postgresql-hive-iceberg
       name: postgresql
       repo:
         name: bitnami
@@ -140,19 +192,65 @@ _templates:
           type: NodePort
           nodePort: null
 
+  - helmChart: &template-postgresql-hivehdfs
+      releaseName: hivehdfs
+      name: postgresql
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 10.16.2
+      options:
+        postgresqlUsername: hive
+        postgresqlPassword: hive
+        postgresqlDatabase: hivehdfs
+  - helmChart: &template-postgresql-hives3
+      releaseName: hives3
+      name: postgresql
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 10.16.2
+      options:
+        postgresqlUsername: hive
+        postgresqlPassword: hive
+        postgresqlDatabase: hives3
+
 stacks:
   airflow:
     description: Stack containing Airflow scheduling platform
-    stackableRelease: 22.09
+    stackableRelease: 22.11
     labels:
       - airflow
     manifests:
       - helmChart: *template-postgresql-airflow
       - helmChart: *template-redis-airflow
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
+  data-lakehouse-iceberg-trino-spark:
+    description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
+    stackableRelease: 22.11
+    labels:
+      - iceberg
+      - trino
+      - spark
+      - superset
+      - kafka
+      - nifi
+      - minio
+      - s3
+    manifests:
+      - helmChart: *template-minio-distributed
+      - helmChart: *template-postgresql-hive
+      - helmChart: *template-postgresql-hive-iceberg
+      - helmChart: *template-postgresql-superset
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
-    stackableRelease: 22.09
+    stackableRelease: 22.11
     labels:
       - hbase
       - hdfs
@@ -162,7 +260,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hbase.yaml
   kafka-druid-superset-s3:
     description: Stack containing Kafka, MinIO, Druid and Superset for data visualization
-    stackableRelease: 22.09
+    stackableRelease: 22.11
     labels:
       - kafka
       - druid
@@ -178,7 +276,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml
   nifi-kafka-druid-superset-s3:
     description: Stack containing NiFi, Kafka, Druid, MinIO and Superset for data visualization
-    stackableRelease: 22.09
+    stackableRelease: 22.11
     labels:
       - nifi
       - kafka
@@ -194,9 +292,25 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/druid.yaml # Reuse
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+  spark-trino-superset-s3:
+    description: Stack containing MinIO, Trino and Superset for data visualization
+    stackableRelease: 22.11
+    labels:
+      - trino
+      - superset
+      - minio
+      - s3
+    manifests:
+      - helmChart: *template-minio-trino
+      - helmChart: *template-postgresql-hive
+      - helmChart: *template-postgresql-hive-iceberg
+      - helmChart: *template-postgresql-superset
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/hive-metastore.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/superset.yaml
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 22.09
+    stackableRelease: 22.11
     labels:
       - trino
       - superset
@@ -209,6 +323,23 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
+  dual-hive-hdfs-s3:
+    description: Dual stack Hive on HDFS and S3 for Hadoop/Hive to Trino migration
+    stackableRelease: 22.11
+    labels:
+      - trino
+      - hive
+      - hdfs
+      - s3
+    manifests:
+      - helmChart: *template-postgresql-hivehdfs
+      - helmChart: *template-postgresql-hives3
+      - helmChart: *template-minio-trino
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hive.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
+
+
   hdfs-hbase-phoenix-trino:
     description: HBase cluster using HDFS as underlying storage. Using Phoenix and Trino to access data
     stackableRelease: nightly

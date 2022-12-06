@@ -1,0 +1,8 @@
+= Customization
+
+If you're working for a large company, chances are that there are multiple teams using the Stackable Data Platform.
+A single team can also operate multiple Stackable Data Platforms.
+`stackablectl` is build in a way customers or developers can define their own releases, stacks and demos!
+This way it is possible to cover the following use-cases.
+
+Any additional demos/stacks/releases you specify, will be added to the already existing ones provided by Stackable.

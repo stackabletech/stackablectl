@@ -4,7 +4,7 @@ kind: TrinoCluster
 metadata:
   name: trino
 spec:
-  version: 387-stackable0.1.0
+  version: 396-stackable0.1.0
   catalogLabelSelector:
     matchLabels:
       trino: trino
@@ -21,6 +21,13 @@ spec:
       default:
         replicas: 1
   workers:
+    config:
+      resources:
+        cpu:
+          min: "1"
+          max: "4"
+        memory:
+          limit: '4Gi'
     roleGroups:
       default:
         replicas: 1
@@ -31,9 +38,9 @@ metadata:
   name: trino-users
 type: kubernetes.io/opaque
 stringData:
-  # admin:admin
-  admin: $2y$10$89xReovvDLacVzRGpjOyAOONnayOgDAyIS2nW9bs5DJT98q17Dy5i
-  # demo:demo
+  # htpasswd -n -B -C 10 admin # pass adminadmin
+  admin: $2y$10$6eXlCsbvSNsLaeClkOeRZujIM4aKIFuSXbwGUej7eEOFbkeo.BQBO
+  # htpasswd -n -B -C 10 demo # pass demo
   demo: $2y$10$mMRoIKfWtAuycEQnKiDCeOlCSYiWkvbs0WsMFLkaSnNO0ZnFKVRXm
 ---
 apiVersion: trino.stackable.tech/v1alpha1
@@ -80,7 +87,7 @@ kind: OpaCluster
 metadata:
   name: opa
 spec:
-  version: 0.41.0-stackable0.1.0
+  version: 0.45.0-stackable0.1.0
   servers:
     roleGroups:
       default:
