@@ -1,0 +1,59 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-phoenix-view
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-phoenix-view
+          image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.2.0
+          env:
+            - name: HBASE_CONF_DIR
+              value: "/stackable/conf/"
+          command: ["bash", "-c", "/stackable/phoenix/bin/psql.py /tmp/script/create-view.sql"]
+          volumeMounts:
+            - name: script
+              mountPath: /tmp/script
+            - mountPath: /stackable/conf/hdfs-site.xml
+              name: config-volume-hdfs
+              subPath: hdfs-site.xml
+            - mountPath: /stackable/conf/core-site.xml
+              name: config-volume-hdfs
+              subPath: core-site.xml
+            - mountPath: /stackable/conf/hbase-site.xml
+              name: config-volume-hbase
+              subPath: hbase-site.xml
+            - mountPath: /stackable/conf/hbase-env.sh
+              name: config-volume-hbase
+              subPath: hbase-env.sh
+      volumes:
+        - name: script
+          configMap:
+            name: create-phoenix-view
+        - name: config-volume-hbase
+          configMap:
+            name: hbase-master-default
+        - name: config-volume-hdfs
+          configMap:
+            name: hdfs
+      restartPolicy: OnFailure
+  backoffLimit: 50
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-phoenix-view
+data:
+  create-view.sql: |
+    USE DEMO_SCHEMA;
+    
+    CREATE VIEW "T_EVENTS" (hash_col VARCHAR PRIMARY KEY,
+                          "cf1"."EVENT" VARCHAR,
+                          "cf1"."ITEMID" VARCHAR,
+                          "cf1"."TIMESTAMP" VARCHAR,
+                          "cf1"."TRANSACTIONID" VARCHAR,
+                          "cf1"."VISITORID" VARCHAR);
+    
+    UPDATE STATISTICS T_EVENTS;

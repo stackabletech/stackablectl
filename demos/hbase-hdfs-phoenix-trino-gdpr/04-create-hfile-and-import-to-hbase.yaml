@@ -26,7 +26,7 @@ spec:
               name: config-volume-hbase
               subPath: hbase-env.sh
           command: [ "bash", "-c", "/stackable/hbase/bin/hbase org.apache.hadoop.hbase.mapreduce.ImportTsv \
-                                    -Dimporttsv.columns=HBASE_ROW_KEY,cf1:timestamp,cf1:visitorid,cf1:event,cf1:itemid,cf1:transactionid \
+                                    -Dimporttsv.columns=HBASE_ROW_KEY,cf1:TIMESTAMP,cf1:VISITORID,cf1:EVENT,cf1:ITEMID,cf1:TRANSACTIONID \
                                     -Dimporttsv.separator=';' \
                                     -Dimporttsv.bulk.output=hdfs://hdfs/data/hfile \
                                     DEMO_SCHEMA:T_EVENTS hdfs://hdfs/data/raw/hashed_events.gz \

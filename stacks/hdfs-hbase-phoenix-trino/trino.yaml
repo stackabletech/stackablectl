@@ -36,25 +36,6 @@ stringData:
   # demo:demo
   demo: $2y$10$mMRoIKfWtAuycEQnKiDCeOlCSYiWkvbs0WsMFLkaSnNO0ZnFKVRXm
 ---
-apiVersion: trino.stackable.tech/v1alpha1
-kind: TrinoCatalog
-metadata:
-  name: hive
-  labels:
-    trino: trino
-spec:
-  connector:
-    hive:
-      metastore:
-        configMap: hive
-      s3:
-        inline:
-          host: minio-trino
-          port: 9000
-          accessStyle: Path
-          credentials:
-            secretClass: trino-s3-credentials
----
 apiVersion: secrets.stackable.tech/v1alpha1
 kind: SecretClass
 metadata:
@@ -107,3 +88,17 @@ data:
     allow {
       input.context.identity.user == "demo"
     }
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: phoenix
+  labels:
+    trino: trino
+spec:
+  connector:
+    phoenix:
+      hbase:
+        configMap: hbase
+      zookeeper:
+        configMap: zookeeper
