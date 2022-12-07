@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: vector-aggregator-discovery
 data:
-  ADDRESS: vector-aggregator.default.svc.cluster.local:6000
+  ADDRESS: vector-aggregator:6000
