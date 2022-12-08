@@ -55,10 +55,10 @@ data:
     assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS hive.demo WITH (location = 's3a://demo-bucket/')")[0][0] is True
     assert run_query(connection, """
         CREATE TABLE IF NOT EXISTS hive.demo.category_tree (
-            categoryid BIGINT,
-            parentid BIGINT
+            categoryid VARCHAR,
+            parentid VARCHAR
         ) WITH (
-            external_location = 's3a://demo-bucket/category_tree.tgz',
+            external_location = 's3a://demo-bucket/',
             format = 'csv'
         )
     """)[0][0] is True
@@ -71,5 +71,28 @@ data:
     analyze_rows = run_query(connection, """ANALYZE hive.demo.category_tree""")[0][0]
     assert analyze_rows == loaded_rows
     stats = run_query(connection, """show stats for hive.demo.category_tree""")
+    print("Produced the following stats:")
+    print(*stats, sep="\n")
+    
+    assert run_query(connection, """
+        CREATE TABLE IF NOT EXISTS hive.demo.item_properties (
+            timestamp VARCHAR,
+            itemid VARCHAR,
+            property VARCHAR,
+            value VARCHAR
+        ) WITH (
+            external_location = 's3a://demo-bucket/',
+            format = 'csv'
+        )
+    """)[0][0] is True
+
+    loaded_rows = run_query(connection, "SELECT COUNT(*) FROM hive.demo.item_properties")[0][0]
+    print(f"Loaded {loaded_rows} rows")
+    assert loaded_rows > 0
+
+    print("Analyzing table item_properties")
+    analyze_rows = run_query(connection, """ANALYZE hive.demo.item_properties""")[0][0]
+    assert analyze_rows == loaded_rows
+    stats = run_query(connection, """show stats for hive.demo.item_properties""")
     print("Produced the following stats:")
     print(*stats, sep="\n")

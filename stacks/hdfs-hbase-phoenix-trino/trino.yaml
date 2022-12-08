@@ -4,15 +4,18 @@ kind: TrinoCluster
 metadata:
   name: trino
 spec:
-  version: 387-stackable0.1.0
-  catalogLabelSelector:
-    matchLabels:
-      trino: trino
+  version: 396-stackable0.1.0
+  config:
+    tls:
+      secretClass: trino-tls
   authentication:
     method:
       multiUser:
         userCredentialsSecret:
           name: trino-users
+  catalogLabelSelector:
+    matchLabels:
+      trino: trino
   opa:
     configMapName: opa
     package: trino
@@ -25,6 +28,19 @@ spec:
       default:
         replicas: 1
 ---
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: trino-tls
+spec:
+  backend:
+    autoTls:
+      ca:
+        secret:
+          name: secret-provisioner-trino-tls-ca
+          namespace: default
+        autoGenerate: true
+---
 apiVersion: v1
 kind: Secret
 metadata:
@@ -35,6 +51,25 @@ stringData:
   admin: $2y$10$89xReovvDLacVzRGpjOyAOONnayOgDAyIS2nW9bs5DJT98q17Dy5i
   # demo:demo
   demo: $2y$10$mMRoIKfWtAuycEQnKiDCeOlCSYiWkvbs0WsMFLkaSnNO0ZnFKVRXm
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: hive
+  labels:
+    trino: trino
+spec:
+  connector:
+    hive:
+      metastore:
+        configMap: hive
+      s3:
+        inline:
+          host: minio-trino
+          port: 9000
+          accessStyle: Path
+          credentials:
+            secretClass: trino-s3-credentials
 ---
 apiVersion: secrets.stackable.tech/v1alpha1
 kind: SecretClass

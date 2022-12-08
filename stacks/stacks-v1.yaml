@@ -165,7 +165,7 @@ _templates:
         replica:
           replicaCount: 1
   - helmChart: &template-minio-hbase-phoenix-trino
-      releaseName: demo-minio-hbase
+      releaseName: minio-trino
       name: minio
       repo:
         name: minio
@@ -181,6 +181,12 @@ _templates:
         users:
           - accessKey: demo
             secretKey: demodemo
+            policy: readwrite
+          - accessKey: trino
+            secretKey: trinotrino
+            policy: readwrite
+          - accessKey: hive
+            secretKey: hivehive
             policy: readwrite
         resources:
           requests:
@@ -338,8 +344,6 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hdfs.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hive.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
-
-
   hdfs-hbase-phoenix-trino:
     description: HBase cluster using HDFS as underlying storage. Using Phoenix and Trino to access data
     stackableRelease: nightly
@@ -350,7 +354,7 @@ stacks:
       - trino
     manifests:
       - helmChart: *template-minio-hbase-phoenix-trino
-      - helmChart: *template-postgresql-hive
+      - helmChart: *template-postgresql-hives3
       - plainYaml: stacks/hdfs-hbase-phoenix-trino/zookeeper.yaml
       - plainYaml: stacks/hdfs-hbase-phoenix-trino/hdfs.yaml
       - plainYaml: stacks/hdfs-hbase-phoenix-trino/hbase.yaml
