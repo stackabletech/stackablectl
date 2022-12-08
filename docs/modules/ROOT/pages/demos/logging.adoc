@@ -8,8 +8,8 @@ This demo will
 information, naming, providing distributed synchronization, and providing group
 services. This demo makes its log data observable in OpenSearch Dashboards.
 ** *Vector*: A tool for building observability pipelines. This demo uses Vector
-as an log agent to gather and transform the logs and as an aggregator to
-forward the collected logs to OpenSearch.
+as a log agent to gather and transform the logs and as an aggregator to forward
+the collected logs to OpenSearch.
 ** *OpenSearch*: A data store and search engine. This demo uses it to store and
 index the log data.
 ** *OpenSearch Dashboards*: A visualization and user interface. This demo uses
@@ -62,7 +62,7 @@ Then run `sudo sysctl --load` to reload.
 
 == Run the demo
 
-This demo is work in progress and therefore additional parameters are necessary to run it.
+The following command creates a kind cluster and installs this demo:
 
 [source,console]
 ----
