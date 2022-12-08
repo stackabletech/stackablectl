@@ -200,7 +200,7 @@ async fn list_services(
                     Cell::new("Name"),
                     Cell::new("Namespace"),
                     Cell::new("Endpoints"),
-                    Cell::new("Extra infos"),
+                    Cell::new("Info"),
                 ]);
 
             let max_endpoint_name_length = output
