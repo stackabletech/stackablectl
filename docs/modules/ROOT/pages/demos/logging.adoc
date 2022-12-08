@@ -2,7 +2,7 @@
 
 This demo will
 
-* Install the required Stackable operators
+* Install the required Stackable operators.
 * Spin up the follow data products:
 ** *Apache ZooKeeper*: A centralized service for maintaining configuration
 information, naming, providing distributed synchronization, and providing group
