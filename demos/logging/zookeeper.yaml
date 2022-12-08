@@ -19,12 +19,12 @@ spec:
             containers:
               vector:
                 file:
-                  levelThreshold: WARN
+                  level: WARN
               zookeeper:
                 console:
-                  levelThreshold: INFO
+                  level: INFO
                 file:
-                  levelThreshold: INFO
+                  level: INFO
                 loggers:
                   ROOT:
                     level: INFO
