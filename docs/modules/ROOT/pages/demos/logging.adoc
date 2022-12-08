@@ -19,8 +19,7 @@ it to make the log data easily accessible to the user.
 You can see the deployed products as well as their relationship in the
 following diagram:
 
-// image::logging/overview.png[]
-image::https://raw.githubusercontent.com/stackabletech/stackablectl/logging/docs/modules/ROOT/images/logging/overview.png[]
+image::logging/overview.png[]
 
 == OpenSearch prerequisites
 
@@ -102,12 +101,10 @@ interface by running `stackablectl services list` and opening the URL shown in
 the info column of the `opensearch-dashboards` entry. In this case it is
 http://172.18.0.5:31319/app/discover?security_tenant=global#/view/logs.
 
-// image::logging/login.png[]
-image::https://raw.githubusercontent.com/stackabletech/stackablectl/logging/docs/modules/ROOT/images/logging/login.png[]
+image::logging/login.png[]
 
 Log in with the username `admin` and password `adminadmin`.
 
-// image::logging/logs.png[]
-image::https://raw.githubusercontent.com/stackabletech/stackablectl/logging/docs/modules/ROOT/images/logging/logs.png[]
+image::logging/logs.png[]
 
 Inspect the logs.
