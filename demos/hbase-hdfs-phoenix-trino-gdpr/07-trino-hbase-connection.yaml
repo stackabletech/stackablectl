@@ -55,11 +55,11 @@ data:
     assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS hive.demo WITH (location = 's3a://demo-bucket/')")[0][0] is True
     assert run_query(connection, """
         CREATE TABLE IF NOT EXISTS hive.demo.category_tree (
-            categoryid VARCHAR,
-            parentid VARCHAR
+            categoryid INT,
+            parentid DOUBLE
         ) WITH (
-            external_location = 's3a://demo-bucket/',
-            format = 'csv'
+            external_location = 's3a://demo-bucket/category_tree/',
+            format = 'parquet'
         )
     """)[0][0] is True
 
@@ -76,13 +76,13 @@ data:
     
     assert run_query(connection, """
         CREATE TABLE IF NOT EXISTS hive.demo.item_properties (
-            timestamp VARCHAR,
-            itemid VARCHAR,
-            property VARCHAR,
-            value VARCHAR
+            timestamp TIMESTAMP,
+            itemid BIGINT,
+            property VARCHAR(200),
+            value VARCHAR(200)
         ) WITH (
-            external_location = 's3a://demo-bucket/',
-            format = 'csv'
+            external_location = 's3a://demo-bucket/item_properties/',
+            format = 'parquet'
         )
     """)[0][0] is True
 

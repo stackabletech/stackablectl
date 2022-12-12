@@ -47,6 +47,7 @@ metadata:
   name: create-phoenix-view
 data:
   create-view.sql: |
+    CREATE SCHEMA DEMO_SCHEMA;
     USE DEMO_SCHEMA;
     
     CREATE VIEW "T_EVENTS" (hash_col VARCHAR PRIMARY KEY,

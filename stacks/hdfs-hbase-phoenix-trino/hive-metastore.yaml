@@ -18,7 +18,7 @@ spec:
         replicas: 1
         config:
           database:
-            connString: jdbc:postgresql://postgresql-hive:5432/hive
+            connString: jdbc:postgresql://hives3-postgresql:5432/hives3
             user: hive
             password: hive
             dbType: postgres

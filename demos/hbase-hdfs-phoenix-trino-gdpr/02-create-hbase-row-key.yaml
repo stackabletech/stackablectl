@@ -83,11 +83,11 @@ data:
       CSV_FILE_NAME = args.csv_file_name
       OBJECT_NAME = args.input_file
       OUTPUT_FILE_NAME = args.output_file_name
-      MINIO_HOST = 'demo-minio-hbase'
+      MINIO_HOST = 'minio-trino'
       MINIO_PORT = '9000'
       MINIO_CLIENT = Minio(MINIO_HOST + ':' + MINIO_PORT, access_key=ACCESS_KEY, secret_key=SECRET_KEY, secure=False)
       
-      MINIO_CLIENT.fget_object(BUCKET_NAME, OBJECT_NAME, LOCAL_FILE_PATH + OBJECT_NAME )
+      MINIO_CLIENT.fget_object(BUCKET_NAME, 'tgz/' + OBJECT_NAME, LOCAL_FILE_PATH + OBJECT_NAME )
       
       file = tarfile.open(LOCAL_FILE_PATH + OBJECT_NAME)
       file.extractall(LOCAL_FILE_PATH)
@@ -99,7 +99,7 @@ data:
       
       df3 = df2[ ['hash_col'] + [ col for col in df2.columns if col != 'hash_col' ]]
       
-      df3.to_csv(LOCAL_FILE_PATH + OUTPUT_FILE_NAME,columns=['hash_col','timestamp','visitorid','event','itemid','transactionid'], compression='gzip', sep=';', encoding='utf-8', index=False, na_rep='N/A')
+      df3.to_csv(LOCAL_FILE_PATH + OUTPUT_FILE_NAME,columns=['hash_col','timestamp','visitorid','event','itemid','transactionid'], compression='gzip', sep=';', encoding='utf-8', index=False, na_rep='N/A')     
       
       result = MINIO_CLIENT.fput_object(BUCKET_NAME, OUTPUT_FILE_NAME, LOCAL_FILE_PATH + OUTPUT_FILE_NAME)
       
