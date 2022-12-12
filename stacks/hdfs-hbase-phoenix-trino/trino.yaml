@@ -20,13 +20,29 @@ spec:
     configMapName: opa
     package: trino
   coordinators:
+    config:
+      queryMaxMemory: 10TB
+      resources:
+        cpu:
+          min: "1"
+          max: "4"
+        memory:
+          limit: '6Gi'
     roleGroups:
       default:
         replicas: 1
   workers:
+    config:
+      queryMaxMemoryPerNode: 4GB
+      resources:
+        cpu:
+          min: "2"
+          max: "4"
+        memory:
+          limit: '8Gi'
     roleGroups:
       default:
-        replicas: 1
+        replicas: 2
 ---
 apiVersion: secrets.stackable.tech/v1alpha1
 kind: SecretClass

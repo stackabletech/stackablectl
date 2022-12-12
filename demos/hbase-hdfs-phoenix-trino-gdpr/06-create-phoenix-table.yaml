@@ -50,11 +50,11 @@ data:
     CREATE SCHEMA DEMO_SCHEMA;
     USE DEMO_SCHEMA;
     
-    CREATE VIEW "T_EVENTS" (hash_col VARCHAR PRIMARY KEY,
-                          "cf1"."EVENT" VARCHAR,
-                          "cf1"."ITEMID" VARCHAR,
-                          "cf1"."TIMESTAMP" VARCHAR,
-                          "cf1"."TRANSACTIONID" VARCHAR,
-                          "cf1"."VISITORID" VARCHAR);
+    CREATE VIEW "T_EVENTS" (hash_col VARCHAR(100) PRIMARY KEY,
+                          "cf1"."EVENT" VARCHAR(100),
+                          "cf1"."ITEMID" VARCHAR(100),
+                          "cf1"."TIMESTAMP" VARCHAR(100),
+                          "cf1"."TRANSACTIONID" VARCHAR(100),
+                          "cf1"."VISITORID" VARCHAR(100));
     
     UPDATE STATISTICS T_EVENTS;
