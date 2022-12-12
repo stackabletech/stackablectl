@@ -90,14 +90,6 @@ lazy_static! {
                 }
             ),
             (
-                "opensearch-dashboards",
-                GroupVersionKind {
-                    group: "apps".to_string(),
-                    version: "v1".to_string(),
-                    kind: "Deployment".to_string(),
-                }
-            ),
-            (
                 "superset",
                 GroupVersionKind {
                     group: "superset.stackable.tech".to_string(),
