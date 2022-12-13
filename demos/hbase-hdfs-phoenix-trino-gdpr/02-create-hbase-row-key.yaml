@@ -101,7 +101,7 @@ data:
       
       df3.to_csv(LOCAL_FILE_PATH + OUTPUT_FILE_NAME,columns=['hash_col','timestamp','visitorid','event','itemid','transactionid'], compression='gzip', sep=';', encoding='utf-8', index=False, na_rep='N/A')     
       
-      result = MINIO_CLIENT.fput_object(BUCKET_NAME, OUTPUT_FILE_NAME, LOCAL_FILE_PATH + OUTPUT_FILE_NAME)
+      result = MINIO_CLIENT.fput_object(BUCKET_NAME, 'events/' + OUTPUT_FILE_NAME, LOCAL_FILE_PATH + OUTPUT_FILE_NAME)
       
       print("created {0} object; etag: {1}, version-id: {2}".format(
             result.object_name, result.etag, result.version_id,),)

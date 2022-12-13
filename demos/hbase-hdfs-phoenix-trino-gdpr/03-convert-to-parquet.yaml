@@ -9,15 +9,8 @@ spec:
       containers:
         - name: convert-to-parquet
           image: "bitnami/python:latest"
-          env:
-            - name: CATEGORY_TREE
-              value: "category_tree.tgz"
-            - name: EVENTS
-              value: "events.tgz"
-            - name: ITEM_PROPERTIES
-              value: "item_properties.tgz"
-          command: ["bash", "-c", "pip3 install pandas minio fastparquet pyarrow && \  
-                                   python3 -u /tmp/script/script.py -l category_tree events item_properties && sleep infinity"]
+          command: ["bash", "-c", "pip3 install pandas minio fastparquet && \  
+                                   python3 -u /tmp/script/script.py --input_file category_tree.tgz item_properties.tgz && sleep infinity"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
@@ -40,54 +33,38 @@ data:
     from minio import Minio
     import tarfile
     import fastparquet
-    import pyarrow as pa
-    import pyarrow.parquet as pq
   
     def parse_args():
       parser = argparse.ArgumentParser(
       description=""
       )
     
-      parser.add_argument('-l','--list', nargs='+', help='<Required> Set flag', required=True)
-      
-      #parser.add_argument(
-      #"-c",
-      #"--category_tree",
-      #type=str,
-      #help="Name of the entity.",
-      #required=True
-      #)
-      
-      #parser.add_argument(
-      #"-e",
-      #"--events",
-      #type=str,
-      #help="Name of the entity.",
-      #required=True
-      #)
-      
-      #parser.add_argument(
-      #"-i",
-      #"--item_properties",
-      #type=str,
-      #help="Name of the entity.",
-      #required=True
-      #)
+      parser.add_argument('-i','--input_file', nargs='+', help='<Required> Set flag', required=True)            
       
       return parser.parse_args()
     
-    def transform_to_parquet(OBJECT_NAME, LOCAL_FILE_PATH, CSV_FILE_NAME, OUTPUT_FILE_NAME):
-      file = tarfile.open(LOCAL_FILE_PATH + OBJECT_NAME + '.tgz')
-      file.extractall(LOCAL_FILE_PATH)
-      df = pd.read_csv(LOCAL_FILE_PATH + CSV_FILE_NAME)                       
+    def transform_to_parquet(BUCKET_NAME, INPUT_FILE, LOCAL_FILE_PATH, MINIO_CLIENT):
+      CSV_FILE_NAME = INPUT_FILE.replace('tgz','csv')
+      OUTPUT_FILE_NAME = INPUT_FILE.replace('tgz','parquet')
+      DIR = INPUT_FILE.replace('.tgz','')
+      INPUT_FILE = str(INPUT_FILE)
       
-      #print(df.count())
-      #print(df.isna().sum().sum())
-     
+      MINIO_CLIENT.fget_object(BUCKET_NAME, 'tgz/' + INPUT_FILE, LOCAL_FILE_PATH + INPUT_FILE) 
+      
+      file = tarfile.open(LOCAL_FILE_PATH + INPUT_FILE)
+      file.extractall(LOCAL_FILE_PATH)
+            
+      df = pd.read_csv(LOCAL_FILE_PATH + CSV_FILE_NAME)                                        
+      
       df.to_parquet(LOCAL_FILE_PATH + OUTPUT_FILE_NAME)
     
-      #data = pd.read_parquet(LOCAL_FILE_PATH + OUTPUT_FILE_NAME)
-      #print(data.head())
+      result = MINIO_CLIENT.fput_object(BUCKET_NAME, '/' + DIR + '/' + OUTPUT_FILE_NAME, LOCAL_FILE_PATH + OUTPUT_FILE_NAME)    
+      print("created {0} object; etag: {1}, version-id: {2}".format(
+            result.object_name, result.etag, result.version_id,),)
+    
+      data = pd.read_parquet(LOCAL_FILE_PATH + OUTPUT_FILE_NAME)
+      print(data.head())
+      print(data.count())          
 
 
     def main():
@@ -102,47 +79,10 @@ data:
       MINIO_PORT = '9000'
       MINIO_CLIENT = Minio(MINIO_HOST + ':' + MINIO_PORT, access_key=ACCESS_KEY, secret_key=SECRET_KEY, secure=False)      
     
-      #CATEGORY_TREE = args.list[0]
-      #print(CATEGORY_TREE)
-      #MINIO_CLIENT.fget_object(BUCKET_NAME, 'tgz/' + CATEGORY_TREE + '.tgz' , LOCAL_FILE_PATH + CATEGORY_TREE + '.tgz')                         
-      #transform_to_parquet(CATEGORY_TREE, LOCAL_FILE_PATH, CATEGORY_TREE + '.csv' , CATEGORY_TREE + '.parquet')
-      #data = pd.read_parquet(LOCAL_FILE_PATH + CATEGORY_TREE + '.parquet')
-      #print(data.head())
-      #print(data.count())
-      #print(data.isna().sum().sum())
+      input_files = args.input_file
       
-      #result = MINIO_CLIENT.fput_object(BUCKET_NAME, '/category_tree/' + CATEGORY_TREE + '.parquet', LOCAL_FILE_PATH + CATEGORY_TREE + '.parquet')    
-      #print("created {0} object; etag: {1}, version-id: {2}".format(
-      #      result.object_name, result.etag, result.version_id,),)
-      
-      
-      ITEM_PROPERTIES = args.list[2]
-      print(ITEM_PROPERTIES)
-      MINIO_CLIENT.fget_object(BUCKET_NAME, 'tgz/' + ITEM_PROPERTIES + '_part1.tgz' , LOCAL_FILE_PATH + ITEM_PROPERTIES + '_part1.tgz')
-      MINIO_CLIENT.fget_object(BUCKET_NAME, 'tgz/' + ITEM_PROPERTIES + '_part2.tgz' , LOCAL_FILE_PATH + ITEM_PROPERTIES + '_part2.tgz') 
-      transform_to_parquet(ITEM_PROPERTIES + '_part1', LOCAL_FILE_PATH, ITEM_PROPERTIES + '_part1.csv' , ITEM_PROPERTIES + '_part1.parquet')
-      transform_to_parquet(ITEM_PROPERTIES + '_part2', LOCAL_FILE_PATH, ITEM_PROPERTIES + '_part2.csv' , ITEM_PROPERTIES + '_part2.parquet')
-      data_part1 = pd.read_parquet(LOCAL_FILE_PATH + ITEM_PROPERTIES + '_part1.parquet')
-      data_part2 = pd.read_parquet(LOCAL_FILE_PATH + ITEM_PROPERTIES + '_part2.parquet')
-      print(data_part1.head())
-      print(data_part1.count())
-      print(data_part1.isna().sum().sum())
-    
-      print(data_part2.head())
-      print(data_part2.count())
-      print(data_part2.isna().sum().sum())
-    
-      result = MINIO_CLIENT.fput_object(BUCKET_NAME, '/item_properties/' + ITEM_PROPERTIES + '_part1.parquet', LOCAL_FILE_PATH + ITEM_PROPERTIES + '_part1.parquet')    
-      print("created {0} object; etag: {1}, version-id: {2}".format(
-            result.object_name, result.etag, result.version_id,),)
-    
-      result = MINIO_CLIENT.fput_object(BUCKET_NAME, '/item_properties/' + ITEM_PROPERTIES + '_part2.parquet', LOCAL_FILE_PATH + ITEM_PROPERTIES + '_part2.parquet')
-      print("created {0} object; etag: {1}, version-id: {2}".format(
-        result.object_name, result.etag, result.version_id,),)
-      
-
-    
-
+      for input_file in input_files:                                
+        transform_to_parquet(BUCKET_NAME, input_file, LOCAL_FILE_PATH, MINIO_CLIENT)          
     
     if __name__ == "__main__":
       main()
