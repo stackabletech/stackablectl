@@ -12,8 +12,7 @@ spec:
           command: ["bash", "-c", "cd /tmp && \
                                    curl -O https://repo.stackable.tech/repository/misc/datasets/retail-store-sales-transactions/events.tgz && \
                                    curl -O https://repo.stackable.tech/repository/misc/datasets/retail-store-sales-transactions/category_tree.tgz && \
-                                   curl -O https://repo.stackable.tech/repository/misc/datasets/retail-store-sales-transactions/item_properties_part1.tgz && \
-                                   curl -O https://repo.stackable.tech/repository/misc/datasets/retail-store-sales-transactions/item_properties_part2.tgz && \
+                                   curl -O https://repo.stackable.tech/repository/misc/datasets/retail-store-sales-transactions/item_properties.tgz && \                                   
                                    mc alias set $MINIO_ALIAS $MINIO_SERVER_SCHEME://$MINIO_SERVER_HOST:$MINIO_SERVER_PORT_NUMBER $MINIO_SERVER_ACCESS_KEY $MINIO_SERVER_SECRET_KEY && \
                                    mc mb $MINIO_ALIAS/$MINIO_BUCKET_NAME/tgz && \
                                    mc mb $MINIO_ALIAS/$MINIO_BUCKET_NAME/category_tree && \
