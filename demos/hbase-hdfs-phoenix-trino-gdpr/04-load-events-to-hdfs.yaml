@@ -40,6 +40,10 @@ spec:
               value: "demo-minio"
             - name: MINIO_BUCKET_NAME
               value: "demo-bucket"
+            - name: MINIO_DIRECTORY
+              value: "events"
+            - name: FILE_NAME
+              value: "hashed_events.gz"
           command: ["bash", "-c", "bin/hdfs dfs -mkdir -p /data/raw && \
                                   bin/hadoop distcp \
                                   -D fs.s3a.endpoint=$MINIO_SERVER_SCHEME://$MINIO_SERVER_HOST:$MINIO_SERVER_PORT_NUMBER \ 
@@ -47,7 +51,7 @@ spec:
                                   -D fs.s3a.access.key=$MINIO_SERVER_ACCESS_KEY \
                                   -D fs.s3a.secret.key=$MINIO_SERVER_SECRET_KEY \
                                   -D fs.s3a.aws.credentials.provider=org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider \
-                                  s3a://$MINIO_BUCKET_NAME/hashed_events.gz \
+                                  s3a://$MINIO_BUCKET_NAME/$MINIO_DIRECTORY/$FILE_NAME \
                                   hdfs://hdfs/data/raw"]
           volumeMounts:
             - name: config-volume-hdfs
