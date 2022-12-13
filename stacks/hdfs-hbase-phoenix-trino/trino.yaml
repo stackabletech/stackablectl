@@ -21,13 +21,13 @@ spec:
     package: trino
   coordinators:
     config:
-      queryMaxMemory: 10TB
+      queryMaxMemory: 10GB
       resources:
         cpu:
-          min: "1"
+          min: "2"
           max: "4"
         memory:
-          limit: '6Gi'
+          limit: '8Gi'
     roleGroups:
       default:
         replicas: 1
@@ -39,7 +39,7 @@ spec:
           min: "2"
           max: "4"
         memory:
-          limit: '8Gi'
+          limit: '10Gi'
     roleGroups:
       default:
         replicas: 2
