@@ -7,10 +7,12 @@ spec:
   version: 24.0.0-stackable0.1.0
   zookeeperConfigMapName: druid-znode
   metadataStorageDatabase:
-    dbType: derby
-    connString: jdbc:derby://localhost:1527/var/druid/metadata.db;create=true
-    host: localhost
-    port: 1527
+    dbType: postgresql
+    connString: jdbc:postgresql://postgresql-druid/druid
+    host: postgresql-druid
+    port: 5432
+    user: druid
+    password: druid
   deepStorage:
     s3:
       bucket:
@@ -36,17 +38,27 @@ spec:
     roleGroups:
       default:
         replicas: 2
+        config:
+          resources:
+            cpu:
+              min: "1"
+              max: "2"
+            memory:
+              limit: 2Gi # TODO Increase after https://github.com/stackabletech/druid-operator/issues/359 is fixed
         configOverrides:
           runtime.properties:
-            druid.processing.numThreads: "4" # See https://github.com/stackabletech/druid-operator/issues/306
+            # druid.processing.numThreads: "2" # TODO Can be removed after we have a strategy how to derive this setting from the configured resources
+            # TODO Can be changed in 23.01, see https://github.com/stackabletech/druid-operator/pull/342
             druid.segmentCache.locations: '[{"path":"/stackable/var/druid/segment-cache","maxSize":"8g","freeSpacePercent":"5.0"}]'
   middleManagers:
     roleGroups:
       default:
-        # We use multiple middle-managers to be able to run multiple ingestion jobs simultaneously.
-        # If we need even more slots, the configuration maxNumConcurrentSubTasks should increase the number of slots
-        # without increasing the number of middleManagers.
-        replicas: 2
+        replicas: 1
+        config:
+          resources:
+            cpu:
+              min: "1"
+              max: "4" # Need enough CPU cores to run multiple ingestion jobs at once
   routers:
     roleGroups:
       default:
