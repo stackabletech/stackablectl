@@ -350,8 +350,8 @@ _templates:
               type: elasticsearch
               inputs:
                 - vector
-              endpoint: |-
-                https://opensearch-cluster-master.default.svc.cluster.local:9200
+              endpoints:
+                - https://opensearch-cluster-master.default.svc.cluster.local:9200
               mode: bulk
               api_version: v8
               tls:
