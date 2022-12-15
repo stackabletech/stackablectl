@@ -23,18 +23,18 @@ image::logging/overview.png[]
 
 == OpenSearch prerequisites
 
+=== Mac and Windows
+
+If you are running on Mac or Windows and use Docker to run Kubernetes then set
+the RAM to at least 4 GB in _Preferences_ > _Resources_.
+
+=== Linux
+
 OpenSearch uses a mmapfs directory by default to store its indices. The default
 operating system limits on mmap counts is likely to be too low – usually 65530,
 which may result in out of memory exceptions. So the Linux setting
 `vm.max_map_count` on the host machine where kind is running, must be set to at
 least 262144.
-
-[NOTE]
-====
-If you are on a Mac, the commands in this section won’t work for you. You can
-skip it, and continue with the rest of the tutorial. They are not strictly
-necessary to get a working prototype going.
-====
 
 To check the current value, run this command:
 
