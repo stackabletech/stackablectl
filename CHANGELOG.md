@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Support listing OpenSearch Dashboards services ([#187](https://github.com/stackabletech/stackablectl/pull/187)).
+
 ### Changed
 
 - Print CLI tables using [comfy-table](https://crates.io/crates/comfy-table) ([#176](https://github.com/stackabletech/stackablectl/pull/176))
