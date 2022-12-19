@@ -220,7 +220,7 @@ async fn list_services(
                         .join("\n");
 
                     table.add_row(vec![
-                        Cell::new(&product_name),
+                        Cell::new(product_name.as_str()),
                         Cell::new(installed_product.name),
                         Cell::new(installed_product.namespace.unwrap_or_default()),
                         Cell::new(endpoints),
