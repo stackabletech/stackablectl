@@ -1,0 +1,249 @@
+= data-federation-hbase-phoenix-trino
+
+[WARNING]
+====
+This demo shows data workload with more data volume than just a few MB. This increase the necessary ressource and exceeds the ressource of a local machine.
+It was developed and tested on a kubernetes cluster with 5 nodes (4 cores, 32GB RAM and 20GB HDD).
+
+Instance types that loosely correspond to this on the Hyperscalers are:
+
+- *Google*: `e2-standard-32`
+
+
+====
+
+[NOTE]
+====
+This guide assumes that you already have the demo `data-federation-hbase-phoenix-trino` installed.
+If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you have to run `stackablectl demo install data-federation-hbase-phoenix-trino`.
+====
+
+This demo will
+
+* Install the required Stackable operators
+* Spin up the following data products
+** *Apache HBase*: A open source distributed scalable, big data store.
+** *Apache Phoenix*: enables OLTP and operational analytics in Hadoop for low latency applications by combining the best of both worlds:
+*** the power of standard SQL and JDBC APIs with full ACID transaction capabilities and
+*** the flexibility of late-bound, schema-on-read capabilities from the NoSQL world by leveraging HBase as its backing stor
+** *Apache HDFS*: The Hadoop Distributed File System (HDFS) is a distributed file system designed to run on commodity hardware. HDFS is highly fault-tolerant and is designed to be deployed on low-cost hardware. HDFS provides high throughput access to application data and is suitable for applications that have large data sets.
+** *Trino*: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
+** *MinIO*: A S3 compatible object store. This demo uses it as persistent storage to store all the data used
+** *Apache Hive metastore*: A service that stores metadata related to Apache Hive and other services. This demo uses it as metadata storage for Trino and Spark
+** *Open policy agent* (OPA): An open source, general-purpose policy engine that unifies policy enforcement across the stack. This demo uses it as the authorizer for Trino, which decides which user is able to query which data.
+
+* Copy multiple data sources in CSV format into the S3 staging area
+* Convert data from csv to parquet files to reduces READ times of sql queries
+* Calculate hash value of event data. This ensures a unique identifier and ensures even distribution of data across HBase region server
+* Move data from S3 to HDFS
+* Create namespace for HBase and create Hfiles (a HBase dedicated file format) and subsequently import the Hfiles to Hbase.
+* Create phoenix view. The view will be visible by trino
+* Create tables for trino pointing to the files stored in S3
+
+You can see the deployed products as well as their relationship in the following diagram:
+
+image::demo-data-federation/overview.png[]
+
+== Scenario
+The analytics team wants to analyze the data generated from a webshop or a website.
+The event data from your E-Commerce Webshop is may be stored in hbase. Hbase has been proven of a well suited datastore for this kind of data.
+The details connected to your event data such as master data is stored somewhere else.
+Frequent questions around this issue can be:
+
+** how can I connect the data?
+** how can I easily manipulate the data?
+
+Having data stored in different places can result in additional ETL jobs if the data needs to be connected and analyzed.
+Since event data can get very large it can use up additional space or may be the data needs to be aggregated with the drawback of losing details.
+
+Another challenge in context of event data from a webshop results from the GDPR context.
+Since a few year consumers have the right to be forgotten. Nowadays the consumers frequently enforce their right to be forgotten and want all their data to be deleted.
+With hbase, users have access to a single row. The user is able to quickly identify a consumer and the events connect with the him.
+Since master data and other details are usually not stored all in HBase, the user needs to access different sources to get a big picture of the situation and e.g. delete all data related.
+
+This demo will try to connect event data stored in hbase with data stored in s3 to enrich the events (data federation).
+A federated database system (FDBS) is a type of meta-database management system (DBMS), which transparently maps multiple autonomous database systems into a single [federated database.]https://en.wikipedia.org/wiki/Federated_database_system
+
+== List deployed Stackable services
+To list the installed installed Stackable services run the following command:
+
+[source,console]
+----
+$ stackablectl services list --all-namespaces
+┌───────────┬─────────────┬───────────┬──────────────────────────────────────────────────────────┬
+│ Product   ┆ Name        ┆ Namespace ┆ Endpoints                                                ┆
+╞═══════════╪═════════════╪═══════════╪══════════════════════════════════════════════════════════╪
+│ hbase     ┆ hbase       ┆ gdpr      ┆ regionserver                  34.77.43.141:30299         ┆
+│           ┆             ┆           ┆ ui                            http://34.77.43.141:30633  ┆
+│           ┆             ┆           ┆ metrics                       34.77.43.141:30718         ┆
+├╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼
+│ hdfs      ┆ hdfs        ┆ gdpr      ┆ datanode-default-0-metrics    34.77.43.141:31691         ┆
+│           ┆             ┆           ┆ datanode-default-0-data       34.77.43.141:30589         ┆
+│           ┆             ┆           ┆ datanode-default-0-http       http://34.77.43.141:30690  ┆
+│           ┆             ┆           ┆ datanode-default-0-ipc        34.77.43.141:30545         ┆
+│           ┆             ┆           ┆ journalnode-default-0-metrics 34.77.43.141:30050         ┆
+│           ┆             ┆           ┆ journalnode-default-0-http    http://34.77.43.141:31652  ┆
+│           ┆             ┆           ┆ journalnode-default-0-https   https://34.77.43.141:30926 ┆
+│           ┆             ┆           ┆ journalnode-default-0-rpc     34.77.43.141:30259         ┆
+│           ┆             ┆           ┆ namenode-default-0-metrics    34.77.43.141:30961         ┆
+│           ┆             ┆           ┆ namenode-default-0-http       http://34.77.43.141:30266  ┆
+│           ┆             ┆           ┆ namenode-default-0-rpc        34.77.43.141:30281         ┆
+│           ┆             ┆           ┆ namenode-default-1-metrics    34.76.193.251:31728        ┆
+│           ┆             ┆           ┆ namenode-default-1-http       http://34.76.193.251:30601 ┆
+│           ┆             ┆           ┆ namenode-default-1-rpc        34.76.193.251:30094        ┆
+├╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼
+│ hive      ┆ hive        ┆ gdpr      ┆ hive                          34.77.43.141:30526         ┆
+│           ┆             ┆           ┆ metrics                       34.77.43.141:32325         ┆
+├╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼
+│ opa       ┆ opa         ┆ gdpr      ┆ http                          http://34.76.193.251:32223 ┆
+├╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼
+│ trino     ┆ trino       ┆ gdpr      ┆ coordinator-metrics           34.79.219.92:30747         ┆
+│           ┆             ┆           ┆ coordinator-https             https://34.79.219.92:31965 ┆
+├╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼
+│ zookeeper ┆ zookeeper   ┆ gdpr      ┆ zk                            34.79.219.92:30153         ┆
+├╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼
+│ minio     ┆ minio-trino ┆ gdpr      ┆ http                          http://34.76.193.251:31998 ┆
+│           ┆             ┆           ┆ console-http                  http://34.76.193.251:31122 ┆
+└───────────┴─────────────┴───────────┴──────────────────────────────────────────────────────────┴
+
+== MinIO
+=== List buckets
+The S3 provided by MinIO is used as persistent storage to store all the data used.
+Open the `minio` endpoint `console-http` retrieved by `stackablectl services list` in your browser (http://217.160.222.211:31429 in this case).
+
+Log in with the username `demo` and password `demodemo`.
+After logging in, you'll see the following structure
+
+1. `staging`: The demo loads static datasets into this area. It is stored in different compressed .csv files
+2. `warehouse`: This bucket includes the transformed data which is ready for production useage.
+
+image::demo-data-federation/minio.png[]
+
+
+== Python Transformation
+=== Calculate Row-Key
+Commonly, the selected data is not in the desired file format or essential key/identifiers are missing in supplied data.
+For Hbase a Row-Key is needed. The row-key ensure even distribution of the data along the region servers.
+In this example we deviate the row-key as a hash from the supplied identifier and timestamp.
+We do this with commonly known python. Thus, it does nor require knowledge of a dedicated tool and it require very little pre-requistes.
+The data with the deviated row-key is stored back to MinIO.
+
+=== Create .parquet files
+The second job is transforming .csv data to .parquet.
+https://parquet.apache.org/[Apache Parquet] file format will enable fast queries with trino.
+The transformed data will be stored back to MinIO into the `warehouse` section.
+
+
+== Pushing data to hdfs
+https://hadoop.apache.org/docs/stable/hadoop-distcp/DistCp.html[DistCp] (distributed copy) is a tool used for large inter/intra-cluster copying. It uses MapReduce to effect its distribution, error handling, recovery, and reporting. It expands a list of files and directories into input to map tasks, each of which will copy a partition of the files specified in the source list.
+Therefore, the first Job uses DistCp to copy data from a S3 bucket into HDFS. Below you'll see parts from the logs.
+
+[source]
+----
+
+----
+
+== Create Hfiles
+The second Job consists of 2 steps.
+
+First, we use `org.apache.hadoop.hbase.mapreduce.ImportTsv` (see https://hbase.apache.org/book.html#importtsv[ImportTsv Docs]) to Hfiles.
+Hfile is an Hbase dedicated file format which is performance optimized for hbase. It stores meta information about the data and thus increases the performance of hbase
+When connecting to the hbase master and opening a `bin/hbase shell` and executing `list`, you will see the created table. However, it'll contain 0 rows at this point.
+You can connect to the shell via
+[source]
+----
+kubectl exec -it hbase-master-default-0 -- bin/hbase shell
+----
+If you use k9s you can go into the `hbase-master-default-0` and execute `bin/hbase shell list`.
+
+
+== Load Hfiles to Hbase
+Creating Hfiles does not make the data available in HBase. Therefore, we'll use `org.apache.hadoop.hbase.tool.LoadIncrementalHFiles` (see https://hbase.apache.org/book.html#arch.bulk.load[see bulk load docs]) to import the Hfiles into the table.
+While importing the Hfiles we have created a namespace/schema. This is neccessary to encapsulate the data for phoenix. It ist simply more reliable to run in a dedicated namespace/schema.
+You can now use the `bin/hbase shell` again and execute `count 'T_EVENTS'` and see below for a partial result.
+
+
+== Apply schema and table for apache phoenix
+SQL is a widely adapted language and enables a broad audience access to data. Apache Phoenix makes Hbase accessible via SQL.
+This requires preparation by creating the same `demo_schema` schema as created before in hbase. The applies to the table as well.
+The table and columns need to be named identical to the hbase names. The ensures phoenix can access the data in hbase.
+
+[source,sql]
+----
+CREATE SCHEMA DEMO_SCHEMA;
+USE DEMO_SCHEMA;
+
+CREATE VIEW "T_EVENTS" (hash_col VARCHAR(100) PRIMARY KEY,
+                      "cf1"."EVENT" VARCHAR(100),
+                      "cf1"."ITEMID" VARCHAR(100),
+                      "cf1"."TIMESTAMP" VARCHAR(100),
+                      "cf1"."TRANSACTIONID" VARCHAR(100),
+                      "cf1"."VISITORID" VARCHAR(100));
+
+UPDATE STATISTICS T_EVENTS;
+----
+
+=== Delete mechanism
+The deletion of data in context of GDPR has been a controversial issue. Storage systems in the past have been developed with a focus on keeping data for an eternity and not removing data.
+With this stack the deletion of data can be as easy as `DELETE FROM phoenix.demo_schema.t_events WHERE phoenix.demo_schema.visitorid IN ('964404');`
+
+[WARNING]
+====
+The deletion mechanism does not work as of 12/2022. The hbase properties need to be adjusted to incorporate the push down of `DELETE` commands.
+Follow these tickets for progress:
+* https://github.com/stackabletech/hbase-operator/issues/246
+* https://github.com/stackabletech/hbase-operator/issues/289
+* https://github.com/stackabletech/hbase-operator/issues/288
+
+
+== Data federation with Trino
+Trino is used to enable SQL access to the data. The best way is to use an IDE for databases such as DBeaver.
+
+
+=== Connect with DBeaver
+https://dbeaver.io/[DBeaver] is free multi-platform database tool that can be used to connect to Trino.
+
+Open up the the given `trino` endpoint `coordinator-https` from your `stackablectl services list --all-namespaces` command output (https://34.79.219.92:31965 in this case).
+
+Create a connection by right clicking into the database navigator window.
+
+image::demo-data-federation/dbeaver-trino-open-config.png[]
+
+At first select the database you want to use. In this case select `trino`
+image::demo-data-federation/dbeaver-trino-select-database.png[]
+
+Enter the IP and port of the `coordinator-https`
+image::demo-data-federation/dbeaver-trino-config.png[]
+
+Enabling access means to set `SSL` to `true` in the `driver properties`.
+image::demo-data-federation/dbeaver-trino-properties-1.png[]
+
+In addition, in the `advanced properties` section the propertie `SSLVerification` needs to be added and set to `NONE`
+image::demo-data-federation/dbeaver-trino-properties-2.png[]
+
+=== Data access
+After opening the drop down menu, you will see the databases `hive` and `phoenix` and thus `hbase`.
+Opening the structure will show all available sources.
+Open a SQL editor and try the following query:
+
+[source,sql]
+----
+create or replace view hive.demo.events_with_attributes as (
+
+	select hbase.event
+			,hbase.visitorid
+			,hbase.timestamp
+			,FORMAT_DATETIME(FROM_UNIXTIME(cast(hbase.timestamp as BIGINT)/1000),'yyyy-MM-dd HH:mm:ss') as creation_time
+			,hbase.transactionid
+			,cast(hbase.itemid as BIGINT) as itemid
+			,hive.property
+			,hive.value
+	from phoenix.demo_schema.t_events as hbase
+	left join hive.demo.item_properties as hive
+	on cast(hbase.itemid as BIGINT) = hive.itemid
+);
+
+select count(*) as row_count
+from hive.demo.events_with_attributes;
+----

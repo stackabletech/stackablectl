@@ -76,7 +76,7 @@ data:
     
     assert run_query(connection, """
         CREATE TABLE IF NOT EXISTS hive.demo.item_properties (
-            timestamp TIMESTAMP,
+            timestamp DECIMAL(13,0),
             itemid BIGINT,
             property VARCHAR(200),
             value VARCHAR(200)
@@ -94,5 +94,33 @@ data:
     analyze_rows = run_query(connection, """ANALYZE hive.demo.item_properties""")[0][0]
     assert analyze_rows == loaded_rows
     stats = run_query(connection, """show stats for hive.demo.item_properties""")
+    print("Produced the following stats:")
+    print(*stats, sep="\n")
+
+    assert run_query(connection, """
+        create or replace view hive.demo.events_with_attributes as (
+  
+          select hbase.event
+          ,hbase.visitorid
+          ,hbase.timestamp
+          ,FORMAT_DATETIME(FROM_UNIXTIME(cast(hbase.timestamp as BIGINT)/1000),'yyyy-MM-dd HH:mm:ss') as creation_time
+          ,hbase.transactionid
+          ,cast(hbase.itemid as BIGINT) as itemid
+          ,hive.property
+          ,hive.value
+          from phoenix.demo_schema.t_events as hbase
+          left join hive.demo.item_properties as hive
+          on cast(hbase.itemid as BIGINT) = hive.itemid
+          );
+    """)[0][0] is True
+
+    loaded_rows = run_query(connection, "SELECT COUNT(*) FROM hive.demo.events_with_attributes")[0][0]
+    print(f"Loaded {loaded_rows} rows")
+    assert loaded_rows > 0
+
+    print("Analyzing table hive.demo.events_with_attributes")
+    analyze_rows = run_query(connection, """ANALYZE hive.demo.events_with_attributes""")[0][0]
+    assert analyze_rows == loaded_rows
+    stats = run_query(connection, """show stats for hive.demo.events_with_attributes""")
     print("Produced the following stats:")
     print(*stats, sep="\n")
