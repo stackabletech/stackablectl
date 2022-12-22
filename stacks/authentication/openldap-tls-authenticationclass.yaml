@@ -8,7 +8,7 @@ spec:
     ldap:
       hostname: openldap.default.svc.cluster.local
       searchBase: ou=users,dc=example,dc=org
-      # The bind credentials are used so an application can 'bind' to the LDAP server
+      # The bind credentials are used so an application can bind to the LDAP server
       bindCredentials:
         secretClass: ldap-bind-credentials
       port: 1636
@@ -17,6 +17,7 @@ spec:
           server:
             caCert:
               secretClass: openldap-tls
+
 ---
 apiVersion: secrets.stackable.tech/v1alpha1
 kind: SecretClass
@@ -27,3 +28,15 @@ spec:
     k8sSearch:
       searchNamespace:
         pod: {}
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ldap-bind-credentials
+  labels:
+    secrets.stackable.tech/class: ldap-bind-credentials
+stringData:
+  # User and password are defined in the OpenLDAP StatefulSet
+  user: cn=ldapadmin,dc=example,dc=org
+  password: ldapadminpassword
