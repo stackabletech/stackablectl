@@ -42,7 +42,7 @@ spec:
             - name: LDAP_PASSWORDS
               value: alice,bob
             - name: LDAP_ENABLE_TLS
-              value: \"yes\"
+              value: "yes"
             - name: LDAP_TLS_CERT_FILE
               value: /tls/tls.crt
             - name: LDAP_TLS_KEY_FILE
