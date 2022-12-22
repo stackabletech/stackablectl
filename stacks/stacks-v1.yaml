@@ -555,10 +555,23 @@ stacks:
       - helmChart: *template-vector-aggregator
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/logging/vector-aggregator-discovery.yaml
   tutorial-openldap:
-    description: An OpenLDAP instance with two users (Alice, Bob), no TLS and no AuthenticationClass configured.
+    description: >-
+      An OpenLDAP instance with two users (Alice, Bob) and TLS enabled.
+      No AuthenticationClass is configured, The AuthenticationClass is created manually in the tutorial.
+      Use the 'openldap' Stack for an OpenLDAD with an AuthenticationClass already installed.
     stackableRelease: 22.11
     labels:
       - authentication
       - ldap
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/feature/ldap-stack/stacks/tutorial/openldap.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/feature/ldap-stack/stacks/authentication/openldap-tls.yaml
+  openldap:
+    description: >-
+      An OpenLDAP instance with two users (Alice, Bob) and TLS enabled.
+    stackableRelease: 22.11
+    labels:
+      - authentication
+      - ldap
+    manifests:
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/feature/ldap-stack/stacks/authentication/openldap-tls.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/feature/ldap-stack/stacks/authentication/openldap-tls-authenticationclass.yaml
