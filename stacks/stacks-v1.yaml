@@ -554,3 +554,11 @@ stacks:
       - helmChart: *template-opensearch-dashboards
       - helmChart: *template-vector-aggregator
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/logging/vector-aggregator-discovery.yaml
+  tutorial-openldap:
+    description: An OpenLDAP instance with two users (Alice, Bob), no TLS and no AuthenticationClass configured.
+    stackableRelease: 22.11
+    labels:
+      - authentication
+      - ldap
+    manifests:
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/tutorial/openldap.yaml
