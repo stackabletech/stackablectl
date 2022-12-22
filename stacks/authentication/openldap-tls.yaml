@@ -10,6 +10,7 @@ spec:
         autoGenerate: true
         secret:
           name: openldap-tls-ca
+          namespace: default
 ---
 apiVersion: apps/v1
 kind: StatefulSet
