@@ -33,14 +33,20 @@ spec:
         - name: openldap
           image: docker.io/bitnami/openldap:2.6
           env:
+            # The Admin credentials. These are used to bind later.
             - name: LDAP_ADMIN_USERNAME
-              value: admin
+              value: ldapadmin
             - name: LDAP_ADMIN_PASSWORD
-              value: admin
+              value: ldapadminpassword
+            # Regular users to create
             - name: LDAP_USERS
-              value: alice,bob
+              value: alice,bob,supersetbind
             - name: LDAP_PASSWORDS
-              value: alice,bob
+              value: alice,bob,supersetbindpw
+            # Disallow anonymous binding
+            - name: LDAP_ALLOW_ANON_BINDING
+              value: "no"
+            # TLD config
             - name: LDAP_ENABLE_TLS
               value: "yes"
             - name: LDAP_TLS_CERT_FILE

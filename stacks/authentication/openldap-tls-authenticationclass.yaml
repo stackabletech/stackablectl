@@ -8,11 +8,22 @@ spec:
     ldap:
       hostname: openldap.default.svc.cluster.local
       searchBase: ou=users,dc=example,dc=org
+      # The bind credentials are used so an application can 'bind' to the LDAP server
       bindCredentials:
-        secretClass: trino-with-ldap-bind
+        secretClass: ldap-bind-credentials
       port: 1636
       tls:
         verification:
           server:
             caCert:
               secretClass: openldap-tls
+---
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: ldap-bind-credentials
+spec:
+  backend:
+    k8sSearch:
+      searchNamespace:
+        pod: {}
