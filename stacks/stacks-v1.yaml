@@ -561,4 +561,4 @@ stacks:
       - authentication
       - ldap
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/tutorial/openldap.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/feature/ldap-stack/stacks/tutorial/openldap.yaml
