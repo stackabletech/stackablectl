@@ -554,3 +554,28 @@ stacks:
       - helmChart: *template-opensearch-dashboards
       - helmChart: *template-vector-aggregator
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/logging/vector-aggregator-discovery.yaml
+  tutorial-openldap:
+    description: >-
+      An OpenLDAP instance with two users (alice:alice, bob:bob) and TLS enabled.
+      The bind user credentials are: ldapadmin:ldapadminpassword.
+      No AuthenticationClass is configured, The AuthenticationClass is created manually in the tutorial.
+      Use the 'openldap' Stack for an OpenLDAD with an AuthenticationClass already installed.
+    stackableRelease: 22.11
+    labels:
+      - authentication
+      - ldap
+    manifests:
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
+  openldap:
+    description: >-
+      An OpenLDAP instance with two users (alice:alice, bob:bob) and TLS enabled.
+      The bind user credentials are: ldapadmin:ldapadminpassword.
+      The LDAP AuthenticationClass is called 'ldap' and the SecretClass for the bind credentials is called 'ldap-bind-credentials'.
+      The stack already creates an appropriate Secret, so referring to the 'ldap' AuthenticationClass in your ProductCluster should be enough.
+    stackableRelease: 22.11
+    labels:
+      - authentication
+      - ldap
+    manifests:
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls-authenticationclass.yaml
