@@ -565,7 +565,7 @@ stacks:
       - authentication
       - ldap
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/feature/ldap-stack/stacks/authentication/openldap-tls.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
   openldap:
     description: >-
       An OpenLDAP instance with two users (alice:alice, bob:bob) and TLS enabled.
@@ -577,5 +577,5 @@ stacks:
       - authentication
       - ldap
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/feature/ldap-stack/stacks/authentication/openldap-tls.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/feature/ldap-stack/stacks/authentication/openldap-tls-authenticationclass.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls-authenticationclass.yaml
