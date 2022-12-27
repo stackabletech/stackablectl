@@ -40,9 +40,9 @@ spec:
               value: ldapadminpassword
             # Regular users to create
             - name: LDAP_USERS
-              value: alice,bob,supersetbind
+              value: alice,bob
             - name: LDAP_PASSWORDS
-              value: alice,bob,supersetbindpw
+              value: alice,bob
             # Disallow anonymous binding
             - name: LDAP_ALLOW_ANON_BINDING
               value: "no"
