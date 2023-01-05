@@ -10,6 +10,7 @@
 
 - Print CLI tables using [comfy-table](https://crates.io/crates/comfy-table) ([#176](https://github.com/stackabletech/stackablectl/pull/176))
 - Bump kube to 0.77 ([#201](https://github.com/stackabletech/stackablectl/pull/201))
+- Bump go k8s client to 0.26.0 ([#202](https://github.com/stackabletech/stackablectl/pull/202))
 
 ## [0.6.0] - 2022-10-28
 
