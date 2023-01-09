@@ -110,31 +110,63 @@ _templates:
       repo:
         name: bitnami
         url: https://charts.bitnami.com/bitnami/
-      version: 10.16.2
+      version: 12.1.5
       options:
-        # Old version (10) of helm-charts has old way of setting credentials
-        postgresqlUsername: hive
-        postgresqlPassword: hive
-        postgresqlDatabase: hive
+        auth:
+          username: hive
+          password: hive
+          database: hive
+        primary:
+          extendedConfiguration: password_encryption=md5
   - helmChart: &template-postgresql-hive-iceberg
       releaseName: postgresql-hive-iceberg
       name: postgresql
       repo:
         name: bitnami
         url: https://charts.bitnami.com/bitnami/
-      version: 10.16.2
+      version: 12.1.5
       options:
-        # Old version (10) of helm-charts has old way of setting credentials
-        postgresqlUsername: hive
-        postgresqlPassword: hive
-        postgresqlDatabase: hive
+        auth:
+          username: hive
+          password: hive
+          database: hive
+        primary:
+          extendedConfiguration: password_encryption=md5
+  - helmChart: &template-postgresql-hivehdfs
+      releaseName: hivehdfs
+      name: postgresql
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 12.1.5
+      options:
+        auth:
+          username: hive
+          password: hive
+          database: hivehdfs
+        primary:
+          extendedConfiguration: password_encryption=md5
+  - helmChart: &template-postgresql-hives3
+      releaseName: hives3
+      name: postgresql
+      repo:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami/
+      version: 12.1.5
+      options:
+        auth:
+          username: hive
+          password: hive
+          database: hives3
+        primary:
+          extendedConfiguration: password_encryption=md5
   - helmChart: &template-postgresql-druid
       releaseName: postgresql-druid
       name: postgresql
       repo:
         name: bitnami
         url: https://charts.bitnami.com/bitnami/
-      version: 11.0.0
+      version: 12.1.5
       options:
         auth:
           username: druid
@@ -146,7 +178,7 @@ _templates:
       repo:
         name: bitnami
         url: https://charts.bitnami.com/bitnami/
-      version: 11.0.0
+      version: 12.1.5
       options:
         auth:
           username: superset
@@ -158,7 +190,7 @@ _templates:
       repo:
         name: bitnami
         url: https://charts.bitnami.com/bitnami/
-      version: 11.0.0
+      version: 12.1.5
       options:
         auth:
           username: airflow
@@ -170,7 +202,7 @@ _templates:
       repo:
         name: bitnami
         url: https://charts.bitnami.com/bitnami/
-      version: 16.13.2
+      version: 17.3.17
       options:
         auth:
           password: airflow
@@ -394,28 +426,6 @@ _templates:
                   resources:
                     requests:
                       storage: 1
-  - helmChart: &template-postgresql-hivehdfs
-      releaseName: hivehdfs
-      name: postgresql
-      repo:
-        name: bitnami
-        url: https://charts.bitnami.com/bitnami/
-      version: 10.16.2
-      options:
-        postgresqlUsername: hive
-        postgresqlPassword: hive
-        postgresqlDatabase: hivehdfs
-  - helmChart: &template-postgresql-hives3
-      releaseName: hives3
-      name: postgresql
-      repo:
-        name: bitnami
-        url: https://charts.bitnami.com/bitnami/
-      version: 10.16.2
-      options:
-        postgresqlUsername: hive
-        postgresqlPassword: hive
-        postgresqlDatabase: hives3
 
 stacks:
   airflow:
