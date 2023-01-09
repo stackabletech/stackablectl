@@ -473,6 +473,7 @@ stacks:
       - s3
     manifests:
       - helmChart: *template-minio-druid
+      - helmChart: *template-postgresql-druid
       - helmChart: *template-postgresql-superset
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/zookeeper.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/kafka.yaml
