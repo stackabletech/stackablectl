@@ -58,6 +58,14 @@ You can view the available buckets as well as objects (think of files) as descri
 == Connect to Trino
 Have a look at xref:demos/data-lakehouse-iceberg-trino-spark.adoc#_connect_with_dbeaver[documentation on how to connect with DBeaver].
 
+As a alternative you can use https://trino.io/download.html[trino-cli] by running
+[source,bash]
+----
+java -jar ~/Downloads/trino-cli-396-executable.jar --user admin --insecure --password --server https://172.18.0.3:31250
+----
+
+Make sure to replace the server endpoint with the endpoint listed in the `stackablectl services list` output.
+
 == Create testdata
 === Create Schema
 First of you need to create a schema in the lakehouse to store the testdata
