@@ -1,0 +1,120 @@
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  version: 403-stackable0.1.0
+  catalogLabelSelector:
+    matchLabels:
+      trino: trino
+  authentication:
+    method:
+      multiUser:
+        userCredentialsSecret:
+          name: trino-users
+  opa:
+    configMapName: opa
+    package: trino
+  coordinators:
+    config:
+      queryMaxMemory: 10TB
+      resources:
+        cpu:
+          min: "2"
+          max: "4"
+        memory:
+          limit: '6Gi'
+    roleGroups:
+      default:
+        replicas: 1
+  workers:
+    config:
+      queryMaxMemoryPerNode: 6GB
+      resources:
+        cpu:
+          min: "2"
+          max: "4"
+        memory:
+          limit: '12Gi'
+    roleGroups:
+      default:
+        replicas: 1
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trino-users
+type: kubernetes.io/opaque
+stringData:
+  # htpasswd -n -B -C 10 admin # pass adminadmin
+  admin: $2y$10$6eXlCsbvSNsLaeClkOeRZujIM4aKIFuSXbwGUej7eEOFbkeo.BQBO
+  # htpasswd -n -B -C 10 demo # pass demo
+  demo: $2y$10$mMRoIKfWtAuycEQnKiDCeOlCSYiWkvbs0WsMFLkaSnNO0ZnFKVRXm
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: lakehouse
+  labels:
+    trino: trino
+spec:
+  connector:
+    iceberg:
+      metastore:
+        configMap: hive-iceberg
+      s3:
+        reference: minio
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: tpcds
+  labels:
+    trino: trino
+spec:
+  connector:
+    tpcds: {}
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: tpch
+  labels:
+    trino: trino
+spec:
+  connector:
+    tpch: {}
+---
+apiVersion: opa.stackable.tech/v1alpha1
+kind: OpaCluster
+metadata:
+  name: opa
+spec:
+  version: 0.45.0-stackable0.1.0
+  servers:
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trino-opa-bundle
+  labels:
+    opa.stackable.tech/bundle: "trino"
+data:
+  trino.rego: |
+    package trino
+
+    default allow = false
+
+    allow {
+      input.context.identity.user == "admin"
+    }
+
+    allow {
+      input.context.identity.user == "demo"
+    }

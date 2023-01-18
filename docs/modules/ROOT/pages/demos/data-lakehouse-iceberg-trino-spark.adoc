@@ -3,8 +3,12 @@
 [WARNING]
 ====
 This demo shows a data workload with real world data volumes and uses significant amount of resources to ensure acceptable response times.
-It will most likely not run on your workstation. It was developed and tested on a kubernetes cluster with 10 nodes (4 cores (8 threads), 20GB RAM and 30GB HDD).
+It will most likely not run on your workstation.
 
+There is also the smaller xref:demos/trino-iceberg.adoc[] demo focusing on the abilities a lakehouse using Apache Iceberg offers.
+The `trino-iceberg` demo has no streaming data part and can be executed on a local workstation.
+
+The demo was developed and tested on a kubernetes cluster with 10 nodes (4 cores (8 threads), 20GB RAM and 30GB HDD).
 Instance types that loosely correspond to this on the Hyperscalers are:
 
 - *Google*: `e2-standard-8`
@@ -12,8 +16,6 @@ Instance types that loosely correspond to this on the Hyperscalers are:
 - *AWS*: `m5.2xlarge`
 
 In addition to these nodes the operators will request multiple persistent volumes with a total capacity of about 1TB.
-
-A smaller version of this demo might be created in the future.
 ====
 
 [NOTE]
@@ -80,30 +82,30 @@ To list the installed installed Stackable services run the following command:
 [source,console]
 ----
 $ stackablectl services list --all-namespaces
- PRODUCT    NAME          NAMESPACE  ENDPOINTS                                          EXTRA INFOS                             
-                                                                                                                                
- hive       hive          default    hive                212.227.224.138:31022                                                  
-                                     metrics             212.227.224.138:30459                                                  
-                                                                                                                                
- hive       hive-iceberg  default    hive                212.227.233.131:31511                                                  
-                                     metrics             212.227.233.131:30003                                                  
-                                                                                                                                
- kafka      kafka         default    metrics             217.160.118.190:32160                                                  
-                                     kafka               217.160.118.190:31736                                           
-                                                                                                                                
- nifi       nifi          default    https               https://217.160.120.117:31499  Admin user: admin, password: adminadmin 
-                                                                                                                                
- opa        opa           default    http                http://217.160.222.211:31767                                           
-                                                                                                                                
- superset   superset      default    external-superset   http://212.227.233.47:32393    Admin user: admin, password: adminadmin      
-                                                                                                                                
- trino      trino         default    coordinator-metrics 212.227.224.138:30610                                                  
-                                     coordinator-https   https://212.227.224.138:30876                                          
-                                                                                                                                
- zookeeper  zookeeper     default    zk                  212.227.224.138:32321                                                  
-                                                                                                                                
- minio      minio         default    http                http://217.160.222.211:32031   Third party service                     
-                                     console-http        http://217.160.222.211:31429   Admin user: admin, password: adminadmin 
+ PRODUCT    NAME          NAMESPACE  ENDPOINTS                                          EXTRA INFOS
+
+ hive       hive          default    hive                212.227.224.138:31022
+                                     metrics             212.227.224.138:30459
+
+ hive       hive-iceberg  default    hive                212.227.233.131:31511
+                                     metrics             212.227.233.131:30003
+
+ kafka      kafka         default    metrics             217.160.118.190:32160
+                                     kafka               217.160.118.190:31736
+
+ nifi       nifi          default    https               https://217.160.120.117:31499  Admin user: admin, password: adminadmin
+
+ opa        opa           default    http                http://217.160.222.211:31767
+
+ superset   superset      default    external-superset   http://212.227.233.47:32393    Admin user: admin, password: adminadmin
+
+ trino      trino         default    coordinator-metrics 212.227.224.138:30610
+                                     coordinator-https   https://212.227.224.138:30876
+
+ zookeeper  zookeeper     default    zk                  212.227.224.138:32321
+
+ minio      minio         default    http                http://217.160.222.211:32031   Third party service
+                                     console-http        http://217.160.222.211:31429   Admin user: admin, password: adminadmin
 ----
 
 [NOTE]
