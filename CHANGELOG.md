@@ -5,6 +5,7 @@
 ### Added
 
 - Support listing OpenSearch Dashboards services ([#187](https://github.com/stackabletech/stackablectl/pull/187)).
+- Add support for listing Spark History Servers ([#210](https://github.com/stackabletech/stackablectl/pull/210)).
 
 ### Changed
 
