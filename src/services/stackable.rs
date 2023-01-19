@@ -85,6 +85,14 @@ lazy_static! {
                 }
             ),
             (
+                "spark-history-server",
+                GroupVersionKind {
+                    group: "spark.stackable.tech".to_string(),
+                    version: "v1alpha1".to_string(),
+                    kind: "SparkHistoryServer".to_string(),
+                }
+            ),
+            (
                 "superset",
                 GroupVersionKind {
                     group: "superset.stackable.tech".to_string(),
