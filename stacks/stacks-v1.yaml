@@ -430,13 +430,13 @@ _templates:
 stacks:
   airflow:
     description: Stack containing Airflow scheduling platform
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - airflow
     manifests:
       - helmChart: *template-postgresql-airflow
       - helmChart: *template-redis-airflow
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
+      - plainYaml: stacks/airflow/airflow.yaml
   data-lakehouse-iceberg-trino-spark:
     description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
     stackableRelease: 22.11
@@ -462,7 +462,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - hbase
       - hdfs
@@ -489,7 +489,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml
   nifi-kafka-druid-superset-s3:
     description: Stack containing NiFi, Kafka, Druid, MinIO and Superset for data visualization
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - nifi
       - kafka
@@ -508,7 +508,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
   spark-trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - trino
       - superset
@@ -524,7 +524,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/superset.yaml
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - trino
       - superset
@@ -539,7 +539,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
   dual-hive-hdfs-s3:
     description: Dual stack Hive on HDFS and S3 for Hadoop/Hive to Trino migration
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - trino
       - hive
@@ -571,7 +571,7 @@ stacks:
       The bind user credentials are: ldapadmin:ldapadminpassword.
       No AuthenticationClass is configured, The AuthenticationClass is created manually in the tutorial.
       Use the 'openldap' Stack for an OpenLDAD with an AuthenticationClass already installed.
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - authentication
       - ldap
@@ -583,7 +583,7 @@ stacks:
       The bind user credentials are: ldapadmin:ldapadminpassword.
       The LDAP AuthenticationClass is called 'ldap' and the SecretClass for the bind credentials is called 'ldap-bind-credentials'.
       The stack already creates an appropriate Secret, so referring to the 'ldap' AuthenticationClass in your ProductCluster should be enough.
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - authentication
       - ldap
