@@ -6,8 +6,10 @@ metadata:
 spec:
   image:
     productVersion: 3.8.0
-    stackableVersion: 0.9.0
-  vectorAggregatorConfigMapName: vector-aggregator-discovery
+    stackableVersion: "23.1"
+  clusterConfig:
+    logging:
+      vectorAggregatorConfigMapName: vector-aggregator-discovery
   servers:
     roleGroups:
       default:
