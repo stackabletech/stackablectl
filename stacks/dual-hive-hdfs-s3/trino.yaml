@@ -60,7 +60,9 @@ kind: TrinoCluster
 metadata:
   name: trino
 spec:
-  version: 396-stackable0.2.0
+  image:
+    productVersion: 396
+    stackableVersion: "23.1"
   catalogLabelSelector:
     matchLabels:
       trino: trino
@@ -93,6 +95,9 @@ metadata:
   name: opa
 spec:
   version: 0.41.0-stackable0.1.0
+  image:
+    productVersion: 0.41.0
+    stackableVersion: "23.1"
   servers:
     roleGroups:
       default:

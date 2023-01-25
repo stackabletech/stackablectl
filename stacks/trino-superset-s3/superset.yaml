@@ -4,8 +4,9 @@ kind: SupersetCluster
 metadata:
   name: superset
 spec:
-  version: 1.5.1-stackable0.2.0
-  statsdExporterVersion: v0.22.4
+  image:
+    productVersion: 1.5.1
+    stackableVersion: "23.1"
   credentialsSecret: superset-credentials
   mapboxSecret: superset-mapbox-api-key
   nodes:

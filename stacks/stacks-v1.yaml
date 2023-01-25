@@ -439,7 +439,7 @@ stacks:
       - plainYaml: stacks/airflow/airflow.yaml
   data-lakehouse-iceberg-trino-spark:
     description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - iceberg
       - trino
@@ -472,7 +472,7 @@ stacks:
       - plainYaml: stacks/hdfs-hbase/hbase.yaml
   kafka-druid-superset-s3:
     description: Stack containing Kafka, MinIO, Druid and Superset for data visualization
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - kafka
       - druid
@@ -483,10 +483,10 @@ stacks:
       - helmChart: *template-minio-druid
       - helmChart: *template-postgresql-druid
       - helmChart: *template-postgresql-superset
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/zookeeper.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/kafka.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/druid.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml
+      - plainYaml: stacks/kafka-druid-superset-s3/zookeeper.yaml
+      - plainYaml: stacks/kafka-druid-superset-s3/kafka.yaml
+      - plainYaml: stacks/kafka-druid-superset-s3/druid.yaml
+      - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml
   nifi-kafka-druid-superset-s3:
     description: Stack containing NiFi, Kafka, Druid, MinIO and Superset for data visualization
     stackableRelease: 23.1
@@ -501,11 +501,11 @@ stacks:
       - helmChart: *template-minio-druid
       - helmChart: *template-postgresql-druid
       - helmChart: *template-postgresql-superset
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/zookeeper.yaml # Reuse
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/kafka.yaml # Reuse
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/druid.yaml # Reuse
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+      - plainYaml: stacks/kafka-druid-superset-s3/zookeeper.yaml # Reuse
+      - plainYaml: stacks/kafka-druid-superset-s3/kafka.yaml # Reuse
+      - plainYaml: stacks/kafka-druid-superset-s3/druid.yaml # Reuse
+      - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml # Reuse
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/nifi.yaml
   spark-trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
     stackableRelease: 23.1
@@ -519,9 +519,9 @@ stacks:
       - helmChart: *template-postgresql-hive
       - helmChart: *template-postgresql-hive-iceberg
       - helmChart: *template-postgresql-superset
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/hive-metastore.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/superset.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/trino.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/superset.yaml
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
     stackableRelease: 23.1
@@ -534,9 +534,9 @@ stacks:
       - helmChart: *template-minio-trino
       - helmChart: *template-postgresql-hive
       - helmChart: *template-postgresql-superset
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
+      - plainYaml: stacks/trino-superset-s3/hive-metastore.yaml
+      - plainYaml: stacks/trino-superset-s3/trino.yaml
+      - plainYaml: stacks/trino-superset-s3/superset.yaml
   dual-hive-hdfs-s3:
     description: Dual stack Hive on HDFS and S3 for Hadoop/Hive to Trino migration
     stackableRelease: 23.1
@@ -554,7 +554,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
   logging:
     description: Stack containing OpenSearch, OpenSearch Dashboards, and Vector
-    stackableRelease: 23.01
+    stackableRelease: 23.1
     labels:
       - logging
       - opensearch

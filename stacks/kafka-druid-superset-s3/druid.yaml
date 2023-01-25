@@ -4,28 +4,31 @@ kind: DruidCluster
 metadata:
   name: druid
 spec:
-  version: 24.0.0-stackable0.1.0
-  zookeeperConfigMapName: druid-znode
-  metadataStorageDatabase:
-    dbType: postgresql
-    connString: jdbc:postgresql://postgresql-druid/druid
-    host: postgresql-druid
-    port: 5432
-    user: druid
-    password: druid
-  deepStorage:
-    s3:
-      bucket:
-        inline:
-          bucketName: druid
-          connection:
-            inline:
-              host: minio-druid
-              port: 9000
-              accessStyle: Path
-              credentials:
-                secretClass: druid-s3-credentials
-      baseKey: data
+  image:
+    productVersion: 24.0.0
+    stackableVersion: "23.1"
+  clusterConfig:
+    zookeeperConfigMapName: druid-znode
+    metadataStorageDatabase:
+      dbType: postgresql
+      connString: jdbc:postgresql://postgresql-druid/druid
+      host: postgresql-druid
+      port: 5432
+      user: druid
+      password: druid
+    deepStorage:
+      s3:
+        bucket:
+          inline:
+            bucketName: druid
+            connection:
+              inline:
+                host: minio-druid
+                port: 9000
+                accessStyle: Path
+                credentials:
+                  secretClass: druid-s3-credentials
+        baseKey: data
   brokers:
     roleGroups:
       default:
