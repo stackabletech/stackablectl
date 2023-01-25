@@ -554,7 +554,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
   logging:
     description: Stack containing OpenSearch, OpenSearch Dashboards, and Vector
-    stackableRelease: 23.01
+    stackableRelease: 23.1
     labels:
       - logging
       - opensearch
