@@ -570,7 +570,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
   trino-iceberg:
     description: Stack containing Trino using Apache Iceberg as a S3 data lakehouse
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - trino
       - iceberg
