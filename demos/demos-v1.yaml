@@ -116,4 +116,15 @@ demos:
       - ny-taxi-data
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/load-test-data.yaml
- 
+  logging:
+    description: Demo showing the logging stack in action
+    documentation: https://docs.stackable.tech/stackablectl/stable/demos/logging.html
+    stackableStack: logging
+    labels:
+      - logging
+      - opensearch
+      - opensearch-dashboards
+      - vector
+      - zookeeper
+    manifests:
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/logging/zookeeper.yaml

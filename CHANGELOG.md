@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Added
+
+- Support listing OpenSearch Dashboards services ([#187](https://github.com/stackabletech/stackablectl/pull/187)).
+- Add support for listing Spark History Servers ([#210](https://github.com/stackabletech/stackablectl/pull/210)).
+
+### Changed
+
+- Print CLI tables using [comfy-table](https://crates.io/crates/comfy-table) ([#176](https://github.com/stackabletech/stackablectl/pull/176))
+- Bump kube to 0.77 ([#201](https://github.com/stackabletech/stackablectl/pull/201))
+- Bump go k8s client to 0.26.0 ([#202](https://github.com/stackabletech/stackablectl/pull/202))
+- Bump kube, k8s-openapi and tokio ([#205](https://github.com/stackabletech/stackablectl/pull/205))
+
 ## [0.6.0] - 2022-10-28
 
 ### Added

@@ -1,0 +1,110 @@
+= logging
+
+This demo will
+
+* Install the required Stackable operators.
+* Spin up the follow data products:
+** *Apache ZooKeeper*: A centralized service for maintaining configuration
+information, naming, providing distributed synchronization, and providing group
+services. This demo makes its log data observable in OpenSearch Dashboards.
+** *Vector*: A tool for building observability pipelines. This demo uses Vector
+as a log agent to gather and transform the logs and as an aggregator to forward
+the collected logs to OpenSearch.
+** *OpenSearch*: A data store and search engine. This demo uses it to store and
+index the log data.
+** *OpenSearch Dashboards*: A visualization and user interface. This demo uses
+it to make the log data easily accessible to the user.
+* Create a view in OpenSearch Dashboards for convenient browsing the log data.
+
+You can see the deployed products as well as their relationship in the
+following diagram:
+
+image::logging/overview.png[]
+
+== OpenSearch prerequisites
+
+=== Mac and Windows
+
+If you are running on Mac or Windows and use Docker to run Kubernetes then set
+the RAM to at least 4 GB in _Preferences_ > _Resources_.
+
+=== Linux
+
+OpenSearch uses a mmapfs directory by default to store its indices. The default
+operating system limits on mmap counts is likely to be too low – usually 65530,
+which may result in out of memory exceptions. So the Linux setting
+`vm.max_map_count` on the host machine where kind is running, must be set to at
+least 262144.
+
+To check the current value, run this command:
+
+[source,console]
+----
+sysctl vm.max_map_count
+----
+
+The limit can be temporarily increased with:
+
+[source,console]
+----
+sudo sysctl --write vm.max_map_count=262144
+----
+
+To permanently increase the value, add the following line to `/etc/sysctl.conf`:
+
+[source,.properties]
+----
+vm.max_map_count=262144
+----
+
+Then run `sudo sysctl --load` to reload.
+
+== Run the demo
+
+The following command creates a kind cluster and installs this demo:
+
+[source,console]
+----
+$ stackablectl demo install logging --kind-cluster
+----
+
+== List deployed Stackable services
+
+To list the installed Stackable services run the following command:
+
+[source,console]
+----
+$ stackablectl services list
+┌───────────────────────┬───────────────────────┬───────────┬──────────────────────────────┬───────────────────────────────────────────────────────────────────────────────────┐
+│ Product               ┆ Name                  ┆ Namespace ┆ Endpoints                    ┆ Info                                                                              │
+╞═══════════════════════╪═══════════════════════╪═══════════╪══════════════════════════════╪═══════════════════════════════════════════════════════════════════════════════════╡
+│ opensearch-dashboards ┆ opensearch-dashboards ┆ default   ┆ http http://172.18.0.5:31319 ┆ Third party service                                                               │
+│                       ┆                       ┆           ┆                              ┆ Logs view: http://172.18.0.5:31319/app/discover?security_tenant=global#/view/logs │
+│                       ┆                       ┆           ┆                              ┆ Username: admin, password: adminadmin                                             │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│ zookeeper             ┆ simple-zk             ┆ default   ┆ zk   172.18.0.2:32417        ┆                                                                                   │
+└───────────────────────┴───────────────────────┴───────────┴──────────────────────────────┴───────────────────────────────────────────────────────────────────────────────────┘
+----
+
+[NOTE]
+====
+When a product instance has not finished starting yet, the service will have no
+endpoint. Starting all the product instances might take a considerable amount
+of time depending on your internet connectivity. In case the product is not
+ready yet, a warning might be shown.
+====
+
+== Inspect the log data
+
+You can have a look at the log data within the OpenSearch Dashboards web
+interface by running `stackablectl services list` and opening the URL shown in
+the info column of the `opensearch-dashboards` entry. In this case it is
+http://172.18.0.5:31319/app/discover?security_tenant=global#/view/logs.
+
+image::logging/login.png[]
+
+Log in with the username `admin` and password `adminadmin`.
+
+image::logging/logs.png[]
+
+Inspect the logs.

@@ -1,6 +1,10 @@
 use crate::{arguments::OutputType, helm, helm::HELM_REPOS, helpers, kind, kube, release, CliArgs};
 use cached::proc_macro::cached;
 use clap::{Parser, ValueHint};
+use comfy_table::{
+    presets::{NOTHING, UTF8_FULL},
+    Cell, ContentArrangement, Table,
+};
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{debug, info, warn};
@@ -121,13 +125,23 @@ async fn list_stacks(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
     let output = get_stacks().await;
     match output_type {
         OutputType::Text => {
-            println!("STACK                               STACKABLE RELEASE  DESCRIPTION");
+            let mut table = Table::new();
+            table
+                .load_preset(UTF8_FULL)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .set_header(vec![
+                    Cell::new("Stack"),
+                    Cell::new("Stackable release"),
+                    Cell::new("Description"),
+                ]);
             for (stack_name, stack) in output.stacks {
-                println!(
-                    "{:35} {:18} {}",
-                    stack_name, stack.stackable_release, stack.description,
-                );
+                table.add_row(vec![
+                    Cell::new(stack_name),
+                    Cell::new(stack.stackable_release),
+                    Cell::new(stack.description),
+                ]);
             }
+            println!("{table}");
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output)?);
@@ -160,10 +174,24 @@ async fn describe_stack(stack_name: &str, output_type: &OutputType) -> Result<()
 
     match output_type {
         OutputType::Text => {
-            println!("Stack:              {}", output.stack);
-            println!("Description:        {}", output.description);
-            println!("Stackable release:  {}", output.stackable_release);
-            println!("Labels:             {}", output.labels.join(", "));
+            let mut table = Table::new();
+            table
+                .load_preset(NOTHING)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .add_row(vec![Cell::new("Stack"), Cell::new(output.stack)])
+                .add_row(vec![
+                    Cell::new("Description"),
+                    Cell::new(output.description),
+                ])
+                .add_row(vec![
+                    Cell::new("Stackable release"),
+                    Cell::new(output.stackable_release),
+                ])
+                .add_row(vec![
+                    Cell::new("Labels"),
+                    Cell::new(output.labels.join(", ")),
+                ]);
+            println!("{table}");
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output)?);

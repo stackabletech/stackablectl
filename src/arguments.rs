@@ -84,19 +84,19 @@ pub struct CliArgs {
 
 #[derive(Parser)]
 pub enum CliCommand {
-    /// This subcommand interacts with single operators if you don’t want to install the full platform.
+    /// This command interacts with single operators if you don’t want to install the full platform.
     #[command(subcommand, alias("o"), alias("op"))]
     Operator(CliCommandOperator),
 
-    /// This subcommand interacts with all operators of the platform that are released together.
+    /// This command interacts with all operators of the platform that are released together.
     #[command(subcommand, alias("r"), alias("re"))]
     Release(CliCommandRelease),
 
-    /// This subcommand interacts with stacks, which are ready-to-use combinations of products.
+    /// This command interacts with stacks, which are ready-to-use combinations of products.
     #[command(subcommand, alias("s"), alias("st"))]
     Stack(CliCommandStack),
 
-    /// This subcommand interacts with deployed services of products.
+    /// This command interacts with deployed services of products.
     #[command(subcommand, alias("svc"))]
     Services(CliCommandServices),
 
