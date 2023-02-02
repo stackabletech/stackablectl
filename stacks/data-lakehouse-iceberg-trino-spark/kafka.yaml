@@ -37,6 +37,6 @@ spec:
             # 5 brokers
             # and 1 topic (with 27 partitions) with large volume of data
             # 50Gi pvc * 5 brokers = 250Gi total disk size.
-            # Lets aim for 50% => 0.7 * 250Gi = 125Gi / 27 partitions = 4.6Gi
+            # Lets aim for 50% => 0.5 * 250Gi = 125Gi / 27 partitions = 4.6Gi
             log.segment.bytes: "50000000" # 0.5GB
             log.retention.bytes: "4000000000" # 4 GB. Should keep between 4.0 and 4.5GB

@@ -34,4 +34,11 @@ spec:
         replicas: 1
         configOverrides:
           server.properties:
-            log.retention.bytes: "4294967296" # 4Gi, as this is for every partition and the demos/users might add multiple topics
+            num.partitions: "27"
+            # We have
+            # 1 brokers
+            # and 2 topic (with 27 partitions)
+            # 15Gi pvc * 1 brokers = 15Gi total disk size.
+            # Lets aim for 50% => 0.5 * 15Gi = 7.5Gi / 54 partitions = 0.138Gi
+            log.segment.bytes: "5000000" # 0.05GB
+            log.retention.bytes: "10000000" # 0.10 GB. Should keep between 0.10 and 0.15 GB
