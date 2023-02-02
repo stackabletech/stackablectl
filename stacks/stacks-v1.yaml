@@ -485,12 +485,12 @@ stacks:
       - helmChart: *template-postgresql-hive
       - helmChart: *template-postgresql-hive-iceberg
       - helmChart: *template-postgresql-superset
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
+      - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml # Reuse
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
     stackableRelease: 23.1
@@ -579,9 +579,9 @@ stacks:
     manifests:
       - helmChart: *template-minio-distributed-small
       - helmChart: *template-postgresql-hive-iceberg
-      - plainYaml: stacks/trino-iceberg/s3-connection.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/s3-connection.yaml
-      - plainYaml: stacks/trino-iceberg/hive-metastores.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/hive-metastores.yaml
-      - plainYaml: stacks/trino-iceberg/trino.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/trino.yaml
+      - plainYaml: stacks/trino-iceberg/s3-connection.yaml
+      - plainYaml: stacks/trino-iceberg/hive-metastores.yaml
+      - plainYaml: stacks/trino-iceberg/trino.yaml
   dual-hive-hdfs-s3:
     description: Dual stack Hive on HDFS and S3 for Hadoop/Hive to Trino migration
     stackableRelease: 23.1
@@ -594,9 +594,9 @@ stacks:
       - helmChart: *template-postgresql-hivehdfs
       - helmChart: *template-postgresql-hives3
       - helmChart: *template-minio-trino
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hdfs.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hive.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/hdfs.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/hive.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/trino.yaml
   logging:
     description: Stack containing OpenSearch, OpenSearch Dashboards, and Vector
     stackableRelease: 23.1
@@ -609,7 +609,7 @@ stacks:
       - helmChart: *template-opensearch
       - helmChart: *template-opensearch-dashboards
       - helmChart: *template-vector-aggregator
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/logging/vector-aggregator-discovery.yaml
+      - plainYaml: stacks/logging/vector-aggregator-discovery.yaml
   tutorial-openldap:
     description: >-
       An OpenLDAP instance with two users (alice:alice, bob:bob) and TLS enabled.
@@ -621,7 +621,7 @@ stacks:
       - authentication
       - ldap
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
+      - plainYaml: stacks/authentication/openldap-tls.yaml
   openldap:
     description: >-
       An OpenLDAP instance with two users (alice:alice, bob:bob) and TLS enabled.
@@ -633,5 +633,5 @@ stacks:
       - authentication
       - ldap
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls-authenticationclass.yaml
+      - plainYaml: stacks/authentication/openldap-tls.yaml
+      - plainYaml: stacks/authentication/openldap-tls-authenticationclass.yaml
