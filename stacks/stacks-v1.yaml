@@ -104,6 +104,37 @@ _templates:
         consoleService:
           type: NodePort
           nodePort: null
+  - helmChart: &template-minio-distributed-small
+      releaseName: minio
+      name: minio
+      repo:
+        name: minio
+        url: https://charts.min.io/
+      version: 4.0.15
+      options:
+        rootUser: admin
+        rootPassword: adminadmin
+        mode: distributed
+        replicas: 2
+        persistence:
+          size: 50Gi
+        users:
+          - accessKey: minio
+            secretKey: miniominio
+            policy: readwrite
+        buckets:
+          - name: lakehouse
+            policy: public
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2Gi
+        service:
+          type: NodePort
+          nodePort: null
+        consoleService:
+          type: NodePort
+          nodePort: null
   - helmChart: &template-postgresql-hive
       releaseName: postgresql-hive
       name: postgresql
@@ -537,6 +568,20 @@ stacks:
       - plainYaml: stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: stacks/trino-superset-s3/trino.yaml
       - plainYaml: stacks/trino-superset-s3/superset.yaml
+  trino-iceberg:
+    description: Stack containing Trino using Apache Iceberg as a S3 data lakehouse
+    stackableRelease: 23.1
+    labels:
+      - trino
+      - iceberg
+      - minio
+      - s3
+    manifests:
+      - helmChart: *template-minio-distributed-small
+      - helmChart: *template-postgresql-hive-iceberg
+      - plainYaml: stacks/trino-iceberg/s3-connection.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/s3-connection.yaml
+      - plainYaml: stacks/trino-iceberg/hive-metastores.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/hive-metastores.yaml
+      - plainYaml: stacks/trino-iceberg/trino.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/trino.yaml
   dual-hive-hdfs-s3:
     description: Dual stack Hive on HDFS and S3 for Hadoop/Hive to Trino migration
     stackableRelease: 23.1
