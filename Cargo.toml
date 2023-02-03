@@ -9,7 +9,7 @@ repository = "https://github.com/stackabletech/stackablectl"
 
 [dependencies]
 cached = { version = "0.42", features = ['async_tokio_rt_multi_thread'] }
-clap = { version = "4.0", features = ["derive", "cargo"] }
+clap = { version = "4.1", features = ["derive", "cargo"] }
 clap_complete = "4.0"
 comfy-table = "6.1"
 env_logger = "0.10"
