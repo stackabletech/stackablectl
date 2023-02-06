@@ -539,7 +539,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
   jupyterhub-pyspark-hdfs:
     description: Jupyterhub with PySpark and HDFS integration
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - jupyterhub
       - hdfs
@@ -564,7 +564,7 @@ stacks:
                   allowed_users:
                     - admin
                 DummyAuthenticator:
-                  password: admin
+                  password: adminadmin
                 JupyterHub:
                   authenticator_class: dummy
             rbac:

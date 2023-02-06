@@ -83,7 +83,7 @@ You should see the JupyterHub login page.
 
 image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_login.png[]
 
-Log in with username `admin` and password `admin`.
+Log in with username `admin` and password `adminadmin`.
 
 There should appear a new pod called `jupyter-admin` (operator pods are left out for clarity, you will see more Pods):
 
