@@ -15,6 +15,7 @@
 ** xref:demos/nifi-kafka-druid-earthquake-data.adoc[]
 ** xref:demos/nifi-kafka-druid-water-level-data.adoc[]
 ** xref:demos/spark-k8s-anomaly-detection-taxi-data.adoc[]
+** xref:demos/trino-iceberg.adoc[]
 ** xref:demos/trino-taxi-data.adoc[]
 * xref:customization/index.adoc[]
 ** xref:customization/add_demo.adoc[]
