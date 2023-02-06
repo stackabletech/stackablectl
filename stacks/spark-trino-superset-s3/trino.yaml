@@ -5,7 +5,7 @@ metadata:
   name: trino
 spec:
   image:
-    productVersion: 396
+    productVersion: "403"
     stackableVersion: "23.1"
   catalogLabelSelector:
     matchLabels:
@@ -107,9 +107,7 @@ spec:
   servers:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
+        replicas: 1
 ---
 apiVersion: v1
 kind: ConfigMap
