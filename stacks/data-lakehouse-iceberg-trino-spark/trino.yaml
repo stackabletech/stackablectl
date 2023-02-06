@@ -4,7 +4,9 @@ kind: TrinoCluster
 metadata:
   name: trino
 spec:
-  version: 396-stackable0.1.0
+  image:
+    productVersion: "396" # TODO bump to 403
+    stackableVersion: "23.1"
   catalogLabelSelector:
     matchLabels:
       trino: trino
@@ -136,7 +138,9 @@ kind: OpaCluster
 metadata:
   name: opa
 spec:
-  version: 0.45.0-stackable0.1.0
+  image:
+    productVersion: 0.45.0
+    stackableVersion: "23.1"
   servers:
     roleGroups:
       default:

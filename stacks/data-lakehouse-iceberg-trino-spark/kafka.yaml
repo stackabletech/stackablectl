@@ -12,9 +12,11 @@ kind: KafkaCluster
 metadata:
   name: kafka
 spec:
-  version: 3.3.1-stackable0.1.0
-  zookeeperConfigMapName: kafka-znode
-  config:
+  image:
+    productVersion: 3.3.1
+    stackableVersion: "23.1"
+  clusterConfig:
+    zookeeperConfigMapName: kafka-znode
     tls: null
   brokers:
     config:
