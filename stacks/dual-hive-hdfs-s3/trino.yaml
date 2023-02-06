@@ -61,7 +61,7 @@ metadata:
   name: trino
 spec:
   image:
-    productVersion: 396
+    productVersion: "403"
     stackableVersion: "23.1"
   catalogLabelSelector:
     matchLabels:
@@ -94,16 +94,13 @@ kind: OpaCluster
 metadata:
   name: opa
 spec:
-  version: 0.41.0-stackable0.1.0
   image:
-    productVersion: 0.41.0
+    productVersion: 0.45.0
     stackableVersion: "23.1"
   servers:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
+        replicas: 1
 ---
 apiVersion: v1
 kind: ConfigMap
