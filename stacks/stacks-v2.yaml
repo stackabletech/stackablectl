@@ -1,0 +1,28 @@
+stacks:
+  logging:
+    description: Stack containing OpenSearch, OpenSearch Dashboards, and Vector
+    stackableRelease: 23.1
+    stackableOperators:
+      - commons
+      - secret
+      - listener
+    labels:
+      - logging
+      - opensearch
+      - opensearch-dashboards
+      - vector
+    manifests:
+      - helmChart: stacks/_templates/opensearch.yaml
+      - helmChart: stacks/_templates/opensearch-dashboards.yaml
+      - helmChart: stacks/_templates/vector-aggregator.yaml
+      - plainYaml: stacks/_templates/vector-aggregator-discovery.yaml
+    parameters:
+      - name: openSearchAdminPassword
+        description: Password of the admin user created in Opensearch
+        default: adminadmin
+      - name: openSearchDashboardPassword
+        description: Password of the user created for Opensearch Dashboard
+        default: kibanaserverkibanaserver
+      - name: setSysctlMaxMapCount
+        description: Wether an init-container should be used to increase 'sysctl -w vm.max_map_count'. This requires to spawn an init-container with runsAsUser 0 privileges, which some clusters prohibit. You can increase 'vm.max_map_count' on all of the kubernetes nodes manually and set this to 'false'.
+        default: "true"

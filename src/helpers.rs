@@ -1,5 +1,6 @@
 use log::trace;
 use std::{
+    collections::HashMap,
     error::Error,
     ffi::CStr,
     fs,
@@ -8,7 +9,10 @@ use std::{
     process::{Command, Stdio},
     str,
 };
+use tera::Context;
 use which::which;
+
+use crate::templating::new_templating_instance;
 
 #[repr(C)]
 pub struct GoString {
@@ -42,6 +46,24 @@ pub async fn read_from_url_or_file(url_or_file: &str) -> Result<String, String> 
             "Couldn't read a file or a URL with the name \"{url_or_file}\": {err}"
         )),
     }
+}
+
+pub async fn read_from_url_or_file_with_templating(
+    url_or_file: &str,
+    parameters: &HashMap<String, String>,
+) -> Result<String, String> {
+    let file_content = read_from_url_or_file(url_or_file).await?;
+
+    let mut context = Context::new();
+    parameters.iter().for_each(|(name, value)| {
+        context.insert(name, value);
+    });
+
+    let mut tera = new_templating_instance()
+        .map_err(|err| format!("Failed to construct templating instance:: {err}"))?;
+
+    tera.render_str(&file_content, &context)
+        .map_err(|err| format!("Failed to render template {url_or_file}: {err}"))
 }
 
 /// Ensures that the program is installed
