@@ -582,6 +582,74 @@ stacks:
       - plainYaml: stacks/trino-iceberg/s3-connection.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/s3-connection.yaml
       - plainYaml: stacks/trino-iceberg/hive-metastores.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/hive-metastores.yaml
       - plainYaml: stacks/trino-iceberg/trino.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/trino.yaml
+  jupyterhub-pyspark-hdfs:
+    description: Jupyterhub with PySpark and HDFS integration
+    stackableRelease: 22.11
+    labels:
+      - jupyterhub
+      - hdfs
+      - pyspark
+    manifests:
+      - plainYaml: stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
+      - plainYaml: stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
+      - plainYaml: stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
+      - plainYaml: stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
+      - helmChart:
+          releaseName: jupyterhub
+          name: jupyterhub
+          repo:
+            name: jupyterhub
+            url: https://jupyterhub.github.io/helm-chart/
+          version: 2.0.0
+          options:
+            proxy:
+              service:
+                type: NodePort
+            hub:
+              config:
+                Authenticator:
+                  allowed_users:
+                    - admin
+                DummyAuthenticator:
+                  password: admin
+                JupyterHub:
+                  authenticator_class: dummy
+            rbac:
+              create: true
+            singleuser:
+              serviceAccountName: spark
+              extraEnv:
+                HADOOP_CONF_DIR: "/home/jovyan/hdfs"
+              initContainers:
+                - name: download-notebook
+                  image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.4.0
+                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-pyspark-hdfs/notebook.ipynb -o /notebook/notebook.ipynb']
+                  volumeMounts:
+                    - mountPath: /notebook
+                      name: notebook
+              storage:
+                extraVolumes:
+                  - name: hdfs-discovery-configmap
+                    configMap:
+                      name: hdfs
+                  - name: notebook
+                    emptyDir:
+                      sizeLimit: 500Mi
+                extraVolumeMounts:
+                  - name: hdfs-discovery-configmap
+                    mountPath: /home/jovyan/hdfs
+                  - name: notebook
+                    mountPath: /home/jovyan/notebook
+              image:
+                # You should replace the "latest" tag with a fixed version from:
+                # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
+                # Inspect the Dockerfile at:
+                # https://github.com/jupyter/docker-stacks/tree/HEAD/datascience-notebook/Dockerfile
+                name: jupyter/pyspark-notebook
+                tag: 2022-11-21
+              # `cmd: null` allows the custom CMD of the Jupyter docker-stacks to be used
+              # which performs further customization on startup.
+              cmd: null
   dual-hive-hdfs-s3:
     description: Dual stack Hive on HDFS and S3 for Hadoop/Hive to Trino migration
     stackableRelease: 22.11
