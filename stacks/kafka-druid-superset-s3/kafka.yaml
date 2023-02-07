@@ -12,16 +12,18 @@ kind: KafkaCluster
 metadata:
   name: kafka
 spec:
-  version: 3.3.1-stackable0.1.0
-  zookeeperConfigMapName: kafka-znode
-  config:
+  image:
+    productVersion: 3.3.1
+    stackableVersion: "23.1"
+  clusterConfig:
+    zookeeperConfigMapName: kafka-znode
     tls: null
   brokers:
     config:
       resources:
         storage:
           logDirs:
-            capacity: 15Gi
+            capacity: 30Gi
         cpu:
           max: 500m
           min: 250m
@@ -32,4 +34,11 @@ spec:
         replicas: 1
         configOverrides:
           server.properties:
-            log.retention.bytes: "4294967296" # 4Gi, as this is for every partition and the demos/users might add multiple topics
+            num.partitions: "8"
+            # We have
+            # 1 brokers
+            # and 2 topics (with 8 partitions)
+            # 30Gi pvc * 1 brokers = 30Gi total disk size.
+            # Lets aim for 50% => 0.5 * 8Gi = 15Gi / 16 partitions = 0.9375Gi
+            log.segment.bytes: "100000000" # 0.1 GB
+            log.retention.bytes: "900000000" # 0.9 GB. Should keep between 0.9 and 1.0 GB

@@ -52,8 +52,8 @@ data:
 
     connection = get_connection()
 
-    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS hive.demo WITH (location = 's3a://demo/')")[0][0] is True
-    assert run_query(connection, """
+    run_query(connection, "CREATE SCHEMA IF NOT EXISTS hive.demo WITH (location = 's3a://demo/')")
+    run_query(connection, """
         CREATE TABLE IF NOT EXISTS hive.demo.ny_taxi_data_raw (
             VendorID BIGINT,
             tpep_pickup_datetime TIMESTAMP,
@@ -68,7 +68,7 @@ data:
             external_location = 's3a://demo/ny-taxi-data/raw/',
             format = 'parquet'
         )
-    """)[0][0] is True
+    """)
 
     loaded_rows = run_query(connection, "SELECT COUNT(*) FROM hive.demo.ny_taxi_data_raw")[0][0]
     print(f"Loaded {loaded_rows} rows")
@@ -81,7 +81,7 @@ data:
     print("Produced the following stats:")
     print(*stats, sep="\n")
 
-    assert run_query(connection, """
+    run_query(connection, """
         create or replace view hive.demo.ny_taxi_data as
         select
           vendorid,
@@ -97,7 +97,7 @@ data:
         from hive.demo.ny_taxi_data_raw
         where tpep_pickup_datetime >= from_iso8601_timestamp('2019-12-01T00:00:00')
         and tpep_pickup_datetime <= from_iso8601_timestamp('2022-05-31T00:00:00')
-    """)[0][0] is True
+    """)
 
     rows_in_view = run_query(connection, "SELECT COUNT(*) FROM hive.demo.ny_taxi_data")[0][0]
     print(f"{rows_in_view} rows in view")
