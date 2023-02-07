@@ -115,6 +115,17 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/create-nifi-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/setup-superset.yaml
+  jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data:
+    description: Jupyterhub with PySpark and HDFS integration
+    documentation: https://docs.stackable.tech/stackablectl/stable/demos/jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data.html
+    stackableStack: jupyterhub-pyspark-hdfs
+    labels:
+      - jupyterhub
+      - hdfs
+      - pyspark
+      - ny-taxi-data
+    manifests:
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/load-test-data.yaml
   logging:
     description: Demo showing the logging stack in action
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/logging.html

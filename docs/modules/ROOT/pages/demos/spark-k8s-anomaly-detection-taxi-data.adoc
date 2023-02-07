@@ -26,7 +26,7 @@ You can see the deployed products as well as their relationship in the following
 image::spark-k8s-anomaly-detection-taxi-data/overview.png[]
 
 == List deployed Stackable services
-To list the installed installed Stackable services run the following command:
+To list the installed Stackable services run the following command:
 
 [source,console]
 ----
@@ -88,7 +88,7 @@ This is a much smaller file as it only contains scores for each aggregated time 
 
 == Spark
 
-The Spark job ingests the raw data and performs some fairly straightforward data wrangling and feature engineering. Any windowing features designed to capture the time-series nature of the data - such as lags or rolling averages - need to make use of evenly distributed partitions so that Spark can execute these tasks in parallel. The job uses an implementation of the Isolation Forest https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf[algorithm] provided by the scikit-learn https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html[library]: the model is trained in a single task, but is then distributed to each executor from where it is invoked by a user-defined function. The Isolation Forest algorithm is used for unsupervised model training, which means that a labelled set of data - against which the model is trained - is not necessary. This makes model preparation easier as we do not have to divide the data set into training and validation datasets.
+The Spark job ingests the raw data and performs some fairly straightforward data wrangling and feature engineering. Any windowing features designed to capture the time-series nature of the data - such as lags or rolling averages - need to make use of evenly distributed partitions so that Spark can execute these tasks in parallel. The job uses an implementation of the Isolation Forest https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf[algorithm] provided by the scikit-learn https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html[library]: the model is trained in a single task, but is then distributed to each executor from where it is invoked by a user-defined function (see https://towardsdatascience.com/isolation-forest-and-spark-b88ade6c63ff[this article] for how to call the sklearn library with a pyspark UDF). The Isolation Forest algorithm is used for unsupervised model training, which means that a labelled set of data - against which the model is trained - is not necessary. This makes model preparation easier as we do not have to divide the data set into training and validation datasets.
 
 You can inspect a running Spark job by forwarding the port used by the Spark-UI:
 
