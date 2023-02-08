@@ -6,11 +6,22 @@ repo:
 version: 41.9.1
 options:
   prometheus:
+    prometheusSpec:
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 50Gi
     service:
       type: NodePort
       nodePort: null
   grafana:
     adminPassword: {{ grafanaAdminPassword }}
+    persistence:
+      enabled: true
+      size: 10Gi
     service:
       type: NodePort
       nodePort: null
