@@ -16,6 +16,10 @@ Some container images used by this demo are quite large and some steps may take 
 For more details on how to install Stackable demos see the xref:commands/demo.adoc#_install_demo[documentation].
 ====
 
+== Aim / Context
+
+This demo does not use the Stackable spark-k8s-operator but rather delegates the creation of executor pods to JupyterHub. The intention is to demonstrate how to interact with SDP components when designing and testing Spark jobs: the resulting script and Spark job definition can then be transferred for use with a Stackable `SparkApplication` resource. When logging in to JupyterHub (described below), a pod will be created with the username as a suffix e.g. `jupyter-admin`. This runs a container that hosts a Jupyter notebook with Spark, Java and Python pre-installed. When the user creates a `SparkSession`, temporary spark executors are created that are persisted until the notebook kernel is shut down or re-started. The notebook can thus be used as a sandbox for writing, testing and benchmarking Spark jobs before they are moved into production.
+
 == Overview
 
 This demo will:
@@ -29,10 +33,6 @@ This demo will:
 * Train an anomaly detection model using PySpark on the data available in HDFS
 * Perform some predictions and visualize anomalies
 
-[NOTE]
-====
-This demo does not use the Stackable spark-k8s-operator but delegates the creation of executor pods to JupyterHub. The notebook demonstrates how to interact with SDP components when designing and testing Spark jobs: the resulting script and Spark job definition can then be transferred for use with a Stackable `SparkApplication` resource.
-====
 
 == HDFS
 
@@ -121,11 +121,15 @@ image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_run_
 
 == Model details
 
-The job uses an implementation of the Isolation Forest https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf[algorithm] provided by the scikit-learn https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html[library]: the model is trained and then invoked by a user-defined function (see https://towardsdatascience.com/isolation-forest-and-spark-b88ade6c63ff[this article] for how to call the sklearn library with a pyspark UDF), all of which is run using Spark in non-distributed/local mode. This type of model attempts to isolate each data point by continually partitioning the data. Data closely packed together will require more partitions to separate data points, whereas any outliers will require less: the number of required partitions for a particular data point is thus inversely proportional to the anomaly "score".
+The job uses an implementation of the Isolation Forest https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf[algorithm] provided by the scikit-learn https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html[library]: the model is trained and then invoked by a user-defined function (see https://towardsdatascience.com/isolation-forest-and-spark-b88ade6c63ff[this article] for how to call the sklearn library with a pyspark UDF), all of which is run using the Spark executors spun up in the current `SparkSession`. This type of model attempts to isolate each data point by continually partitioning the data. Data closely packed together will require more partitions to separate data points, whereas any outliers will require less: the number of required partitions for a particular data point is thus inversely proportional to the anomaly "score".
 
 == Visualization
 
-The notebook shows how to plot the outliers against a particular metric (e.g. "number of rides"). However, this is mainly for convenience - the anomaly score is derived from the *_entire_* feature space i.e. it takes all dimensions (or features/columns) into account when scoring data. This means that not only are the results difficult to visualize (how can multidimensional data be represented in only 3-D dimensional space?), but that a root cause analysis has to be a separate process. It would be tempting to look at just one metric and assume causal affects, but the model "sees" all features as a set of numerical values and derives patterns accordingly.
+The notebook shows how to plot the outliers against a particular metric (e.g. "number of rides"):
+
+image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_graph.png[]
+
+However, this is mainly for convenience - the anomaly score is derived from the *_entire_* feature space i.e. it takes all dimensions (or features/columns) into account when scoring data. This means that not only are the results difficult to visualize (how can multidimensional data be represented in only 3-D dimensional space?), but that a root cause analysis has to be a separate process. It would be tempting to look at just one metric and assume causal affects, but the model "sees" all features as a set of numerical values and derives patterns accordingly.
 
 We can tackle the first of these issues by collapsing - or projecting - our data down into a manageable number of dimensions that can be plotted: once the script has finished successfully, plots should be displayed on the bottom that show the same data in 2D and 3D representation. The 3D plot should look like this:
 
