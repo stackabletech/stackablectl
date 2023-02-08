@@ -29,6 +29,11 @@ This demo will:
 * Train an anomaly detection model using PySpark on the data available in HDFS
 * Perform some predictions and visualize anomalies
 
+[NOTE]
+====
+This demo does not use the Stackable spark-k8s-operator but delegates the creation of executor pods to JupyterHub. The notebook demonstrates how to interact with SDP components when designing and testing Spark jobs: the resulting script and Spark job definition can then be transferred for use with a Stackable `SparkApplication` resource.
+====
+
 == HDFS
 
 The Stackable Operator for Apache HDFS will spin up a HDFS cluster in order to store the taxi dataset in https://parquet.apache.org/[Apache Parquet] format. This dataset will be read and processed via PySpark.
