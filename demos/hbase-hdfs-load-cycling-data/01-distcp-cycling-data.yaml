@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: distcp-cycling-data
-          image: docker.stackable.tech/stackable/hadoop:3.3.3-stackable0.1.0
+          image: docker.stackable.tech/stackable/hadoop:3.3.4-stackable23.1
           env:
             - name: HADOOP_CONF_DIR
               value: "/stackable/conf/hdfs"

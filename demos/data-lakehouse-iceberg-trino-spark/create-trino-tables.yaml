@@ -8,7 +8,7 @@ spec:
     spec:
       serviceAccountName: demo-serviceaccount
       initContainers:
-        - name: wait-for-testdata 
+        - name: wait-for-testdata
           image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
           command: ["bash", "-c", "echo 'Waiting for job load-test-data to finish' && kubectl wait --for=condition=complete --timeout=30m job/load-test-data"]
       containers:
@@ -61,16 +61,16 @@ data:
 
     connection = get_connection()
 
-    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS staging.house_sales WITH (location = 's3a://staging/house-sales/')")[0][0] is True
-    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS staging.earthquakes WITH (location = 's3a://staging/earthquakes/')")[0][0] is True
-    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS staging.smart_city WITH (location = 's3a://staging/smart-city/')")[0][0] is True
-    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS staging.taxi WITH (location = 's3a://staging/taxi/')")[0][0] is True
-    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS lakehouse.house_sales WITH (location = 's3a://lakehouse/house-sales/')")[0][0] is True
-    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS lakehouse.earthquakes WITH (location = 's3a://lakehouse/earthquakes/')")[0][0] is True
-    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS lakehouse.smart_city WITH (location = 's3a://lakehouse/smart-city/')")[0][0] is True
-    assert run_query(connection, "CREATE SCHEMA IF NOT EXISTS lakehouse.taxi WITH (location = 's3a://lakehouse/taxi/')")[0][0] is True
+    run_query(connection, "CREATE SCHEMA IF NOT EXISTS staging.house_sales WITH (location = 's3a://staging/house-sales/')")
+    run_query(connection, "CREATE SCHEMA IF NOT EXISTS staging.earthquakes WITH (location = 's3a://staging/earthquakes/')")
+    run_query(connection, "CREATE SCHEMA IF NOT EXISTS staging.smart_city WITH (location = 's3a://staging/smart-city/')")
+    run_query(connection, "CREATE SCHEMA IF NOT EXISTS staging.taxi WITH (location = 's3a://staging/taxi/')")
+    run_query(connection, "CREATE SCHEMA IF NOT EXISTS lakehouse.house_sales WITH (location = 's3a://lakehouse/house-sales/')")
+    run_query(connection, "CREATE SCHEMA IF NOT EXISTS lakehouse.earthquakes WITH (location = 's3a://lakehouse/earthquakes/')")
+    run_query(connection, "CREATE SCHEMA IF NOT EXISTS lakehouse.smart_city WITH (location = 's3a://lakehouse/smart-city/')")
+    run_query(connection, "CREATE SCHEMA IF NOT EXISTS lakehouse.taxi WITH (location = 's3a://lakehouse/taxi/')")
 
-    assert run_query(connection, """
+    run_query(connection, """
         CREATE TABLE IF NOT EXISTS staging.house_sales.house_sales (
         transaction_id varchar,
             price varchar,
@@ -96,9 +96,9 @@ data:
             csv_quote = '"',
             csv_separator = ','
         )
-    """)[0][0] is True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         CREATE TABLE IF NOT EXISTS staging.house_sales.postcode_geo_lookup (
             postcode varchar,
             status varchar,
@@ -125,9 +125,9 @@ data:
             csv_quote = '"',
             csv_separator = ','
         )
-    """)[0][0] is True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         CREATE TABLE IF NOT EXISTS staging.earthquakes.earthquakes (
           timestamp varchar,
             latitude varchar,
@@ -160,9 +160,9 @@ data:
             csv_separator = ',',
             skip_header_line_count = 1
         )
-    """)[0][0] is True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         CREATE TABLE IF NOT EXISTS staging.smart_city.e_charging_stations (
           operator varchar,
           street varchar,
@@ -200,9 +200,9 @@ data:
             csv_separator = ',',
             skip_header_line_count = 1
         )
-    """)[0][0] is True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         CREATE TABLE IF NOT EXISTS staging.taxi.taxi_zone_lookup (
             location_id VARCHAR,
             borough VARCHAR,
@@ -216,9 +216,9 @@ data:
             csv_separator = ',',
             skip_header_line_count = 1
         )
-    """)[0][0] is True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         CREATE TABLE IF NOT EXISTS staging.taxi.payment_type_lookup (
             payment_type_id VARCHAR,
             payment_type VARCHAR
@@ -230,9 +230,9 @@ data:
             csv_separator = ',',
             skip_header_line_count = 1
         )
-    """)[0][0] is True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         CREATE TABLE IF NOT EXISTS staging.taxi.rate_code_lookup (
             rate_code_id VARCHAR,
             rate_code VARCHAR
@@ -244,9 +244,9 @@ data:
             csv_separator = ',',
             skip_header_line_count = 1
         )
-    """)[0][0] is True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         CREATE TABLE IF NOT EXISTS staging.taxi.yellow_tripdata (
             VendorID BIGINT,
             tpep_pickup_datetime TIMESTAMP,
@@ -271,9 +271,9 @@ data:
             external_location = 's3a://staging/taxi/yellow-tripdata/',
             format = 'parquet'
         )
-    """)[0][0] is True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         CREATE TABLE IF NOT EXISTS staging.taxi.green_tripdata (
             VendorID BIGINT,
             lpep_pickup_datetime TIMESTAMP,
@@ -299,9 +299,9 @@ data:
             external_location = 's3a://staging/taxi/green-tripdata/',
             format = 'parquet'
         )
-    """)[0][0] is True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         CREATE TABLE IF NOT EXISTS staging.taxi.fhvhv_tripdata (
             hvfhs_license_num VARCHAR,
             dispatching_base_num VARCHAR,
@@ -331,7 +331,7 @@ data:
             external_location = 's3a://staging/taxi/fhvhv-tripdata/',
             format = 'parquet'
         )
-    """)[0][0] is True
+    """)
 
 
 
@@ -356,7 +356,7 @@ data:
 
 
 
-    assert run_query(connection, """
+    run_query(connection, """
         create table if not exists lakehouse.house_sales.house_sales with (
             partitioning = ARRAY['year(date_of_transfer)']
         ) as
@@ -376,7 +376,7 @@ data:
             county,
             ppd_category,
             record_status,
-            l.status,   
+            l.status,
             l.usertype,
             l.country,
             l.postcode_no_space,
@@ -386,9 +386,9 @@ data:
             cast(l.latitude as double) as latitude
         from staging.house_sales.house_sales as s
         left join staging.house_sales.postcode_geo_lookup as l on s.postcode = l.postcode
-    """)[0][0] >= 0
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
       create table if not exists lakehouse.earthquakes.earthquakes as
         select
             cast(date_parse(timestamp, '%Y-%m-%dT%H:%i:%s.%fZ') as timestamp(6)) as timestamp,
@@ -415,9 +415,9 @@ data:
             mag_source
         from staging.earthquakes.earthquakes
         where length(timestamp) = 24
-    """)[0][0] >= 0
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         create table if not exists lakehouse.smart_city.e_charging_stations as
         select
           operator,
@@ -448,22 +448,22 @@ data:
           try_cast(replace(port_4_power, ',', '.') as double) as port_4_power,
           port_4_pubkey
       from staging.smart_city.e_charging_stations
-    """)[0][0] >= 0
+    """)
 
     # We need to let Trino recognize the lookup tables are small so that is uses a replicated and not a partitioned join
-    assert run_query(connection, """
+    run_query(connection, """
     analyze staging.taxi.payment_type_lookup
-    """)[0][0] >= 0
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
     analyze staging.taxi.rate_code_lookup
-    """)[0][0] >= 0
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
     analyze staging.taxi.taxi_zone_lookup
-    """)[0][0] >= 0
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         create table if not exists lakehouse.taxi.yellow_tripdata with (
             partitioning = ARRAY['month(tpep_pickup_datetime)']
         )
@@ -497,7 +497,7 @@ data:
         left join staging.taxi.payment_type_lookup as p on t.payment_type = cast(p.payment_type_id as bigint)
         left join staging.taxi.rate_code_lookup as r on t.ratecodeid = cast(r.rate_code_id as bigint)
         where tpep_pickup_datetime >= date '2015-01-01' and tpep_pickup_datetime <= now() -- We have to remove some invalid records
-    """)[0][0] >= 0
+    """)
 
 
 
@@ -516,7 +516,7 @@ data:
 
 
 
-    assert run_query(connection, """
+    run_query(connection, """
       create or replace materialized view lakehouse.taxi.yellow_tripdata_daily_agg as
       select
             date_trunc('day', tpep_pickup_datetime) as day,
@@ -534,9 +534,9 @@ data:
             sum(trip_distance) as sum_trip_distance
         from lakehouse.taxi.yellow_tripdata
         group by 1, 2, 3, 4, 5, 6
-    """)[0][0] == True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
       create or replace materialized view lakehouse.taxi.yellow_tripdata_monthly_agg as
       select
             date_trunc('month', day) as month,
@@ -551,15 +551,15 @@ data:
             sum(sum_trip_distance) as sum_trip_distance
         from lakehouse.taxi.yellow_tripdata_daily_agg
         group by 1, 2, 3, 4, 5, 6
-    """)[0][0] == True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         REFRESH MATERIALIZED VIEW lakehouse.taxi.yellow_tripdata_daily_agg
-    """)[0][0] >= 0
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         REFRESH MATERIALIZED VIEW lakehouse.taxi.yellow_tripdata_monthly_agg
-    """)[0][0] >= 0
+    """)
 
 
 
@@ -567,26 +567,26 @@ data:
 
 
     # At this point Spark should have created the needed underlying tables
-    assert run_query(connection, """
+    run_query(connection, """
         create or replace view lakehouse.smart_city.shared_bikes_station_status_latest as
         select * from lakehouse.smart_city.shared_bikes_station_status
         where (station_id, last_reported) in (select station_id, max(last_reported) from lakehouse.smart_city.shared_bikes_station_status group by station_id)
-    """)[0][0] == True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         create or replace view lakehouse.smart_city.shared_bikes_station_status_joined as
         select i.name, s.*, i.latitude, i.longitude from lakehouse.smart_city.shared_bikes_station_status as s
         left join lakehouse.smart_city.shared_bikes_station_information as i on s.station_id = i.station_id
-    """)[0][0] == True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         create or replace view lakehouse.smart_city.shared_bikes_station_status_latest_joined as
         select i.name, s.*, i.latitude, i.longitude from lakehouse.smart_city.shared_bikes_station_status_latest as s
         left join lakehouse.smart_city.shared_bikes_station_information as i on s.station_id = i.station_id
-    """)[0][0] == True
+    """)
 
-    assert run_query(connection, """
+    run_query(connection, """
         create or replace view lakehouse.water_levels.measurements_joined as
         select s.short_name, m.*, s.number, s.long_name, s.km, s.agency, s.latitude, s.longitude, s.water_short_name, s.water_long_name
         from lakehouse.water_levels.measurements as m left join lakehouse.water_levels.stations as s on m.station_uuid = s.station_uuid
-    """)[0][0] == True
+    """)
