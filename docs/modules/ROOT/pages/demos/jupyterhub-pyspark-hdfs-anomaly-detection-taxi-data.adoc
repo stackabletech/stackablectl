@@ -20,6 +20,7 @@ For more details on how to install Stackable demos see the xref:commands/demo.ad
 
 This demo does not use the Stackable spark-k8s-operator but rather delegates the creation of executor pods to JupyterHub. The intention is to demonstrate how to interact with SDP components when designing and testing Spark jobs: the resulting script and Spark job definition can then be transferred for use with a Stackable `SparkApplication` resource. When logging in to JupyterHub (described below), a pod will be created with the username as a suffix e.g. `jupyter-admin`. This runs a container that hosts a Jupyter notebook with Spark, Java and Python pre-installed. When the user creates a `SparkSession`, temporary spark executors are created that are persisted until the notebook kernel is shut down or re-started. The notebook can thus be used as a sandbox for writing, testing and benchmarking Spark jobs before they are moved into production.
 
+
 == Overview
 
 This demo will:
@@ -118,6 +119,12 @@ image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_work
 Now you can click on the `notebooks` folder on the left and open the contained file and run it. Click on the double arrow to execute the Python scripts. You can inspect the `hdfs` folder as well where the `core-site.xml` and `hdfs-site.xml` from the discovery `ConfigMap` of the HDFS cluster are located.
 
 image::demo-jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/jupyter_hub_run_notebook.png[]
+
+
+[NOTE]
+====
+The image defined for the spark job must contain all dependencies needed for that job to run. For pyspark jobs, this will mean that python libraries either need to be baked into the image itself (this demo contains a Dockerfile that was used to generate a image containing scikit-learn, pandas and their dependencies), or https://spark.apache.org/docs/latest/api/python/user_guide/python_packaging.html[packaged some other way].
+====
 
 == Model details
 
