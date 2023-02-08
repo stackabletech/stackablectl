@@ -1,11 +1,10 @@
 stacks:
   logging:
-    description: Stack containing OpenSearch, OpenSearch Dashboards, and Vector
+    description: Stack containing OpenSearch, OpenSearch Dashboards (Kibana) and Vector aggregator
     stackableRelease: 23.1
     stackableOperators:
       - commons
       - secret
-      - listener
     labels:
       - logging
       - opensearch
@@ -18,11 +17,27 @@ stacks:
       - plainYaml: stacks/_templates/vector-aggregator-discovery.yaml
     parameters:
       - name: openSearchAdminPassword
-        description: Password of the admin user created in Opensearch
+        description: Password of the OpenSearch admin user
         default: adminadmin
       - name: openSearchDashboardPassword
-        description: Password of the user created for Opensearch Dashboard
+        description: Password of OpenSearch Dashboard user
         default: kibanaserverkibanaserver
       - name: setSysctlMaxMapCount
         description: Wether an init-container should be used to increase 'sysctl -w vm.max_map_count'. This requires to spawn an init-container with runsAsUser 0 privileges, which some clusters prohibit. You can increase 'vm.max_map_count' on all of the kubernetes nodes manually and set this to 'false'.
         default: "true"
+  monitoring:
+    description: Stack containing Prometheus and Grafana
+    stackableRelease: 23.1
+    stackableOperators:
+     - commons
+    labels:
+      - monitoring
+      - prometheus
+      - grafana
+    manifests:
+      - helmChart: stacks/_templates/prometheus.yaml
+      - plainYaml: stacks/_templates/prometheus-service-monitor.yaml
+    parameters:
+      - name: grafanaAdminPassword
+        description: Password of the Grafana admin user
+        default: adminadmin

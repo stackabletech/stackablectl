@@ -1,0 +1,24 @@
+releaseName: prometheus
+name: kube-prometheus-stack
+repo:
+  name: prometheus-community
+  url: https://prometheus-community.github.io/helm-charts
+version: 41.9.1
+options:
+  prometheus:
+    service:
+      type: NodePort
+      nodePort: null
+  grafana:
+    adminPassword: {{ grafanaAdminPassword }}
+    service:
+      type: NodePort
+      nodePort: null
+  kube-state-metrics:
+    metricLabelsAllowlist:
+      - pods=[*]
+      - statefulsets=[*]
+      - service=[*]
+      - nodes=[*]
+      - namespaces=[*]
+      - configmaps=[*]
