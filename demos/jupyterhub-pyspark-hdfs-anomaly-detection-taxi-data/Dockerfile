@@ -35,12 +35,10 @@ RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
     "openjdk-${openjdk_version}-jre-headless" \
     ca-certificates-java \
-    python3.10 python3-pip wget && \
-    #python3.10-venv && \
+    python3.10 python3.10-venv python3-pip wget && \
     pip3 install --upgrade pip setuptools && \
-    #python3 -m venv --system-site-packages /stackable/app && \
-    #source /stackable/app/bin/activate && \
-    #pip install --no-cache-dir --upgrade pip && \
+    python3 -m venv --system-site-packages /stackable/app && \
+    pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir scikit-learn==1.1.3 pandas==1.5.1 && \
     apt-get clean && rm -rf /var/lib/apt/lists/* \
     rm -r /root/.cache && rm -rf /var/cache/apt/*
@@ -58,10 +56,10 @@ RUN wget -qO "spark.tgz" "https://archive.apache.org/dist/spark/spark-${APACHE_S
 RUN mkdir -p ${SPARK_HOME}/python && mkdir -p ${SPARK_HOME}/jars
 
 # Add S3A support
-RUN wget -O ${SPARK_HOME}/jars/hadoop-aws-${HADOOP_LONG_VERSION}.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOOP_LONG_VERSION}/hadoop-aws-${HADOOP_LONG_VERSION}.jar
-RUN wget -O ${SPARK_HOME}/jars/aws-java-sdk-bundle-1.12.270.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.270/aws-java-sdk-bundle-1.12.270.jar
+RUN wget -qO ${SPARK_HOME}/jars/hadoop-aws-${HADOOP_LONG_VERSION}.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOOP_LONG_VERSION}/hadoop-aws-${HADOOP_LONG_VERSION}.jar
+RUN wget -qO ${SPARK_HOME}/jars/aws-java-sdk-bundle-1.12.270.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.270/aws-java-sdk-bundle-1.12.270.jar
 
-RUN wget -O /usr/bin/tini https://repo.stackable.tech/repository/packages/tini/tini-x86_64
+RUN wget -qO /usr/bin/tini https://repo.stackable.tech/repository/packages/tini/tini-x86_64
 RUN chmod +x /usr/bin/tini
 
 RUN groupadd -r stackable --gid=1000 && \
