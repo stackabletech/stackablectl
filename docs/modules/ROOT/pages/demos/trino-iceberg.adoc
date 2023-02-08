@@ -543,10 +543,6 @@ spec:
           min: "4" # Guaranteed CPU resources
         memory:
           limit: 6Gi # Available RAM
-  opa:
-    configMapName: opa
-    package: trino
-  version: 403-stackable0.1.0
   workers:
     config:
 	  # This limit can't be to big as otherwise the workers won't start.

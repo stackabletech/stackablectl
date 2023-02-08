@@ -481,12 +481,13 @@ _templates:
         rbac:
           create: true
         singleuser:
+          serviceAccountName: spark
           extraEnv:
             HADOOP_CONF_DIR: "/home/jovyan/hdfs"
           initContainers:
             - name: download-notebook
               image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.4.0
-              command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/notebook.ipynb -o /notebook/notebook.ipynb']
+              command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/jupyterhub-cluster/stacks/jupyterhub-pyspark-hdfs/notebook.ipynb -o /notebook/notebook.ipynb']
               volumeMounts:
                 - mountPath: /notebook
                   name: notebook
@@ -516,7 +517,7 @@ _templates:
 stacks:
   airflow:
     description: Stack containing Airflow scheduling platform
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - airflow
     manifests:
@@ -525,7 +526,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
   data-lakehouse-iceberg-trino-spark:
     description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - iceberg
       - trino
@@ -548,7 +549,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - hbase
       - hdfs
@@ -558,7 +559,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hbase.yaml
   kafka-druid-superset-s3:
     description: Stack containing Kafka, MinIO, Druid and Superset for data visualization
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - kafka
       - druid
@@ -575,7 +576,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml
   nifi-kafka-druid-superset-s3:
     description: Stack containing NiFi, Kafka, Druid, MinIO and Superset for data visualization
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - nifi
       - kafka
@@ -594,7 +595,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
   spark-trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - trino
       - superset
@@ -634,9 +635,9 @@ stacks:
     manifests:
       - helmChart: *template-minio-distributed-small
       - helmChart: *template-postgresql-hive-iceberg
-      - plainYaml: stacks/trino-iceberg/s3-connection.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/s3-connection.yaml
-      - plainYaml: stacks/trino-iceberg/hive-metastores.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/hive-metastores.yaml
-      - plainYaml: stacks/trino-iceberg/trino.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/s3-connection.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/hive-metastores.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/trino.yaml
   jupyterhub-pyspark-hdfs:
     description: Jupyterhub with PySpark and HDFS integration
     stackableRelease: 23.1
@@ -645,69 +646,14 @@ stacks:
       - hdfs
       - pyspark
     manifests:
+      - helmChart: *template-jupyterhub
       - plainYaml: stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
       - plainYaml: stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
       - plainYaml: stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
       - plainYaml: stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
-      - helmChart:
-          releaseName: jupyterhub
-          name: jupyterhub
-          repo:
-            name: jupyterhub
-            url: https://jupyterhub.github.io/helm-chart/
-          version: 2.0.0
-          options:
-            proxy:
-              service:
-                type: NodePort
-            hub:
-              config:
-                Authenticator:
-                  allowed_users:
-                    - admin
-                DummyAuthenticator:
-                  password: adminadmin
-                JupyterHub:
-                  authenticator_class: dummy
-            rbac:
-              create: true
-            singleuser:
-              serviceAccountName: spark
-              extraEnv:
-                HADOOP_CONF_DIR: "/home/jovyan/hdfs"
-              initContainers:
-                - name: download-notebook
-                  image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.4.0
-                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/jupyterhub-cluster/stacks/jupyterhub-pyspark-hdfs/notebook.ipynb -o /notebook/notebook.ipynb']
-                  volumeMounts:
-                    - mountPath: /notebook
-                      name: notebook
-              storage:
-                extraVolumes:
-                  - name: hdfs-discovery-configmap
-                    configMap:
-                      name: hdfs
-                  - name: notebook
-                    emptyDir:
-                      sizeLimit: 500Mi
-                extraVolumeMounts:
-                  - name: hdfs-discovery-configmap
-                    mountPath: /home/jovyan/hdfs
-                  - name: notebook
-                    mountPath: /home/jovyan/notebook
-              image:
-                # You should replace the "latest" tag with a fixed version from:
-                # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
-                # Inspect the Dockerfile at:
-                # https://github.com/jupyter/docker-stacks/tree/HEAD/datascience-notebook/Dockerfile
-                name: jupyter/pyspark-notebook
-                tag: 2022-11-21
-              # `cmd: null` allows the custom CMD of the Jupyter docker-stacks to be used
-              # which performs further customization on startup.
-              cmd: null
   dual-hive-hdfs-s3:
     description: Dual stack Hive on HDFS and S3 for Hadoop/Hive to Trino migration
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - trino
       - hive
@@ -739,7 +685,7 @@ stacks:
       The bind user credentials are: ldapadmin:ldapadminpassword.
       No AuthenticationClass is configured, The AuthenticationClass is created manually in the tutorial.
       Use the 'openldap' Stack for an OpenLDAD with an AuthenticationClass already installed.
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - authentication
       - ldap
@@ -751,7 +697,7 @@ stacks:
       The bind user credentials are: ldapadmin:ldapadminpassword.
       The LDAP AuthenticationClass is called 'ldap' and the SecretClass for the bind credentials is called 'ldap-bind-credentials'.
       The stack already creates an appropriate Secret, so referring to the 'ldap' AuthenticationClass in your ProductCluster should be enough.
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - authentication
       - ldap

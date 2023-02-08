@@ -1,14 +1,15 @@
+# This jobs create Hfiles first (=dedicated Hbase file format with metadata for the HCatalog.) Afterwards executing a bulkload to Hbase.
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: create-hfile-and-import-to-hbase # this jobs create Hfiles first (=dedicated Hbase file format with metadata for the HCatalog.) Afterwards executing a bulkload to Hbase.
+  name: create-hfile-and-import-to-hbase
 spec:
   template:
     spec:
       containers:
         - name: create-hfile-and-import-to-hbase
-          image: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.2.0
+          image: docker.stackable.tech/stackable/hbase:2.4.12-stackable23.1
           env:
             - name: HBASE_CONF_DIR
               value: "/stackable/conf/"
@@ -34,7 +35,7 @@ spec:
                                     && /stackable/hbase/bin/hbase \
                                     org.apache.hadoop.hbase.tool.LoadIncrementalHFiles \
                                     hdfs://hdfs/data/hfile \
-                                    cycling-tripdata" ] #https://hbase.apache.org/book.html#tools
+                                    cycling-tripdata" ] # https://hbase.apache.org/book.html#tools
       volumes:
         - name: config-volume-hbase
           configMap:
