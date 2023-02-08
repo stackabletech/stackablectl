@@ -639,7 +639,7 @@ stacks:
       - plainYaml: stacks/trino-iceberg/trino.yaml # https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/trino.yaml
   jupyterhub-pyspark-hdfs:
     description: Jupyterhub with PySpark and HDFS integration
-    stackableRelease: 22.11
+    stackableRelease: 23.1
     labels:
       - jupyterhub
       - hdfs
@@ -666,7 +666,7 @@ stacks:
                   allowed_users:
                     - admin
                 DummyAuthenticator:
-                  password: admin
+                  password: adminadmin
                 JupyterHub:
                   authenticator_class: dummy
             rbac:
@@ -678,7 +678,7 @@ stacks:
               initContainers:
                 - name: download-notebook
                   image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.4.0
-                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/stack-jupyterhub/stacks/jupyterhub-pyspark-hdfs/notebook.ipynb -o /notebook/notebook.ipynb']
+                  command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/notebook.ipynb -o /notebook/notebook.ipynb']
                   volumeMounts:
                     - mountPath: /notebook
                       name: notebook
