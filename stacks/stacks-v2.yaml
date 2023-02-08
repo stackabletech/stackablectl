@@ -35,6 +35,7 @@ stacks:
       - prometheus
       - grafana
     manifests:
+      - plainYaml: stacks/monitoring/grafana-dashboards.yaml
       - helmChart: stacks/_templates/prometheus.yaml
       - plainYaml: stacks/_templates/prometheus-service-monitor.yaml
     parameters:

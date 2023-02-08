@@ -18,6 +18,9 @@ options:
       type: NodePort
       nodePort: null
   grafana:
+    grafana.ini:
+      analytics:
+        check_for_updates: false
     adminPassword: {{ grafanaAdminPassword }}
     persistence:
       enabled: true
@@ -25,6 +28,20 @@ options:
     service:
       type: NodePort
       nodePort: null
+    dashboardProviders:
+      stackable-dashboardprovider.yaml:
+        apiVersion: 1
+        providers:
+        - name: 'stackable'
+          orgId: 1
+          folder: 'Stackable Data Platform'
+          type: file
+          disableDeletion: false
+          allowUiUpdates: true # TODO set to false. Is enabled so Dashboards can be build easier. Note: If a provisioned dashboard is saved from the UI and then later updated from the source, the dashboard stored in the database will always be overwritten
+          options:
+            path: /var/lib/grafana/dashboards/stackable # Must be /var/lib/grafana/dashboards/<provider_name>
+    dashboardsConfigMaps:
+      stackable: stackable-grafana-dashboards
   kube-state-metrics:
     metricLabelsAllowlist:
       - pods=[*]
