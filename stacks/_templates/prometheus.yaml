@@ -49,4 +49,7 @@ options:
       - service=[*]
       - nodes=[*]
       - namespaces=[*]
+      - namespaces=[*]
       - configmaps=[*]
+      - persistentvolumes=[*]
+      - persistentvolumeclaims=[*]
