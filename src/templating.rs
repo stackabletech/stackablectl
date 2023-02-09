@@ -8,7 +8,7 @@ const PASSWORD_CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 const PASSWORD_LEN: usize = 30;
 
 pub fn new_templating_instance() -> Result<Tera, Box<dyn Error>> {
-    let mut tera = Tera::new("this-folder-does-not-exist/* */.yaml")?;
+    let mut tera = Tera::new("this-folder-does-not-exist/*.yaml")?;
     tera.register_function("random_password", random_password());
     tera.register_function("bcrypt", bcrypt());
     Ok(tera)
