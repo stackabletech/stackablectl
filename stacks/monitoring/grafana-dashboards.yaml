@@ -2583,7 +2583,7 @@ data:
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
-      "id": 30,
+      "id": 29,
       "links": [],
       "liveNow": false,
       "panels": [
@@ -2644,7 +2644,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_requests{resource=\"cpu\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=\"broker\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_requests{resource=\"cpu\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "legendFormat": "__auto",
               "range": true,
               "refId": "A"
@@ -2710,7 +2710,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_limits{resource=\"cpu\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=\"broker\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_limits{resource=\"cpu\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "legendFormat": "__auto",
               "range": true,
               "refId": "A"
@@ -2777,7 +2777,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_requests{resource=\"memory\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=\"broker\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_requests{resource=\"memory\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "legendFormat": "__auto",
               "range": true,
               "refId": "A"
@@ -3028,7 +3028,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (rate(container_cpu_usage_seconds_total{container!=\"\"}[$__rate_interval]) * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=\"broker\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (rate(container_cpu_usage_seconds_total{container!=\"\"}[$__rate_interval]) * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "hide": false,
               "legendFormat": "used",
               "range": true,
@@ -3040,7 +3040,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_limits{resource=\"cpu\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=\"broker\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_limits{resource=\"cpu\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "hide": false,
               "legendFormat": "limit",
               "range": true,
@@ -3052,7 +3052,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_requests{resource=\"cpu\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=\"broker\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_requests{resource=\"cpu\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "hide": false,
               "legendFormat": "request",
               "range": true,
@@ -3197,7 +3197,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_usage_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=\"broker\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_usage_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "hide": false,
               "legendFormat": "used",
               "range": true,
@@ -3209,7 +3209,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_requests{resource=\"memory\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=\"broker\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (kube_pod_container_resource_requests{resource=\"memory\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "hide": false,
               "legendFormat": "limit",
               "range": true,
@@ -3353,7 +3353,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (rate(container_network_receive_bytes_total[$__rate_interval]) * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=\"broker\",label_app_kubernetes_io_instance=~\"$cluster\"})*8",
+              "expr": "sum by (label_app_kubernetes_io_instance) (rate(container_network_receive_bytes_total[$__rate_interval]) * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})*8",
               "hide": false,
               "legendFormat": "rx",
               "range": true,
@@ -3365,7 +3365,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "-sum by (label_app_kubernetes_io_instance) (rate(container_network_transmit_bytes_total[$__rate_interval]) * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=\"broker\",label_app_kubernetes_io_instance=~\"$cluster\"})*8",
+              "expr": "-sum by (label_app_kubernetes_io_instance) (rate(container_network_transmit_bytes_total[$__rate_interval]) * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})*8",
               "hide": false,
               "legendFormat": "tx",
               "range": true,
@@ -3445,7 +3445,7 @@ data:
       "timezone": "",
       "title": "Kafka",
       "uid": "C_8qIX04k",
-      "version": 8,
+      "version": 2,
       "weekStart": ""
     }
   zookeeper.json: |
