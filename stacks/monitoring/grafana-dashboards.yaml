@@ -886,7 +886,7 @@ data:
         ]
       },
       "time": {
-        "from": "now-30m",
+        "from": "now-3h",
         "to": "now"
       },
       "timepicker": {},
@@ -2546,7 +2546,7 @@ data:
         ]
       },
       "time": {
-        "from": "now-1h",
+        "from": "now-3h",
         "to": "now"
       },
       "timepicker": {},
