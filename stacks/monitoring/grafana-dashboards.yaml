@@ -3530,7 +3530,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by(topic)(rate(kafka_server_brokertopicmetrics_messagesin_total{namespace=~\"$namespace\",job=~\"$cluster\",topic!=\"\"}[5m]))",
+              "expr": "sum by(topic)(rate(kafka_server_brokertopicmetrics_messagesin_total{namespace=~\"$namespace\",job=~\"$cluster\",topic!=\"\"}[$__rate_interval]))",
               "legendFormat": "{{topic}}",
               "range": true,
               "refId": "A"
@@ -3627,7 +3627,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by(topic)(rate(kafka_server_brokertopicmetrics_bytesin_total{namespace=~\"$namespace\",job=~\"$cluster\",topic!=\"\"}[5m]))*8",
+              "expr": "sum by(topic)(rate(kafka_server_brokertopicmetrics_bytesin_total{namespace=~\"$namespace\",job=~\"$cluster\",topic!=\"\"}[$__rate_interval]))*8",
               "legendFormat": "{{topic}}",
               "range": true,
               "refId": "A"
@@ -3867,7 +3867,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum(rate(kafka_server_kafkaserver_linux_disk_read_bytes{namespace=~\"$namespace\",job=~\"$cluster\"}[5m]))*8",
+              "expr": "sum(rate(kafka_server_kafkaserver_linux_disk_read_bytes{namespace=~\"$namespace\",job=~\"$cluster\"}[$__rate_interval]))*8",
               "hide": false,
               "legendFormat": "rx",
               "range": true,
@@ -3879,7 +3879,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "-sum(rate(kafka_server_kafkaserver_linux_disk_write_bytes{namespace=~\"$namespace\",job=~\"$cluster\"}[5m]))*8",
+              "expr": "-sum(rate(kafka_server_kafkaserver_linux_disk_write_bytes{namespace=~\"$namespace\",job=~\"$cluster\"}[$__rate_interval]))*8",
               "hide": false,
               "legendFormat": "tx",
               "range": true,
@@ -3952,14 +3952,14 @@ data:
         ]
       },
       "time": {
-        "from": "now-1h",
+        "from": "now-3h",
         "to": "now"
       },
       "timepicker": {},
       "timezone": "",
       "title": "Kafka",
       "uid": "C_8qIX04k",
-      "version": 13,
+      "version": 14,
       "weekStart": ""
     }
   zookeeper.json: |
