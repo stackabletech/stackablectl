@@ -13,7 +13,7 @@ options:
             accessModes: ["ReadWriteOnce"]
             resources:
               requests:
-                storage: 50Gi
+                storage: 100Gi
     service:
       type: NodePort
       nodePort: null
