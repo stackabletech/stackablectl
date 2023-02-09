@@ -645,7 +645,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_usage_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"nifi\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_working_set_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"nifi\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "hide": false,
               "legendFormat": "used",
               "range": true,
@@ -1537,7 +1537,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_usage_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"trino\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_working_set_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"trino\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "hide": false,
               "legendFormat": "used",
               "range": true,
@@ -3197,7 +3197,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_usage_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_working_set_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"kafka\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "hide": false,
               "legendFormat": "used",
               "range": true,
@@ -4156,7 +4156,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_usage_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"zookeeper\",label_app_kubernetes_io_component=\"server\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_working_set_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"zookeeper\",label_app_kubernetes_io_component=\"server\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "hide": false,
               "legendFormat": "used",
               "range": true,
@@ -5048,7 +5048,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_usage_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"hdfs\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
+              "expr": "sum by (label_app_kubernetes_io_instance) (container_memory_working_set_bytes{container!=\"\"} * on (pod) group_left(label_app_kubernetes_io_instance) kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=\"hdfs\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})",
               "hide": false,
               "legendFormat": "used",
               "range": true,
