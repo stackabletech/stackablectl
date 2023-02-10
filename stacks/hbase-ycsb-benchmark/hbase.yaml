@@ -5,8 +5,9 @@ metadata:
   name: hbase
 spec:
   image:
-    custom: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.2.0-jmx-dns-snappy
     productVersion: 2.4.12
+    # stackableVersion: "23.1" # Use instead of custom when dns problem is fixed
+    custom: docker.stackable.tech/stackable/hbase:2.4.12-stackable0.2.0-jmx-dns-snappy
   hdfsConfigMapName: hdfs
   zookeeperConfigMapName: hbase-znode
   config:
