@@ -2995,7 +2995,7 @@ data:
               "editorMode": "code",
               "expr": "sum(max by (namespace, persistentvolumeclaim)(kubelet_volume_stats_capacity_bytes) * on (namespace, persistentvolumeclaim) group_left() (max by (namespace, persistentvolumeclaim) (kube_persistentvolumeclaim_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=~\"$product\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})))",
               "hide": false,
-              "legendFormat": "capacity",
+              "legendFormat": "limit",
               "range": true,
               "refId": "C"
             }
@@ -8203,7 +8203,7 @@ data:
               "editorMode": "code",
               "expr": "sum(max by (namespace, persistentvolumeclaim)(kubelet_volume_stats_capacity_bytes) * on (namespace, persistentvolumeclaim) group_left() (max by (namespace, persistentvolumeclaim) (kube_persistentvolumeclaim_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=~\"$product\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})))",
               "hide": false,
-              "legendFormat": "capacity",
+              "legendFormat": "limit",
               "range": true,
               "refId": "C"
             }
@@ -8560,7 +8560,7 @@ data:
       "timezone": "",
       "title": "HDFS",
       "uid": "qjZGZ3AVz",
-      "version": 8,
+      "version": 9,
       "weekStart": ""
     }
   hbase.json: |
