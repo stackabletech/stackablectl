@@ -22,6 +22,7 @@ stacks:
     stackableOperators:
       - commons
       - secret
+      - zookeeper # demo does install a zookeeper to produce logs
     labels:
       - logging
       - opensearch
