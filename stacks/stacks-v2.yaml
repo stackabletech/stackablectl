@@ -208,3 +208,22 @@ stacks:
       - plainYaml: stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: stacks/trino-superset-s3/trino.yaml
       - plainYaml: stacks/trino-superset-s3/superset.yaml
+  trino-iceberg:
+    description: Stack containing Trino using Apache Iceberg as a S3 data lakehouse
+    stackableRelease: 23.1
+    stackableOperators:
+      - commons
+      - secret
+      - hive
+      - trino
+    labels:
+      - trino
+      - iceberg
+      - minio
+      - s3
+    manifests:
+      - helmChart: stacks/_templates/minio-distributed-small.yaml
+      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
+      - plainYaml: stacks/trino-iceberg/s3-connection.yaml
+      - plainYaml: stacks/trino-iceberg/hive-metastores.yaml
+      - plainYaml: stacks/trino-iceberg/trino.yaml
