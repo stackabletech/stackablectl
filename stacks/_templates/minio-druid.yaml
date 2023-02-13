@@ -1,0 +1,28 @@
+releaseName: minio-druid
+name: minio
+repo:
+  name: minio
+  url: https://charts.min.io/
+version: 4.0.15
+options:
+  rootUser: admin
+  rootPassword: adminadmin
+  mode: standalone
+  persistence:
+    size: 15Gi
+  users:
+    - accessKey: druid
+      secretKey: druiddruid
+      policy: readwrite
+  buckets:
+    - name: druid
+      policy: public
+  resources:
+    requests:
+      memory: 2Gi
+  service:
+    type: NodePort
+    nodePort: null
+  consoleService:
+    type: NodePort
+    nodePort: null

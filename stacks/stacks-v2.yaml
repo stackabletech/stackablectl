@@ -111,3 +111,29 @@ stacks:
       - plainYaml: stacks/hdfs-hbase/hbase.yaml
     # TODO: Parameterize
     parameters: []
+  kafka-druid-superset-s3:
+    description: Stack containing Kafka, MinIO, Druid and Superset for data visualization
+    stackableRelease: 23.1
+    stackableOperators:
+      - commons
+      - secret
+      - zookeeper
+      - kafka
+      - druid
+      - superset
+    labels:
+      - kafka
+      - druid
+      - superset
+      - minio
+      - s3
+    manifests:
+      - helmChart: stacks/_templates/minio-druid.yaml
+      - helmChart: stacks/_templates/postgresql-druid.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/kafka-druid-superset-s3/zookeeper.yaml
+      - plainYaml: stacks/kafka-druid-superset-s3/kafka.yaml
+      - plainYaml: stacks/kafka-druid-superset-s3/druid.yaml
+      - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml
+    # TODO: Parameterize
+    parameters: []
