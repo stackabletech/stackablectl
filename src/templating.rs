@@ -1,10 +1,9 @@
 use std::{collections::HashMap, error::Error};
 
 use bcrypt::{hash, DEFAULT_COST};
-use rand::Rng;
+use passwords::PasswordGenerator;
 use tera::{from_value, Function, Tera, Value};
 
-const PASSWORD_CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const PASSWORD_LEN: usize = 30;
 
 pub fn new_templating_instance() -> Result<Tera, Box<dyn Error>> {
@@ -20,14 +19,10 @@ pub fn new_templating_instance() -> Result<Tera, Box<dyn Error>> {
 fn random_password() -> impl Function {
     Box::new(
         move |_args: &HashMap<String, Value>| -> tera::Result<Value> {
-            let mut rng = rand::thread_rng();
-            let password: String = (0..PASSWORD_LEN)
-                .map(|_| {
-                    let idx = rng.gen_range(0..PASSWORD_CHARSET.len());
-                    PASSWORD_CHARSET[idx] as char
-                })
-                .collect();
-
+            let password = PasswordGenerator::new()
+                .length(PASSWORD_LEN)
+                .generate_one()
+                .map_err(|err| format!("Failed to generate password: {err}"))?;
             Ok(password.into())
         },
     )
