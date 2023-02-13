@@ -34,7 +34,8 @@ fn bcrypt() -> impl Function {
             match args.get("password") {
                 Some(val) => match from_value::<String>(val.clone()) {
                     Ok(password) => {
-                        let hash = hash(password, DEFAULT_COST).unwrap();
+                        let hash = hash(password, DEFAULT_COST)
+                            .map_err(|err| format!("Failed to create bcrypt hash: {err}"))?;
                         Ok(hash.into())
                     }
                     Err(_) => Err("Cant get value of password".into()),
