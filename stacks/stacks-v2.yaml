@@ -49,7 +49,7 @@ stacks:
       - commons
       - secret
       - airflow
-      - spark-k8s # The airflow-scheduled-job demo does schedule a Spark job
+      - spark-k8s # Some demo does schedule a Spark job
     labels:
       - airflow
     manifests:
@@ -164,3 +164,26 @@ stacks:
       - plainYaml: stacks/kafka-druid-superset-s3/druid.yaml # Reuse
       - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml # Reuse
       - plainYaml: stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+  spark-trino-superset-s3:
+    description: Stack containing MinIO, Trino and Superset for data visualization
+    stackableRelease: 23.1
+    stackableOperators:
+      - commons
+      - secret
+      - hive
+      - trino
+      - superset
+      - spark-k8s # Some demo does schedule a Spark job
+    labels:
+      - trino
+      - superset
+      - minio
+      - s3
+    manifests:
+      - helmChart: stacks/_templates/minio-trino.yaml
+      - helmChart: stacks/_templates/postgresql-hive.yaml
+      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/trino.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/superset.yaml
