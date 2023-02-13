@@ -56,7 +56,7 @@ stacks:
       - helmChart: stacks/_templates/postgresql-airflow.yaml
       - helmChart: stacks/_templates/redis-airflow.yaml
       - plainYaml: stacks/airflow/airflow.yaml
-    # TODO: Parametrize
+    # TODO: Parameterize
     parameters: []
   data-lakehouse-iceberg-trino-spark:
     description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
@@ -91,5 +91,23 @@ stacks:
       - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
       - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
       - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml # Reuse
-    # TODO: Parametrize
+    # TODO: Parameterize
+    parameters: []
+  hdfs-hbase:
+    description: HBase cluster using HDFS as underlying storage
+    stackableRelease: 23.1
+    stackableOperators:
+      - commons
+      - secret
+      - zookeeper
+      - hdfs
+      - hbase
+    labels:
+      - hbase
+      - hdfs
+    manifests:
+      - plainYaml: stacks/hdfs-hbase/zookeeper.yaml
+      - plainYaml: stacks/hdfs-hbase/hdfs.yaml
+      - plainYaml: stacks/hdfs-hbase/hbase.yaml
+    # TODO: Parameterize
     parameters: []
