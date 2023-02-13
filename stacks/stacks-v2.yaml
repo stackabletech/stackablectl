@@ -164,6 +164,8 @@ stacks:
       - plainYaml: stacks/kafka-druid-superset-s3/druid.yaml # Reuse
       - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml # Reuse
       - plainYaml: stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+    # TODO: Parameterize
+    parameters: []
   spark-trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
     stackableRelease: 23.1
@@ -187,6 +189,8 @@ stacks:
       - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
       - plainYaml: stacks/spark-trino-superset-s3/trino.yaml
       - plainYaml: stacks/spark-trino-superset-s3/superset.yaml
+    # TODO: Parameterize
+    parameters: []
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
     stackableRelease: 23.1
@@ -208,6 +212,8 @@ stacks:
       - plainYaml: stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: stacks/trino-superset-s3/trino.yaml
       - plainYaml: stacks/trino-superset-s3/superset.yaml
+    # TODO: Parameterize
+    parameters: []
   trino-iceberg:
     description: Stack containing Trino using Apache Iceberg as a S3 data lakehouse
     stackableRelease: 23.1
@@ -227,3 +233,26 @@ stacks:
       - plainYaml: stacks/trino-iceberg/s3-connection.yaml
       - plainYaml: stacks/trino-iceberg/hive-metastores.yaml
       - plainYaml: stacks/trino-iceberg/trino.yaml
+    # TODO: Parameterize
+    parameters: []
+  jupyterhub-pyspark-hdfs:
+    description: Jupyterhub with PySpark and HDFS integration
+    stackableRelease: 23.1
+    stackableOperators:
+      - commons
+      - secret
+      - zookeeper
+      - hdfs
+      - spark-k8s
+    labels:
+      - jupyterhub
+      - hdfs
+      - pyspark
+    manifests:
+      - helmChart: stacks/_templates/jupyterhub.yaml
+      - plainYaml: stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
+      - plainYaml: stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
+      - plainYaml: stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
+      - plainYaml: stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
+    # TODO: Parameterize
+    parameters: []
