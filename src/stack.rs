@@ -162,7 +162,15 @@ impl StackParameter {
             let value = split.next().ok_or("Can not parse parameter. Parameters need to have the format `<parameter>=<value>`, e.g. `adminPassword=secret123`.")?;
 
             if !parameters.contains_key(name) {
-                return Err(format!("Parameter {name} not known").into());
+                return Err(format!(
+                    "Parameter {name} not known. Known parameters are {}",
+                    stack_parameters
+                        .iter()
+                        .map(|p| p.name.clone())
+                        .collect::<Vec<String>>()
+                        .join(", ")
+                )
+                .into());
             }
             parameters.insert(name.to_string(), value.to_string());
         }
