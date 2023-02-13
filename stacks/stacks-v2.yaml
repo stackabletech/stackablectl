@@ -1,4 +1,21 @@
 stacks:
+  monitoring:
+    description: Stack containing Prometheus and Grafana
+    stackableRelease: 23.1
+    stackableOperators:
+     - commons
+    labels:
+      - monitoring
+      - prometheus
+      - grafana
+    manifests:
+      - plainYaml: stacks/monitoring/grafana-dashboards.yaml
+      - helmChart: stacks/_templates/prometheus.yaml
+      - plainYaml: stacks/_templates/prometheus-service-monitor.yaml
+    parameters:
+      - name: grafanaAdminPassword
+        description: Password of the Grafana admin user
+        default: adminadmin
   logging:
     description: Stack containing OpenSearch, OpenSearch Dashboards (Kibana) and Vector aggregator
     stackableRelease: 23.1
@@ -25,20 +42,19 @@ stacks:
       - name: setSysctlMaxMapCount
         description: Wether an init-container should be used to increase 'sysctl -w vm.max_map_count'. This requires to spawn an init-container with runsAsUser 0 privileges, which some clusters prohibit. You can increase 'vm.max_map_count' on all of the kubernetes nodes manually and set this to 'false'.
         default: "true"
-  monitoring:
-    description: Stack containing Prometheus and Grafana
+  airflow:
+    description: Stack containing Airflow scheduling platform
     stackableRelease: 23.1
     stackableOperators:
-     - commons
+      - commons
+      - secret
+      - airflow
+      - spark-k8s # The airflow-scheduled-job demo does schedule a Spark job
     labels:
-      - monitoring
-      - prometheus
-      - grafana
+      - airflow
     manifests:
-      - plainYaml: stacks/monitoring/grafana-dashboards.yaml
-      - helmChart: stacks/_templates/prometheus.yaml
-      - plainYaml: stacks/_templates/prometheus-service-monitor.yaml
-    parameters:
-      - name: grafanaAdminPassword
-        description: Password of the Grafana admin user
-        default: adminadmin
+      - helmChart: stacks/_templates/postgresql-airflow.yaml
+      - helmChart: stacks/_templates/redis-airflow.yaml
+      - plainYaml: stacks/airflow/airflow.yaml
+    # TODO: Parametrize
+    parameters: []
