@@ -8,6 +8,9 @@ const PASSWORD_CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 const PASSWORD_LEN: usize = 30;
 
 pub fn new_templating_instance() -> Result<Tera, Box<dyn Error>> {
+    // tera requires a glob of templates files to parse to offer better performance.
+    // As we only template the files once there is no benefit to collect the needed files and pass it in here.
+    // We just give some non-existent file and pass the filename to template during templating itself.
     let mut tera = Tera::new("this-folder-does-not-exist/*.yaml")?;
     tera.register_function("random_password", random_password());
     tera.register_function("bcrypt", bcrypt());
