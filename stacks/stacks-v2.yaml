@@ -256,3 +256,27 @@ stacks:
       - plainYaml: stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
     # TODO: Parameterize
     parameters: []
+  dual-hive-hdfs-s3:
+    description: Dual stack Hive on HDFS and S3 for Hadoop/Hive to Trino migration
+    stackableRelease: 23.1
+    stackableOperators:
+      - commons
+      - secret
+      - zookeeper
+      - hdfs
+      - hive
+      - trino
+    labels:
+      - trino
+      - hive
+      - hdfs
+      - s3
+    manifests:
+      - helmChart: stacks/_templates/postgresql-hivehdfs.yaml
+      - helmChart: stacks/_templates/postgresql-hives3.yaml
+      - helmChart: stacks/_templates/minio-trino.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/hdfs.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/hive.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/trino.yaml
+    # TODO: Parameterize
+    parameters: []
