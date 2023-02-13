@@ -297,3 +297,21 @@ stacks:
       - plainYaml: stacks/authentication/openldap-tls.yaml
     # TODO: Parameterize
     parameters: []
+  openldap:
+    description: >-
+      An OpenLDAP instance with two users (alice:alice, bob:bob) and TLS enabled.
+      The bind user credentials are: ldapadmin:ldapadminpassword.
+      The LDAP AuthenticationClass is called 'ldap' and the SecretClass for the bind credentials is called 'ldap-bind-credentials'.
+      The stack already creates an appropriate Secret, so referring to the 'ldap' AuthenticationClass in your ProductCluster should be enough.
+    stackableRelease: 23.1
+    stackableOperators:
+      - commons
+      - secret
+    labels:
+      - authentication
+      - ldap
+    manifests:
+      - plainYaml: stacks/authentication/openldap-tls.yaml
+      - plainYaml: stacks/authentication/openldap-tls-authenticationclass.yaml
+    # TODO: Parameterize
+    parameters: []
