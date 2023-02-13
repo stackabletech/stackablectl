@@ -45,7 +45,7 @@ pub enum CliCommandStack {
         stack: String,
 
         /// List of parameters to use when installing the stack.
-        /// Every parameter need to have the format `<parameter>=<value>`, e.g. `adminPassword=secret123`.
+        /// All parameters need to have the format `<parameter>=<value>`, e.g. `adminPassword=secret123`.
         /// Multiple parameters can be specified.
         /// Use `stackable stack describe <stack>` to list the available parameters.
         #[arg(short, long)]
