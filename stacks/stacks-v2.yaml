@@ -280,3 +280,20 @@ stacks:
       - plainYaml: stacks/dual-hive-hdfs-s3/trino.yaml
     # TODO: Parameterize
     parameters: []
+  tutorial-openldap:
+    description: >-
+      An OpenLDAP instance with two users (alice:alice, bob:bob) and TLS enabled.
+      The bind user credentials are: ldapadmin:ldapadminpassword.
+      No AuthenticationClass is configured, The AuthenticationClass is created manually in the tutorial.
+      Use the 'openldap' Stack for an OpenLDAD with an AuthenticationClass already installed.
+    stackableRelease: 23.1
+    stackableOperators:
+      - commons
+      - secret
+    labels:
+      - authentication
+      - ldap
+    manifests:
+      - plainYaml: stacks/authentication/openldap-tls.yaml
+    # TODO: Parameterize
+    parameters: []
