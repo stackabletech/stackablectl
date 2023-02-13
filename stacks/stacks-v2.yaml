@@ -58,3 +58,38 @@ stacks:
       - plainYaml: stacks/airflow/airflow.yaml
     # TODO: Parametrize
     parameters: []
+  data-lakehouse-iceberg-trino-spark:
+    description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
+    stackableRelease: 23.1
+    stackableOperators:
+      - commons
+      - secret
+      - hive
+      - trino
+      - zookeeper
+      - kafka
+      - nifi
+      - superset
+      - spark-k8s
+    labels:
+      - iceberg
+      - trino
+      - spark
+      - superset
+      - kafka
+      - nifi
+      - minio
+      - s3
+    manifests:
+      - helmChart: stacks/_templates/minio-distributed.yaml
+      - helmChart: stacks/_templates/postgresql-hive.yaml
+      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
+      - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml # Reuse
+    # TODO: Parametrize
+    parameters: []

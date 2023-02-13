@@ -1,0 +1,13 @@
+releaseName: postgresql-hive
+name: postgresql
+repo:
+  name: bitnami
+  url: https://charts.bitnami.com/bitnami/
+version: 12.1.5
+options:
+  auth:
+    username: hive
+    password: hive
+    database: hive
+  primary:
+    extendedConfiguration: password_encryption=md5
