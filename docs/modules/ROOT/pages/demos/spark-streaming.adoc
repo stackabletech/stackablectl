@@ -1,0 +1,18 @@
+TODOs
+
+[.line-through]#- setup components (done)#
+
+[.line-through]#- open nifi and generate some data (done)#
+
+[.line-through]#- create workflow to write to kafka (done)#
+
+[.line-through]#- use kafkacat to inspect topic (done)#
+
+* set up jupyter notebook for kafka access
+** need to mount kafka configmap
+* connect to kafka from spark-streaming
+* write raw data to trino
+* display raw data in superset
+* add algorithm
+* display in superset and plan next steps
+* replace data generation with script/processor?
