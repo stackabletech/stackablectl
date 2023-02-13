@@ -147,6 +147,8 @@ pub struct StackParameter {
 }
 
 impl StackParameter {
+    const PARSE_PARAMETER_ERROR_MESSAGE: &str = "Can not parse parameter. Parameters need to have the format `<parameter>=<value>`, e.g. `adminPassword=secret123`.";
+
     pub fn from_cli_parameters(
         stack_parameters: &[StackParameter],
         cli_parameters: &[String],
@@ -158,8 +160,8 @@ impl StackParameter {
 
         for parameter in cli_parameters {
             let mut split = parameter.split('=');
-            let name = split.next().ok_or("Can not parse parameter. Parameters need to have the format `<parameter>=<value>`, e.g. `adminPassword=secret123`.")?;
-            let value = split.next().ok_or("Can not parse parameter. Parameters need to have the format `<parameter>=<value>`, e.g. `adminPassword=secret123`.")?;
+            let name = split.next().ok_or(Self::PARSE_PARAMETER_ERROR_MESSAGE)?;
+            let value = split.next().ok_or(Self::PARSE_PARAMETER_ERROR_MESSAGE)?;
 
             if !parameters.contains_key(name) {
                 return Err(format!(
