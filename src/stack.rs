@@ -13,7 +13,7 @@ use std::{collections::HashMap, error::Error, ops::Deref, sync::Mutex};
 
 lazy_static! {
     pub static ref STACK_FILES: Mutex<Vec<String>> = Mutex::new(vec![
-       "https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/stacks-v2.yaml"
+        "https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/stacks-v2.yaml"
             .to_string(),
     ]);
 }
