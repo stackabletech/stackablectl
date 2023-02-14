@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.7.0] - 2023-02-14
+
 ### Added
 
 - Support parametrization of stacks and demos ([#228](https://github.com/stackabletech/stackablectl/pull/228))
