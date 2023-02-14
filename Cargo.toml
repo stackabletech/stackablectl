@@ -2,7 +2,7 @@
 name = "stackablectl"
 description = "Command line tool to interact with a Stackable Data Platform"
 authors = ["Stackable GmbH <info@stackable.tech>"]
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
 license = "OSL-3.0"
 repository = "https://github.com/stackabletech/stackablectl"
