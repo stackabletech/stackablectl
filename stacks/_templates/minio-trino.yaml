@@ -1,0 +1,35 @@
+releaseName: minio-trino
+name: minio
+repo:
+  name: minio
+  url: https://charts.min.io/
+version: 4.0.15
+options:
+  rootUser: admin
+  rootPassword: adminadmin
+  mode: standalone
+  persistence:
+    size: 10Gi
+  users:
+    - accessKey: trino
+      secretKey: trinotrino
+      policy: readwrite
+    - accessKey: hive
+      secretKey: hivehive
+      policy: readwrite
+    - accessKey: demo
+      secretKey: demodemo
+      policy: readwrite
+  buckets:
+    - name: demo
+      policy: public
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  service:
+    type: NodePort
+    nodePort: null
+  consoleService:
+    type: NodePort
+    nodePort: null

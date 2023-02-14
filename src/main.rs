@@ -15,6 +15,7 @@ mod operator;
 mod release;
 mod services;
 mod stack;
+mod templating;
 
 const AVAILABLE_OPERATORS: &[&str] = &[
     "airflow",

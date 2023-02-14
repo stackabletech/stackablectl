@@ -1,7 +1,7 @@
 use crate::{
     arguments::OutputType,
     helpers, kind,
-    stack::{self, StackManifest},
+    stack::{self, HelmChartOrYaml, StackParameter},
     CliArgs,
 };
 use cached::proc_macro::cached;
@@ -18,7 +18,7 @@ use std::{error::Error, ops::Deref, sync::Mutex};
 
 lazy_static! {
     pub static ref DEMO_FILES: Mutex<Vec<String>> = Mutex::new(vec![
-        "https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/demos-v1.yaml"
+        "https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/demos-v2.yaml"
             .to_string(),
     ]);
 }
@@ -48,6 +48,20 @@ pub enum CliCommandDemo {
         #[arg(required = true, value_hint = ValueHint::Other)]
         demo: String,
 
+        /// List of parameters to use when installing the stack.
+        /// All parameters need to have the format `<parameter>=<value>`, e.g. `adminPassword=secret123`.
+        /// Multiple parameters can be specified.
+        /// Use `stackable stack describe <stack>` to list the available parameters.
+        #[arg(short, long)]
+        stack_parameters: Vec<String>,
+
+        /// List of parameters to use when installing the demo.
+        /// All parameters need to have the format `<parameter>=<value>`, e.g. `adminPassword=secret123`.
+        /// Multiple parameters can be specified.
+        /// Use `stackable demo describe <demo>` to list the available parameters.
+        #[arg(short, long)]
+        parameters: Vec<String>,
+
         /// If specified, a local Kubernetes cluster consisting of 4 nodes (1 for control-plane and 3 workers) for testing purposes will be created.
         /// Kind is a tool to spin up a local Kubernetes cluster running on Docker on your machine.
         /// You need to have `docker` and `kind` installed.
@@ -73,11 +87,13 @@ impl CliCommandDemo {
             CliCommandDemo::Describe { demo, output } => describe_demo(demo, output).await?,
             CliCommandDemo::Install {
                 demo,
+                stack_parameters,
+                parameters,
                 kind_cluster,
                 kind_cluster_name,
             } => {
                 kind::handle_cli_arguments(*kind_cluster, kind_cluster_name)?;
-                install_demo(demo).await?;
+                install_demo(demo, stack_parameters, parameters).await?;
             }
         }
         Ok(())
@@ -102,8 +118,12 @@ struct Demo {
     description: String,
     documentation: Option<String>,
     stackable_stack: String,
+    #[serde(default)]
     labels: Vec<String>,
-    manifests: Vec<StackManifest>,
+    #[serde(default)]
+    manifests: Vec<HelmChartOrYaml>,
+    #[serde(default)]
+    parameters: Vec<StackParameter>,
 }
 
 async fn list_demos(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
@@ -148,6 +168,7 @@ async fn describe_demo(demo_name: &str, output_type: &OutputType) -> Result<(), 
         documentation: Option<String>,
         stackable_stack: String,
         labels: Vec<String>,
+        parameters: Vec<StackParameter>,
     }
 
     let demo = get_demo(demo_name).await?;
@@ -157,6 +178,7 @@ async fn describe_demo(demo_name: &str, output_type: &OutputType) -> Result<(), 
         documentation: demo.documentation,
         stackable_stack: demo.stackable_stack,
         labels: demo.labels,
+        parameters: demo.parameters,
     };
 
     match output_type {
@@ -183,6 +205,24 @@ async fn describe_demo(demo_name: &str, output_type: &OutputType) -> Result<(), 
                     Cell::new(output.labels.join(", ")),
                 ]);
             println!("{table}");
+
+            let mut table = Table::new();
+            table
+                .load_preset(UTF8_FULL)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .set_header(vec![
+                    Cell::new("Parameter"),
+                    Cell::new("Description"),
+                    Cell::new("Default"),
+                ]);
+            for parameter in output.parameters {
+                table.add_row(vec![
+                    Cell::new(parameter.name),
+                    Cell::new(parameter.description),
+                    Cell::new(parameter.default),
+                ]);
+            }
+            println!("{table}");
         }
         OutputType::Json => {
             println!("{}", serde_json::to_string_pretty(&output).unwrap());
@@ -195,12 +235,18 @@ async fn describe_demo(demo_name: &str, output_type: &OutputType) -> Result<(), 
     Ok(())
 }
 
-async fn install_demo(demo_name: &str) -> Result<(), Box<dyn Error>> {
+async fn install_demo(
+    demo_name: &str,
+    stack_parameters: &[String],
+    parameters: &[String],
+) -> Result<(), Box<dyn Error>> {
     info!("Installing demo {demo_name}");
     let demo = get_demo(demo_name).await?;
-    stack::install_stack(&demo.stackable_stack).await?;
+    let parameters = StackParameter::from_cli_parameters(&demo.parameters, parameters)?;
+
+    stack::install_stack(&demo.stackable_stack, stack_parameters).await?;
     info!("Installing components of demo {demo_name}");
-    stack::install_manifests(&demo.manifests).await?;
+    stack::install_manifests(&demo.manifests, &parameters).await?;
 
     info!("Installed demo {demo_name}. Use \"stackablectl services list\" to list the installed services");
     Ok(())

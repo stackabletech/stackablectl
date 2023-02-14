@@ -4,8 +4,9 @@
 
 ### Added
 
-- Support listing OpenSearch Dashboards services ([#187](https://github.com/stackabletech/stackablectl/pull/187)).
-- Add support for listing Spark History Servers ([#210](https://github.com/stackabletech/stackablectl/pull/210)).
+- Support parametrization of stacks and demos ([#228](https://github.com/stackabletech/stackablectl/pull/228))
+- Support listing OpenSearch Dashboards services ([#187](https://github.com/stackabletech/stackablectl/pull/187))
+- Add support for listing Spark History Servers ([#210](https://github.com/stackabletech/stackablectl/pull/210))
 
 ### Changed
 
@@ -13,6 +14,7 @@
 - Bump kube to 0.77 ([#201](https://github.com/stackabletech/stackablectl/pull/201))
 - Bump go k8s client to 0.26.0 ([#202](https://github.com/stackabletech/stackablectl/pull/202))
 - Bump kube, k8s-openapi and tokio ([#205](https://github.com/stackabletech/stackablectl/pull/205))
+- BREAKING: Bump format of demos and stacks to v2. Old versions of stackablectl will need an update ([#228](https://github.com/stackabletech/stackablectl/pull/228))
 
 ## [0.6.0] - 2022-10-28
 

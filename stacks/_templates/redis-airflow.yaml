@@ -1,0 +1,11 @@
+releaseName: redis-airflow
+name: redis
+repo:
+  name: bitnami
+  url: https://charts.bitnami.com/bitnami/
+version: 17.3.17
+options:
+  auth:
+    password: airflow
+  replica:
+    replicaCount: 1
