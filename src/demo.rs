@@ -18,8 +18,7 @@ use std::{error::Error, ops::Deref, sync::Mutex};
 
 lazy_static! {
     pub static ref DEMO_FILES: Mutex<Vec<String>> = Mutex::new(vec![
-        // "https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/demos-v2.yaml"
-        "demos/demos-v2.yaml"
+        "https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/demos-v2.yaml"
             .to_string(),
     ]);
 }
