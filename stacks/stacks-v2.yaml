@@ -9,9 +9,9 @@ stacks:
       - prometheus
       - grafana
     manifests:
-      - plainYaml: stacks/monitoring/grafana-dashboards.yaml
-      - helmChart: stacks/_templates/prometheus.yaml
-      - plainYaml: stacks/_templates/prometheus-service-monitor.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/monitoring/grafana-dashboards.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/prometheus.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/prometheus-service-monitor.yaml
     parameters:
       - name: grafanaAdminPassword
         description: Password of the Grafana admin user
@@ -29,10 +29,10 @@ stacks:
       - opensearch-dashboards
       - vector
     manifests:
-      - helmChart: stacks/_templates/opensearch.yaml
-      - helmChart: stacks/_templates/opensearch-dashboards.yaml
-      - helmChart: stacks/_templates/vector-aggregator.yaml
-      - plainYaml: stacks/_templates/vector-aggregator-discovery.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/opensearch.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/opensearch-dashboards.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/vector-aggregator.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/vector-aggregator-discovery.yaml
     parameters:
       - name: openSearchAdminPassword
         description: Password of the OpenSearch admin user
@@ -54,9 +54,9 @@ stacks:
     labels:
       - airflow
     manifests:
-      - helmChart: stacks/_templates/postgresql-airflow.yaml
-      - helmChart: stacks/_templates/redis-airflow.yaml
-      - plainYaml: stacks/airflow/airflow.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-airflow.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/redis-airflow.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
     # TODO: Parameterize
     parameters: []
   data-lakehouse-iceberg-trino-spark:
@@ -82,16 +82,16 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: stacks/_templates/minio-distributed.yaml
-      - helmChart: stacks/_templates/postgresql-hive.yaml
-      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
-      - helmChart: stacks/_templates/postgresql-superset.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
-      - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml # Reuse
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-distributed.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
     # TODO: Parameterize
     parameters: []
   hdfs-hbase:
@@ -107,9 +107,9 @@ stacks:
       - hbase
       - hdfs
     manifests:
-      - plainYaml: stacks/hdfs-hbase/zookeeper.yaml
-      - plainYaml: stacks/hdfs-hbase/hdfs.yaml
-      - plainYaml: stacks/hdfs-hbase/hbase.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hbase.yaml
     # TODO: Parameterize
     parameters: []
   kafka-druid-superset-s3:
@@ -129,13 +129,13 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: stacks/_templates/minio-druid.yaml
-      - helmChart: stacks/_templates/postgresql-druid.yaml
-      - helmChart: stacks/_templates/postgresql-superset.yaml
-      - plainYaml: stacks/kafka-druid-superset-s3/zookeeper.yaml
-      - plainYaml: stacks/kafka-druid-superset-s3/kafka.yaml
-      - plainYaml: stacks/kafka-druid-superset-s3/druid.yaml
-      - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-druid.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/kafka.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/druid.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml
     # TODO: Parameterize
     parameters: []
   nifi-kafka-druid-superset-s3:
@@ -157,14 +157,14 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: stacks/_templates/minio-druid.yaml
-      - helmChart: stacks/_templates/postgresql-druid.yaml
-      - helmChart: stacks/_templates/postgresql-superset.yaml
-      - plainYaml: stacks/kafka-druid-superset-s3/zookeeper.yaml # Reuse
-      - plainYaml: stacks/kafka-druid-superset-s3/kafka.yaml # Reuse
-      - plainYaml: stacks/kafka-druid-superset-s3/druid.yaml # Reuse
-      - plainYaml: stacks/kafka-druid-superset-s3/superset.yaml # Reuse
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-druid.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/zookeeper.yaml # Reuse
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/kafka.yaml # Reuse
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/druid.yaml # Reuse
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
     # TODO: Parameterize
     parameters: []
   spark-trino-superset-s3:
@@ -183,13 +183,13 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: stacks/_templates/minio-trino.yaml
-      - helmChart: stacks/_templates/postgresql-hive.yaml
-      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
-      - helmChart: stacks/_templates/postgresql-superset.yaml
-      - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
-      - plainYaml: stacks/spark-trino-superset-s3/trino.yaml
-      - plainYaml: stacks/spark-trino-superset-s3/superset.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-trino.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/hive-metastore.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/superset.yaml
     # TODO: Parameterize
     parameters: []
   trino-superset-s3:
@@ -207,12 +207,12 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: stacks/_templates/minio-trino.yaml
-      - helmChart: stacks/_templates/postgresql-hive.yaml
-      - helmChart: stacks/_templates/postgresql-superset.yaml
-      - plainYaml: stacks/trino-superset-s3/hive-metastore.yaml
-      - plainYaml: stacks/trino-superset-s3/trino.yaml
-      - plainYaml: stacks/trino-superset-s3/superset.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-trino.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
     # TODO: Parameterize
     parameters: []
   trino-iceberg:
@@ -229,11 +229,11 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: stacks/_templates/minio-distributed-small.yaml
-      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
-      - plainYaml: stacks/trino-iceberg/s3-connection.yaml
-      - plainYaml: stacks/trino-iceberg/hive-metastores.yaml
-      - plainYaml: stacks/trino-iceberg/trino.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-distributed-small.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/s3-connection.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/hive-metastores.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/trino.yaml
     # TODO: Parameterize
     parameters: []
   jupyterhub-pyspark-hdfs:
@@ -250,11 +250,11 @@ stacks:
       - hdfs
       - pyspark
     manifests:
-      - helmChart: stacks/_templates/jupyterhub.yaml
-      - plainYaml: stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
-      - plainYaml: stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
-      - plainYaml: stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
-      - plainYaml: stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/jupyterhub.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
     # TODO: Parameterize
     parameters: []
   dual-hive-hdfs-s3:
@@ -273,12 +273,12 @@ stacks:
       - hdfs
       - s3
     manifests:
-      - helmChart: stacks/_templates/postgresql-hivehdfs.yaml
-      - helmChart: stacks/_templates/postgresql-hives3.yaml
-      - helmChart: stacks/_templates/minio-trino.yaml
-      - plainYaml: stacks/dual-hive-hdfs-s3/hdfs.yaml
-      - plainYaml: stacks/dual-hive-hdfs-s3/hive.yaml
-      - plainYaml: stacks/dual-hive-hdfs-s3/trino.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hivehdfs.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hives3.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hive.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
     # TODO: Parameterize
     parameters: []
   tutorial-openldap:
@@ -295,7 +295,7 @@ stacks:
       - authentication
       - ldap
     manifests:
-      - plainYaml: stacks/authentication/openldap-tls.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
     # TODO: Parameterize
     parameters: []
   openldap:
@@ -312,7 +312,7 @@ stacks:
       - authentication
       - ldap
     manifests:
-      - plainYaml: stacks/authentication/openldap-tls.yaml
-      - plainYaml: stacks/authentication/openldap-tls-authenticationclass.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls-authenticationclass.yaml
     # TODO: Parameterize
     parameters: []
