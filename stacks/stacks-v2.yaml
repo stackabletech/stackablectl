@@ -67,6 +67,7 @@ stacks:
       - secret
       - hive
       - trino
+      - opa
       - zookeeper
       - kafka
       - nifi
@@ -175,6 +176,7 @@ stacks:
       - secret
       - hive
       - trino
+      - opa
       - superset
       - spark-k8s # Some demo does schedule a Spark job
     labels:
@@ -200,6 +202,7 @@ stacks:
       - secret
       - hive
       - trino
+      - opa
       - superset
     labels:
       - trino
@@ -225,6 +228,7 @@ stacks:
       - trino
     labels:
       - trino
+      - opa
       - iceberg
       - minio
       - s3
@@ -267,6 +271,7 @@ stacks:
       - hdfs
       - hive
       - trino
+      - opa
     labels:
       - trino
       - hive
