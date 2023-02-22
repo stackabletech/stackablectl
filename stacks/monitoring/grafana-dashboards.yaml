@@ -8745,7 +8745,7 @@ data:
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
-      "id": 32,
+      "id": 29,
       "links": [],
       "liveNow": false,
       "panels": [
@@ -8757,8 +8757,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "green",
-                "mode": "fixed"
+                "mode": "thresholds"
               },
               "mappings": [],
               "thresholds": {
@@ -8783,7 +8782,7 @@ data:
             "x": 0,
             "y": 0
           },
-          "id": 6,
+          "id": 17,
           "options": {
             "colorMode": "value",
             "graphMode": "none",
@@ -8806,13 +8805,15 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum(kube_pod_container_resource_requests{resource=\"cpu\"} * on (namespace, pod) group_left() (max by (namespace, pod) (kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=~\"$product\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})))",
+              "exemplar": false,
+              "expr": "count(Hadoop_HBase_numMasterWALs{namespace=~\"$namespace\",job=~\"$cluster\"})",
+              "instant": true,
               "legendFormat": "__auto",
-              "range": true,
+              "range": false,
               "refId": "A"
             }
           ],
-          "title": "CPU request",
+          "title": "Masters",
           "type": "stat"
         },
         {
@@ -8823,8 +8824,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "green",
-                "mode": "fixed"
+                "mode": "thresholds"
               },
               "mappings": [],
               "thresholds": {
@@ -8849,7 +8849,7 @@ data:
             "x": 3,
             "y": 0
           },
-          "id": 7,
+          "id": 18,
           "options": {
             "colorMode": "value",
             "graphMode": "none",
@@ -8872,13 +8872,15 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum(kube_pod_container_resource_limits{resource=\"cpu\"} * on (namespace, pod) group_left() (max by (namespace, pod) (kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=~\"$product\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})))",
+              "exemplar": false,
+              "expr": "max(Hadoop_HBase_numRegionServers{namespace=~\"$namespace\",job=~\"$cluster\"})",
+              "instant": true,
               "legendFormat": "__auto",
-              "range": true,
+              "range": false,
               "refId": "A"
             }
           ],
-          "title": "CPU limit",
+          "title": "Region servers",
           "type": "stat"
         },
         {
@@ -8889,8 +8891,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "green",
-                "mode": "fixed"
+                "mode": "thresholds"
               },
               "mappings": [],
               "thresholds": {
@@ -8905,8 +8906,7 @@ data:
                     "value": 80
                   }
                 ]
-              },
-              "unit": "bytes"
+              }
             },
             "overrides": []
           },
@@ -8916,10 +8916,10 @@ data:
             "x": 6,
             "y": 0
           },
-          "id": 8,
+          "id": 26,
           "options": {
             "colorMode": "value",
-            "graphMode": "none",
+            "graphMode": "area",
             "justifyMode": "auto",
             "orientation": "auto",
             "reduceOptions": {
@@ -8939,13 +8939,15 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum(kube_pod_container_resource_requests{resource=\"memory\"} * on (namespace, pod) group_left() (max by (namespace, pod) (kube_pod_labels{namespace=~\"$namespace\",label_app_kubernetes_io_name=~\"$product\",label_app_kubernetes_io_component=~\".*\",label_app_kubernetes_io_instance=~\"$cluster\"})))",
+              "exemplar": false,
+              "expr": "sum(max by (namespace, pod)(Hadoop_HBase_regionCount{namespace=~\"$namespace\",job=~\"$cluster\"}))",
+              "instant": false,
               "legendFormat": "__auto",
               "range": true,
               "refId": "A"
             }
           ],
-          "title": "Memory limit",
+          "title": "Regions",
           "type": "stat"
         },
         {
@@ -9019,10 +9021,10 @@ data:
             "x": 14,
             "y": 0
           },
-          "id": 17,
+          "id": 25,
           "options": {
             "colorMode": "value",
-            "graphMode": "none",
+            "graphMode": "area",
             "justifyMode": "auto",
             "orientation": "auto",
             "reduceOptions": {
@@ -9032,6 +9034,7 @@ data:
               "fields": "",
               "values": false
             },
+            "text": {},
             "textMode": "auto"
           },
           "pluginVersion": "9.2.4",
@@ -9042,15 +9045,13 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "exemplar": false,
-              "expr": "count(Hadoop_HBase_numMasterWALs{namespace=~\"$namespace\",job=~\"$cluster\"})",
-              "instant": true,
+              "expr": "sum(max by (namespace, pod)(Hadoop_HBase_ritCount{namespace=~\"$namespace\",job=~\"$cluster\"}))",
               "legendFormat": "__auto",
-              "range": false,
+              "range": true,
               "refId": "A"
             }
           ],
-          "title": "Masters",
+          "title": "Regions in transition",
           "type": "stat"
         },
         {
@@ -9061,6 +9062,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
+                "fixedColor": "green",
                 "mode": "thresholds"
               },
               "mappings": [],
@@ -9072,11 +9074,16 @@ data:
                     "value": null
                   },
                   {
+                    "color": "dark-yellow",
+                    "value": 600000
+                  },
+                  {
                     "color": "red",
-                    "value": 80
+                    "value": 3600000
                   }
                 ]
-              }
+              },
+              "unit": "ms"
             },
             "overrides": []
           },
@@ -9086,10 +9093,10 @@ data:
             "x": 17,
             "y": 0
           },
-          "id": 18,
+          "id": 31,
           "options": {
             "colorMode": "value",
-            "graphMode": "none",
+            "graphMode": "area",
             "justifyMode": "auto",
             "orientation": "auto",
             "reduceOptions": {
@@ -9099,6 +9106,7 @@ data:
               "fields": "",
               "values": false
             },
+            "text": {},
             "textMode": "auto"
           },
           "pluginVersion": "9.2.4",
@@ -9109,15 +9117,13 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "exemplar": false,
-              "expr": "count(Hadoop_HBase_regionCount{namespace=~\"$namespace\",job=~\"$cluster\"})",
-              "instant": true,
+              "expr": "max(max by (pod)(Hadoop_HBase_ritOldestAge{namespace=~\"$namespace\",job=~\"$cluster\"}))",
               "legendFormat": "__auto",
-              "range": false,
+              "range": true,
               "refId": "A"
             }
           ],
-          "title": "Region servers",
+          "title": "Oldest regions in transition",
           "type": "stat"
         },
         {
@@ -9602,6 +9608,798 @@ data:
           ],
           "title": "Network usage",
           "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 50,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 10
+          },
+          "id": 33,
+          "options": {
+            "legend": {
+              "calcs": [
+                "last"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": false,
+              "sortBy": "Last",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "sum(max by (pod)(Hadoop_HBase_numActiveHandler{namespace=~\"$namespace\",job=~\"$cluster\"}))",
+              "legendFormat": "active handlers",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Active handlers",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMin": 0,
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 25,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "reqps"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "limit"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "request"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "used"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 10
+          },
+          "id": 28,
+          "options": {
+            "legend": {
+              "calcs": [
+                "last"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "sum(max by(pod)(rate(Hadoop_HBase_readRequestCount{namespace=~\"$namespace\",job=~\"$cluster\"}[$__rate_interval])))*8",
+              "hide": false,
+              "legendFormat": "read",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "-sum(max by(pod)(rate(Hadoop_HBase_writeRequestCount{namespace=~\"$namespace\",job=~\"$cluster\"}[$__rate_interval])))*8",
+              "hide": false,
+              "legendFormat": "write",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "Requests",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 10
+          },
+          "id": 32,
+          "options": {
+            "legend": {
+              "calcs": [
+                "last"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Last",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "sum(max by (pod)(rate(Hadoop_HBase_slowGetCount{namespace=~\"$namespace\",job=~\"$cluster\"}[$__rate_interval])))",
+              "legendFormat": "get",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "sum(max by (pod)(rate(Hadoop_HBase_slowPutCount{namespace=~\"$namespace\",job=~\"$cluster\"}[$__rate_interval])))",
+              "hide": false,
+              "legendFormat": "put",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "sum(max by (pod)(rate(Hadoop_HBase_slowAppendCount{namespace=~\"$namespace\",job=~\"$cluster\"}[$__rate_interval])))",
+              "hide": false,
+              "legendFormat": "append",
+              "range": true,
+              "refId": "C"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "sum(max by (pod)(rate(Hadoop_HBase_slowDeleteCount{namespace=~\"$namespace\",job=~\"$cluster\"}[$__rate_interval])))",
+              "hide": false,
+              "legendFormat": "delete",
+              "range": true,
+              "refId": "D"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "sum(max by (pod)(rate(Hadoop_HBase_slowIncrementCount{namespace=~\"$namespace\",job=~\"$cluster\"}[$__rate_interval])))",
+              "hide": false,
+              "legendFormat": "increment",
+              "range": true,
+              "refId": "E"
+            }
+          ],
+          "title": "Slow operations",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 18
+          },
+          "id": 23,
+          "options": {
+            "legend": {
+              "calcs": [
+                "last"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Last",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "sum(max by (pod)(Hadoop_HBase_ritCount{namespace=~\"$namespace\",job=~\"$cluster\"}))",
+              "legendFormat": "In transition",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Regions",
+          "type": "timeseries"
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 26
+          },
+          "id": 30,
+          "panels": [],
+          "title": "Queues",
+          "type": "row"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 27
+          },
+          "id": 20,
+          "options": {
+            "legend": {
+              "calcs": [
+                "last"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": false,
+              "sortBy": "Last",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (pod)(Hadoop_HBase_compactionQueueLength{namespace=~\"$namespace\",job=~\"$cluster\"})",
+              "legendFormat": "{{pod}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Compaction queue length",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 27
+          },
+          "id": 21,
+          "options": {
+            "legend": {
+              "calcs": [
+                "last"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": false,
+              "sortBy": "Last",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (pod)(Hadoop_HBase_flushQueueLength{namespace=~\"$namespace\",job=~\"$cluster\"})",
+              "legendFormat": "{{pod}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Flush queue length",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 27
+          },
+          "id": 22,
+          "options": {
+            "legend": {
+              "calcs": [
+                "last"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": false,
+              "sortBy": "Last",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (pod)(Hadoop_HBase_splitQueueLength{namespace=~\"$namespace\",job=~\"$cluster\"})",
+              "legendFormat": "{{pod}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Split queue length",
+          "type": "timeseries"
         }
       ],
       "refresh": false,
@@ -9681,7 +10479,7 @@ data:
       "timezone": "",
       "title": "HBase",
       "uid": "vVpFeeAVz",
-      "version": 6,
+      "version": 17,
       "weekStart": ""
     }
 {% endraw %}
