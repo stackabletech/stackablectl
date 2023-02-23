@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [0.8.0] - 2023-02-23
+
+### Changed
+
+- Build binaries on Ubuntu 20.04 instead of 22.04 to have glibc 2.31 instead of 2.35. This allows the binary to run on older platforms ([#235](https://github.com/stackabletech/stackablectl/pull/235))
+
+### Fixed
+
+- Use stable helm repo for operators ending with `-dev` ([#234](https://github.com/stackabletech/stackablectl/pull/234))
+
 ## [0.7.0] - 2023-02-14
 
 ### Added

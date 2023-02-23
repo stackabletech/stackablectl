@@ -14,7 +14,7 @@ jobs:
       matrix:
         include:
           - target: x86_64-unknown-linux-gnu
-            os: ubuntu-latest
+            os: ubuntu-20.04 # We don't use ubuntu-latest because we want to build against an old glibc version. (18.04 has glibc 2.27, 20.04 has glibc 2.31, 22.04 has glibc 2.35)
             file-suffix: ""
           - target: x86_64-pc-windows-gnu
             os: windows-latest
@@ -37,7 +37,7 @@ jobs:
           target: ${{ matrix.target }}
           override: true
       - name: Prepare Ubuntu env
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-20.04'
         run: sudo apt install -y musl-tools
       - name: Prepare Windows env
         if: matrix.os == 'windows-latest'
