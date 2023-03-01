@@ -3,3 +3,19 @@
 The pages below this section guide you on how to use the demos provided by Stackable.
 
 To install a demo please follow the xref:quickstart.adoc[quickstart guide] or have a look at the xref:commands/demo.adoc[demo command].
+
+NOTE:
+These demos are provided by Stackable as showcases to demonstrate potential architectures that could be built with the Stackable Data Platform.
+As such they may include components that are not supported by Stackable as part of our commercial offering.
+
+If you are evaluating one or more of these demos with the intention of purchasing a subscription, please make sure to double-check the list of supported operators, anything that is not mentioned on there is not part of our commercial offering.
+
+Below you can find a list of components that are currently contained in one or more of the demos for reference, if something is missing from this list and also not mentioned on our operators list, then this component is not supported:
+
+- Grafana
+- OpenLDAP
+- OpenSearch
+- OpenSearch Dashboards
+- PostgreSQL
+- Prometheus
+- Redis
