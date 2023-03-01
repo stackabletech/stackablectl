@@ -13,6 +13,8 @@ If you are evaluating one or more of these demos with the intention of purchasin
 Below you can find a list of components that are currently contained in one or more of the demos for reference, if something is missing from this list and also not mentioned on our operators list, then this component is not supported:
 
 - Grafana
+- JupyterHub
+- MinIO
 - OpenLDAP
 - OpenSearch
 - OpenSearch Dashboards
