@@ -4,7 +4,9 @@ The pages below this section guide you on how to use the demos provided by Stack
 
 To install a demo please follow the xref:quickstart.adoc[quickstart guide] or have a look at the xref:commands/demo.adoc[demo command].
 
-NOTE:
+[IMPORTANT]
+.External Components in these demos
+====
 These demos are provided by Stackable as showcases to demonstrate potential architectures that could be built with the Stackable Data Platform.
 As such they may include components that are not supported by Stackable as part of our commercial offering.
 
@@ -21,3 +23,4 @@ Below you can find a list of components that are currently contained in one or m
 - PostgreSQL
 - Prometheus
 - Redis
+====
