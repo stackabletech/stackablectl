@@ -9,6 +9,11 @@ This demo can be installed on most cloud managed Kubernetes clusters as well as 
 stackablectl demo install jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
 ----
 
+[WARNING]
+====
+This demo should not be run alongside other demos and requires a minimum of 32 GB RAM and 8 CPUs.
+====
+
 [NOTE]
 ====
 Some container images used by this demo are quite large and some steps may take several minutes to complete. If you install this demo locally, on a developer laptop for example, this can lead to timeouts during the installation. If this happens, it's safe to rerun the `stackablectl` command from above.

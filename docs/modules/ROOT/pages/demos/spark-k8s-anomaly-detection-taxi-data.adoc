@@ -1,5 +1,9 @@
 = spark-k8s-anomaly-detection-taxi-data
 
+[WARNING]
+====
+This demo should not be run alongside other demos and requires a minimum of 32 GB RAM and 8 CPUs.
+====
 [NOTE]
 ====
 This guide assumes you already have the demo `spark-k8s-anomaly-detection-taxi-data` installed.
