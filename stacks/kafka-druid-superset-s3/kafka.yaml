@@ -17,7 +17,6 @@ spec:
     stackableVersion: "23.1"
   clusterConfig:
     zookeeperConfigMapName: kafka-znode
-    tls: null
   brokers:
     config:
       resources:
