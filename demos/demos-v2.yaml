@@ -34,9 +34,9 @@ demos:
       - s3
       - earthquakes
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-nifi-ingestion-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml
+      - plainYaml: demos/nifi-kafka-druid-earthquake-data/create-nifi-ingestion-job.yaml
+      - plainYaml: demos/nifi-kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
+      - plainYaml: demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml
   nifi-kafka-druid-water-level-data:
     description:  Demo ingesting water level data into Kafka using NiFi, streaming it into Druid and creating a Superset dashboard
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/nifi-kafka-druid-water-level-data.html
@@ -51,8 +51,8 @@ demos:
       - water-levels
     manifests:
       - plainYaml: demos/nifi-kafka-druid-water-level-data/create-nifi-ingestion-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/setup-superset.yaml
+      - plainYaml: demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml
+      - plainYaml: demos/nifi-kafka-druid-water-level-data/setup-superset.yaml
   spark-k8s-anomaly-detection-taxi-data:
     description: Demo loading New York taxi data into an S3 bucket and carrying out an anomaly detection analysis on it
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/spark-k8s-anomaly-detection-taxi-data.html
