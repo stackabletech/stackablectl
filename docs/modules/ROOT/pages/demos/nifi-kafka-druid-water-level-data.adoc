@@ -72,7 +72,7 @@ In case the product is not ready yet a warning might be shown.
 == Inspect data in Kafka
 Kafka is used as an event streaming platform to stream the data in near real-time.
 All the messages put in and read from Kafka are structured in dedicated queues called topics.
-The test data is split across two topic called `stations` and `measurements`.
+The test data is split across two topics called `stations` and `measurements`.
 The topic `stations` contains a record for every station that can measure the water level.
 The topic `measurements` contains a record for every measurement that has happened.
 The records are produced (written) by the data ingestion job and are consumed (read) by Druid afterwards in the same order they where produced.
@@ -208,12 +208,12 @@ This process is called data normalization.
 The downside here is, that when analyzing the data you need to combine the records from multiple tables in Druid (`stations` and `measurements`).
 
 If you are interested on how many records have been produced to the Kafka topic so far, use the following command.
-It will print the last record produced to the topic, which will be formatted with the pattern specified in the `-f` parameter.
+It will print the last record produced to the topic partition, which will be formatted with the pattern specified in the `-f` parameter.
 The given pattern will print some metadata of the record.
 
 [source,console]
 ----
-$ kubectl exec -it kafka-broker-default-0 -c kafka -- /bin/bash -c "/stackable/kcat -b localhost:9093 -X security.protocol=SSL -X ssl.key.location=/stackable/tls_server_mount/tls.key -X ssl.certificate.location=/stackable/tls_server_mount/tls.crt -X ssl.ca.location=/stackable/tls_server_mount/ca.crt -C -t measurements -o -1 -c 8 -f 'Topic %t / Partition %p / Offset: %o / Timestamp: %T\n'"
+$ kubectl exec -it kafka-broker-default-0 -c kafka -- /bin/bash -c "/stackable/kcat -b localhost:9093 -X security.protocol=SSL -X ssl.key.location=/stackable/tls_server_mount/tls.key -X ssl.certificate.location=/stackable/tls_server_mount/tls.crt -X ssl.ca.location=/stackable/tls_server_mount/ca.crt -C -t measurements -o -8 -c 8 -f 'Topic %t / Partition %p / Offset: %o / Timestamp: %T\n'"
 Topic measurements / Partition 0 / Offset: 1324098 / Timestamp: 1680606104652
 Topic measurements / Partition 1 / Offset: 1346816 / Timestamp: 1680606100462
 Topic measurements / Partition 2 / Offset: 1339363 / Timestamp: 1680606100461
@@ -222,7 +222,6 @@ Topic measurements / Partition 4 / Offset: 1330144 / Timestamp: 1680606098368
 Topic measurements / Partition 5 / Offset: 1340226 / Timestamp: 1680606104652
 Topic measurements / Partition 6 / Offset: 1320125 / Timestamp: 1680606100462
 Topic measurements / Partition 7 / Offset: 1317719 / Timestamp: 1680606098368
-% Reached end of topic measurements [0] at offset 1324099
 ----
 
 If you calculate `1,324,098` records * `8` partitions you end up with ~ 10,592,784 records.
