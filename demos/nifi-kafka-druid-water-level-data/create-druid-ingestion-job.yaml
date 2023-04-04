@@ -36,7 +36,10 @@ data:
             "security.protocol": "SSL",
             "ssl.truststore.location": "/stackable/tls/truststore.p12",
             "ssl.truststore.password": "changeit",
-            "ssl.truststore.type": "PKCS12"
+            "ssl.truststore.type": "PKCS12",
+            "ssl.keystore.location": "/stackable/tls/keystore.p12",
+            "ssl.keystore.password": "changeit",
+            "ssl.keystore.type": "PKCS12"
           },
           "topic": "stations",
           "inputFormat": {
@@ -112,7 +115,10 @@ data:
             "security.protocol": "SSL",
             "ssl.truststore.location": "/stackable/tls/truststore.p12",
             "ssl.truststore.password": "changeit",
-            "ssl.truststore.type": "PKCS12"
+            "ssl.truststore.type": "PKCS12",
+            "ssl.keystore.location": "/stackable/tls/keystore.p12",
+            "ssl.keystore.password": "changeit",
+            "ssl.keystore.type": "PKCS12"
           },
           "topic": "measurements",
           "inputFormat": {
