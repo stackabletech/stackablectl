@@ -9,7 +9,7 @@ spec:
       containers:
         - name: create-nifi-ingestion-job
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
-          command: ["bash", "-c", "curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/kafka-tls/demos/nifi-kafka-druid-earthquake-data/IngestEarthquakesToKafka.xml && python -u /tmp/script/script.py"]
+          command: ["bash", "-c", "curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/IngestEarthquakesToKafka.xml && python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
