@@ -422,7 +422,8 @@ Log in with the username `admin` and password `adminadmin`.
 image::demo-data-lakehouse-iceberg-trino-spark/trino_2.png[]
 
 === Connect to Trino
-Please have a look at the xref:trino:usage_guide/connect_to_trino.adoc[trino-operator documentation on how to connect to Trino].
+// TODO Switch to stable version when available (e.g. with 23.4)
+Please have a look at the xref:nightly@home:trino:usage_guide/connect_to_trino.adoc[trino-operator documentation on how to connect to Trino].
 This demo recommends to use DBeaver, as Trino consists of many schemas and tables you can explore.
 
 image::demo-data-lakehouse-iceberg-trino-spark/dbeaver_1.png[]
