@@ -32,24 +32,32 @@ To list the installed Stackable services run the following command:
 [source,console]
 ----
 $ stackablectl services list --all-namespaces
- PRODUCT    NAME         NAMESPACE  ENDPOINTS                                    EXTRA INFOS                          
-
- druid      druid        default    broker-http        http://172.18.0.3:32670                                       
-                                    coordinator-http   http://172.18.0.3:30392                                       
-                                    historical-http    http://172.18.0.2:30831                                       
-                                    middlemanager-http http://172.18.0.4:30356                                       
-                                    router-http        http://172.18.0.4:30109                                       
-                                                                                                                     
- kafka      kafka        default    kafka              172.18.0.4:30968                                              
-
- nifi       nifi         default    https              https://172.18.0.3:32558  Admin user: admin, password: adminadmin
-                                                                                                                     
- superset   superset     default    external-superset  http://172.18.0.3:32108   Admin user: admin, password: adminadmin   
-                                                                                                                     
- zookeeper  zookeeper    default    zk                 172.18.0.2:32309                                              
-                                                                                                                     
- minio      minio-druid  default    http               http://172.18.0.4:32306   Third party service                  
-                                    console-http       http://172.18.0.4:31664   Admin user: admin, password: adminadmin
+┌───────────┬─────────────┬───────────┬────────────────────────────────────────────────┬─────────────────────────────────────────┐
+│ Product   ┆ Name        ┆ Namespace ┆ Endpoints                                      ┆ Info                                    │
+╞═══════════╪═════════════╪═══════════╪════════════════════════════════════════════════╪═════════════════════════════════════════╡
+│ druid     ┆ druid       ┆ default   ┆ broker-metrics        172.18.0.2:32002         ┆                                         │
+│           ┆             ┆           ┆ broker-https          https://172.18.0.2:32304 ┆                                         │
+│           ┆             ┆           ┆ coordinator-metrics   172.18.0.2:32058         ┆                                         │
+│           ┆             ┆           ┆ coordinator-https     https://172.18.0.2:32545 ┆                                         │
+│           ┆             ┆           ┆ historical-metrics    172.18.0.2:30277         ┆                                         │
+│           ┆             ┆           ┆ historical-https      https://172.18.0.2:30903 ┆                                         │
+│           ┆             ┆           ┆ middlemanager-metrics 172.18.0.2:32459         ┆                                         │
+│           ┆             ┆           ┆ middlemanager-https   https://172.18.0.2:31967 ┆                                         │
+│           ┆             ┆           ┆ router-metrics        172.18.0.2:31720         ┆                                         │
+│           ┆             ┆           ┆ router-https          https://172.18.0.2:32656 ┆                                         │
+├╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│ kafka     ┆ kafka       ┆ default   ┆ metrics               172.18.0.2:31501         ┆                                         │
+│           ┆             ┆           ┆ kafka-tls             172.18.0.2:31237         ┆                                         │
+├╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│ nifi      ┆ nifi        ┆ default   ┆ https                 https://172.18.0.2:31214 ┆ Admin user: admin, password: adminadmin │
+├╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│ superset  ┆ superset    ┆ default   ┆ external-superset     http://172.18.0.2:30677  ┆ Admin user: admin, password: adminadmin │
+├╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│ zookeeper ┆ zookeeper   ┆ default   ┆ zk                    172.18.0.2:32682         ┆                                         │
+├╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│ minio     ┆ minio-druid ┆ default   ┆ http                  http://172.18.0.2:31516  ┆ Third party service                     │
+│           ┆             ┆           ┆ console-http          http://172.18.0.2:30835  ┆ Admin user: admin, password: adminadmin │
+└───────────┴─────────────┴───────────┴────────────────────────────────────────────────┴─────────────────────────────────────────┘
 ----
 
 [NOTE]
@@ -66,47 +74,84 @@ The test data will be put in a topic called `earthquakes`.
 The records get produced (put in) by the test data generator and are consumed (read) by Druid afterwards in the same order they where produced.
 
 As Kafka itself has no webinterface you have to use a Kafka client like https://github.com/edenhill/kcat[kafkacat].
-In order to connect to Kafka, use the `kafka` endpoint from the `kafka` service in your `stackablectl services list` command output (`172.18.0.4:30968` in this case).
+Kafka uses mutual TLS, so clients that want to connect to Kafka have to present a valid TLS certificate.
+The easiest way to obtain this is to shell into the `kafka-broker-default-0` Pod, as we will do in the following section for demonstration purpose.
+For a production setup you should spin up a dedicated Pod provisioned with a certificate acting as a kafka client instead of shell-ing into the Kafka Pod.
 
-If you have `kafkacat` installed, you can see the available brokers and topics with the following command.
-You need to replace the `-b` parameter to match your Kafka endpoint.
+=== List available topics
+You can execute a command on the Kafka broker to list the available topics as follows:
 
 [source,console]
 ----
-$ kafkacat -b 172.18.0.4:30968 -L
-Metadata for all topics (from broker -1: 172.18.0.4:30968/bootstrap):
+kubectl exec -it kafka-broker-default-0 -c kafka -- /bin/bash -c "/stackable/kcat -b localhost:9093 -X security.protocol=SSL -X ssl.key.location=/stackable/tls_server_mount/tls.key -X ssl.certificate.location=/stackable/tls_server_mount/tls.crt -X ssl.ca.location=/stackable/tls_server_mount/ca.crt -L"
+Metadata for all topics (from broker -1: ssl://localhost:9093/bootstrap):
  1 brokers:
-  broker 1001 at 172.18.0.4:30755 (controller)
+  broker 1001 at 172.18.0.2:32175 (controller)
  1 topics:
-  topic "earthquakes" with 1 partitions:
+  topic "earthquakes" with 8 partitions:
     partition 0, leader 1001, replicas: 1001, isrs: 1001
+    partition 1, leader 1001, replicas: 1001, isrs: 1001
+    partition 2, leader 1001, replicas: 1001, isrs: 1001
+    partition 3, leader 1001, replicas: 1001, isrs: 1001
+    partition 4, leader 1001, replicas: 1001, isrs: 1001
+    partition 5, leader 1001, replicas: 1001, isrs: 1001
+    partition 6, leader 1001, replicas: 1001, isrs: 1001
+    partition 7, leader 1001, replicas: 1001, isrs: 1001
 ----
 
-You can see that Kafka consists of one broker and the topic `earthquakes` has been created.
+You can see that Kafka consists of one broker and the topic `earthquakes` with 8 partitions has been created.
 To see some records that have been send to Kafka run the following command.
 You can change the number of records to print via the `-c` parameter.
 
-[source,console]
+// Choosing json over console here, because most part is json and it improves syntax highlighting
+[source,json]
 ----
-$ kafkacat -b 172.18.0.4:30968 -C -t earthquakes -c 3
-{"time":"1950-01-02T15:14:37.960Z","latitude":-11.242,"longitude":165.006,"depth":15.0,"mag":6.12,"magType":"mw","nst":null,"gap":null,"dmin":null,"rms":null,"net":"iscgem","id":"iscgem895104","updated":"2022-04-26T18:23:01.545Z","place":"103 km WSW of Lata, Solomon Islands","type":"earthquake","horizontalError":null,"depthError":8.6,"magError":0.41,"magNst":null,"status":"reviewed","locationSource":"iscgem","magSource":"iscgem"}
-{"time":"1950-01-03T02:51:55.410Z","latitude":17.533,"longitude":121.447,"depth":30.0,"mag":6.5,"magType":"mw","nst":null,"gap":null,"dmin":null,"rms":null,"net":"iscgem","id":"iscgem895106","updated":"2022-04-26T18:23:07.394Z","place":"6 km NNW of Tabuk, Philippines","type":"earthquake","horizontalError":null,"depthError":3.8,"magError":0.34,"magNst":null,"status":"reviewed","locationSource":"iscgem","magSource":"iscgem"}
-{"time":"1950-01-03T11:06:28.640Z","latitude":-45.798,"longitude":-77.077,"depth":15.0,"mag":6.27,"magType":"mw","nst":null,"gap":null,"dmin":null,"rms":null,"net":"iscgem","id":"iscgem895109","updated":"2022-04-26T18:23:08.483Z","place":"Off the coast of Aisen, Chile","type":"earthquake","horizontalError":null,"depthError":25.0,"magError":0.2,"magNst":null,"status":"reviewed","locationSource":"iscgem","magSource":"iscgem"}
+kubectl exec -it kafka-broker-default-0 -c kafka -- /bin/bash -c "/stackable/kcat -b localhost:9093 -X security.protocol=SSL -X ssl.key.location=/stackable/tls_server_mount/tls.key -X ssl.certificate.location=/stackable/tls_server_mount/tls.crt -X ssl.ca.location=/stackable/tls_server_mount/ca.crt -C -t earthquakes -c 1"
+{
+  "time": "1950-01-09T13:29:32.340Z",
+  "latitude": 35.033,
+  "longitude": -116.8816667,
+  "depth": 6,
+  "mag": 2.42,
+  "magType": "ml",
+  "nst": 5,
+  "gap": 238,
+  "dmin": 0.848,
+  "rms": 0.48,
+  "net": "ci",
+  "id": "ci3361965",
+  "updated": "2016-01-28T18:07:12.280Z",
+  "place": "20km NE of Barstow, CA",
+  "type": "earthquake",
+  "horizontalError": 3.29,
+  "depthError": 31.61,
+  "magError": 0.181,
+  "magNst": 6,
+  "status": "reviewed",
+  "locationSource": "ci",
+  "magSource": "ci"
+}
 ----
 
 If you are interested on how many records have been produced to the Kafka topic so far, use the following command.
-It will print the last record produced to the topic, which will be formatted with the pattern specified in the `-f` parameter.
+It will print the last record produced to the topic partition, which will be formatted with the pattern specified in the `-f` parameter.
 The given pattern will print some metadata of the record.
 
 [source,console]
 ----
-$ kafkacat -b 172.18.0.4:30968 -C -t earthquakes -o -1 -c 1 \
-    -f 'Topic %t / Partition %p / Offset: %o / Timestamp: %T\n'
-Topic earthquakes / Partition 0 / Offset: 2670281 / Timestamp: 1660571644060
+$ kubectl exec -it kafka-broker-default-0 -c kafka -- /bin/bash -c "/stackable/kcat -b localhost:9093 -X security.protocol=SSL -X ssl.key.location=/stackable/tls_server_mount/tls.key -X ssl.certificate.location=/stackable/tls_server_mount/tls.crt -X ssl.ca.location=/stackable/tls_server_mount/ca.crt -C -t earthquakes -o -8 -c 8 -f 'Topic %t / Partition %p / Offset: %o / Timestamp: %T\n'"
+Topic earthquakes / Partition 0 / Offset: 385011 / Timestamp: 1680607795568
+Topic earthquakes / Partition 0 / Offset: 385012 / Timestamp: 1680607795568
+Topic earthquakes / Partition 0 / Offset: 385013 / Timestamp: 1680607795570
+Topic earthquakes / Partition 0 / Offset: 385014 / Timestamp: 1680607795570
+Topic earthquakes / Partition 0 / Offset: 385015 / Timestamp: 1680607795571
+Topic earthquakes / Partition 0 / Offset: 385016 / Timestamp: 1680607795571
+Topic earthquakes / Partition 0 / Offset: 385017 / Timestamp: 1680607795571
+Topic earthquakes / Partition 0 / Offset: 385018 / Timestamp: 1680607795571
 ----
 
-From the output you can see, that the last record was produced at the timestamp `1660571644060` which translates to `Mo 15. Aug 15:54:04 CEST 2022` (using the command `date -d @1660571644`).
-You can also see that it was the record number `2670281` send to this topic, so ~2.6 million records have been produced so far.
+If you calculate `385,011` records * `8` partitions you end up with ~ 3,080,088 records.
+The output also shows that the last measurement record was produced at the timestamp `1680607795568` which translates to `Di 4. Apr 13:29:55 CEST 2023` (using the command `date -d @1680607795`).
 
 == NiFi
 
