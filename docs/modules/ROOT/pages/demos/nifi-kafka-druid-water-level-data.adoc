@@ -79,7 +79,8 @@ The records are produced (written) by the data ingestion job and are consumed (r
 
 As Kafka itself has no webinterface you have to use a Kafka client like https://github.com/edenhill/kcat[kafkacat].
 Kafka uses mutual TLS, so clients that want to connect to Kafka have to present a valid TLS certificate.
-The easiest way to obtain this is to shell into the `kafka-broker-default-0` Pod, as we will do in the following section.
+The easiest way to obtain this is to shell into the `kafka-broker-default-0` Pod, as we will do in the following section for demonstration purpose.
+For a production setup you should spin up a dedicated Pod provisioned with a certificate acting as a kafka client instead of shell-ing into the Kafka Pod.
 
 === List available topics
 You can execute a command on the Kafka broker to list the available topics as follows:
