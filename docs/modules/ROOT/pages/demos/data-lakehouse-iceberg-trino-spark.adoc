@@ -421,17 +421,12 @@ Log in with the username `admin` and password `adminadmin`.
 
 image::demo-data-lakehouse-iceberg-trino-spark/trino_2.png[]
 
-=== Connect with DBeaver
-https://dbeaver.io/[DBeaver] is free multi-platform database tool that can be used to connect to Trino.
-Please have a look at the <TODO> trino-operator documentation on how to connect DBeaver to Trino.
+=== Connect to Trino
+// TODO Switch to stable version when available (e.g. with 23.4)
+Please have a look at the xref:nightly@home:trino:usage_guide/connect_to_trino.adoc[trino-operator documentation on how to connect to Trino].
+This demo recommends to use DBeaver, as Trino consists of many schemas and tables you can explore.
 
 image::demo-data-lakehouse-iceberg-trino-spark/dbeaver_1.png[]
-
-image::demo-data-lakehouse-iceberg-trino-spark/dbeaver_2.png[]
-You need to modify the setting `TLS` to `true`.
-Additionally you need to add the setting `SSLVerification` and set it to `NONE`.
-
-image::demo-data-lakehouse-iceberg-trino-spark/dbeaver_3.png[]
 
 Here you can see all the available Trino catalogs.
 
