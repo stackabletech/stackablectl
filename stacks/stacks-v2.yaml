@@ -45,7 +45,7 @@ stacks:
         default: "true"
   airflow:
     description: Stack containing Airflow scheduling platform
-    stackableRelease: 23.1
+    stackableRelease: 23.4
     stackableOperators:
       - commons
       - secret
@@ -54,9 +54,9 @@ stacks:
     labels:
       - airflow
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-airflow.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/redis-airflow.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
+      - helmChart: stacks/_templates/postgresql-airflow.yaml
+      - helmChart: stacks/_templates/redis-airflow.yaml
+      - plainYaml: stacks/airflow/airflow.yaml
     # TODO: Parameterize
     parameters: []
   data-lakehouse-iceberg-trino-spark:

@@ -7,7 +7,9 @@ metadata:
 spec:
   image:
     productVersion: 2.4.1
-    stackableVersion: "23.1"
+    stackableVersion: "23.4.0-rc3"
+  clusterConfig:
+    listenerClass: external-unstable
   executor: CeleryExecutor
   loadExamples: false
   exposeConfig: false
@@ -258,7 +260,7 @@ data:
       name: pyspark-pi
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable23.1
+      sparkImage: docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable23.4.0-rc2
       mode: cluster
       mainApplicationFile: local:///stackable/spark/examples/src/main/python/pi.py
       driver:
