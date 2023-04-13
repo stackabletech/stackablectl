@@ -170,7 +170,7 @@ stacks:
     parameters: []
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 23.1
+    stackableRelease: 23.4
     stackableOperators:
       - commons
       - secret
@@ -184,12 +184,12 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-trino.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
+      - helmChart: stacks/_templates/minio-trino.yaml
+      - helmChart: stacks/_templates/postgresql-hive.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/trino-superset-s3/hive-metastore.yaml
+      - plainYaml: stacks/trino-superset-s3/trino.yaml
+      - plainYaml: stacks/trino-superset-s3/superset.yaml
     # TODO: Parameterize
     parameters: []
   trino-iceberg:

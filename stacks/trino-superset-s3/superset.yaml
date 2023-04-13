@@ -6,7 +6,9 @@ metadata:
 spec:
   image:
     productVersion: 1.5.1
-    stackableVersion: "23.1"
+    stackableVersion: "23.4.0-rc2"
+  clusterConfig:
+    listenerClass: external-unstable
   credentialsSecret: superset-credentials
   mapboxSecret: superset-mapbox-api-key
   nodes:
