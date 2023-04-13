@@ -1,0 +1,34 @@
+---
+releases:
+  23.4:
+    releaseDate: 1970-01-01
+    description: Testing of the 23.4 release
+    products:
+      airflow:
+        operatorVersion: 0.0.0-dev
+      commons:
+        operatorVersion: 0.0.0-dev
+      druid:
+        operatorVersion: 0.0.0-dev
+      hbase:
+        operatorVersion: 0.0.0-dev
+      hdfs:
+        operatorVersion: 0.0.0-dev
+      hive:
+        operatorVersion: 0.0.0-dev
+      kafka:
+        operatorVersion: 0.0.0-dev
+      nifi:
+        operatorVersion: 0.0.0-dev
+      opa:
+        operatorVersion: 0.0.0-dev
+      secret:
+        operatorVersion: 0.0.0-dev
+      spark-k8s:
+        operatorVersion: 0.0.0-dev
+      superset:
+        operatorVersion: 0.0.0-dev
+      trino:
+        operatorVersion: 0.0.0-dev
+      zookeeper:
+        operatorVersion: 0.0.0-dev
