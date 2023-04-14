@@ -11,7 +11,7 @@ spec:
     spec:
       serviceAccountName: demo-serviceaccount
       initContainers:
-        - name: wait-for-testdata 
+        - name: wait-for-testdata
           image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
           command: ["bash", "-c", "echo 'Waiting for all kafka brokers to be ready' && kubectl wait --for=condition=ready --timeout=30m pod -l app.kubernetes.io/instance=kafka -l app.kubernetes.io/name=kafka"]
       containers:
@@ -108,6 +108,7 @@ data:
 
     spark.sql("CREATE SCHEMA IF NOT EXISTS lakehouse.water_levels LOCATION 's3a://lakehouse/water-levels/'")
     spark.sql("CREATE SCHEMA IF NOT EXISTS lakehouse.smart_city LOCATION 's3a://lakehouse/smart-city/'")
+    spark.sql("CREATE SCHEMA IF NOT EXISTS lakehouse.github LOCATION 's3a://lakehouse/github/'")
 
     # TODO add PARTITIONED BY (days(timestamp))
     # Currently fails with org.apache.spark.sql.AnalysisException: days(timestamp) ASC NULLS FIRST is not currently supported
@@ -122,6 +123,8 @@ data:
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_bike_status (bike_id string, vehicle_type_id string, latitude double, longitude double, is_reserved boolean, is_disabled boolean, last_reported timestamp) USING iceberg PARTITIONED BY (days(last_reported)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_information (station_id string, name string, latitude double, longitude double) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_status (station_id string, num_bikes_available short, is_installed boolean, is_renting boolean, is_returning boolean, last_reported timestamp) USING iceberg PARTITIONED BY (days(last_reported)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.github.repos (id bigint, node_id string, name string, full_name string, private boolean, owner struct<login string, id bigint>) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.github.commits (sha string, node_id string, commit struct<author struct<name string, email string, date timestamp>, committer struct<name string, email string, date timestamp>, message string, tree struct<sha string, url string>, url string, comment_count bigint, verification struct<verified boolean, reason string, signature string, payload string>>, url string, html_url string, comments_url string, author struct<login string, id bigint, node_id string, avatar_url string, gravatar_id string, url string, html_url string, followers_url string, following_url string, gists_url string, starred_url string, subscriptions_url string, organizations_url string, repos_url string, events_url string, received_events_url string, type string, site_admin boolean>, committer struct<login string, id bigint, node_id string, avatar_url string, gravatar_id string, url string, html_url string, followers_url string, following_url string, gists_url string, starred_url string, subscriptions_url string, organizations_url string, repos_url string, events_url string, received_events_url string, type string, site_admin boolean>, parents struct<sha string, url string, html_url string>) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
 
 
 
@@ -295,7 +298,7 @@ data:
       # Upsert into the shared_bikes_station_status table, only inserting records if they don't already exist.
       # In case they don't exist, we only insert the new records instead of replacing the old to keep the history,
       # thus enabling to build reports on the usage change over time
-      # 
+      #
       # We have to remove all station_id with less than 5 characters as they contain duplicates
       # This causes org.apache.spark.SparkException: The ON search condition of the MERGE statement matched a single row from the target table with multiple rows of the source table. This could result in the target row being operated on more than once with an update or delete operation and is not allowed.
       microBatchOutputDF._jdf.sparkSession().sql("""
@@ -385,6 +388,152 @@ data:
     .outputMode("update") \
     .trigger(processingTime='2 minutes') \
     .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/shared_bikes_bike_status") \
+    .start()
+
+    def upsertGithubRepos(microBatchOutputDF, batchId):
+      microBatchOutputDF.createOrReplaceTempView("githubReposUpserts")
+
+      microBatchOutputDF._jdf.sparkSession().sql("""
+        MERGE INTO lakehouse.github.repos as t
+        USING
+          (
+            SELECT *
+            FROM githubReposUpserts
+            WHERE (id, kafka_timestamp) IN (SELECT id, max(kafka_timestamp) FROM githubReposUpserts GROUP BY id)
+          ) as u
+        ON u.id = t.id
+        WHEN MATCHED THEN UPDATE SET *
+        WHEN NOT MATCHED THEN INSERT *
+      """)
+
+    schema = StructType([ \
+      StructField("id", LongType(), True), \
+      StructField("node_id", StringType(), True), \
+      StructField("name", StringType(), True), \
+      StructField("full_name", StringType(), True), \
+      StructField("private", BooleanType(), True), \
+      StructField("owner", StructType([StructField("login", StringType(), True), StructField("id", LongType(), True)]), True), \
+    ])
+    spark \
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("subscribe", "github_repos") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 10000000) \
+    .option("failOnDataLoss", "false") \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)", "timestamp") \
+    .withColumn("json", from_json(col("value"), schema)) \
+    .selectExpr("json.*", "timestamp as kafka_timestamp") \
+    .writeStream \
+    .queryName("ingest github repos") \
+    .format("iceberg") \
+    .foreachBatch(upsertGithubRepos) \
+    .outputMode("update") \
+    .trigger(processingTime='2 minutes') \
+    .option("checkpointLocation", "s3a://lakehouse/github/checkpoints/repos") \
+    .start()
+
+    def upsertGithubCommits(microBatchOutputDF, batchId):
+      microBatchOutputDF.createOrReplaceTempView("githubCommitsUpserts")
+
+      microBatchOutputDF._jdf.sparkSession().sql("""
+        MERGE INTO lakehouse.github.commits as t
+        USING
+          (
+            SELECT *
+            FROM githubCommitsUpserts
+            WHERE (sha, kafka_timestamp) IN (SELECT sha, max(kafka_timestamp) FROM githubCommitsUpserts GROUP BY sha)
+          ) as u
+        ON u.sha = t.sha
+        WHEN MATCHED THEN UPDATE SET *
+        WHEN NOT MATCHED THEN INSERT *
+      """)
+
+    schema = StructType([ \
+      StructField("sha", StringType(), True), \
+      StructField("node_id", StringType(), True), \
+      StructField("name", StringType(), True), \
+      StructField("full_name", StringType(), True), \
+      StructField("private", BooleanType(), True), \
+      StructField("commit", StructType([ \
+        StructField("author", StructType([StructField("name", StringType(), True), StructField("email", StringType(), True), StructField("date", TimestampType(), True)]), True), \
+        StructField("committer", StructType([StructField("name", StringType(), True), StructField("email", StringType(), True), StructField("date", TimestampType(), True)]), True), \
+        StructField("message", StringType(), True), \
+        StructField("tree", StructType([StructField("sha", StringType(), True), StructField("url", StringType(), True)]), True), \
+        StructField("url", StringType(), True), \
+        StructField("comment_count", LongType(), True), \
+        StructField("verification", StructType([StructField("verified", BooleanType(), True), StructField("reason", StringType(), True), StructField("signature", StringType(), True), StructField("payload", StringType(), True)]), True), \
+      ]), True), \
+      StructField("url", StringType(), True), \
+      StructField("html_url", StringType(), True), \
+      StructField("comments_url", StringType(), True), \
+      StructField("author", StructType([ \
+        StructField("login", StringType(), True), \
+        StructField("id", LongType(), True), \
+        StructField("node_id", StringType(), True), \
+        StructField("avatar_url", StringType(), True), \
+        StructField("gravatar_id", StringType(), True), \
+        StructField("url", StringType(), True), \
+        StructField("html_url", StringType(), True), \
+        StructField("followers_url", StringType(), True), \
+        StructField("following_url", StringType(), True), \
+        StructField("gists_url", StringType(), True), \
+        StructField("starred_url", StringType(), True), \
+        StructField("subscriptions_url", StringType(), True), \
+        StructField("organizations_url", StringType(), True), \
+        StructField("repos_url", StringType(), True), \
+        StructField("events_url", StringType(), True), \
+        StructField("received_events_url", StringType(), True), \
+        StructField("type", StringType(), True), \
+        StructField("site_admin", BooleanType(), True), \
+      ]), True), \
+      StructField("committer", StructType([ \
+        StructField("login", StringType(), True), \
+        StructField("id", LongType(), True), \
+        StructField("node_id", StringType(), True), \
+        StructField("avatar_url", StringType(), True), \
+        StructField("gravatar_id", StringType(), True), \
+        StructField("url", StringType(), True), \
+        StructField("html_url", StringType(), True), \
+        StructField("followers_url", StringType(), True), \
+        StructField("following_url", StringType(), True), \
+        StructField("gists_url", StringType(), True), \
+        StructField("starred_url", StringType(), True), \
+        StructField("subscriptions_url", StringType(), True), \
+        StructField("organizations_url", StringType(), True), \
+        StructField("repos_url", StringType(), True), \
+        StructField("events_url", StringType(), True), \
+        StructField("received_events_url", StringType(), True), \
+        StructField("type", StringType(), True), \
+        StructField("site_admin", BooleanType(), True), \
+      ]), True), \
+      StructField("parents", StructType([ \
+        StructField("sha", StringType(), True), \
+        StructField("url", StringType(), True), \
+        StructField("html_url", StringType(), True), \
+      ]), True), \
+    ])
+    spark \
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .option("subscribe", "github_commits") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 10000000) \
+    .option("failOnDataLoss", "false") \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)", "timestamp") \
+    .withColumn("json", from_json(col("value"), schema)) \
+    .selectExpr("json.*", "timestamp as kafka_timestamp") \
+    .writeStream \
+    .queryName("ingest github commits") \
+    .format("iceberg") \
+    .foreachBatch(upsertGithubCommits) \
+    .outputMode("update") \
+    .trigger(processingTime='2 minutes') \
+    .option("checkpointLocation", "s3a://lakehouse/github/checkpoints/commits") \
     .start()
 
 
