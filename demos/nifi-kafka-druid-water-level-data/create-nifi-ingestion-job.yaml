@@ -21,12 +21,12 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
       volumes:
-      - name: script
-        configMap:
-          name: create-nifi-ingestion-job-script
-      - name: nifi-admin-credentials
-        secret:
-          secretName: nifi-admin-credentials
+        - name: script
+          configMap:
+            name: create-nifi-ingestion-job-script
+        - name: nifi-admin-credentials
+          secret:
+            secretName: nifi-admin-credentials
       restartPolicy: OnFailure
   backoffLimit: 50
 ---

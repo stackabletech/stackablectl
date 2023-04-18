@@ -13,15 +13,20 @@ spec:
           volumeMounts:
             - name: script
               mountPath: /tmp/script
+            - name: nifi-admin-credentials
+              mountPath: /nifi-admin-credentials
           env:
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
       volumes:
-      - name: script
-        configMap:
-          name: create-nifi-ingestion-job-script
+        - name: script
+          configMap:
+            name: create-nifi-ingestion-job-script
+        - name: nifi-admin-credentials
+          secret:
+            secretName: nifi-admin-credentials
       restartPolicy: OnFailure
   backoffLimit: 50
 ---
@@ -40,8 +45,8 @@ data:
 
     # As of 2022-08-29 we cant use "https://nifi:8443" here because <h2>The request contained an invalid host header [<code>nifi:8443</code>] in the request [<code>/nifi-api</code>]. Check for request manipulation or third-party intercept.</h2>
     ENDPOINT = f"https://nifi-node-default-0.nifi-node-default.{os.environ['NAMESPACE']}.svc.cluster.local:8443" # For local testing / developing replace it, afterwards change back to f"https://nifi-node-default-0.nifi-node-default.{os.environ['NAMESPACE']}.svc.cluster.local:8443"
-    USERNAME = "admin"
-    PASSWORD = "adminadmin"
+    USERNAME = open("/nifi-admin-credentials/username").read()
+    PASSWORD = open("/nifi-admin-credentials/password").read()
     TEMPLATE_NAME = "IngestEarthquakesToKafka"
     TEMPLATE_FILE = f"{TEMPLATE_NAME}.xml"
 
