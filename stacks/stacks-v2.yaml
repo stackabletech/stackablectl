@@ -1,7 +1,7 @@
 stacks:
   monitoring:
     description: Stack containing Prometheus and Grafana
-    stackableRelease: 23.1
+    stackableRelease: 23.4
     stackableOperators:
      - commons
     labels:
