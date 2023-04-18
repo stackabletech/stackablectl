@@ -151,13 +151,13 @@ stacks:
         default: adminadmin
       - name: supersetAdminPassword
         description: Password of the Superset admin user
-        default: supersetAdminPassword
-      - name: adminadmin
+        default: adminadmin
+      - name: minioAdminPassword
         description: Password of the MinIO admin user
-        default: minioAdminPassword
-      - name: adminadmin
+        default: adminadmin
+      - name: supersetSecretKey
         description: Superset's secret key used to generate e.g. user session tokens
-        default: supersetSecretKey
+        default: adminadmin
   spark-trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
     stackableRelease: 23.1
