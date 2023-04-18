@@ -6,7 +6,7 @@ metadata:
 spec:
   image:
     productVersion: "403"
-    stackableVersion: "23.4.0-rc2"
+    stackableVersion: "23.4"
   clusterConfig:
     listenerClass: external-unstable
     catalogLabelSelector:
@@ -94,7 +94,7 @@ metadata:
 spec:
   image:
     productVersion: 0.45.0
-    stackableVersion: "23.4.0-rc2"
+    stackableVersion: "23.4"
   servers:
     roleGroups:
       default:
