@@ -148,14 +148,14 @@ stacks:
     parameters:
       - name: nifiAdminPassword
         description: Password of the NiFI admin user
-        default: nifiAdminPassword
+        default: adminadmin
       - name: supersetAdminPassword
         description: Password of the Superset admin user
         default: supersetAdminPassword
-      - name: minioAdminPassword
+      - name: adminadmin
         description: Password of the MinIO admin user
         default: minioAdminPassword
-      - name: supersetSecretKey
+      - name: adminadmin
         description: Superset's secret key used to generate e.g. user session tokens
         default: supersetSecretKey
   spark-trino-superset-s3:
