@@ -19,8 +19,8 @@ demos:
       - hdfs
       - cycling-tripdata
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/distcp-cycling-data.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/create-hfile-and-import-to-hbase.yaml
+      - plainYaml: demos/hbase-hdfs-load-cycling-data/distcp-cycling-data.yaml
+      - plainYaml: demos/hbase-hdfs-load-cycling-data/create-hfile-and-import-to-hbase.yaml
   nifi-kafka-druid-earthquake-data:
     description: Demo ingesting earthquake data into Kafka using NiFi, streaming it into Druid and creating a Superset dashboard
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/nifi-kafka-druid-earthquake-data.html
