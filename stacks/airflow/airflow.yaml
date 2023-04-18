@@ -271,6 +271,7 @@ data:
         cores: 1
         instances: 3
         memory: "512m"
+{% endraw %}
 ---
 apiVersion: v1
 kind: Secret
@@ -282,9 +283,8 @@ stringData:
   adminUser.firstname: Airflow
   adminUser.lastname: Admin
   adminUser.email: airflow@airflow.com
-  adminUser.password: adminadmin
-  connections.secretKey: thisISaSECRET_1234
+  adminUser.password: "{{ adminPassword }}"
+  connections.secretKey: "{{ airflowSecretKey }}"
   connections.sqlalchemyDatabaseUri: postgresql+psycopg2://airflow:airflow@postgresql-airflow/airflow
   connections.celeryResultBackend: db+postgresql://airflow:airflow@postgresql-airflow/airflow
   connections.celeryBrokerUrl: redis://:airflow@redis-airflow-master:6379/0
-{% endraw %}

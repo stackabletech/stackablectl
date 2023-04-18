@@ -57,8 +57,13 @@ stacks:
       - helmChart: stacks/_templates/postgresql-airflow.yaml
       - helmChart: stacks/_templates/redis-airflow.yaml
       - plainYaml: stacks/airflow/airflow.yaml
-    # TODO: Parameterize
-    parameters: []
+    parameters:
+      - name: adminPassword
+        description: Password of the Airflow admin user
+        default: adminadmin
+      - name: airflowSecretKey
+        description: Airflow's secret key used to generate e.g. user session tokens
+        default: airflowSecretKey
   data-lakehouse-iceberg-trino-spark:
     description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
     stackableRelease: 23.1
