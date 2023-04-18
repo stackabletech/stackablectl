@@ -14,7 +14,7 @@ kind: S3Connection
 metadata:
   name: minio
 spec:
-  host: minio
+  host: minio-trino
   port: 9000
   accessStyle: Path
   credentials:
@@ -27,8 +27,8 @@ metadata:
   labels:
     secrets.stackable.tech/class: hive-s3-secret-class
 stringData:
-  accessKey: trino
-  secretKey: trinotrino
+  accessKey: admin
+  secretKey: {{ minioAdminPassword }}
 ---
 apiVersion: hive.stackable.tech/v1alpha1
 kind: HiveCluster
