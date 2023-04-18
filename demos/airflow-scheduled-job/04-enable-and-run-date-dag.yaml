@@ -14,13 +14,21 @@ spec:
           # below are not "water-tight" but add a layer of stability by at least ensuring that the db is initialized and ready and that
           # all pods are reachable (albeit independent of each other).
           command: ["bash", "-c", "
-          kubectl wait airflowdb/airflow --for jsonpath='{.status.condition}'=Ready --timeout 600s
-          && kubectl rollout status --watch statefulset/airflow-webserver-default
-          && kubectl rollout status --watch statefulset/airflow-worker-default
-          && kubectl rollout status --watch statefulset/airflow-scheduler-default
-          && curl -i -s --user admin:adminadmin http://airflow-webserver-default:8080/api/v1/dags/date_demo
-          && curl -i -s --user admin:adminadmin -H 'Content-Type:application/json' -XPATCH http://airflow-webserver-default:8080/api/v1/dags/date_demo -d '{\"is_paused\": false}'
-          && curl -i -s --user admin:adminadmin -H 'Content-Type:application/json' -XPOST http://airflow-webserver-default:8080/api/v1/dags/date_demo/dagRuns -d '{}'
+            kubectl wait airflowdb/airflow --for jsonpath='{.status.condition}'=Ready --timeout 600s
+            && kubectl rollout status --watch statefulset/airflow-webserver-default
+            && kubectl rollout status --watch statefulset/airflow-worker-default
+            && kubectl rollout status --watch statefulset/airflow-scheduler-default
+            && export AIRFLOW_ADMIN_PASSWORD=$(cat /airflow-credentials/adminUser.password)
+            && curl -i -s --user admin:$AIRFLOW_ADMIN_PASSWORD http://airflow-webserver-default:8080/api/v1/dags/date_demo
+            && curl -i -s --user admin:$AIRFLOW_ADMIN_PASSWORD -H 'Content-Type:application/json' -XPATCH http://airflow-webserver-default:8080/api/v1/dags/date_demo -d '{\"is_paused\": false}'
+            && curl -i -s --user admin:$AIRFLOW_ADMIN_PASSWORD -H 'Content-Type:application/json' -XPOST http://airflow-webserver-default:8080/api/v1/dags/date_demo/dagRuns -d '{}'
           "]
+          volumeMounts:
+            - name: airflow-credentials
+              mountPath: /airflow-credentials
+      volumes:
+        - name: airflow-credentials
+          secret:
+            secretName: airflow-credentials
       restartPolicy: OnFailure
   backoffLimit: 20 # give some time for the Airflow cluster to be available
