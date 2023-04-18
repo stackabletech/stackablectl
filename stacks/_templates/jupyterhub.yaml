@@ -14,7 +14,7 @@ options:
         allowed_users:
           - admin
       DummyAuthenticator:
-        password: adminadmin
+        password: {{ jupyterHubAdminPassword }}
       JupyterHub:
         authenticator_class: dummy
   rbac:
