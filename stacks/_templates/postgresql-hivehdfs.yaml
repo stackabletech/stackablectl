@@ -3,7 +3,9 @@ name: postgresql
 repo:
   name: bitnami
   url: https://charts.bitnami.com/bitnami/
-version: 12.1.5
+# helm search repo bitnami/postgresql --versions
+# bitnami/postgresql      12.2.8          15.2.0          PostgreSQL (Postgres) is an open source object-
+version: 12.2.8
 options:
   auth:
     username: hive
