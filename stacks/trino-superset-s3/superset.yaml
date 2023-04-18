@@ -26,8 +26,8 @@ stringData:
   adminUser.firstname: Superset
   adminUser.lastname: Admin
   adminUser.email: admin@superset.com
-  adminUser.password: adminadmin
-  connections.secretKey: thisISaSECRET_1234
+  adminUser.password: {{ supersetAdminPassword }}
+  connections.secretKey: {{ supersetSecretKey }}
   connections.sqlalchemyDatabaseUri: postgresql://superset:superset@postgresql-superset/superset
 ---
 apiVersion: v1

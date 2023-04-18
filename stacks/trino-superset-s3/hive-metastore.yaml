@@ -14,33 +14,8 @@ spec:
       password: hive
       dbType: postgres
     s3:
-      inline:
-        host: minio-trino
-        port: 9000
-        accessStyle: Path
-        credentials:
-          secretClass: hive-s3-credentials
+      reference: minio
   metastore:
     roleGroups:
       default:
         replicas: 1
----
-apiVersion: secrets.stackable.tech/v1alpha1
-kind: SecretClass
-metadata:
-  name: hive-s3-credentials
-spec:
-  backend:
-    k8sSearch:
-      searchNamespace:
-        pod: {}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: hive-s3-credentials
-  labels:
-    secrets.stackable.tech/class: hive-s3-credentials
-stringData:
-  accessKey: hive
-  secretKey: hivehive

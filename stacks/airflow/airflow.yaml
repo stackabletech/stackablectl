@@ -283,7 +283,7 @@ stringData:
   adminUser.firstname: Airflow
   adminUser.lastname: Admin
   adminUser.email: airflow@airflow.com
-  adminUser.password: "{{ adminPassword }}"
+  adminUser.password: "{{ airflowAdminPassword }}"
   connections.secretKey: "{{ airflowSecretKey }}"
   connections.sqlalchemyDatabaseUri: postgresql+psycopg2://airflow:airflow@postgresql-airflow/airflow
   connections.celeryResultBackend: db+postgresql://airflow:airflow@postgresql-airflow/airflow

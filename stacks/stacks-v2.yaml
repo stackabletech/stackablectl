@@ -58,7 +58,7 @@ stacks:
       - helmChart: stacks/_templates/redis-airflow.yaml
       - plainYaml: stacks/airflow/airflow.yaml
     parameters:
-      - name: adminPassword
+      - name: airflowAdminPassword
         description: Password of the Airflow admin user
         default: adminadmin
       - name: airflowSecretKey
@@ -189,14 +189,26 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: stacks/_templates/minio-trino.yaml
+      - helmChart: stacks/_templates/minio.yaml
       - helmChart: stacks/_templates/postgresql-hive.yaml
       - helmChart: stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/trino-superset-s3/s3-credentials.yaml
       - plainYaml: stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: stacks/trino-superset-s3/trino.yaml
       - plainYaml: stacks/trino-superset-s3/superset.yaml
-    # TODO: Parameterize
-    parameters: []
+    parameters:
+      - name: trinoAdminPassword
+        description: Password of the Trino admin user
+        default: adminadmin
+      - name: supersetAdminPassword
+        description: Password of the Superset admin user
+        default: adminadmin
+      - name: minioAdminPassword
+        description: Password of the MinIO admin user
+        default: adminadmin
+      - name: supersetSecretKey
+        description: Superset's secret key used to generate e.g. user session tokens
+        default: supersetSecretKey
   trino-iceberg:
     description: Stack containing Trino using Apache Iceberg as a S3 data lakehouse
     stackableRelease: 23.1

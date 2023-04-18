@@ -1,4 +1,4 @@
-releaseName: minio-druid
+releaseName: minio-trino
 name: minio
 repo:
   name: minio
@@ -6,19 +6,16 @@ repo:
 version: 5.0.8
 options:
   rootUser: admin
-  rootPassword: adminadmin
+  rootPassword: {{ minioAdminPassword }}
   mode: standalone
   persistence:
-    size: 15Gi
-  users:
-    - accessKey: druid
-      secretKey: druiddruid
-      policy: readwrite
+    size: 10Gi
   buckets:
-    - name: druid
+    - name: demo
       policy: public
   resources:
     requests:
+      cpu: 1
       memory: 2Gi
   service:
     type: NodePort
