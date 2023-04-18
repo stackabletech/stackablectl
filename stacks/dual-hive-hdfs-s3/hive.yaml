@@ -27,8 +27,8 @@ metadata:
   labels:
     secrets.stackable.tech/class: hive-s3-secret-class
 stringData:
-  accessKey: admin
-  secretKey: {{ minioAdminPassword }}
+  accessKey: trino
+  secretKey: trinotrino
 ---
 apiVersion: hive.stackable.tech/v1alpha1
 kind: HiveCluster

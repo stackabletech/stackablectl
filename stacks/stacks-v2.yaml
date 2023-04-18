@@ -288,10 +288,8 @@ stacks:
       - plainYaml: stacks/dual-hive-hdfs-s3/hdfs.yaml
       - plainYaml: stacks/dual-hive-hdfs-s3/hive.yaml
       - plainYaml: stacks/dual-hive-hdfs-s3/trino.yaml
-    parameters:
-      - name: minioAdminPassword
-        description: Password of the MinIO admin user
-        default: adminadmin
+    # TODO: Parameterize
+    parameters: []
   tutorial-openldap:
     description: >-
       An OpenLDAP instance with two users (alice:alice, bob:bob) and TLS enabled.
