@@ -120,7 +120,7 @@ stacks:
     parameters: []
   nifi-kafka-druid-superset-s3:
     description: Stack containing NiFi, Kafka, Druid, MinIO and Superset for data visualization
-    stackableRelease: 23.1
+    stackableRelease: 23.4
     stackableOperators:
       - commons
       - secret
@@ -137,16 +137,27 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-druid.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/kafka.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/druid.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/superset.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
-    # TODO: Parameterize
-    parameters: []
+      - helmChart: stacks/_templates/minio.yaml
+      - helmChart: stacks/_templates/postgresql-druid.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/kafka.yaml
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/druid.yaml
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/superset.yaml
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+    parameters:
+      - name: nifiAdminPassword
+        description: Password of the NiFI admin user
+        default: nifiAdminPassword
+      - name: supersetAdminPassword
+        description: Password of the Superset admin user
+        default: supersetAdminPassword
+      - name: minioAdminPassword
+        description: Password of the MinIO admin user
+        default: minioAdminPassword
+      - name: supersetSecretKey
+        description: Superset's secret key used to generate e.g. user session tokens
+        default: supersetSecretKey
   spark-trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
     stackableRelease: 23.1
