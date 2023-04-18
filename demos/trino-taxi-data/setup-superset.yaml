@@ -45,8 +45,6 @@ data:
     trino_username = "admin"
     trino_password = open("/trino-credentials/admin").read()
 
-    print(superset_username, superset_password, trino_username, trino_password)
-
     logging.basicConfig(level=logging.INFO)
     logging.info("Starting setup of Superset")
 
@@ -87,7 +85,7 @@ data:
         "bundle": ("superset-assets.zip", open("superset-assets.zip", "rb")),
     }
     data = {
-        "passwords": '{"databases/Trino.yaml": trino_password}'
+        "passwords": '{"databases/Trino.yaml": "' + trino_password + '"}'
     }
     result = session.post(f"{base_url}/api/v1/assets/import", headers=headers, files=files, data=data)
     print(result)
