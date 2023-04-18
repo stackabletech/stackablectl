@@ -18,7 +18,7 @@ stacks:
         default: adminadmin
   logging:
     description: Stack containing OpenSearch, OpenSearch Dashboards (Kibana) and Vector aggregator
-    stackableRelease: 23.1
+    stackableRelease: 23.4
     stackableOperators:
       - commons
       - secret
@@ -29,10 +29,10 @@ stacks:
       - opensearch-dashboards
       - vector
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/opensearch.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/opensearch-dashboards.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/vector-aggregator.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/vector-aggregator-discovery.yaml
+      - helmChart: stacks/_templates/opensearch.yaml
+      - helmChart: stacks/_templates/opensearch-dashboards.yaml
+      - helmChart: stacks/_templates/vector-aggregator.yaml
+      - plainYaml: stacks/_templates/vector-aggregator-discovery.yaml
     parameters:
       - name: openSearchAdminPassword
         description: Password of the OpenSearch admin user
