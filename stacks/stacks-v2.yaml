@@ -267,7 +267,7 @@ stacks:
         default: adminadmin
   dual-hive-hdfs-s3:
     description: Dual stack Hive on HDFS and S3 for Hadoop/Hive to Trino migration
-    stackableRelease: 23.1
+    stackableRelease: 23.4
     stackableOperators:
       - commons
       - secret
@@ -282,14 +282,16 @@ stacks:
       - hdfs
       - s3
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hivehdfs.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hives3.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hdfs.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hive.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
-    # TODO: Parameterize
-    parameters: []
+      - helmChart: stacks/_templates/postgresql-hivehdfs.yaml
+      - helmChart: stacks/_templates/postgresql-hives3.yaml
+      - helmChart: stacks/_templates/minio.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/hdfs.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/hive.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/trino.yaml
+    parameters:
+      - name: minioAdminPassword
+        description: Password of the MinIO admin user
+        default: adminadmin
   tutorial-openldap:
     description: >-
       An OpenLDAP instance with two users (alice:alice, bob:bob) and TLS enabled.
