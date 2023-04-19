@@ -100,7 +100,3 @@ data:
     allow {
       input.context.identity.user == "admin"
     }
-
-    allow {
-      input.context.identity.user == "demo"
-    }

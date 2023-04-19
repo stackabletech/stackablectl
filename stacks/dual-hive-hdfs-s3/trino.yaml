@@ -104,9 +104,11 @@ data:
   trino.rego: |
     package trino
     default allow = false
+
     allow {
       input.context.identity.user == "admin"
     }
+
     allow {
       input.context.identity.user == "demo"
     }

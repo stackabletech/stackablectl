@@ -6,21 +6,11 @@ repo:
 version: 5.0.8
 options:
   rootUser: admin
-  rootPassword: adminadmin
+  rootPassword: {{ minioAdminPassword }}
   mode: distributed
   replicas: 5
   persistence:
     size: 250Gi
-  users:
-    - accessKey: trino
-      secretKey: trinotrino
-      policy: readwrite
-    - accessKey: hive
-      secretKey: hivehive
-      policy: readwrite
-    - accessKey: demo
-      secretKey: demodemo
-      policy: readwrite
   buckets:
     - name: staging
       policy: public

@@ -9,9 +9,9 @@ stacks:
       - prometheus
       - grafana
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/monitoring/grafana-dashboards.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/prometheus.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/prometheus-service-monitor.yaml
+      - plainYaml: stacks/monitoring/grafana-dashboards.yaml
+      - helmChart: stacks/_templates/prometheus.yaml
+      - plainYaml: stacks/_templates/prometheus-service-monitor.yaml
     parameters:
       - name: grafanaAdminPassword
         description: Password of the Grafana admin user
@@ -66,7 +66,7 @@ stacks:
         default: airflowSecretKey
   data-lakehouse-iceberg-trino-spark:
     description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
-    stackableRelease: 23.1
+    stackableRelease: 23.4
     stackableOperators:
       - commons
       - secret
@@ -88,18 +88,33 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-distributed.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/superset.yaml # Reuse
-    # TODO: Parameterize
-    parameters: []
+      - helmChart: stacks/_templates/minio-distributed.yaml
+      - helmChart: stacks/_templates/postgresql-hive.yaml
+      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/s3-connection.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/superset.yaml # Reuse
+    parameters:
+      - name: trinoAdminPassword
+        description: Password of the Trino admin user
+        default: trinoAdminPassword # adminadmin
+      - name: supersetAdminPassword
+        description: Password of the Superset admin user
+        default: supersetAdminPassword # adminadmin
+      - name: nifiAdminPassword
+        description: Password of the MinIO admin user
+        default: nifiAdminPassword # adminadmin
+      - name: minioAdminPassword
+        description: Password of the MinIO admin user
+        default: minioAdminPassword # adminadmin
+      - name: supersetSecretKey
+        description: Superset's secret key used to generate e.g. user session tokens
+        default: supersetSecretKey
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
     stackableRelease: 23.4
@@ -116,7 +131,6 @@ stacks:
       - plainYaml: stacks/hdfs-hbase/zookeeper.yaml
       - plainYaml: stacks/hdfs-hbase/hdfs.yaml
       - plainYaml: stacks/hdfs-hbase/hbase.yaml
-    # TODO: Parameterize
     parameters: []
   nifi-kafka-druid-superset-s3:
     description: Stack containing NiFi, Kafka, Druid, MinIO and Superset for data visualization
@@ -306,7 +320,6 @@ stacks:
       - plainYaml: stacks/dual-hive-hdfs-s3/hdfs.yaml
       - plainYaml: stacks/dual-hive-hdfs-s3/hive.yaml
       - plainYaml: stacks/dual-hive-hdfs-s3/trino.yaml
-    # TODO: Parameterize
     parameters: []
   tutorial-openldap:
     description: >-
@@ -322,7 +335,7 @@ stacks:
       - authentication
       - ldap
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
+      - plainYaml: stacks/authentication/openldap-tls.yaml
     # TODO: Parameterize
     parameters: []
   openldap:
@@ -339,7 +352,7 @@ stacks:
       - authentication
       - ldap
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls-authenticationclass.yaml
+      - plainYaml: stacks/authentication/openldap-tls.yaml
+      - plainYaml: stacks/authentication/openldap-tls-authenticationclass.yaml
     # TODO: Parameterize
     parameters: []

@@ -20,11 +20,11 @@ spec:
   nodes:
     config:
       resources:
-        memory:
-          limit: '6Gi'
         cpu:
           min: "500m"
           max: "4"
+        memory:
+          limit: '6Gi'
         storage:
           contentRepo:
             capacity: "10Gi"

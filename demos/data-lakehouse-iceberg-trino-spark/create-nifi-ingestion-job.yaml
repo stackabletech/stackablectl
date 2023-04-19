@@ -8,7 +8,7 @@ spec:
     spec:
       serviceAccountName: demo-serviceaccount
       initContainers:
-        - name: wait-for-testdata 
+        - name: wait-for-testdata
           image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
           command: ["bash", "-c", "echo 'Waiting for all kafka brokers to be ready' && kubectl wait --for=condition=ready --timeout=30m pod -l app.kubernetes.io/instance=kafka -l app.kubernetes.io/name=kafka"]
       containers:
@@ -24,9 +24,9 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
       volumes:
-      - name: script
-        configMap:
-          name: create-nifi-ingestion-job-script
+        - name: script
+          configMap:
+            name: create-nifi-ingestion-job-script
       restartPolicy: OnFailure
   backoffLimit: 50
 ---

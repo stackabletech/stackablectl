@@ -11,10 +11,6 @@ options:
   replicas: 2
   persistence:
     size: 50Gi
-  users:
-    - accessKey: minio
-      secretKey: miniominio
-      policy: readwrite
   buckets:
     - name: lakehouse
       policy: public
