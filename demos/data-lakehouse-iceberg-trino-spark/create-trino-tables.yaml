@@ -18,10 +18,15 @@ spec:
           volumeMounts:
             - name: script
               mountPath: /tmp/script
+            - name: trino-credentials
+              mountPath: /trino-credentials
       volumes:
-      - name: script
-        configMap:
-          name: create-tables-in-trino-script
+        - name: script
+          configMap:
+            name: create-tables-in-trino-script
+        - name: trino-credentials
+          secret:
+            secretName: trino-credentials
       restartPolicy: OnFailure
   backoffLimit: 50
 ---
@@ -42,9 +47,9 @@ data:
         connection = trino.dbapi.connect(
             host="trino-coordinator",
             port=8443,
-            user="demo",
+            user="admin",
             http_scheme='https',
-            auth=trino.auth.BasicAuthentication("demo", "demo"),
+            auth=trino.auth.BasicAuthentication("admin", open("/trino-credentials/admin").read()),
         )
         connection._http_session.verify = False
         return connection

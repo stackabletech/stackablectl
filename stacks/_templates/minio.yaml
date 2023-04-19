@@ -1,4 +1,4 @@
-releaseName: minio-trino
+releaseName: minio
 name: minio
 repo:
   name: minio

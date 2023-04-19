@@ -14,7 +14,7 @@ kind: S3Connection
 metadata:
   name: minio
 spec:
-  host: minio-trino
+  host: minio
   port: 9000
   accessStyle: Path
   credentials:
