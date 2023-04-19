@@ -1,5 +1,11 @@
 = nifi-kafka-druid-earthquake-data
 
+[WARNING]
+====
+This demos does only run in the `default` namespace, as a `ServiceAccount` will be created.
+Additionally, we have to use the fqdn service names (including the namespace), so that the used TLS certificates are valid.
+====
+
 [NOTE]
 ====
 This guide assumes that you already have the demo `nifi-kafka-druid-earthquake-data` installed.
