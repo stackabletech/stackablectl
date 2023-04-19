@@ -6,7 +6,7 @@ repo:
 version: 5.0.8
 options:
   rootUser: admin
-  rootPassword: adminadmin
+  rootPassword: {{ minioAdminPassword }}
   mode: distributed
   replicas: 2
   persistence:

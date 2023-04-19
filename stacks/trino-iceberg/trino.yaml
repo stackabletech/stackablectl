@@ -6,18 +6,21 @@ metadata:
 spec:
   image:
     productVersion: "403"
-    stackableVersion: "23.1"
-  catalogLabelSelector:
-    matchLabels:
-      trino: trino
-  authentication:
-    method:
-      multiUser:
-        userCredentialsSecret:
-          name: trino-users
-  opa:
-    configMapName: opa
-    package: trino
+    stackableVersion: "23.4"
+  clusterConfig:
+    listenerClass: external-unstable
+    catalogLabelSelector:
+      matchLabels:
+        trino: trino
+    authentication:
+      method:
+        multiUser:
+          userCredentialsSecret:
+            name: trino-users
+    authorization:
+      opa:
+        configMapName: opa
+        package: trino
   coordinators:
     config:
       queryMaxMemory: 10TB
@@ -49,10 +52,18 @@ metadata:
   name: trino-users
 type: kubernetes.io/opaque
 stringData:
-  # htpasswd -n -B -C 10 admin # pass adminadmin
-  admin: $2y$10$6eXlCsbvSNsLaeClkOeRZujIM4aKIFuSXbwGUej7eEOFbkeo.BQBO
-  # htpasswd -n -B -C 10 demo # pass demo
-  demo: $2y$10$mMRoIKfWtAuycEQnKiDCeOlCSYiWkvbs0WsMFLkaSnNO0ZnFKVRXm
+  # htpasswd -n -B -C 10 admin
+  # Hack: Trino requires bcrypt version 2Y, the bcrypt crate generates 2B hashes. See https://github.com/trinodb/trino/issues/11314 for details
+  # This can be removed once the bcrypt crate starts generating 2X hashes
+  admin: "{{ bcrypt(password=trinoAdminPassword) | replace(from="$2b$", to="$2y$") }}"
+---
+# As the demo needs to have access to Trino using the admin user we need to store the password somewhere
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trino-credentials
+stringData:
+  admin: "{{ trinoAdminPassword }}"
 ---
 apiVersion: trino.stackable.tech/v1alpha1
 kind: TrinoCatalog
@@ -95,7 +106,7 @@ metadata:
 spec:
   image:
     productVersion: 0.45.0
-    stackableVersion: "23.1"
+    stackableVersion: "23.4"
   servers:
     roleGroups:
       default:
