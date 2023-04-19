@@ -64,10 +64,10 @@ demos:
       - s3
       - ny-taxi-data
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/serviceaccount.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/load-test-data.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/create-spark-anomaly-detection-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/setup-superset.yaml
+      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/serviceaccount.yaml
+      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/load-test-data.yaml
+      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/create-spark-anomaly-detection-job.yaml
+      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/setup-superset.yaml
   trino-iceberg:
     description: Demo containing Trino using Apache Iceberg as a S3 data lakehouse
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/trino-iceberg.html

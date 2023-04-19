@@ -9,14 +9,24 @@ spec:
       containers:
         - name: setup-superset
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
-          command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/superset-assets.zip && python -u /tmp/script/script.py"]
+          command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/release-23.4/demos/spark-k8s-anomaly-detection-taxi-data/superset-assets.zip && python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
+            - name: trino-credentials
+              mountPath: /trino-credentials
+            - name: superset-credentials
+              mountPath: /superset-credentials
       volumes:
         - name: script
           configMap:
             name: setup-superset-script
+        - name: superset-credentials
+          secret:
+            secretName: superset-credentials
+        - name: trino-credentials
+          secret:
+            secretName: trino-credentials
       restartPolicy: OnFailure
   backoffLimit: 50
 ---
@@ -30,17 +40,22 @@ data:
     import requests
 
     base_url = "http://superset-external:8088" # For local testing / developing replace it, afterwards change back to http://superset-external:8088
-    username = "admin"
-    password = "adminadmin"
+    superset_username = open("/superset-credentials/adminUser.username").read()
+    superset_password =  open("/superset-credentials/adminUser.password").read()
+    trino_username = "admin"
+    trino_password = open("/trino-credentials/admin").read()
 
     logging.basicConfig(level=logging.INFO)
     logging.info("Starting setup of Superset")
+
     logging.info("Getting access token from /api/v1/security/login")
     session = requests.session()
-    access_token = session.post(f"{base_url}/api/v1/security/login", json={"username": username, "password": password, "provider": "db", "refresh": True}).json()['access_token']
+    access_token = session.post(f"{base_url}/api/v1/security/login", json={"username": superset_username, "password": superset_password, "provider": "db", "refresh": True}).json()['access_token']
+    # print(f"access_token: {access_token}")
 
     logging.info("Getting csrf token from /api/v1/security/csrf_token")
     csrf_token = session.get(f"{base_url}/api/v1/security/csrf_token", headers={"Authorization": f"Bearer {access_token}"}).json()["result"]
+    # print(f"csrf_token: {csrf_token}")
 
     headers = {
         "accept": "application/json",
@@ -48,24 +63,29 @@ data:
         "X-CSRFToken": csrf_token,
     }
 
-    #########################
-    # Export
-    #########################
-    #logging.info("Exporting all assets")
-    #result = session.get(f"{base_url}/api/v1/assets/export", headers=headers)
-    #assert result.status_code == 200
-    #with open("superset-assets.zip", "wb") as f:
-    #    f.write(result.content)
+    # To retrieve all of the assets (datasources, datasets, charts and dashboards) run the following commands
+    # logging.info("Exporting all assets")
+    # result = session.get(f"{base_url}/api/v1/assets/export", headers=headers)
+    # assert result.status_code == 200
+    # with open("superset-assets.zip", "wb") as f:
+    #     f.write(result.content)
+
 
     #########################
-    # Import
+    # IMPORTANT
+    #########################
+    # The exported zip file had to be modified, otherwise we get:
+    # <Response [422]>
+    # {"errors": [{"message": "Error importing assets", "error_type": "GENERIC_COMMAND_ERROR", "level": "warning", "extra": {"databases/Trino.yaml": {"extra": {"disable_data_preview": ["Unknown field."]}}, "issue_codes": [{"code": 1010, "message": "Issue 1010 - Superset encountered an error while running a command."}]}}]}
+    #
+    # The file databases/Trino.yaml was modified and the attribute "extra.disable_data_preview" was removed
     #########################
     logging.info("Importing all assets")
     files = {
         "bundle": ("superset-assets.zip", open("superset-assets.zip", "rb")),
     }
     data = {
-        "passwords": '{"databases/Trino.yaml": "demo"}'
+        "passwords": '{"databases/Trino.yaml": "' + trino_password + '"}'
     }
     result = session.post(f"{base_url}/api/v1/assets/import", headers=headers, files=files, data=data)
     print(result)

@@ -160,7 +160,7 @@ stacks:
         default: adminadmin
   spark-trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 23.1
+    stackableRelease: 23.4
     stackableOperators:
       - commons
       - secret
@@ -175,15 +175,28 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-trino.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/hive-metastore.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/superset.yaml
-    # TODO: Parameterize
-    parameters: []
+      - helmChart: stacks/_templates/minio.yaml
+      - helmChart: stacks/_templates/postgresql-hive.yaml
+      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/trino-superset-s3/s3-connection.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
+      - plainYaml: stacks/trino-superset-s3/trino.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/trino-prediction-catalog.yaml
+      - plainYaml: stacks/trino-superset-s3/superset.yaml
+    parameters:
+      - name: trinoAdminPassword
+        description: Password of the Trino admin user
+        default: trinoAdminPassword # adminadmin
+      - name: supersetAdminPassword
+        description: Password of the Superset admin user
+        default: supersetAdminPassword # adminadmin
+      - name: minioAdminPassword
+        description: Password of the MinIO admin user
+        default: minioAdminPassword # adminadmin
+      - name: supersetSecretKey
+        description: Superset's secret key used to generate e.g. user session tokens
+        default: supersetSecretKey
   trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
     stackableRelease: 23.4

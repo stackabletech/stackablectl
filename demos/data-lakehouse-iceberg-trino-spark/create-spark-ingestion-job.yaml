@@ -11,7 +11,7 @@ spec:
     spec:
       serviceAccountName: demo-serviceaccount
       initContainers:
-        - name: wait-for-testdata 
+        - name: wait-for-testdata
           image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
           command: ["bash", "-c", "echo 'Waiting for all kafka brokers to be ready' && kubectl wait --for=condition=ready --timeout=30m pod -l app.kubernetes.io/instance=kafka -l app.kubernetes.io/name=kafka"]
       containers:
@@ -48,11 +48,9 @@ data:
       #   packages:
       #     - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:1.1.0
       #     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0
+      s3connection:
+        reference: minio
       sparkConf:
-        spark.hadoop.fs.s3a.endpoint: http://minio:9000
-        spark.hadoop.fs.s3a.path.style.access: "true"
-        spark.hadoop.fs.s3a.access.key: trino
-        spark.hadoop.fs.s3a.secret.key: trinotrino
         spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
         spark.sql.catalog.lakehouse: org.apache.iceberg.spark.SparkCatalog
         spark.sql.catalog.lakehouse.type: hive
@@ -295,7 +293,7 @@ data:
       # Upsert into the shared_bikes_station_status table, only inserting records if they don't already exist.
       # In case they don't exist, we only insert the new records instead of replacing the old to keep the history,
       # thus enabling to build reports on the usage change over time
-      # 
+      #
       # We have to remove all station_id with less than 5 characters as they contain duplicates
       # This causes org.apache.spark.SparkException: The ON search condition of the MERGE statement matched a single row from the target table with multiple rows of the source table. This could result in the target row being operated on more than once with an update or delete operation and is not allowed.
       microBatchOutputDF._jdf.sparkSession().sql("""
