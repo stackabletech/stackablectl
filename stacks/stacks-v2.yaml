@@ -102,16 +102,16 @@ stacks:
     parameters:
       - name: trinoAdminPassword
         description: Password of the Trino admin user
-        default: trinoAdminPassword # adminadmin
+        default: adminadmin
       - name: supersetAdminPassword
         description: Password of the Superset admin user
-        default: supersetAdminPassword # adminadmin
+        default: adminadmin
       - name: nifiAdminPassword
         description: Password of the MinIO admin user
-        default: nifiAdminPassword # adminadmin
+        default: adminadmin
       - name: minioAdminPassword
         description: Password of the MinIO admin user
-        default: minioAdminPassword # adminadmin
+        default: adminadmin
       - name: supersetSecretKey
         description: Superset's secret key used to generate e.g. user session tokens
         default: supersetSecretKey
@@ -201,13 +201,13 @@ stacks:
     parameters:
       - name: trinoAdminPassword
         description: Password of the Trino admin user
-        default: trinoAdminPassword # adminadmin
+        default: adminadmin
       - name: supersetAdminPassword
         description: Password of the Superset admin user
-        default: supersetAdminPassword # adminadmin
+        default: adminadmin
       - name: minioAdminPassword
         description: Password of the MinIO admin user
-        default: minioAdminPassword # adminadmin
+        default: adminadmin
       - name: supersetSecretKey
         description: Superset's secret key used to generate e.g. user session tokens
         default: supersetSecretKey
