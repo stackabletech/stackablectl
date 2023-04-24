@@ -22,9 +22,9 @@ spec:
             - name: manifest
               mountPath: /tmp/manifest
       volumes:
-      - name: manifest
-        configMap:
-          name: create-spark-ingestion-job-manifest
+        - name: manifest
+          configMap:
+            name: create-spark-ingestion-job-manifest
       restartPolicy: OnFailure
   backoffLimit: 50
 ---
@@ -41,7 +41,8 @@ data:
       name: spark-ingest-into-lakehouse
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0-1.1.0
+      sparkImage: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable23.4
+      sparkImagePullPolicy: Always
       mode: cluster
       mainApplicationFile: local:///stackable/spark/jobs/spark-ingest-into-lakehouse.py
       # deps:
@@ -62,6 +63,20 @@ data:
         - name: script
           configMap:
             name: write-iceberg-table-script
+        - name: tls
+          ephemeral:
+            volumeClaimTemplate:
+              metadata:
+                annotations:
+                  secrets.stackable.tech/class: tls
+                  secrets.stackable.tech/scope: pod
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: "1"
+                storageClassName: secrets.stackable.tech
       job:
         resources:
           cpu:
@@ -73,10 +88,12 @@ data:
             min: "1"
             max: "1"
           memory:
-            limit: "4Gi"
+            limit: "8Gi"
         volumeMounts:
           - name: script
             mountPath: /stackable/spark/jobs
+          - name: tls
+            mountPath: /stackable/tls
       executor:
         instances: 4
         resources:
@@ -88,6 +105,8 @@ data:
         volumeMounts:
           - name: script
             mountPath: /stackable/spark/jobs
+          - name: tls
+            mountPath: /stackable/tls
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -98,11 +117,29 @@ data:
     from pyspark.sql import SparkSession
     from pyspark.sql.types import StructType, StructField, StringType, LongType, ShortType, FloatType, DoubleType, BooleanType, TimestampType, MapType, ArrayType
     from pyspark.sql.functions import col, from_json, expr
-    import time
     from datetime import datetime, timedelta
+    import subprocess
+    import time
 
     spark = SparkSession.builder.appName("spark-ingest-into-lakehouse").getOrCreate()
     # spark.sparkContext.setLogLevel("DEBUG")
+
+    def createTrustStore(partitionData):
+      print("Creating truststore")
+      subprocess.run("keytool -importcert -file /stackable/tls/ca.crt -keystore /stackable/tls/truststore.p12 -storetype pkcs12 -noprompt -alias ca_cert -storepass changeit", shell=True)
+      print("Creating certificate chain")
+      subprocess.run("cat /stackable/tls/ca.crt /stackable/tls/tls.crt > /stackable/tls/chain.crt", shell=True)
+      print("Creating keystore")
+      subprocess.run("openssl pkcs12 -export -in /stackable/tls/chain.crt -inkey /stackable/tls/tls.key -out /stackable/tls/keystore.p12 --password pass:changeit", shell=True)
+      # We have to return some value
+      return partitionData
+
+    # Run on driver
+    createTrustStore("dummy")
+    # Get Spark to execute this function on every executor
+    rdd = spark._sc.parallelize(["dummy"])
+    rdd = rdd.mapPartitions(createTrustStore)
+    print(rdd.collect())
 
     spark.sql("CREATE SCHEMA IF NOT EXISTS lakehouse.water_levels LOCATION 's3a://lakehouse/water-levels/'")
     spark.sql("CREATE SCHEMA IF NOT EXISTS lakehouse.smart_city LOCATION 's3a://lakehouse/smart-city/'")
@@ -121,11 +158,16 @@ data:
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_information (station_id string, name string, latitude double, longitude double) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_status (station_id string, num_bikes_available short, is_installed boolean, is_renting boolean, is_returning boolean, last_reported timestamp) USING iceberg PARTITIONED BY (days(last_reported)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
 
-
-
-
-
-
+    kafkaOptions = {
+      "kafka.bootstrap.servers": "kafka-broker-default.default.svc.cluster.local:9093",
+      "kafka.security.protocol": "SSL",
+      "kafka.ssl.truststore.location": "/stackable/tls/truststore.p12",
+      "kafka.ssl.truststore.password": "changeit",
+      "kafka.ssl.truststore.type": "PKCS12",
+      "kafka.ssl.keystore.location": "/stackable/tls/keystore.p12",
+      "kafka.ssl.keystore.password": "changeit",
+      "kafka.ssl.keystore.type": "PKCS12",
+    }
 
     def upsertWaterLevelsStationInformation(microBatchOutputDF, batchId):
       microBatchOutputDF.createOrReplaceTempView("waterLevelsStationInformationUpserts")
@@ -159,7 +201,7 @@ data:
     spark \
     .readStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .options(**kafkaOptions) \
     .option("subscribe", "water_levels_stations") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 10000) \
@@ -211,7 +253,7 @@ data:
     spark \
     .readStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .options(**kafkaOptions) \
     .option("subscribe", "water_levels_measurements") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 50000000) \
@@ -264,7 +306,7 @@ data:
     spark \
     .readStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .options(**kafkaOptions) \
     .option("subscribe", "shared_bikes_station_information") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 10000000) \
@@ -315,7 +357,7 @@ data:
     spark \
     .readStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .options(**kafkaOptions) \
     .option("subscribe", "shared_bikes_station_status") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 10000000) \
@@ -367,7 +409,7 @@ data:
     spark \
     .readStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:9092") \
+    .options(**kafkaOptions) \
     .option("subscribe", "shared_bikes_bike_status") \
     .option("startingOffsets", "earliest") \
     .option("maxOffsetsPerTrigger", 10000) \
