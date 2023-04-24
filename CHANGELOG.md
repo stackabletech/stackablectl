@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Also print stack parameters when describing a demo ([#251](https://github.com/stackabletech/stackablectl/pull/251))
+
 ## [0.8.0] - 2023-02-23
 
 ### Changed
