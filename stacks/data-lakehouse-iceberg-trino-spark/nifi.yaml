@@ -6,9 +6,10 @@ metadata:
 spec:
   image:
     productVersion: 1.18.0
-    stackableVersion: "23.1"
-  zookeeperConfigMapName: nifi-znode
-  config:
+    stackableVersion: "23.4"
+  clusterConfig:
+    listenerClass: external-unstable
+    zookeeperConfigMapName: nifi-znode
     authentication:
       method:
         singleUser:
@@ -19,22 +20,22 @@ spec:
   nodes:
     config:
       resources:
-        memory:
-          limit: '6Gi'
         cpu:
           min: "2"
           max: "4"
+        memory:
+          limit: '6Gi'
         storage:
           contentRepo:
             capacity: "10Gi"
           databaseRepo:
-            capacity: "5Gi"
+            capacity: "1Gi"
           flowfileRepo:
-            capacity: "5Gi"
+            capacity: "2Gi"
           provenanceRepo:
-            capacity: "5Gi"
+            capacity: "4Gi"
           stateRepo:
-            capacity: "5Gi"
+            capacity: "1Gi"
     roleGroups:
       default:
         replicas: 2
@@ -45,7 +46,7 @@ metadata:
   name: nifi-admin-credentials
 stringData:
   username: admin
-  password: adminadmin
+  password: {{ nifiAdminPassword }}
 ---
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode

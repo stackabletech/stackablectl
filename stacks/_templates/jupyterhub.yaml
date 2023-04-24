@@ -5,27 +5,44 @@ repo:
   url: https://jupyterhub.github.io/helm-chart/
 version: 2.0.0
 options:
-  proxy:
-    service:
-      type: NodePort
   hub:
     config:
       Authenticator:
         allowed_users:
           - admin
       DummyAuthenticator:
-        password: adminadmin
+        password: {{ jupyterHubAdminPassword }}
       JupyterHub:
         authenticator_class: dummy
+  proxy:
+    service:
+      type: NodePort
+  prePuller:
+    hook:
+      enabled: false
+    continuous:
+      enabled: false
   rbac:
     create: true
   singleuser:
+    # `cmd: null` allows the custom CMD of the Jupyter docker-stacks to be used
+    # which performs further customization on startup.
+    cmd: null
+    image:
+      # You should replace the "latest" tag with a fixed version from:
+      # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
+      # Inspect the Dockerfile at:
+      # https://github.com/jupyter/docker-stacks/tree/HEAD/datascience-notebook/Dockerfile
+      name: jupyter/pyspark-notebook
+      tag: python-3.9
     serviceAccountName: spark
+    networkPolicy:
+      enabled: false
     extraEnv:
       HADOOP_CONF_DIR: "/home/jovyan/hdfs"
     initContainers:
       - name: download-notebook
-        image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.4.0
+        image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
         command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/notebook.ipynb -o /notebook/notebook.ipynb']
         volumeMounts:
           - mountPath: /notebook
@@ -43,13 +60,3 @@ options:
           mountPath: /home/jovyan/hdfs
         - name: notebook
           mountPath: /home/jovyan/notebook
-    image:
-      # You should replace the "latest" tag with a fixed version from:
-      # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
-      # Inspect the Dockerfile at:
-      # https://github.com/jupyter/docker-stacks/tree/HEAD/datascience-notebook/Dockerfile
-      name: jupyter/pyspark-notebook
-      tag: python-3.9
-    # `cmd: null` allows the custom CMD of the Jupyter docker-stacks to be used
-    # which performs further customization on startup.
-    cmd: null

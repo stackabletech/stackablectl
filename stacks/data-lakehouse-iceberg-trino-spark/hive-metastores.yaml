@@ -6,7 +6,7 @@ metadata:
 spec:
   image:
     productVersion: 3.1.3
-    stackableVersion: "23.1"
+    stackableVersion: "23.4"
   clusterConfig:
     database:
       connString: jdbc:postgresql://postgresql-hive:5432/hive
@@ -14,7 +14,7 @@ spec:
       password: hive
       dbType: postgres
     s3:
-      reference: hive
+      reference: minio
   metastore:
     roleGroups:
       default:
@@ -27,7 +27,7 @@ metadata:
 spec:
   image:
     productVersion: 3.1.3
-    stackableVersion: "23.1"
+    stackableVersion: "23.4"
   clusterConfig:
     database:
       connString: jdbc:postgresql://postgresql-hive-iceberg:5432/hive
@@ -35,39 +35,8 @@ spec:
       password: hive
       dbType: postgres
     s3:
-      reference: hive
+      reference: minio
   metastore:
     roleGroups:
       default:
         replicas: 1
----
-apiVersion: s3.stackable.tech/v1alpha1
-kind: S3Connection
-metadata:
-  name: hive
-spec:
-  host: minio
-  port: 9000
-  accessStyle: Path
-  credentials:
-    secretClass: hive-s3-credentials
----
-apiVersion: secrets.stackable.tech/v1alpha1
-kind: SecretClass
-metadata:
-  name: hive-s3-credentials
-spec:
-  backend:
-    k8sSearch:
-      searchNamespace:
-        pod: {}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: hive-s3-credentials
-  labels:
-    secrets.stackable.tech/class: hive-s3-credentials
-stringData:
-  accessKey: hive
-  secretKey: hivehive

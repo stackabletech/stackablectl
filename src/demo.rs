@@ -169,9 +169,11 @@ async fn describe_demo(demo_name: &str, output_type: &OutputType) -> Result<(), 
         stackable_stack: String,
         labels: Vec<String>,
         parameters: Vec<StackParameter>,
+        stack_parameters: Vec<StackParameter>,
     }
 
     let demo = get_demo(demo_name).await?;
+    let stack = stack::get_stack(&demo.stackable_stack).await?;
     let output = Output {
         demo: demo_name.to_string(),
         description: demo.description,
@@ -179,6 +181,7 @@ async fn describe_demo(demo_name: &str, output_type: &OutputType) -> Result<(), 
         stackable_stack: demo.stackable_stack,
         labels: demo.labels,
         parameters: demo.parameters,
+        stack_parameters: stack.get_parameters(),
     };
 
     match output_type {
@@ -220,6 +223,24 @@ async fn describe_demo(demo_name: &str, output_type: &OutputType) -> Result<(), 
                     Cell::new(parameter.name),
                     Cell::new(parameter.description),
                     Cell::new(parameter.default),
+                ]);
+            }
+            println!("{table}");
+
+            let mut table = Table::new();
+            table
+                .load_preset(UTF8_FULL)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .set_header(vec![
+                    Cell::new("Stack parameter"),
+                    Cell::new("Description"),
+                    Cell::new("Default"),
+                ]);
+            for stack_parameter in output.stack_parameters {
+                table.add_row(vec![
+                    Cell::new(stack_parameter.name),
+                    Cell::new(stack_parameter.description),
+                    Cell::new(stack_parameter.default),
                 ]);
             }
             println!("{table}");

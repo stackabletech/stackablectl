@@ -3,18 +3,14 @@ name: minio
 repo:
   name: minio
   url: https://charts.min.io/
-version: 4.0.15
+version: 5.0.8
 options:
   rootUser: admin
-  rootPassword: adminadmin
+  rootPassword: {{ minioAdminPassword }}
   mode: distributed
   replicas: 2
   persistence:
     size: 50Gi
-  users:
-    - accessKey: minio
-      secretKey: miniominio
-      policy: readwrite
   buckets:
     - name: lakehouse
       policy: public

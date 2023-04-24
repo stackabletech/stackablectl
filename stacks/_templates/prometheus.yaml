@@ -3,7 +3,7 @@ name: kube-prometheus-stack
 repo:
   name: prometheus-community
   url: https://prometheus-community.github.io/helm-charts
-version: 41.9.1
+version: 45.10.1
 options:
   prometheus:
     prometheusSpec:
@@ -46,7 +46,7 @@ options:
     metricLabelsAllowlist:
       - pods=[*]
       - statefulsets=[*]
-      - service=[*]
+      - services=[*]
       - nodes=[*]
       - namespaces=[*]
       - namespaces=[*]

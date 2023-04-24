@@ -3,24 +3,14 @@ name: minio
 repo:
   name: minio
   url: https://charts.min.io/
-version: 4.0.15
+version: 5.0.8
 options:
   rootUser: admin
-  rootPassword: adminadmin
+  rootPassword: {{ minioAdminPassword }}
   mode: distributed
   replicas: 5
   persistence:
     size: 250Gi
-  users:
-    - accessKey: trino
-      secretKey: trinotrino
-      policy: readwrite
-    - accessKey: hive
-      secretKey: hivehive
-      policy: readwrite
-    - accessKey: demo
-      secretKey: demodemo
-      policy: readwrite
   buckets:
     - name: staging
       policy: public

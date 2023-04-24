@@ -18,6 +18,12 @@ Instance types that loosely correspond to this on the Hyperscalers are:
 In addition to these nodes the operators will request multiple persistent volumes with a total capacity of about 1TB.
 ====
 
+[WARNING]
+====
+This demo only runs in the `default` namespace, as a `ServiceAccount` will be created.
+Additionally, we have to use the fqdn service names (including the namespace), so that the used TLS certificates are valid.
+====
+
 [NOTE]
 ====
 This guide assumes that you already have the demo `data-lakehouse-iceberg-trino-spark` installed.

@@ -101,7 +101,7 @@ struct Stacks {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-struct Stack {
+pub struct Stack {
     description: String,
     stackable_release: String,
     stackable_operators: Vec<String>,
@@ -111,6 +111,12 @@ struct Stack {
     manifests: Vec<HelmChartOrYaml>,
     #[serde(default)]
     parameters: Vec<StackParameter>,
+}
+
+impl Stack {
+    pub fn get_parameters(self) -> Vec<StackParameter> {
+        self.parameters
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -376,7 +382,7 @@ async fn get_stacks() -> Stacks {
     Stacks { stacks: all_stacks }
 }
 
-async fn get_stack(stack_name: &str) -> Result<Stack, Box<dyn Error>> {
+pub async fn get_stack(stack_name: &str) -> Result<Stack, Box<dyn Error>> {
     get_stacks()
     .await
         .stacks
