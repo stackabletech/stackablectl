@@ -80,6 +80,12 @@ Iceberg resolves this problem by using hidden partitions.
 In Iceberg your table would look like `sales (ts timestamp) with (partitioning = ARRAY['day(ts)'])`.
 The column `day` is not needed anymore, and the query `select count(\*) where ts > now() - interval 1 day` would use partition pruning as expected to only read one the partitions from today and yesterday.
 
+* *Branching and tagging:*
+Iceberg enables git-like semantics on your lakehouse.
+You can create tags pointing to a specific snapshot of your data as well as branches.
+For details please read on https://www.dremio.com/blog/exploring-branch-tags-in-apache-iceberg-using-spark/[this awesome blog post].
+Currently this is only supported in Spark, Trino is https://github.com/trinodb/trino/issues/12844[working on support].
+
 If you want to read more on the motivation and the working principles on Iceberg, please have a read on there https://iceberg.apache.org[website] or https://github.com/apache/iceberg/[GitHub repo].
 
 == List deployed Stackable services
