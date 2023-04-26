@@ -18,6 +18,12 @@ Instance types that loosely correspond to this on the Hyperscalers are:
 In addition to these nodes the operators will request multiple persistent volumes with a total capacity of about 1TB.
 ====
 
+[WARNING]
+====
+This demo only runs in the `default` namespace, as a `ServiceAccount` will be created.
+Additionally, we have to use the fqdn service names (including the namespace), so that the used TLS certificates are valid.
+====
+
 [NOTE]
 ====
 This guide assumes that you already have the demo `data-lakehouse-iceberg-trino-spark` installed.
@@ -73,6 +79,12 @@ Lot's of times users would run a statement such as `select count(\*) where ts > 
 Iceberg resolves this problem by using hidden partitions.
 In Iceberg your table would look like `sales (ts timestamp) with (partitioning = ARRAY['day(ts)'])`.
 The column `day` is not needed anymore, and the query `select count(\*) where ts > now() - interval 1 day` would use partition pruning as expected to only read one the partitions from today and yesterday.
+
+* *Branching and tagging:*
+Iceberg enables git-like semantics on your lakehouse.
+You can create tags pointing to a specific snapshot of your data as well as branches.
+For details please read on https://www.dremio.com/blog/exploring-branch-tags-in-apache-iceberg-using-spark/[this awesome blog post].
+Currently this is only supported in Spark, Trino is https://github.com/trinodb/trino/issues/12844[working on support].
 
 If you want to read more on the motivation and the working principles on Iceberg, please have a read on there https://iceberg.apache.org[website] or https://github.com/apache/iceberg/[GitHub repo].
 
@@ -421,17 +433,12 @@ Log in with the username `admin` and password `adminadmin`.
 
 image::demo-data-lakehouse-iceberg-trino-spark/trino_2.png[]
 
-=== Connect with DBeaver
-https://dbeaver.io/[DBeaver] is free multi-platform database tool that can be used to connect to Trino.
-Please have a look at the <TODO> trino-operator documentation on how to connect DBeaver to Trino.
+=== Connect to Trino
+// TODO Switch to stable version when available (e.g. with 23.4)
+Please have a look at the xref:nightly@home:trino:usage_guide/connect_to_trino.adoc[trino-operator documentation on how to connect to Trino].
+This demo recommends to use DBeaver, as Trino consists of many schemas and tables you can explore.
 
 image::demo-data-lakehouse-iceberg-trino-spark/dbeaver_1.png[]
-
-image::demo-data-lakehouse-iceberg-trino-spark/dbeaver_2.png[]
-You need to modify the setting `TLS` to `true`.
-Additionally you need to add the setting `SSLVerification` and set it to `NONE`.
-
-image::demo-data-lakehouse-iceberg-trino-spark/dbeaver_3.png[]
 
 Here you can see all the available Trino catalogs.
 

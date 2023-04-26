@@ -14,9 +14,11 @@ metadata:
 spec:
   image:
     productVersion: 3.3.4
-    stackableVersion: 23.1.0
-  zookeeperConfigMapName: hdfs-znode
-  dfsReplication: 1
+    stackableVersion: "23.4"
+  clusterConfig:
+    listenerClass: external-unstable
+    dfsReplication: 1
+    zookeeperConfigMapName: hdfs-znode
   nameNodes:
     config:
       resources:

@@ -9,11 +9,11 @@ use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use log::{debug, info, warn};
 use serde::{Deserialize, Serialize};
-use std::{error::Error, ops::Deref, sync::Mutex};
+use std::{collections::HashMap, error::Error, ops::Deref, sync::Mutex};
 
 lazy_static! {
     pub static ref STACK_FILES: Mutex<Vec<String>> = Mutex::new(vec![
-        "https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/stacks-v1.yaml"
+        "https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/stacks-v2.yaml"
             .to_string(),
     ]);
 }
@@ -43,6 +43,13 @@ pub enum CliCommandStack {
         #[arg(required = true, value_hint = ValueHint::Other)]
         stack: String,
 
+        /// List of parameters to use when installing the stack.
+        /// All parameters need to have the format `<parameter>=<value>`, e.g. `adminPassword=secret123`.
+        /// Multiple parameters can be specified.
+        /// Use `stackable stack describe <stack>` to list the available parameters.
+        #[arg(short, long)]
+        parameters: Vec<String>,
+
         /// If specified, a local Kubernetes cluster consisting of 4 nodes (1 for control-plane and 3 workers) for testing purposes will be created.
         /// Kind is a tool to spin up a local Kubernetes cluster running on Docker on your machine.
         /// You need to have `docker` and `kind` installed.
@@ -68,11 +75,12 @@ impl CliCommandStack {
             CliCommandStack::Describe { stack, output } => describe_stack(stack, output).await?,
             CliCommandStack::Install {
                 stack,
+                parameters,
                 kind_cluster,
                 kind_cluster_name,
             } => {
                 kind::handle_cli_arguments(*kind_cluster, kind_cluster_name)?;
-                install_stack(stack).await?;
+                install_stack(stack, parameters).await?;
             }
         }
         Ok(())
@@ -93,25 +101,39 @@ struct Stacks {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-struct Stack {
+pub struct Stack {
     description: String,
     stackable_release: String,
+    stackable_operators: Vec<String>,
+    #[serde(default)]
     labels: Vec<String>,
-    manifests: Vec<StackManifest>,
+    #[serde(default)]
+    manifests: Vec<HelmChartOrYaml>,
+    #[serde(default)]
+    parameters: Vec<StackParameter>,
+}
+
+impl Stack {
+    pub fn get_parameters(self) -> Vec<StackParameter> {
+        self.parameters
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub enum StackManifest {
-    #[serde(rename_all = "camelCase")]
-    HelmChart {
-        release_name: String,
-        name: String,
-        repo: HelmChartRepo,
-        version: String,
-        options: serde_yaml::Value,
-    },
+pub enum HelmChartOrYaml {
+    HelmChart(String),
     PlainYaml(String),
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HelmChart {
+    release_name: String,
+    name: String,
+    repo: HelmChartRepo,
+    version: String,
+    options: serde_yaml::Value,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -119,6 +141,49 @@ pub enum StackManifest {
 pub struct HelmChartRepo {
     name: String,
     url: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StackParameter {
+    pub name: String,
+    pub description: String,
+    pub default: String,
+}
+
+impl StackParameter {
+    const PARSE_PARAMETER_ERROR_MESSAGE: &str = "Can not parse parameter. Parameters need to have the format `<parameter>=<value>`, e.g. `adminPassword=secret123`.";
+
+    pub fn from_cli_parameters(
+        stack_parameters: &[StackParameter],
+        cli_parameters: &[String],
+    ) -> Result<HashMap<String, String>, Box<dyn Error>> {
+        let mut parameters: HashMap<String, String> = stack_parameters
+            .iter()
+            .map(|p| (p.name.clone(), p.default.clone()))
+            .collect();
+
+        for parameter in cli_parameters {
+            let mut split = parameter.split('=');
+            let name = split.next().ok_or(Self::PARSE_PARAMETER_ERROR_MESSAGE)?;
+            let value = split.next().ok_or(Self::PARSE_PARAMETER_ERROR_MESSAGE)?;
+
+            if !parameters.contains_key(name) {
+                return Err(format!(
+                    "Parameter {name} not known. Known parameters are {}",
+                    stack_parameters
+                        .iter()
+                        .map(|p| p.name.clone())
+                        .collect::<Vec<String>>()
+                        .join(", ")
+                )
+                .into());
+            }
+            parameters.insert(name.to_string(), value.to_string());
+        }
+
+        Ok(parameters)
+    }
 }
 
 async fn list_stacks(output_type: &OutputType) -> Result<(), Box<dyn Error>> {
@@ -161,7 +226,9 @@ async fn describe_stack(stack_name: &str, output_type: &OutputType) -> Result<()
         stack: String,
         description: String,
         stackable_release: String,
+        stackable_operators: Vec<String>,
         labels: Vec<String>,
+        parameters: Vec<StackParameter>,
     }
 
     let stack = get_stack(stack_name).await?;
@@ -169,7 +236,9 @@ async fn describe_stack(stack_name: &str, output_type: &OutputType) -> Result<()
         stack: stack_name.to_string(),
         description: stack.description,
         stackable_release: stack.stackable_release,
+        stackable_operators: stack.stackable_operators,
         labels: stack.labels,
+        parameters: stack.parameters,
     };
 
     match output_type {
@@ -188,9 +257,31 @@ async fn describe_stack(stack_name: &str, output_type: &OutputType) -> Result<()
                     Cell::new(output.stackable_release),
                 ])
                 .add_row(vec![
+                    Cell::new("Stackable operators"),
+                    Cell::new(output.stackable_operators.join(", ")),
+                ])
+                .add_row(vec![
                     Cell::new("Labels"),
                     Cell::new(output.labels.join(", ")),
                 ]);
+            println!("{table}");
+
+            let mut table = Table::new();
+            table
+                .load_preset(UTF8_FULL)
+                .set_content_arrangement(ContentArrangement::Dynamic)
+                .set_header(vec![
+                    Cell::new("Parameter"),
+                    Cell::new("Description"),
+                    Cell::new("Default"),
+                ]);
+            for parameter in output.parameters {
+                table.add_row(vec![
+                    Cell::new(parameter.name),
+                    Cell::new(parameter.description),
+                    Cell::new(parameter.default),
+                ]);
+            }
             println!("{table}");
         }
         OutputType::Json => {
@@ -204,53 +295,64 @@ async fn describe_stack(stack_name: &str, output_type: &OutputType) -> Result<()
     Ok(())
 }
 
-pub async fn install_stack(stack_name: &str) -> Result<(), Box<dyn Error>> {
+pub async fn install_stack(stack_name: &str, parameters: &[String]) -> Result<(), Box<dyn Error>> {
     info!("Installing stack {stack_name}");
     let stack = get_stack(stack_name).await?;
+    let parameters = StackParameter::from_cli_parameters(&stack.parameters, parameters)?;
 
-    release::install_release(&stack.stackable_release, &[], &[]).await?;
+    release::install_release(&stack.stackable_release, &stack.stackable_operators, &[]).await?;
 
     info!("Installing components of stack {stack_name}");
-    install_manifests(&stack.manifests).await?;
+    install_manifests(&stack.manifests, &parameters).await?;
 
     info!("Installed stack {stack_name}");
     Ok(())
 }
 
-pub async fn install_manifests(manifests: &[StackManifest]) -> Result<(), Box<dyn Error>> {
+pub async fn install_manifests(
+    manifests: &[HelmChartOrYaml],
+    parameters: &HashMap<String, String>,
+) -> Result<(), Box<dyn Error>> {
     for manifest in manifests {
         match manifest {
-            StackManifest::HelmChart {
-                release_name,
-                name,
-                repo,
-                version,
-                options,
-            } => {
-                debug!("Installing helm chart {name} as {release_name}");
+            HelmChartOrYaml::HelmChart(helm_chart_file) => {
+                let helm_chart =
+                    helpers::read_from_url_or_file_with_templating(helm_chart_file, parameters)
+                        .await
+                        .map_err(|err| {
+                            format!(
+                                "Could not read helm chart from file \"{helm_chart_file}\": {err}"
+                            )
+                        })?;
+                let helm_chart: HelmChart = serde_yaml::from_str(&helm_chart)?;
+                debug!(
+                    "Installing helm chart {} as {}",
+                    helm_chart.name, helm_chart.release_name
+                );
                 HELM_REPOS
                     .lock()?
-                    .insert(repo.name.clone(), repo.url.clone());
+                    .insert(helm_chart.repo.name.clone(), helm_chart.repo.url.clone());
 
-                let values_yaml = serde_yaml::to_string(&options)?;
+                let values_yaml = serde_yaml::to_string(&helm_chart.options)?;
                 helm::install_helm_release_from_repo(
-                    release_name,
-                    release_name,
-                    &repo.name,
-                    name,
-                    Some(version),
+                    &helm_chart.release_name,
+                    &helm_chart.release_name,
+                    &helm_chart.repo.name,
+                    &helm_chart.name,
+                    Some(&helm_chart.version),
                     Some(&values_yaml),
                 )?
             }
-            StackManifest::PlainYaml(yaml_url_or_file) => {
+            HelmChartOrYaml::PlainYaml(yaml_url_or_file) => {
                 debug!("Installing yaml manifest from {yaml_url_or_file}");
-                let manifests = helpers::read_from_url_or_file(yaml_url_or_file)
-                    .await
-                    .map_err(|err| {
-                        format!(
+                let manifests =
+                    helpers::read_from_url_or_file_with_templating(yaml_url_or_file, parameters)
+                        .await
+                        .map_err(|err| {
+                            format!(
                             "Could not read stack manifests from file \"{yaml_url_or_file}\": {err}"
                         )
-                    })?;
+                        })?;
                 kube::deploy_manifests(&manifests).await?;
             }
         }
@@ -280,7 +382,7 @@ async fn get_stacks() -> Stacks {
     Stacks { stacks: all_stacks }
 }
 
-async fn get_stack(stack_name: &str) -> Result<Stack, Box<dyn Error>> {
+pub async fn get_stack(stack_name: &str) -> Result<Stack, Box<dyn Error>> {
     get_stacks()
     .await
         .stacks

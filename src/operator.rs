@@ -324,6 +324,7 @@ impl Operator {
         let helm_repo_name = match &self.version {
             None => "stackable-dev",
             Some(version) if version.ends_with("-nightly") => "stackable-dev",
+            Some(version) if version.ends_with("-dev") => "stackable-dev",
             Some(version) if version.contains("-pr") => "stackable-test",
             Some(_) => "stackable-stable",
         };

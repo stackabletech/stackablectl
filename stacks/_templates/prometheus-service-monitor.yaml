@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: scrape-label
+  labels:
+    release: prometheus
+spec:
+  endpoints:
+  - port: metrics
+  selector:
+    matchLabels:
+      prometheus.io/scrape: "true"
+  namespaceSelector:
+    any: true
+  jobLabel: app.kubernetes.io/instance
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: scrape-minio
+  labels:
+    release: prometheus
+spec:
+  endpoints:
+  - path: /minio/v2/metrics/node
+    port: http
+    scheme: http
+  - path: /minio/v2/metrics/cluster
+    port: http
+    scheme: http
+  selector:
+    matchLabels:
+      app: minio
+      monitoring: "true"
+  namespaceSelector:
+    any: true

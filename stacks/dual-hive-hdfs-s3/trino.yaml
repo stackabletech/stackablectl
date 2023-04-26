@@ -62,10 +62,16 @@ metadata:
 spec:
   image:
     productVersion: "403"
-    stackableVersion: "23.1"
-  catalogLabelSelector:
-    matchLabels:
-      trino: trino
+    stackableVersion: "23.4"
+  clusterConfig:
+    authorization:
+      opa:
+        configMapName: opa
+        package: trino
+    catalogLabelSelector:
+      matchLabels:
+        trino: trino
+    listenerClass: external-unstable
   coordinators:
     roleGroups:
       default:
@@ -74,20 +80,6 @@ spec:
     roleGroups:
       default:
         replicas: 1
-  opa:
-    configMapName: opa
-    package: trino
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: trino-users
-type: kubernetes.io/opaque
-stringData:
-  # admin:admin
-  admin: $2y$10$89xReovvDLacVzRGpjOyAOONnayOgDAyIS2nW9bs5DJT98q17Dy5i
-  # demo:demo
-  demo: $2y$10$mMRoIKfWtAuycEQnKiDCeOlCSYiWkvbs0WsMFLkaSnNO0ZnFKVRXm
 ---
 apiVersion: opa.stackable.tech/v1alpha1
 kind: OpaCluster
@@ -96,7 +88,7 @@ metadata:
 spec:
   image:
     productVersion: 0.45.0
-    stackableVersion: "23.1"
+    stackableVersion: "23.4"
   servers:
     roleGroups:
       default:
@@ -112,9 +104,11 @@ data:
   trino.rego: |
     package trino
     default allow = false
+
     allow {
       input.context.identity.user == "admin"
     }
+
     allow {
       input.context.identity.user == "demo"
     }

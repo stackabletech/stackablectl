@@ -1,3 +1,4 @@
+{% raw %}
 ---
 apiVersion: airflow.stackable.tech/v1alpha1
 kind: AirflowCluster
@@ -6,7 +7,9 @@ metadata:
 spec:
   image:
     productVersion: 2.4.1
-    stackableVersion: "23.1"
+    stackableVersion: "23.4"
+  clusterConfig:
+    listenerClass: external-unstable
   executor: CeleryExecutor
   loadExamples: false
   exposeConfig: false
@@ -257,7 +260,7 @@ data:
       name: pyspark-pi
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable23.1
+      sparkImage: docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable23.4
       mode: cluster
       mainApplicationFile: local:///stackable/spark/examples/src/main/python/pi.py
       driver:
@@ -268,6 +271,7 @@ data:
         cores: 1
         instances: 3
         memory: "512m"
+{% endraw %}
 ---
 apiVersion: v1
 kind: Secret
@@ -279,8 +283,8 @@ stringData:
   adminUser.firstname: Airflow
   adminUser.lastname: Admin
   adminUser.email: airflow@airflow.com
-  adminUser.password: adminadmin
-  connections.secretKey: thisISaSECRET_1234
+  adminUser.password: "{{ airflowAdminPassword }}"
+  connections.secretKey: "{{ airflowSecretKey }}"
   connections.sqlalchemyDatabaseUri: postgresql+psycopg2://airflow:airflow@postgresql-airflow/airflow
   connections.celeryResultBackend: db+postgresql://airflow:airflow@postgresql-airflow/airflow
   connections.celeryBrokerUrl: redis://:airflow@redis-airflow-master:6379/0

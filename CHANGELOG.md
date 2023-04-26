@@ -4,8 +4,25 @@
 
 ### Added
 
-- Support listing OpenSearch Dashboards services ([#187](https://github.com/stackabletech/stackablectl/pull/187)).
-- Add support for listing Spark History Servers ([#210](https://github.com/stackabletech/stackablectl/pull/210)).
+- Also print stack parameters when describing a demo ([#251](https://github.com/stackabletech/stackablectl/pull/251))
+
+## [0.8.0] - 2023-02-23
+
+### Changed
+
+- Build binaries on Ubuntu 20.04 instead of 22.04 to have glibc 2.31 instead of 2.35. This allows the binary to run on older platforms ([#235](https://github.com/stackabletech/stackablectl/pull/235))
+
+### Fixed
+
+- Use stable helm repo for operators ending with `-dev` ([#234](https://github.com/stackabletech/stackablectl/pull/234))
+
+## [0.7.0] - 2023-02-14
+
+### Added
+
+- Support parametrization of stacks and demos ([#228](https://github.com/stackabletech/stackablectl/pull/228))
+- Support listing OpenSearch Dashboards services ([#187](https://github.com/stackabletech/stackablectl/pull/187))
+- Add support for listing Spark History Servers ([#210](https://github.com/stackabletech/stackablectl/pull/210))
 
 ### Changed
 
@@ -13,6 +30,7 @@
 - Bump kube to 0.77 ([#201](https://github.com/stackabletech/stackablectl/pull/201))
 - Bump go k8s client to 0.26.0 ([#202](https://github.com/stackabletech/stackablectl/pull/202))
 - Bump kube, k8s-openapi and tokio ([#205](https://github.com/stackabletech/stackablectl/pull/205))
+- BREAKING: Bump format of demos and stacks to v2. Old versions of stackablectl will need an update ([#228](https://github.com/stackabletech/stackablectl/pull/228))
 
 ## [0.6.0] - 2022-10-28
 

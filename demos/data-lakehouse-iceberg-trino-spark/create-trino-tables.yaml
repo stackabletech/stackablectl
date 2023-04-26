@@ -9,7 +9,7 @@ spec:
       serviceAccountName: demo-serviceaccount
       initContainers:
         - name: wait-for-testdata
-          image: docker.stackable.tech/stackable/tools:0.2.0-stackable0.3.0
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
           command: ["bash", "-c", "echo 'Waiting for job load-test-data to finish' && kubectl wait --for=condition=complete --timeout=30m job/load-test-data"]
       containers:
         - name: create-tables-in-trino
@@ -18,10 +18,15 @@ spec:
           volumeMounts:
             - name: script
               mountPath: /tmp/script
+            - name: trino-credentials
+              mountPath: /trino-credentials
       volumes:
-      - name: script
-        configMap:
-          name: create-tables-in-trino-script
+        - name: script
+          configMap:
+            name: create-tables-in-trino-script
+        - name: trino-credentials
+          secret:
+            secretName: trino-credentials
       restartPolicy: OnFailure
   backoffLimit: 50
 ---
@@ -42,9 +47,9 @@ data:
         connection = trino.dbapi.connect(
             host="trino-coordinator",
             port=8443,
-            user="demo",
+            user="admin",
             http_scheme='https',
-            auth=trino.auth.BasicAuthentication("demo", "demo"),
+            auth=trino.auth.BasicAuthentication("admin", open("/trino-credentials/admin").read()),
         )
         connection._http_session.verify = False
         return connection

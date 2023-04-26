@@ -1,0 +1,16 @@
+releaseName: postgresql-airflow
+name: postgresql
+repo:
+  name: bitnami
+  url: https://charts.bitnami.com/bitnami/
+# helm search repo bitnami/postgresql --versions
+# bitnami/postgresql      12.2.8          15.2.0          PostgreSQL (Postgres) is an open source object-
+#
+# https://airflow.apache.org/docs/apache-airflow/2.4.1/howto/set-up-database.html
+# Airflow 2.4.1 supports PostgreSQL: 10, 11, 12, 13, seems to work anyway
+version: 12.2.8
+options:
+  auth:
+    username: airflow
+    password: airflow
+    database: airflow

@@ -6,7 +6,9 @@ metadata:
 spec:
   image:
     productVersion: 1.5.1
-    stackableVersion: "23.1"
+    stackableVersion: "23.4"
+  clusterConfig:
+    listenerClass: external-unstable
   credentialsSecret: superset-credentials
   mapboxSecret: superset-mapbox-api-key
   nodes:
@@ -24,8 +26,8 @@ stringData:
   adminUser.firstname: Superset
   adminUser.lastname: Admin
   adminUser.email: admin@superset.com
-  adminUser.password: adminadmin
-  connections.secretKey: thisISaSECRET_1234
+  adminUser.password: {{ supersetAdminPassword }}
+  connections.secretKey: {{ supersetSecretKey }}
   connections.sqlalchemyDatabaseUri: postgresql://superset:superset@postgresql-superset/superset
 ---
 apiVersion: v1
@@ -35,14 +37,13 @@ metadata:
 type: Opaque
 stringData:
   connections.mapboxApiKey: "pk.eyJ1IjoibXVlbGxlcmNlbGluZSIsImEiOiJjbDZwM3llMTAwNGpmM2psdHU0Y21wZHJwIn0.kXFJKBbeyhbwf0z460JcTQ"
-# ---
-# TODO Use when available (https://github.com/stackabletech/superset-operator/issues/3)
-# apiVersion: superset.stackable.tech/v1alpha1
-# kind: TrinoConnection
-# metadata:
-#   name: superset-trino-connection
-# spec:
-#   superset:
-#     name: superset
-#   trino:
-#     name: trino
+---
+apiVersion: superset.stackable.tech/v1alpha1
+kind: DruidConnection
+metadata:
+  name: superset-druid-connection
+spec:
+  superset:
+    name: superset
+  druid:
+    name: druid

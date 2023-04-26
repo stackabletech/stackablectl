@@ -1,0 +1,14 @@
+releaseName: redis-airflow
+name: redis
+repo:
+  name: bitnami
+  url: https://charts.bitnami.com/bitnami/
+# helm search repo bitnami/redis --versions
+# NAME                    CHART VERSION   APP VERSION     DESCRIPTION
+# bitnami/redis           17.9.5          7.0.11          Redis(R) is an open source, advanced key-value ...
+version: 17.9.5
+options:
+  auth:
+    password: airflow
+  replica:
+    replicaCount: 1

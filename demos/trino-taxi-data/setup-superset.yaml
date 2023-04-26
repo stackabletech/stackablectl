@@ -13,10 +13,20 @@ spec:
           volumeMounts:
             - name: script
               mountPath: /tmp/script
+            - name: trino-credentials
+              mountPath: /trino-credentials
+            - name: superset-credentials
+              mountPath: /superset-credentials
       volumes:
-      - name: script
-        configMap:
-          name: setup-superset-script
+        - name: script
+          configMap:
+            name: setup-superset-script
+        - name: superset-credentials
+          secret:
+            secretName: superset-credentials
+        - name: trino-credentials
+          secret:
+            secretName: trino-credentials
       restartPolicy: OnFailure
   backoffLimit: 50
 ---
@@ -30,15 +40,17 @@ data:
     import requests
 
     base_url = "http://superset-external:8088" # For local testing / developing replace it, afterwards change back to http://superset-external:8088
-    username = "admin"
-    password = "adminadmin"
+    superset_username = open("/superset-credentials/adminUser.username").read()
+    superset_password =  open("/superset-credentials/adminUser.password").read()
+    trino_username = "admin"
+    trino_password = open("/trino-credentials/admin").read()
 
     logging.basicConfig(level=logging.INFO)
     logging.info("Starting setup of Superset")
 
     logging.info("Getting access token from /api/v1/security/login")
     session = requests.session()
-    access_token = session.post(f"{base_url}/api/v1/security/login", json={"username": username, "password": password, "provider": "db", "refresh": True}).json()['access_token']
+    access_token = session.post(f"{base_url}/api/v1/security/login", json={"username": superset_username, "password": superset_password, "provider": "db", "refresh": True}).json()['access_token']
     # print(f"access_token: {access_token}")
 
     logging.info("Getting csrf token from /api/v1/security/csrf_token")
@@ -73,7 +85,7 @@ data:
         "bundle": ("superset-assets.zip", open("superset-assets.zip", "rb")),
     }
     data = {
-        "passwords": '{"databases/Trino.yaml": "demo"}'
+        "passwords": '{"databases/Trino.yaml": "' + trino_password + '"}'
     }
     result = session.post(f"{base_url}/api/v1/assets/import", headers=headers, files=files, data=data)
     print(result)

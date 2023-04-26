@@ -6,8 +6,9 @@ metadata:
 spec:
   image:
     productVersion: 24.0.0
-    stackableVersion: "23.1"
+    stackableVersion: "23.4"
   clusterConfig:
+    listenerClass: external-unstable
     zookeeperConfigMapName: druid-znode
     metadataStorageDatabase:
       dbType: postgresql
@@ -20,7 +21,7 @@ spec:
       s3:
         bucket:
           inline:
-            bucketName: druid
+            bucketName: demo
             connection:
               inline:
                 host: minio-druid
@@ -47,14 +48,11 @@ spec:
               min: "1"
               max: "2"
             memory:
-              limit: 2Gi # TODO Increase with 23.4
+              limit: 4Gi
             storage:
               segmentCache:
                 emptyDir:
                   capacity: 8Gi
-        # configOverrides:
-        #   runtime.properties:
-        #     druid.processing.numThreads: "2" # TODO Can be removed with 23.4 as we have a strategy how to derive this setting from the configured resources
   middleManagers:
     roleGroups:
       default:
@@ -94,5 +92,5 @@ metadata:
   labels:
     secrets.stackable.tech/class: druid-s3-credentials
 stringData:
-  accessKey: druid
-  secretKey: druiddruid
+  accessKey: admin
+  secretKey: {{ minioAdminPassword }}

@@ -11,11 +11,16 @@ use crate::{arguments::OutputType, kube::get_client};
 use minio::get_minio_services;
 use opensearch::get_opensearch_dashboards_services;
 
-use self::stackable::get_stackable_services;
+use self::{
+    grafana::get_grafana_services, prometheus::get_prometheus_services,
+    stackable::get_stackable_services,
+};
 
-pub mod minio;
-pub mod opensearch;
-pub mod stackable;
+mod grafana;
+mod minio;
+mod opensearch;
+mod prometheus;
+mod stackable;
 
 pub static REDACTED_PASSWORD: &str = "<redacted>";
 
@@ -79,6 +84,16 @@ async fn list_services(
     let minio = get_minio_services(!all_namespaces, redact_credentials).await?;
     if !minio.is_empty() {
         output.insert("minio".to_string(), minio);
+    }
+
+    let prometheus = get_grafana_services(!all_namespaces, redact_credentials).await?;
+    if !prometheus.is_empty() {
+        output.insert("grafana".to_string(), prometheus);
+    }
+
+    let prometheus = get_prometheus_services(!all_namespaces, redact_credentials).await?;
+    if !prometheus.is_empty() {
+        output.insert("prometheus".to_string(), prometheus);
     }
 
     let opensearch =

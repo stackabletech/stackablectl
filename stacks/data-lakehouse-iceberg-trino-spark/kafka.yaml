@@ -14,10 +14,11 @@ metadata:
 spec:
   image:
     productVersion: 3.3.1
-    stackableVersion: "23.1"
+    stackableVersion: "23.4"
   clusterConfig:
     zookeeperConfigMapName: kafka-znode
-    tls: null
+    authentication:
+      - authenticationClass: kafka-client-tls
   brokers:
     config:
       resources:
@@ -35,10 +36,14 @@ spec:
         configOverrides:
           server.properties:
             num.partitions: "27"
-            # We have
-            # 5 brokers
-            # and 1 topic (with 27 partitions) with large volume of data
-            # 50Gi pvc * 5 brokers = 250Gi total disk size.
-            # Lets aim for 50% => 0.5 * 250Gi = 125Gi / 27 partitions = 4.6Gi
             log.segment.bytes: "50000000" # 0.5GB
-            log.retention.bytes: "4000000000" # 4 GB. Should keep between 4.0 and 4.5GB
+            log.retention.bytes: "2000000000" # 2 GB. Should keep between 2.0 and 2.5GB
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: kafka-client-tls
+spec:
+  provider:
+    tls:
+      clientCertSecretClass: tls
