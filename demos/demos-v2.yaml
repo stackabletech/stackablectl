@@ -138,3 +138,15 @@ demos:
       - zookeeper
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/logging/zookeeper.yaml
+  spark-streaming:
+    description: Demo showing signal processing on time-series data
+    documentation: https://docs.stackable.tech/stackablectl/stable/demos/spark-streaming.html
+    stackableStack: spark-streaming
+    labels:
+      - nifi
+      - spark
+      - grafana-dashboards
+      - zookeeper
+    manifests:
+      - plainYaml: demos/spark-streaming/serviceaccount.yaml
+      - plainYaml: demos/spark-streaming/create-timescale-tables.yaml

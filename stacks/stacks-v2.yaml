@@ -358,7 +358,7 @@ stacks:
     parameters: []
   spark-streaming:
     description: >-
-      A stack used for creating, streaming and processing in-flight data and persisting it to Trino before it is displayed in Superset
+      A stack used for creating, streaming and processing in-flight data and persisting it to TimescaleDB before it is displayed in Grafana
     stackableRelease: 23.4
     stackableOperators:
       - commons
@@ -366,12 +366,10 @@ stacks:
       #- zookeeper
       #- nifi
     labels:
-      #- iceberg
-      #- trino
-      #- spark
-      #- superset
-      #- kafka
+      - timescaledb
       - nifi
+      - spark
+      - grafana
     manifests:
       - helmChart: stacks/_templates/postgresql-timescaledb.yaml
       #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml

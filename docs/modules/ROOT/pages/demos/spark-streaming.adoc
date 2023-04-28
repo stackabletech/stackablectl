@@ -1,18 +1,18 @@
 TODOs
 
-[.line-through]#- setup components (done)#
+* ingest flatfile to nifi (done)
+* split and delay data (no: write to DB then update in place)
+* helm chart for timescaleDB (yes)
+* nifi output to timescaleDB (yes)
+* helm chart for grafana (yes: see monitoring stack)
+* timescaleDB data shown in grafana (yes)
 
-[.line-through]#- open nifi and generate some data (done)#
+* put all this in a demo
 
-[.line-through]#- create workflow to write to kafka (done)#
+end of prelims
 
-[.line-through]#- use kafkacat to inspect topic (done)#
+* spark-streaming job to do simple window-average
+* output to timescaleDB
+* add metric to grafana
 
-* set up jupyter notebook for kafka access
-** need to mount kafka configmap
-* connect to kafka from spark-streaming
-* write raw data to trino
-* display raw data in superset
-* add algorithm
-* display in superset and plan next steps
-* replace data generation with script/processor?
+we now have a complete test-harness, ready to add algorithms...
