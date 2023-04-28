@@ -255,6 +255,7 @@ stacks:
       - secret
       - hive
       - trino
+      - opa
     labels:
       - trino
       - opa
