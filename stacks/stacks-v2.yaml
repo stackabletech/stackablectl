@@ -363,8 +363,8 @@ stacks:
     stackableOperators:
       - commons
       - secret
-      - zookeeper
-      - nifi
+      #- zookeeper
+      #- nifi
     labels:
       #- iceberg
       #- trino
@@ -373,17 +373,9 @@ stacks:
       #- kafka
       - nifi
     manifests:
-      #- helmChart: *template-minio-trino
-      #- helmChart: *template-postgresql-hive
-      #- helmChart: *template-postgresql-hive-iceberg
-      #- helmChart: *template-postgresql-superset
-      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/hive-metastore.yaml
-      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino.yaml
-      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/superset.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
-      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/kafka.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
-      #- helmChart: *template-jupyterhub
+      - helmChart: stacks/_templates/postgresql-timescaledb.yaml
+      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
+      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
     parameters:
       - name: nifiAdminPassword
         description: Password of the NiFI admin user

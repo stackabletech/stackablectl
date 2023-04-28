@@ -1,0 +1,13 @@
+releaseName: postgresql-timescaledb
+name: timescaledb-single
+repo:
+  name: timescale
+  url: https://charts.timescale.com/
+version: 0.33.1
+options:
+  replicaCount: 1
+  secrets:
+    credentials:
+      PATRONI_SUPERUSER_PASSWORD: ""
+      PATRONI_REPLICATION_PASSWORD: ""
+      PATRONI_admin_PASSWORD: "adminadmin"
