@@ -356,3 +356,38 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls-authenticationclass.yaml
     # TODO: Parameterize
     parameters: []
+  spark-streaming:
+    description: >-
+      A stack used for creating, streaming and processing in-flight data and persisting it to Trino before it is displayed in Superset
+    stackableRelease: 23.4
+    stackableOperators:
+      - commons
+      - secret
+      - zookeeper
+      - nifi
+    labels:
+      #- iceberg
+      #- trino
+      #- spark
+      #- superset
+      #- kafka
+      - nifi
+    manifests:
+      #- helmChart: *template-minio-trino
+      #- helmChart: *template-postgresql-hive
+      #- helmChart: *template-postgresql-hive-iceberg
+      #- helmChart: *template-postgresql-superset
+      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/hive-metastore.yaml
+      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino.yaml
+      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
+      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/kafka-druid-superset-s3/kafka.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+      #- helmChart: *template-jupyterhub
+    parameters:
+      - name: nifiAdminPassword
+        description: Password of the NiFI admin user
+        default: adminadmin
+
+
+
