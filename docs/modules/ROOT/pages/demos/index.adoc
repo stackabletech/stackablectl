@@ -4,6 +4,10 @@ The pages below this section guide you on how to use the demos provided by Stack
 
 To install a demo please follow the xref:quickstart.adoc[quickstart guide] or have a look at the xref:commands/demo.adoc[demo command].
 
+We currently offer the following list of demos:
+
+include::partial$demos.adoc[]
+
 [IMPORTANT]
 .External Components in these demos
 ====
