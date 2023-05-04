@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <template encoding-version="1.3">
     <description></description>
-    <groupId>e646b9ce-0187-1000-2c3c-2c5b820c6f84</groupId>
+    <groupId>e6d5bf94-0187-1000-0ee7-b84ef2a3037a</groupId>
     <name>DownloadAndWriteToDB</name>
     <snippet>
         <connections>
-            <id>173ff47f-997e-3c39-0000-000000000000</id>
-            <parentGroupId>9d73eae4-39b7-398e-0000-000000000000</parentGroupId>
+            <id>1df138f7-6a8d-33f6-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
             <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
             <backPressureObjectThreshold>10000</backPressureObjectThreshold>
             <destination>
-                <groupId>9d73eae4-39b7-398e-0000-000000000000</groupId>
-                <id>355b6257-bf58-3aba-0000-000000000000</id>
+                <groupId>3d31a075-192a-38f3-0000-000000000000</groupId>
+                <id>6e68cc32-20f8-3d76-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </destination>
             <flowFileExpiration>0 sec</flowFileExpiration>
@@ -23,20 +23,20 @@
             <name></name>
             <selectedRelationships>Response</selectedRelationships>
             <source>
-                <groupId>9d73eae4-39b7-398e-0000-000000000000</groupId>
-                <id>53d36032-664d-3744-0000-000000000000</id>
+                <groupId>3d31a075-192a-38f3-0000-000000000000</groupId>
+                <id>4bcb7570-148b-3521-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </source>
             <zIndex>0</zIndex>
         </connections>
         <connections>
-            <id>cb28231b-c3e2-36fd-0000-000000000000</id>
-            <parentGroupId>9d73eae4-39b7-398e-0000-000000000000</parentGroupId>
+            <id>bc077070-b57b-3923-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
             <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
             <backPressureObjectThreshold>10000</backPressureObjectThreshold>
             <destination>
-                <groupId>9d73eae4-39b7-398e-0000-000000000000</groupId>
-                <id>a3101d14-24f0-3739-0000-000000000000</id>
+                <groupId>3d31a075-192a-38f3-0000-000000000000</groupId>
+                <id>4d2fd50c-ff65-382a-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </destination>
             <flowFileExpiration>0 sec</flowFileExpiration>
@@ -48,15 +48,15 @@
             <name></name>
             <selectedRelationships>success</selectedRelationships>
             <source>
-                <groupId>9d73eae4-39b7-398e-0000-000000000000</groupId>
-                <id>355b6257-bf58-3aba-0000-000000000000</id>
+                <groupId>3d31a075-192a-38f3-0000-000000000000</groupId>
+                <id>6e68cc32-20f8-3d76-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </source>
             <zIndex>0</zIndex>
         </connections>
         <controllerServices>
-            <id>397eb583-a1fc-3207-0000-000000000000</id>
-            <parentGroupId>9d73eae4-39b7-398e-0000-000000000000</parentGroupId>
+            <id>af0e7074-b312-3e72-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
             <bulletinLevel>WARN</bulletinLevel>
             <bundle>
                 <artifact>nifi-dbcp-service-nar</artifact>
@@ -252,8 +252,8 @@
             <type>org.apache.nifi.dbcp.DBCPConnectionPool</type>
         </controllerServices>
         <controllerServices>
-            <id>7d1a193f-26e0-38da-0000-000000000000</id>
-            <parentGroupId>9d73eae4-39b7-398e-0000-000000000000</parentGroupId>
+            <id>e6f67d2c-4c6e-3549-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
             <bulletinLevel>WARN</bulletinLevel>
             <bundle>
                 <artifact>nifi-record-serialization-services-nar</artifact>
@@ -552,298 +552,31 @@
             <state>ENABLED</state>
             <type>org.apache.nifi.csv.CSVReader</type>
         </controllerServices>
-        <processors>
-            <id>355b6257-bf58-3aba-0000-000000000000</id>
-            <parentGroupId>9d73eae4-39b7-398e-0000-000000000000</parentGroupId>
+        <labels>
+            <id>186870f8-9fb7-3efb-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
             <position>
-                <x>0.0</x>
-                <y>256.0</y>
+                <x>304.0</x>
+                <y>416.0</y>
             </position>
-            <bundle>
-                <artifact>nifi-standard-nar</artifact>
-                <group>org.apache.nifi</group>
-                <version>1.18.0</version>
-            </bundle>
-            <config>
-                <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
-                <bulletinLevel>WARN</bulletinLevel>
-                <comments></comments>
-                <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                <descriptors>
-                    <entry>
-                        <key>put-db-record-record-reader</key>
-                        <value>
-                            <identifiesControllerService>org.apache.nifi.serialization.RecordReaderFactory</identifiesControllerService>
-                            <name>put-db-record-record-reader</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>db-type</key>
-                        <value>
-                            <name>db-type</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-statement-type</key>
-                        <value>
-                            <name>put-db-record-statement-type</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Statement Type Record Path</key>
-                        <value>
-                            <dependencies>
-<dependentValues>Use Record Path</dependentValues>
-<propertyName>put-db-record-statement-type</propertyName>
-                            </dependencies>
-                            <name>Statement Type Record Path</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Data Record Path</key>
-                        <value>
-                            <name>Data Record Path</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-dcbp-service</key>
-                        <value>
-                            <identifiesControllerService>org.apache.nifi.dbcp.DBCPService</identifiesControllerService>
-                            <name>put-db-record-dcbp-service</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-catalog-name</key>
-                        <value>
-                            <name>put-db-record-catalog-name</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-schema-name</key>
-                        <value>
-                            <name>put-db-record-schema-name</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-table-name</key>
-                        <value>
-                            <name>put-db-record-table-name</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-translate-field-names</key>
-                        <value>
-                            <name>put-db-record-translate-field-names</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-unmatched-field-behavior</key>
-                        <value>
-                            <name>put-db-record-unmatched-field-behavior</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-unmatched-column-behavior</key>
-                        <value>
-                            <name>put-db-record-unmatched-column-behavior</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-update-keys</key>
-                        <value>
-                            <dependencies>
-<dependentValues>Use statement.type Attribute</dependentValues>
-<dependentValues>Use Record Path</dependentValues>
-<dependentValues>UPSERT</dependentValues>
-<dependentValues>UPDATE</dependentValues>
-<dependentValues>SQL</dependentValues>
-<propertyName>put-db-record-statement-type</propertyName>
-                            </dependencies>
-                            <name>put-db-record-update-keys</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-field-containing-sql</key>
-                        <value>
-                            <dependencies>
-<dependentValues>Use statement.type Attribute</dependentValues>
-<dependentValues>Use Record Path</dependentValues>
-<propertyName>put-db-record-statement-type</propertyName>
-                            </dependencies>
-                            <name>put-db-record-field-containing-sql</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-allow-multiple-statements</key>
-                        <value>
-                            <dependencies>
-<dependentValues>Use statement.type Attribute</dependentValues>
-<dependentValues>Use Record Path</dependentValues>
-<propertyName>put-db-record-statement-type</propertyName>
-                            </dependencies>
-                            <name>put-db-record-allow-multiple-statements</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-quoted-identifiers</key>
-                        <value>
-                            <name>put-db-record-quoted-identifiers</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-quoted-table-identifiers</key>
-                        <value>
-                            <name>put-db-record-quoted-table-identifiers</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-query-timeout</key>
-                        <value>
-                            <name>put-db-record-query-timeout</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>rollback-on-failure</key>
-                        <value>
-                            <name>rollback-on-failure</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>table-schema-cache-size</key>
-                        <value>
-                            <name>table-schema-cache-size</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-max-batch-size</key>
-                        <value>
-                            <dependencies>
-<dependentValues>Use statement.type Attribute</dependentValues>
-<dependentValues>Use Record Path</dependentValues>
-<dependentValues>INSERT</dependentValues>
-<dependentValues>UPDATE</dependentValues>
-<propertyName>put-db-record-statement-type</propertyName>
-                            </dependencies>
-                            <name>put-db-record-max-batch-size</name>
-                        </value>
-                    </entry>
-                </descriptors>
-                <executionNode>ALL</executionNode>
-                <lossTolerant>false</lossTolerant>
-                <maxBackoffPeriod>10 mins</maxBackoffPeriod>
-                <penaltyDuration>30 sec</penaltyDuration>
-                <properties>
-                    <entry>
-                        <key>put-db-record-record-reader</key>
-                        <value>7d1a193f-26e0-38da-0000-000000000000</value>
-                    </entry>
-                    <entry>
-                        <key>db-type</key>
-                        <value>PostgreSQL</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-statement-type</key>
-                        <value>INSERT</value>
-                    </entry>
-                    <entry>
-                        <key>Statement Type Record Path</key>
-                    </entry>
-                    <entry>
-                        <key>Data Record Path</key>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-dcbp-service</key>
-                        <value>397eb583-a1fc-3207-0000-000000000000</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-catalog-name</key>
-                        <value>tsdb</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-schema-name</key>
-                        <value>public</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-table-name</key>
-                        <value>conditions_temp</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-translate-field-names</key>
-                        <value>true</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-unmatched-field-behavior</key>
-                        <value>Ignore Unmatched Fields</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-unmatched-column-behavior</key>
-                        <value>Fail on Unmatched Columns</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-update-keys</key>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-field-containing-sql</key>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-allow-multiple-statements</key>
-                        <value>false</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-quoted-identifiers</key>
-                        <value>false</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-quoted-table-identifiers</key>
-                        <value>false</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-query-timeout</key>
-                        <value>0 seconds</value>
-                    </entry>
-                    <entry>
-                        <key>rollback-on-failure</key>
-                        <value>false</value>
-                    </entry>
-                    <entry>
-                        <key>table-schema-cache-size</key>
-                        <value>100</value>
-                    </entry>
-                    <entry>
-                        <key>put-db-record-max-batch-size</key>
-                        <value>0</value>
-                    </entry>
-                </properties>
-                <retryCount>10</retryCount>
-                <runDurationMillis>0</runDurationMillis>
-                <schedulingPeriod>0 sec</schedulingPeriod>
-                <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
-                <yieldDuration>1 sec</yieldDuration>
-            </config>
-            <executionNodeRestricted>false</executionNodeRestricted>
-            <name>PutDatabaseRecord</name>
-            <relationships>
-                <autoTerminate>true</autoTerminate>
-                <name>failure</name>
-                <retry>false</retry>
-            </relationships>
-            <relationships>
-                <autoTerminate>true</autoTerminate>
-                <name>retry</name>
-                <retry>false</retry>
-            </relationships>
-            <relationships>
-                <autoTerminate>false</autoTerminate>
-                <name>success</name>
-                <retry>false</retry>
-            </relationships>
-            <state>STOPPED</state>
-            <style/>
-            <type>org.apache.nifi.processors.standard.PutDatabaseRecord</type>
-        </processors>
+            <height>88.0</height>
+            <label>This flow downloads a dataset, writing it to a temporary table in TimescaleDB.
+This data is then written to the target table with the time offsets preserved, 
+but re-based to the current time. This means that the data can be displayed
+in Grafana as if it were being streamed, whereas in fact the dashboard moves
+through "future" data that has already been persisted.</label>
+            <style>
+                <entry>
+                    <key>font-size</key>
+                    <value>12px</value>
+                </entry>
+            </style>
+            <width>432.0</width>
+            <zIndex>0</zIndex>
+        </labels>
         <processors>
-            <id>53d36032-664d-3744-0000-000000000000</id>
-            <parentGroupId>9d73eae4-39b7-398e-0000-000000000000</parentGroupId>
+            <id>4bcb7570-148b-3521-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
             <position>
                 <x>3.0</x>
                 <y>0.0</y>
@@ -1322,13 +1055,13 @@
                 <name>Retry</name>
                 <retry>false</retry>
             </relationships>
-            <state>STOPPED</state>
+            <state>RUNNING</state>
             <style/>
             <type>org.apache.nifi.processors.standard.InvokeHTTP</type>
         </processors>
         <processors>
-            <id>a3101d14-24f0-3739-0000-000000000000</id>
-            <parentGroupId>9d73eae4-39b7-398e-0000-000000000000</parentGroupId>
+            <id>4d2fd50c-ff65-382a-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
             <position>
                 <x>0.0</x>
                 <y>544.0</y>
@@ -1401,7 +1134,7 @@
                 <properties>
                     <entry>
                         <key>JDBC Connection Pool</key>
-                        <value>397eb583-a1fc-3207-0000-000000000000</value>
+                        <value>af0e7074-b312-3e72-0000-000000000000</value>
                     </entry>
                     <entry>
                         <key>putsql-sql-statement</key>
@@ -1476,10 +1209,299 @@ from conditions_temp;</value>
                 <name>success</name>
                 <retry>false</retry>
             </relationships>
-            <state>STOPPED</state>
+            <state>RUNNING</state>
             <style/>
             <type>org.apache.nifi.processors.standard.PutSQL</type>
         </processors>
+        <processors>
+            <id>6e68cc32-20f8-3d76-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
+            <position>
+                <x>0.0</x>
+                <y>256.0</y>
+            </position>
+            <bundle>
+                <artifact>nifi-standard-nar</artifact>
+                <group>org.apache.nifi</group>
+                <version>1.18.0</version>
+            </bundle>
+            <config>
+                <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
+                <bulletinLevel>WARN</bulletinLevel>
+                <comments></comments>
+                <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
+                <descriptors>
+                    <entry>
+                        <key>put-db-record-record-reader</key>
+                        <value>
+                            <identifiesControllerService>org.apache.nifi.serialization.RecordReaderFactory</identifiesControllerService>
+                            <name>put-db-record-record-reader</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>db-type</key>
+                        <value>
+                            <name>db-type</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-statement-type</key>
+                        <value>
+                            <name>put-db-record-statement-type</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Statement Type Record Path</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Use Record Path</dependentValues>
+<propertyName>put-db-record-statement-type</propertyName>
+                            </dependencies>
+                            <name>Statement Type Record Path</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Data Record Path</key>
+                        <value>
+                            <name>Data Record Path</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-dcbp-service</key>
+                        <value>
+                            <identifiesControllerService>org.apache.nifi.dbcp.DBCPService</identifiesControllerService>
+                            <name>put-db-record-dcbp-service</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-catalog-name</key>
+                        <value>
+                            <name>put-db-record-catalog-name</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-schema-name</key>
+                        <value>
+                            <name>put-db-record-schema-name</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-table-name</key>
+                        <value>
+                            <name>put-db-record-table-name</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-translate-field-names</key>
+                        <value>
+                            <name>put-db-record-translate-field-names</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-unmatched-field-behavior</key>
+                        <value>
+                            <name>put-db-record-unmatched-field-behavior</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-unmatched-column-behavior</key>
+                        <value>
+                            <name>put-db-record-unmatched-column-behavior</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-update-keys</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Use statement.type Attribute</dependentValues>
+<dependentValues>Use Record Path</dependentValues>
+<dependentValues>UPSERT</dependentValues>
+<dependentValues>UPDATE</dependentValues>
+<dependentValues>SQL</dependentValues>
+<propertyName>put-db-record-statement-type</propertyName>
+                            </dependencies>
+                            <name>put-db-record-update-keys</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-field-containing-sql</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Use statement.type Attribute</dependentValues>
+<dependentValues>Use Record Path</dependentValues>
+<propertyName>put-db-record-statement-type</propertyName>
+                            </dependencies>
+                            <name>put-db-record-field-containing-sql</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-allow-multiple-statements</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Use statement.type Attribute</dependentValues>
+<dependentValues>Use Record Path</dependentValues>
+<propertyName>put-db-record-statement-type</propertyName>
+                            </dependencies>
+                            <name>put-db-record-allow-multiple-statements</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-quoted-identifiers</key>
+                        <value>
+                            <name>put-db-record-quoted-identifiers</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-quoted-table-identifiers</key>
+                        <value>
+                            <name>put-db-record-quoted-table-identifiers</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-query-timeout</key>
+                        <value>
+                            <name>put-db-record-query-timeout</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>rollback-on-failure</key>
+                        <value>
+                            <name>rollback-on-failure</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>table-schema-cache-size</key>
+                        <value>
+                            <name>table-schema-cache-size</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-max-batch-size</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Use statement.type Attribute</dependentValues>
+<dependentValues>Use Record Path</dependentValues>
+<dependentValues>INSERT</dependentValues>
+<dependentValues>UPDATE</dependentValues>
+<propertyName>put-db-record-statement-type</propertyName>
+                            </dependencies>
+                            <name>put-db-record-max-batch-size</name>
+                        </value>
+                    </entry>
+                </descriptors>
+                <executionNode>ALL</executionNode>
+                <lossTolerant>false</lossTolerant>
+                <maxBackoffPeriod>10 mins</maxBackoffPeriod>
+                <penaltyDuration>30 sec</penaltyDuration>
+                <properties>
+                    <entry>
+                        <key>put-db-record-record-reader</key>
+                        <value>e6f67d2c-4c6e-3549-0000-000000000000</value>
+                    </entry>
+                    <entry>
+                        <key>db-type</key>
+                        <value>PostgreSQL</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-statement-type</key>
+                        <value>INSERT</value>
+                    </entry>
+                    <entry>
+                        <key>Statement Type Record Path</key>
+                    </entry>
+                    <entry>
+                        <key>Data Record Path</key>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-dcbp-service</key>
+                        <value>af0e7074-b312-3e72-0000-000000000000</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-catalog-name</key>
+                        <value>tsdb</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-schema-name</key>
+                        <value>public</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-table-name</key>
+                        <value>conditions_temp</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-translate-field-names</key>
+                        <value>true</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-unmatched-field-behavior</key>
+                        <value>Ignore Unmatched Fields</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-unmatched-column-behavior</key>
+                        <value>Fail on Unmatched Columns</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-update-keys</key>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-field-containing-sql</key>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-allow-multiple-statements</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-quoted-identifiers</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-quoted-table-identifiers</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-query-timeout</key>
+                        <value>0 seconds</value>
+                    </entry>
+                    <entry>
+                        <key>rollback-on-failure</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>table-schema-cache-size</key>
+                        <value>100</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-max-batch-size</key>
+                        <value>0</value>
+                    </entry>
+                </properties>
+                <retryCount>10</retryCount>
+                <runDurationMillis>0</runDurationMillis>
+                <schedulingPeriod>0 sec</schedulingPeriod>
+                <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+                <yieldDuration>1 sec</yieldDuration>
+            </config>
+            <executionNodeRestricted>false</executionNodeRestricted>
+            <name>PutDatabaseRecord</name>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>failure</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>retry</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>false</autoTerminate>
+                <name>success</name>
+                <retry>false</retry>
+            </relationships>
+            <state>RUNNING</state>
+            <style/>
+            <type>org.apache.nifi.processors.standard.PutDatabaseRecord</type>
+        </processors>
     </snippet>
-    <timestamp>05/04/2023 11:35:13 UTC</timestamp>
+    <timestamp>05/04/2023 13:30:52 UTC</timestamp>
 </template>
