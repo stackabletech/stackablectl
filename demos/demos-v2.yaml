@@ -150,3 +150,4 @@ demos:
     manifests:
       - plainYaml: demos/spark-streaming/serviceaccount.yaml
       - plainYaml: demos/spark-streaming/create-timescale-tables.yaml
+      - plainYaml: demos/spark-streaming/create-nifi-ingestion-job.yaml

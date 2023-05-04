@@ -363,21 +363,26 @@ stacks:
     stackableOperators:
       - commons
       - secret
-      #- zookeeper
-      #- nifi
+      - zookeeper
+      - nifi
     labels:
       - timescaledb
       - nifi
       - spark
       - grafana
     manifests:
+      - plainYaml: stacks/spark-streaming/grafana-dashboards.yaml
+      - helmChart: stacks/spark-streaming/grafana.yaml
       - helmChart: stacks/_templates/postgresql-timescaledb.yaml
-      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
-      #- plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
     parameters:
       - name: nifiAdminPassword
         description: Password of the NiFI admin user
         default: adminadmin
-
-
-
+      - name: grafanaAdminPassword
+        description: Password of the Grafana admin user
+        default: adminadmin
+      - name: postgresAdminPassword
+        description: Password for the postgres/timescaleDB admin user
+        default: adminadmin

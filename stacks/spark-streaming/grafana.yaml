@@ -1,0 +1,50 @@
+releaseName: grafana
+name: grafana
+repo:
+  name: grafana
+  url: https://grafana.github.io/helm-charts
+version: 6.56.1
+options:
+  grafana.ini:
+    analytics:
+      check_for_updates: false
+  adminPassword: {{ grafanaAdminPassword }}
+  persistence:
+    enabled: true
+    size: 10Gi
+  service:
+    type: NodePort
+    nodePort: null
+  dashboardProviders:
+    stackable-dashboardprovider.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'stackable'
+        orgId: 1
+        folder: 'Stackable Data Platform'
+        type: file
+        disableDeletion: false
+        allowUiUpdates: true
+        options:
+          path: /var/lib/grafana/dashboards/stackable
+  dashboardsConfigMaps:
+    stackable: stackable-grafana-dashboards
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: postgres
+          type: postgres
+          url: postgresql-timescaledb.default.svc.cluster.local:5432
+          user: admin
+          secureJsonData:
+            password: {{ postgresAdminPassword }}
+          jsonData:
+            database: tsdb
+            sslmode: 'require'
+            maxOpenConns: 100
+            maxIdleConns: 100
+            maxIdleConnsAuto: true
+            connMaxLifetime: 14400
+            postgresVersion: 1400
+            timescaledb: true

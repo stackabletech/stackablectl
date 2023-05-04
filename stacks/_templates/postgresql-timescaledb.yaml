@@ -10,4 +10,4 @@ options:
     credentials:
       PATRONI_SUPERUSER_PASSWORD: ""
       PATRONI_REPLICATION_PASSWORD: ""
-      PATRONI_admin_PASSWORD: "adminadmin"
+      PATRONI_admin_PASSWORD: "{{ postgresAdminPassword }}"
