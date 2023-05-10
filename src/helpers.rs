@@ -40,8 +40,16 @@ pub async fn read_from_url_or_file(url_or_file: &str) -> Result<String, String> 
     }
 
     match reqwest::get(url_or_file).await {
-        Ok(response) => response.text().await
-            .map_err(|err| format!("Failed to read from the response of the file or a URL with the name \"{url_or_file}\": {err}")),
+        Ok(response) => {
+            let response_status = response.status();
+            if response_status.is_success() {
+                response.text().await
+                    .map_err(|err| format!("Failed to read from the response of the file or a URL with the name \"{url_or_file}\": {err}"))
+            } else {
+                Err(format!("Couldn't read from URL \"{url_or_file}\", got HTTP status code: {response_status}, expected 2xx"))
+            }
+        }
+
         Err(err) => Err(format!(
             "Couldn't read a file or a URL with the name \"{url_or_file}\": {err}"
         )),
