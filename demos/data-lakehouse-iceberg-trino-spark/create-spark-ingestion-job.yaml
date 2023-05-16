@@ -134,6 +134,9 @@ data:
       subprocess.run("openssl pkcs12 -export -in /stackable/tls/chain.crt -inkey /stackable/tls/tls.key -out /stackable/tls/keystore.p12 --password pass:changeit", shell=True)
       # We have to return some value
       return partitionData
+      
+    # We have to wait until executors are ready, otherwise they will join later on and will be missing the /stackable/tls/keystore.p12
+    time.sleep(5 * 50)
 
     # Run on driver
     createTrustStore("dummy")
