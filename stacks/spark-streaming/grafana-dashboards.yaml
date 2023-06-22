@@ -158,6 +158,18 @@ data:
                     }
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r1_score_lttb"
+                },
+                "properties": [
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
               }
             ]
           },
@@ -262,6 +274,43 @@ data:
               "rawQuery": true,
               "rawSql": "SELECT \"time\"\n, AVG(r1_score) AS \"r1_score\"\n, AVG(r2_score) AS \"r2_score\"\nFROM scores_sr\nWHERE $__timeFilter(\"time\")\nGROUP BY \"time\" ORDER BY \"time\"",
               "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r1_score_lttb\nFROM unnest((\n    SELECT lttb(time, r1_score, 6 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "C",
               "sql": {
                 "columns": [
                   {
@@ -1128,7 +1177,7 @@ data:
       "timezone": "",
       "title": "Gas measurements",
       "uid": "YG_P2MyVk",
-      "version": 3,
+      "version": 4,
       "weekStart": ""
     }
 {% endraw %}

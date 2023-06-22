@@ -108,3 +108,5 @@ data:
     CREATE UNIQUE INDEX idx_scores_sr ON scores_sr(time);
 
     SELECT create_hypertable('scores_sr', 'time');
+
+    CREATE EXTENSION timescaledb_toolkit;
