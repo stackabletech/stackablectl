@@ -376,6 +376,9 @@ stacks:
       - helmChart: stacks/_templates/postgresql-timescaledb.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
+      - helmChart: stacks/spark-streaming/jupyterhub.yaml
     parameters:
       - name: nifiAdminPassword
         description: Password of the NiFI admin user
@@ -385,4 +388,7 @@ stacks:
         default: adminadmin
       - name: postgresAdminPassword
         description: Password for the postgres/timescaleDB admin user
+        default: adminadmin
+      - name: jupyterHubAdminPassword
+        description: Password of the JupyterHub admin user
         default: adminadmin

@@ -120,6 +120,25 @@ data:
                     }
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r1_score"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "#8AB8FF",
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
               }
             ]
           },
@@ -212,6 +231,41 @@ data:
                 }
               },
               "table": "conditions"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT \"time\"\n, AVG(r1_score) AS \"r1_score\"\nFROM scores_sr\nGROUP BY \"time\" ORDER BY \"time\"",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
             }
           ],
           "title": "R-values",
@@ -220,7 +274,7 @@ data:
         {
           "datasource": {
             "type": "postgres",
-            "uid": "PA942B37CCFAF5A81"
+            "uid": "postgres"
           },
           "fieldConfig": {
             "defaults": {
@@ -402,7 +456,7 @@ data:
         {
           "datasource": {
             "type": "postgres",
-            "uid": "PA942B37CCFAF5A81"
+            "uid": "postgres"
           },
           "fieldConfig": {
             "defaults": {
@@ -614,7 +668,7 @@ data:
         {
           "datasource": {
             "type": "postgres",
-            "uid": "PA942B37CCFAF5A81"
+            "uid": "postgres"
           },
           "fieldConfig": {
             "defaults": {

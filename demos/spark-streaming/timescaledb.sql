@@ -48,3 +48,12 @@ CREATE TABLE conditions_temp (
    r13    NUMERIC(12, 6)  NOT NULL,
    r14    NUMERIC(12, 6)  NOT NULL
 );
+
+CREATE TABLE scores_sr (
+   time         TIMESTAMPTZ     NOT NULL,
+   r1_score     NUMERIC(12, 6)  NOT NULL
+);
+
+CREATE UNIQUE INDEX idx_scores_sr ON scores_sr(time);
+
+SELECT create_hypertable('scores_sr', 'time');
