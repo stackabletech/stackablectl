@@ -1,18 +1,1 @@
-TODOs
-
-* ingest flatfile to nifi (done)
-* split and delay data (no: write to DB then update in place)
-* helm chart for timescaleDB (yes)
-* nifi output to timescaleDB (yes)
-* helm chart for grafana (yes: see monitoring stack)
-* timescaleDB data shown in grafana (yes)
-
-* put all this in a demo
-
-end of prelims
-
-* spark-streaming job to do simple window-average
-* output to timescaleDB
-* add metric to grafana
-
-we now have a complete test-harness, ready to add algorithms...
+= spark-streaming
