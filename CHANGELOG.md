@@ -6,6 +6,10 @@
 
 - Also print stack parameters when describing a demo ([#251](https://github.com/stackabletech/stackablectl/pull/251))
 
+### Fixed
+
+- Check HTTP status code when fetching resources via HTTP ([#258](https://github.com/stackabletech/stackablectl/pull/258))
+
 ## [0.8.0] - 2023-02-23
 
 ### Changed
