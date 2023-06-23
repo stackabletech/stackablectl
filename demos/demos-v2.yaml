@@ -144,7 +144,7 @@ demos:
     stackableStack: signal-processing
     labels:
       - nifi
-      - spark
+      - jupyterhub
       - grafana-dashboards
       - zookeeper
     manifests:
