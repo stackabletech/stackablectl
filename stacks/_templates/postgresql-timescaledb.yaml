@@ -8,6 +8,11 @@ options:
   replicaCount: 1
   secrets:
     credentials:
-      PATRONI_SUPERUSER_PASSWORD: ""
+      PATRONI_SUPERUSER_PASSWORD: "{{ postgresAdminPassword }}"
       PATRONI_REPLICATION_PASSWORD: ""
       PATRONI_admin_PASSWORD: "{{ postgresAdminPassword }}"
+      PATRONI_admin_OPTIONS: createrole,createdb
+  image:
+    repository: timescale/timescaledb-ha
+    tag: pg15.2-ts2.10.2-patroni-dcs-failsafe-p0 # fixes service account. originally: pg14.6-ts2.9.1-p1
+    pullPolicy: Always

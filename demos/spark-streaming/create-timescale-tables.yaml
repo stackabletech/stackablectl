@@ -19,7 +19,10 @@ spec:
           env:
             - name: PGPASSWORD
               value: "adminadmin"
-          command: ["bash", "-c", "echo 'Submitting DDL job' && psql -U admin -h postgresql-timescaledb.default.svc.cluster.local postgres -c '\\x' -c 'CREATE DATABASE tsdb' -c '\\c tsdb' -f /tmp/sql/timescaledb.sql -c 'select count(*) from conditions' -c '\\q'"]
+          command: ["bash", "-c", "echo 'Creating extension as superuser' && \
+          psql -U postgres -h postgresql-timescaledb.default.svc.cluster.local postgres -c '\\x' -c 'CREATE EXTENSION timescaledb_toolkit' -c '\\q' && \
+          echo 'Submitting DDL job' && \
+          psql -U admin -h postgresql-timescaledb.default.svc.cluster.local postgres -c '\\x' -c 'CREATE DATABASE tsdb' -c '\\c tsdb' -f /tmp/sql/timescaledb.sql -c 'select count(*) from conditions' -c '\\q'"]
           volumeMounts:
             - name: script
               mountPath: /tmp/sql
@@ -108,5 +111,3 @@ data:
     CREATE UNIQUE INDEX idx_scores_sr ON scores_sr(time);
 
     SELECT create_hypertable('scores_sr', 'time');
-
-    CREATE EXTENSION timescaledb_toolkit;
