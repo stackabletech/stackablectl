@@ -356,7 +356,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls-authenticationclass.yaml
     # TODO: Parameterize
     parameters: []
-  spark-streaming:
+  signal-processing:
     description: >-
       A stack used for creating, streaming and processing in-flight data and persisting it to TimescaleDB before it is displayed in Grafana
     stackableRelease: 23.4
@@ -368,17 +368,17 @@ stacks:
     labels:
       - timescaledb
       - nifi
-      - spark
+      - jupyterhub
       - grafana
     manifests:
-      - plainYaml: stacks/spark-streaming/grafana-dashboards.yaml
-      - helmChart: stacks/spark-streaming/grafana.yaml
+      - plainYaml: stacks/signal-processing/grafana-dashboards.yaml
+      - helmChart: stacks/signal-processing/grafana.yaml
       - helmChart: stacks/_templates/postgresql-timescaledb.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
-      - helmChart: stacks/spark-streaming/jupyterhub.yaml
+      - helmChart: stacks/signal-processing/jupyterhub.yaml
     parameters:
       - name: nifiAdminPassword
         description: Password of the NiFI admin user

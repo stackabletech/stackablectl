@@ -14,7 +14,7 @@ spec:
       containers:
         - name: create-nifi-ingestion-job
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
-          command: ["bash", "-c", "curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/spark-streaming/demos/spark-streaming/DownloadAndWriteToDB.xml && python -u /tmp/script/script.py"]
+          command: ["bash", "-c", "curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/signal-processing/demos/signal-processing/DownloadAndWriteToDB.xml && python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
