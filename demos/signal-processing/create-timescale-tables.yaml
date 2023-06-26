@@ -16,20 +16,23 @@ spec:
       containers:
         - name: create-timescale-tables-job
           image: postgres
-          env:
-            - name: PGPASSWORD
-              value: "adminadmin"
-          command: ["bash", "-c", "echo 'Submitting DDL...' && \
+          command: ["bash", "-c", "export PGPASSWORD=$(cat /timescale-admin-credentials/password) && \
+          echo 'Submitting DDL...' && \
           psql -U admin -h postgresql-timescaledb.default.svc.cluster.local postgres -c '\\x' -c 'CREATE DATABASE tsdb' -c '\\c tsdb' -f /tmp/sql/timescaledb.sql -c 'select count(*) from conditions' -c '\\q' && \
           echo 'Creating extension as superuser...' && \
           psql -U postgres -h postgresql-timescaledb.default.svc.cluster.local postgres -c '\\x' -c '\\c tsdb' -c 'CREATE EXTENSION timescaledb_toolkit' -c '\\q'"]
           volumeMounts:
             - name: script
               mountPath: /tmp/sql
+            - name: timescale-admin-credentials
+              mountPath: /timescale-admin-credentials
       volumes:
         - name: script
           configMap:
             name: create-timescale-tables-job-script
+        - name: timescale-admin-credentials
+          secret:
+            secretName: timescale-admin-credentials
       restartPolicy: OnFailure
   backoffLimit: 50
 ---

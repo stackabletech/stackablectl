@@ -372,6 +372,7 @@ stacks:
       - jupyterhub
       - grafana
     manifests:
+      - plainYaml: stacks/signal-processing/secrets.yaml
       - plainYaml: stacks/signal-processing/grafana-dashboards.yaml
       - helmChart: stacks/signal-processing/grafana.yaml
       - helmChart: stacks/_templates/postgresql-timescaledb.yaml
