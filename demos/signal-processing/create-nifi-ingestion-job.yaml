@@ -14,12 +14,17 @@ spec:
       containers:
         - name: create-nifi-ingestion-job
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
-          command: ["bash", "-c", "curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/signal-processing/demos/signal-processing/DownloadAndWriteToDB.xml && python -u /tmp/script/script.py"]
+          command: ["bash", "-c", "export PGPASSWORD=$(cat /timescale-admin-credentials/password) && \
+          curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/signal-processing/demos/signal-processing/DownloadAndWriteToDB.xml && \
+          sed -i \"s/PLACEHOLDERPGPASSWORD/$PGPASSWORD/g\" DownloadAndWriteToDB.xml && \
+          python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
             - name: nifi-admin-credentials
               mountPath: /nifi-admin-credentials
+            - name: timescale-admin-credentials
+              mountPath: /timescale-admin-credentials
           env:
             - name: NAMESPACE
               valueFrom:
@@ -32,6 +37,9 @@ spec:
         - name: nifi-admin-credentials
           secret:
             secretName: nifi-admin-credentials
+        - name: timescale-admin-credentials
+          secret:
+            secretName: timescale-admin-credentials
       restartPolicy: OnFailure
   backoffLimit: 50
 ---
@@ -73,5 +81,6 @@ data:
 
     for controller in list_all_controllers():
         schedule_controller(controller, scheduled=True)
+
 
     schedule_process_group(pg_id, scheduled=True)
