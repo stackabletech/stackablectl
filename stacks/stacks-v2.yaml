@@ -134,7 +134,7 @@ stacks:
     parameters: []
   nifi-kafka-druid-superset-s3:
     description: Stack containing NiFi, Kafka, Druid, MinIO and Superset for data visualization
-    stackableRelease: 23.4
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
@@ -154,11 +154,11 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/kafka.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/druid.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/superset.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/kafka.yaml
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/druid.yaml
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/superset.yaml
+      - plainYaml: stacks/nifi-kafka-druid-superset-s3/nifi.yaml
     parameters:
       - name: nifiAdminPassword
         description: Password of the NiFI admin user
