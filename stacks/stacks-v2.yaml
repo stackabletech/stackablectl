@@ -45,7 +45,7 @@ stacks:
         default: "true"
   airflow:
     description: Stack containing Airflow scheduling platform
-    stackableRelease: 23.4
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
@@ -56,7 +56,7 @@ stacks:
     manifests:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-airflow.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/redis-airflow.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
+      - plainYaml: stacks/airflow/airflow.yaml
     parameters:
       - name: airflowAdminPassword
         description: Password of the Airflow admin user

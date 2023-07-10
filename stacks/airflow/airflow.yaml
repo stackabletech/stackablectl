@@ -10,10 +10,10 @@ spec:
     stackableVersion: "23.4"
   clusterConfig:
     listenerClass: external-unstable
-  executor: CeleryExecutor
-  loadExamples: false
-  exposeConfig: false
-  credentialsSecret: airflow-credentials
+    executor: CeleryExecutor
+    loadExamples: false
+    exposeConfig: false
+    credentialsSecret: airflow-credentials
   volumes:
     - name: airflow-dags
       configMap:
