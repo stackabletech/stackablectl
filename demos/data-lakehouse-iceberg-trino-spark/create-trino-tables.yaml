@@ -18,15 +18,15 @@ spec:
           volumeMounts:
             - name: script
               mountPath: /tmp/script
-            - name: trino-credentials
-              mountPath: /trino-credentials
+            - name: trino-users
+              mountPath: /trino-users
       volumes:
         - name: script
           configMap:
             name: create-tables-in-trino-script
-        - name: trino-credentials
+        - name: trino-users
           secret:
-            secretName: trino-credentials
+            secretName: trino-users
       restartPolicy: OnFailure
   backoffLimit: 50
 ---
@@ -49,7 +49,7 @@ data:
             port=8443,
             user="admin",
             http_scheme='https',
-            auth=trino.auth.BasicAuthentication("admin", open("/trino-credentials/admin").read()),
+            auth=trino.auth.BasicAuthentication("admin", open("/trino-users/admin").read()),
         )
         connection._http_session.verify = False
         return connection
