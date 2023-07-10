@@ -14,20 +14,20 @@ spec:
     loadExamples: false
     exposeConfig: false
     credentialsSecret: airflow-credentials
-  volumes:
-    - name: airflow-dags
-      configMap:
-        name: airflow-dags
-  volumeMounts:
-    - name: airflow-dags
-      mountPath: /dags/date_demo.py
-      subPath: date_demo.py
-    - name: airflow-dags
-      mountPath: /dags/pyspark_pi.py
-      subPath: pyspark_pi.py
-    - name: airflow-dags
-      mountPath: /dags/pyspark_pi.yaml
-      subPath: pyspark_pi.yaml
+    volumes:
+      - name: airflow-dags
+        configMap:
+          name: airflow-dags
+    volumeMounts:
+      - name: airflow-dags
+        mountPath: /dags/date_demo.py
+        subPath: date_demo.py
+      - name: airflow-dags
+        mountPath: /dags/pyspark_pi.py
+        subPath: pyspark_pi.py
+      - name: airflow-dags
+        mountPath: /dags/pyspark_pi.yaml
+        subPath: pyspark_pi.yaml
   webservers:
     roleGroups:
       default:
