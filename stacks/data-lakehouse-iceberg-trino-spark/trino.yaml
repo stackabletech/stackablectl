@@ -5,18 +5,15 @@ metadata:
   name: trino
 spec:
   image:
-    productVersion: "403"
-    stackableVersion: "23.4"
+    productVersion: "414"
+    stackableVersion: 0.0.0-dev
   clusterConfig:
     listenerClass: external-unstable
     catalogLabelSelector:
       matchLabels:
         trino: trino
     authentication:
-      method:
-        multiUser:
-          userCredentialsSecret:
-            name: trino-users
+      - authenticationClass: trino-users
     authorization:
       opa:
         configMapName: opa
@@ -45,6 +42,16 @@ spec:
     roleGroups:
       default:
         replicas: 4
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: trino-users
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: trino-users
 ---
 apiVersion: v1
 kind: Secret
@@ -109,7 +116,7 @@ metadata:
 spec:
   image:
     productVersion: 0.45.0
-    stackableVersion: "23.4"
+    stackableVersion: 0.0.0-dev
   servers:
     roleGroups:
       default:
