@@ -300,7 +300,7 @@ stacks:
         default: adminadmin
   dual-hive-hdfs-s3:
     description: Dual stack Hive on HDFS and S3 for Hadoop/Hive to Trino migration
-    stackableRelease: 23.4
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
@@ -318,9 +318,9 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hivehdfs.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hives3.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hdfs.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hive.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/hdfs.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/hive.yaml
+      - plainYaml: stacks/dual-hive-hdfs-s3/trino.yaml
     parameters:
       - name: minioAdminPassword
         description: Password of the Minio admin user
@@ -348,7 +348,7 @@ stacks:
       The bind user credentials are: ldapadmin:ldapadminpassword.
       The LDAP AuthenticationClass is called 'ldap' and the SecretClass for the bind credentials is called 'ldap-bind-credentials'.
       The stack already creates an appropriate Secret, so referring to the 'ldap' AuthenticationClass in your ProductCluster should be enough.
-    stackableRelease: 23.4
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
