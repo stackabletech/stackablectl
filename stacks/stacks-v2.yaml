@@ -18,7 +18,7 @@ stacks:
         default: adminadmin
   logging:
     description: Stack containing OpenSearch, OpenSearch Dashboards (Kibana) and Vector aggregator
-    stackableRelease: 23.4
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
@@ -331,7 +331,7 @@ stacks:
       The bind user credentials are: ldapadmin:ldapadminpassword.
       No AuthenticationClass is configured, The AuthenticationClass is created manually in the tutorial.
       Use the 'openldap' Stack for an OpenLDAD with an AuthenticationClass already installed.
-    stackableRelease: 23.4
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
