@@ -61,14 +61,6 @@ type: kubernetes.io/opaque
 stringData:
   admin: "{{ trinoAdminPassword }}"
 ---
-# As the demo needs to have access to Trino using the admin user we need to store the password somewhere
-apiVersion: v1
-kind: Secret
-metadata:
-  name: trino-credentials
-stringData:
-  admin: "{{ trinoAdminPassword }}"
----
 apiVersion: trino.stackable.tech/v1alpha1
 kind: TrinoCatalog
 metadata:
