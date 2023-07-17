@@ -5,7 +5,7 @@ metadata:
   name: nifi
 spec:
   image:
-    productVersion: 1.18.0
+    productVersion: 1.21.0
     stackableVersion: "23.7"
   clusterConfig:
     listenerClass: external-unstable
