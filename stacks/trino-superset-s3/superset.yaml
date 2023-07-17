@@ -9,8 +9,8 @@ spec:
     stackableVersion: "23.7"
   clusterConfig:
     listenerClass: external-unstable
-  credentialsSecret: superset-credentials
-  mapboxSecret: superset-mapbox-api-key
+    credentialsSecret: superset-credentials
+    mapboxSecret: superset-mapbox-api-key
   nodes:
     roleGroups:
       default:
