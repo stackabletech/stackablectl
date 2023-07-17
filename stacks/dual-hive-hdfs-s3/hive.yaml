@@ -37,7 +37,7 @@ metadata:
 spec:
   image:
     productVersion: 2.3.9
-    stackableVersion: 0.0.0-dev
+    stackableVersion: "23.7"
   clusterConfig:
     database:
       connString: jdbc:postgresql://hivehdfs-postgresql:5432/hivehdfs
