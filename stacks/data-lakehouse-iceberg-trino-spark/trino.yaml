@@ -38,7 +38,7 @@ spec:
           min: "2"
           max: "4"
         memory:
-          limit: '10Gi'
+          limit: '12Gi'
     roleGroups:
       default:
         replicas: 4
