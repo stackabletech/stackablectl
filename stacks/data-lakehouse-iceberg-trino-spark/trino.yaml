@@ -32,13 +32,13 @@ spec:
         replicas: 1
   workers:
     config:
-      queryMaxMemoryPerNode: 5GB
+      queryMaxMemoryPerNode: 8GB
       resources:
         cpu:
           min: "2"
-          max: "4"
+          max: "6"
         memory:
-          limit: '12Gi'
+          limit: '16Gi'
     roleGroups:
       default:
         replicas: 4
