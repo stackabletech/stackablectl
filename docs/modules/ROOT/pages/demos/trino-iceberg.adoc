@@ -65,6 +65,7 @@ java -jar ~/Downloads/trino-cli-396-executable.jar --user admin --insecure --pas
 ----
 
 Make sure to replace the server endpoint with the endpoint listed in the `stackablectl services list` output.
+When prompted enter the password `adminadmin`.
 
 == Create testdata
 === Create Schema

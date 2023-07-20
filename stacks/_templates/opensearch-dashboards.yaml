@@ -3,7 +3,7 @@ name: opensearch-dashboards
 repo:
   name: opensearch-dashboards
   url: https://opensearch-project.github.io/helm-charts
-version: 2.9.2
+version: 2.11.1
 options:
   service:
     type: NodePort

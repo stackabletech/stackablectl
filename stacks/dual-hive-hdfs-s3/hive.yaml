@@ -37,7 +37,7 @@ metadata:
 spec:
   image:
     productVersion: 2.3.9
-    stackableVersion: "23.4"
+    stackableVersion: "23.7"
   clusterConfig:
     database:
       connString: jdbc:postgresql://hivehdfs-postgresql:5432/hivehdfs
@@ -58,7 +58,7 @@ metadata:
 spec:
   image:
     productVersion: 3.1.3
-    stackableVersion: "23.4"
+    stackableVersion: "23.7"
   clusterConfig:
     database:
       connString: jdbc:postgresql://hives3-postgresql:5432/hives3

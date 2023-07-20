@@ -5,12 +5,12 @@ metadata:
   name: superset
 spec:
   image:
-    productVersion: 1.5.1
-    stackableVersion: "23.4"
+    productVersion: 2.1.0
+    stackableVersion: "23.7"
   clusterConfig:
     listenerClass: external-unstable
-  credentialsSecret: superset-credentials
-  mapboxSecret: superset-mapbox-api-key
+    credentialsSecret: superset-credentials
+    mapboxSecret: superset-mapbox-api-key
   nodes:
     roleGroups:
       default:
