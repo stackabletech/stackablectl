@@ -56,7 +56,7 @@ stacks:
     manifests:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-airflow.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/redis-airflow.yaml
-      - plainYaml: stacks/airflow/airflow.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
     parameters:
       - name: airflowAdminPassword
         description: Password of the Airflow admin user
@@ -93,12 +93,12 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/s3-connection.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/superset.yaml # Reuse
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/superset.yaml # Reuse
     parameters:
       - name: trinoAdminPassword
         description: Password of the Trino admin user
@@ -154,11 +154,11 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/kafka.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/druid.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/superset.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/kafka.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/druid.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
     parameters:
       - name: nifiAdminPassword
         description: Password of the NiFI admin user
@@ -194,10 +194,10 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/s3-connection.yaml
-      - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
-      - plainYaml: stacks/trino-superset-s3/trino.yaml
-      - plainYaml: stacks/spark-trino-superset-s3/trino-prediction-catalog.yaml
-      - plainYaml: stacks/trino-superset-s3/superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/hive-metastore.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino-prediction-catalog.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
     parameters:
       - name: trinoAdminPassword
         description: Password of the Trino admin user
@@ -231,9 +231,9 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/s3-connection.yaml
-      - plainYaml: stacks/trino-superset-s3/hive-metastore.yaml
-      - plainYaml: stacks/trino-superset-s3/trino.yaml
-      - plainYaml: stacks/trino-superset-s3/superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
     parameters:
       - name: trinoAdminPassword
         description: Password of the Trino admin user
@@ -266,8 +266,8 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-distributed-small.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/s3-connection.yaml
-      - plainYaml: stacks/trino-iceberg/hive-metastores.yaml
-      - plainYaml: stacks/trino-iceberg/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/hive-metastores.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/trino.yaml
     parameters:
       - name: trinoAdminPassword
         description: Password of the Trino admin user
@@ -290,8 +290,8 @@ stacks:
       - pyspark
     manifests:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/jupyterhub.yaml
-      - plainYaml: stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
-      - plainYaml: stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
     parameters:
@@ -318,9 +318,9 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hivehdfs.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hives3.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio.yaml
-      - plainYaml: stacks/dual-hive-hdfs-s3/hdfs.yaml
-      - plainYaml: stacks/dual-hive-hdfs-s3/hive.yaml
-      - plainYaml: stacks/dual-hive-hdfs-s3/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hive.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
     parameters:
       - name: minioAdminPassword
         description: Password of the Minio admin user
