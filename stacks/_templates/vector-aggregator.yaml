@@ -20,6 +20,9 @@ options:
         endpoints:
           - https://opensearch-cluster-master.default.svc.cluster.local:9200
         mode: bulk
+        # The auto-detection of the API version does not work in Vector
+        # 0.31.0 for OpenSearch, so the version must be set explicitly
+        # (see https://github.com/vectordotdev/vector/issues/17690).
         api_version: v8
         tls:
           # Add the certificate of the Certificate Authority
