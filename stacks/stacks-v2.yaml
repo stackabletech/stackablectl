@@ -12,6 +12,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/monitoring/grafana-dashboards.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/prometheus.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/prometheus-service-monitor.yaml
+    supportedNamespaces: []
     parameters:
       - name: grafanaAdminPassword
         description: Password of the Grafana admin user
@@ -33,6 +34,7 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/opensearch-dashboards.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/vector-aggregator.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/vector-aggregator-discovery.yaml
+    supportedNamespaces: []
     parameters:
       - name: openSearchAdminPassword
         description: Password of the OpenSearch admin user
@@ -57,6 +59,7 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-airflow.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/redis-airflow.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
+    supportedNamespaces: []
     parameters:
       - name: airflowAdminPassword
         description: Password of the Airflow admin user
@@ -99,6 +102,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/superset.yaml # Reuse
+    supportedNamespaces: []
     parameters:
       - name: trinoAdminPassword
         description: Password of the Trino admin user
@@ -131,6 +135,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/zookeeper.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hdfs.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hbase.yaml
+    supportedNamespaces: []
     parameters: []
   nifi-kafka-druid-superset-s3:
     description: Stack containing NiFi, Kafka, Druid, MinIO and Superset for data visualization
@@ -159,6 +164,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/druid.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/superset.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+    supportedNamespaces: []
     parameters:
       - name: nifiAdminPassword
         description: Password of the NiFI admin user
@@ -198,6 +204,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino-prediction-catalog.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
+    supportedNamespaces: []
     parameters:
       - name: trinoAdminPassword
         description: Password of the Trino admin user
@@ -234,6 +241,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
+    supportedNamespaces: []
     parameters:
       - name: trinoAdminPassword
         description: Password of the Trino admin user
@@ -268,6 +276,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/s3-connection.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/hive-metastores.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/trino.yaml
+    supportedNamespaces: []
     parameters:
       - name: trinoAdminPassword
         description: Password of the Trino admin user
@@ -293,7 +302,9 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
+      # TODO Use patched JHub that created service for us from customer setup (ask Sebastian)
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
+    supportedNamespaces: []
     parameters:
       - name: jupyterHubAdminPassword
         description: Password of the JupyterHub admin user
@@ -321,6 +332,7 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hdfs.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/hive.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/dual-hive-hdfs-s3/trino.yaml
+    supportedNamespaces: []
     parameters:
       - name: minioAdminPassword
         description: Password of the Minio admin user
@@ -340,6 +352,7 @@ stacks:
       - ldap
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
+    supportedNamespaces: ["default"]
     # TODO: Parameterize
     parameters: []
   openldap:
@@ -358,5 +371,6 @@ stacks:
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/authentication/openldap-tls-authenticationclass.yaml
+    supportedNamespaces: []
     # TODO: Parameterize
     parameters: []
