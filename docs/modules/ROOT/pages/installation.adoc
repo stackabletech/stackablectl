@@ -3,6 +3,8 @@
 == Pre-compiled binary
 Stackable ships pre-compiled binaries of `stackablectl` which should work on most environments such as Windows, macOS, and Linux distros like Ubuntu and Arch.
 
+NOTE: You can find details on the supported OS versions in the <<system-requirements>> section below.
+
 Below are the installation instructions for <<Linux>>, <<macOS>> and <<Windows>>.
 If the binary does not work for you, you can always <<_build_stackablectl_from_source>>
 
@@ -154,3 +156,21 @@ The stackablectl completion script for Zsh can be generated with the command `st
 $ source <(stackablectl completion zsh)
 $ echo 'source <(stackablectl completion zsh)' >> ~/.zshrc
 ----
+
+[#system-requirements]
+== System requirements
+
+=== Hardware
+
+stackablectl requires 200MB of disk storage, 1GB of RAM and 1 CPU to operate.
+
+=== Operating system
+
+stackablectl supports
+
+* Microsoft Windows 10 or above
+* Apple MacOS 11 or above
+* Ubuntu Linux 22.04 or above (only vendor supported versions are supported)
+* RedHat Enterprise Linux 8 and 9 (only vendor supported versions are supported)
+* Debian Linux 10 or above (only vendor supported versions are supported)
+* SUSE Linux 15.3 or above (only vendor supported versions are supported)
