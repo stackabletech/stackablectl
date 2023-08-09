@@ -166,7 +166,8 @@ stackablectl requires 200MB of disk storage, 1GB of RAM and 1 CPU to operate.
 
 === Operating system
 
-stackablectl supports
+The pre-compiled stackablectl binary supports the following operating systems:
+In case a OS is not supported by the binary, it can always be build from [source](https://github.com/stackabletech/stackablectl).
 
 * Microsoft Windows 10 or above
 * Apple MacOS 11 or above
