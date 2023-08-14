@@ -1,12 +1,5 @@
 = airflow-scheduled-job
 
-[NOTE]
-====
-This guide assumes that you already have the demo `airflow-scheduled-job` installed.
-If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
-To put it simply you have to run `stackablectl demo install airflow-scheduled-job`.
-====
-
 This demo will
 
 * Install the required Stackable operators
@@ -30,6 +23,10 @@ To run this demo, your system needs at least:
 * 9GiB memory
 * 24GiB disk storage
 
+== Installation
+
+Please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you have to run `stackablectl demo install airflow-scheduled-job`.
 
 == List deployed Stackable services
 To list the installed Stackable services run the following command:
