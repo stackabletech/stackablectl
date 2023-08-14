@@ -2,29 +2,9 @@
 
 This demo showcases the integration between https://jupyter.org[Jupyter] and https://hadoop.apache.org/[Apache Hadoop] deployed on the Stackable Data Platform (SDP) Kubernetes cluster. https://jupyterlab.readthedocs.io/en/stable/[JupyterLab] is deployed using the https://github.com/jupyterhub/zero-to-jupyterhub-k8s[pyspark-notebook stack] provided by the Jupyter community. The SDP makes this integration easy by publishing a discovery `ConfigMap` for the HDFS cluster. This `ConfigMap` is then mounted in all `Pods`` running https://spark.apache.org/docs/latest/api/python/getting_started/index.html[PySpark] notebooks so that these have access to HDFS data. For this demo, the HDFS cluster is provisioned with a small sample of the https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[NYC taxi trip dataset] which is analyzed with a notebook that is provisioned automatically in the JupyterLab interface .
 
-This demo can be installed on most cloud managed Kubernetes clusters as well as on premise or on a reasonably provisioned laptop. Install this demo on an existing Kubernetes cluster:
-
-[source,bash]
-----
-stackablectl demo install jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data
-----
-
-[WARNING]
-====
-This demo should not be run alongside other demos and requires a minimum of 32 GB RAM and 8 CPUs.
-====
-
-[NOTE]
-====
-Some container images used by this demo are quite large and some steps may take several minutes to complete. If you install this demo locally, on a developer laptop for example, this can lead to timeouts during the installation. If this happens, it's safe to rerun the `stackablectl` command from above.
-
-For more details on how to install Stackable demos see the xref:commands/demo.adoc#_install_demo[documentation].
-====
-
 == Aim / Context
 
 This demo does not use the Stackable spark-k8s-operator but rather delegates the creation of executor pods to JupyterHub. The intention is to demonstrate how to interact with SDP components when designing and testing Spark jobs: the resulting script and Spark job definition can then be transferred for use with a Stackable `SparkApplication` resource. When logging in to JupyterHub (described below), a pod will be created with the username as a suffix e.g. `jupyter-admin`. This runs a container that hosts a Jupyter notebook with Spark, Java and Python pre-installed. When the user creates a `SparkSession`, temporary spark executors are created that are persisted until the notebook kernel is shut down or re-started. The notebook can thus be used as a sandbox for writing, testing and benchmarking Spark jobs before they are moved into production.
-
 
 == Overview
 
@@ -39,6 +19,27 @@ This demo will:
 * Train an anomaly detection model using PySpark on the data available in HDFS
 * Perform some predictions and visualize anomalies
 
+[#system-requirements]
+== System requirements
+
+To run this demo, your system needs at least:
+
+* 8 https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#cpu[cpu units] (core/hyperthread)
+* 32GiB memory
+* 22GiB disk storage
+
+[#installation]
+== Installation
+
+Please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you have to run `stackablectl demo install jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data`.
+
+[NOTE]
+====
+Some container images used by this demo are quite large and some steps may take several minutes to complete. If you install this demo locally, on a developer laptop for example, this can lead to timeouts during the installation. If this happens, it's safe to rerun the `stackablectl` command from above.
+
+For more details on how to install Stackable demos see the xref:commands/demo.adoc#_install_demo[documentation].
+====
 
 == HDFS
 
