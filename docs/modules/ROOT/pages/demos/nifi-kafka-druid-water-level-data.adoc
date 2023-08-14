@@ -1,16 +1,9 @@
 = nifi-kafka-druid-water-level-data
 
-[WARNING]
+[CAUTION]
 ====
 This demo only runs in the `default` namespace, as a `ServiceAccount` will be created.
 Additionally, we have to use the fqdn service names (including the namespace), so that the used TLS certificates are valid.
-====
-
-[NOTE]
-====
-This guide assumes that you already have the demo `nifi-kafka-druid-water-level-data` installed.
-If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
-To put it simply you have to run `stackablectl demo install nifi-kafka-druid-water-level-data`.
 ====
 
 This demo will
@@ -33,6 +26,21 @@ The whole data pipeline will have a very low latency from putting a record into 
 You can see the deployed products as well as their relationship in the following diagram:
 
 image::demo-nifi-kafka-druid-water-level-data/overview.png[]
+
+[#system-requirements]
+== System requirements
+
+To run this demo, your system needs at least:
+
+* 8.9 https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#cpu[cpu units] (core/hyperthread)
+* 28GiB memory
+* 75GiB disk storage
+
+[#installation]
+== Installation
+
+Please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you have to run `stackablectl demo install nifi-kafka-druid-water-level-data`.
 
 == List deployed Stackable services
 To list the installed Stackable services run the following command:
