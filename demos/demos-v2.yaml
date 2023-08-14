@@ -12,6 +12,10 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/03-enable-and-run-spark-dag.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/04-enable-and-run-date-dag.yaml
     supportedNamespaces: []
+    resourceRequests:
+      cpu: 2401m
+      memory: 9010Mi
+      pvc: 24Gi
   hbase-hdfs-load-cycling-data:
     description: Copy data from S3 bucket to an HBase table
     stackableStack: hdfs-hbase
@@ -23,6 +27,10 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/distcp-cycling-data.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/create-hfile-and-import-to-hbase.yaml
     supportedNamespaces: []
+    resourceRequests:
+      cpu: "3"
+      memory: 5638Mi
+      pvc: 16Gi
   nifi-kafka-druid-earthquake-data:
     description: Demo ingesting earthquake data into Kafka using NiFi, streaming it into Druid and creating a Superset dashboard
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/nifi-kafka-druid-earthquake-data.html
@@ -40,6 +48,10 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml
     supportedNamespaces: ["default"]
+    resourceRequests:
+      cpu: 8700m
+      memory: 27746Mi
+      pvc: 75Gi # 30Gi for Kafka
   nifi-kafka-druid-water-level-data:
     description:  Demo ingesting water level data into Kafka using NiFi, streaming it into Druid and creating a Superset dashboard
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/nifi-kafka-druid-water-level-data.html
@@ -57,6 +69,10 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/setup-superset.yaml
     supportedNamespaces: ["default"]
+    resourceRequests:
+      cpu: 8900m
+      memory: 28042Mi
+      pvc: 75Gi # 30Gi for Kafka
   spark-k8s-anomaly-detection-taxi-data:
     description: Demo loading New York taxi data into an S3 bucket and carrying out an anomaly detection analysis on it
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/spark-k8s-anomaly-detection-taxi-data.html
@@ -73,6 +89,10 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/create-spark-anomaly-detection-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/setup-superset.yaml
     supportedNamespaces: []
+    resourceRequests:
+      cpu: 6400m
+      memory: 12622Mi
+      pvc: 35Gi
   trino-iceberg:
     description: Demo containing Trino using Apache Iceberg as a S3 data lakehouse
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/trino-iceberg.html
@@ -84,6 +104,10 @@ demos:
       - s3
     manifests: []
     supportedNamespaces: []
+    resourceRequests:
+      cpu: 8550m
+      memory: 26662Mi
+      pvc: 110Gi # 100Gi for MinIO
   trino-taxi-data:
     description: Demo loading 2.5 years of New York taxi data into S3 bucket, creating a Trino table and a Superset dashboard
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/trino-taxi-data.html
@@ -99,6 +123,10 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/create-table-in-trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
     supportedNamespaces: []
+    resourceRequests:
+      cpu: 6800m
+      memory: 15822Mi
+      pvc: 28Gi
   data-lakehouse-iceberg-trino-spark:
     description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization. Multiple datasources like taxi data, water levels in Germany, earthquakes, e-charging stations and more are loaded.
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/data-lakehouse-iceberg-trino-spark.html
@@ -123,6 +151,10 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/setup-superset.yaml
     supportedNamespaces: ["default"]
+    resourceRequests:
+      cpu: "80"
+      memory: 200Gi
+      pvc: 1Ti
   jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data:
     description: Jupyterhub with PySpark and HDFS integration
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data.html
@@ -135,6 +167,10 @@ demos:
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/load-test-data.yaml
     supportedNamespaces: []
+    resourceRequests:
+      cpu: 3350m
+      memory: 5098Mi
+      pvc: 22Gi
   logging:
     description: Demo showing the logging stack in action
     documentation: https://docs.stackable.tech/stackablectl/stable/demos/logging.html
@@ -148,3 +184,7 @@ demos:
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/logging/zookeeper.yaml
     supportedNamespaces: []
+    resourceRequests:
+      cpu: 6500m
+      memory: 5098Mi
+      pvc: 27Gi
