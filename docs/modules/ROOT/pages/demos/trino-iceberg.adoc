@@ -7,13 +7,6 @@ It focuses on the Trino and Iceberg integration and should run on you local work
 If you are interested in a more complex lakehouse setup, please have a look at the xref:demos/data-lakehouse-iceberg-trino-spark.adoc[] demo.
 ====
 
-[NOTE]
-====
-This guide assumes that you already have the demo `trino-iceberg` installed.
-If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
-To put it simply you have to run `stackablectl demo install trino-iceberg`.
-====
-
 This demo will
 
 * Install the required Stackable operators
@@ -21,6 +14,21 @@ This demo will
 ** *Trino*: A fast distributed SQL query engine for big data analytics that helps you explore your data universe. This demo uses it to enable SQL access to the data
 * Create multiple data lakehouse tables using Apache Iceberg and data from the https://www.tpc.org/tpch/[TPC-H dataset].
 * Run some queries to show the benefits of Iceberg
+
+[#system-requirements]
+== System requirements
+
+To run this demo, your system needs at least:
+
+* 8.55 https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#cpu[cpu units] (core/hyperthread)
+* 27GiB memory
+* 110GiB disk storage
+
+[#installation]
+== Installation
+
+Please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you have to run `stackablectl demo install trino-iceberg`.
 
 == List deployed Stackable services
 To list the installed installed Stackable services run the following command:
