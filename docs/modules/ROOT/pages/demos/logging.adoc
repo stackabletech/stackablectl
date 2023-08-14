@@ -68,6 +68,21 @@ The following command creates a kind cluster and installs this demo:
 $ stackablectl demo install logging --kind-cluster
 ----
 
+[#system-requirements]
+== System requirements
+
+To run this demo, your system needs at least:
+
+* 6.5 https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#cpu[cpu units] (core/hyperthread)
+* 5GiB memory
+* 27GiB disk storage
+
+[#installation]
+== Installation
+
+Please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you have to run `stackablectl demo install logging`.
+
 == List deployed Stackable services
 
 To list the installed Stackable services run the following command:
