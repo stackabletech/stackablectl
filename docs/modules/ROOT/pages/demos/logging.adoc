@@ -59,15 +59,6 @@ vm.max_map_count=262144
 
 Then run `sudo sysctl --load` to reload.
 
-== Run the demo
-
-The following command creates a kind cluster and installs this demo:
-
-[source,console]
-----
-$ stackablectl demo install logging --kind-cluster
-----
-
 [#system-requirements]
 == System requirements
 
