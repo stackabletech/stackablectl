@@ -15,6 +15,7 @@ You can see the deployed products as well as their relationship in the following
 
 image::demo-airflow-scheduled-job/overview.png[]
 
+[#system-requirements]
 == System requirements
 
 To run this demo, your system needs at least:
@@ -23,6 +24,7 @@ To run this demo, your system needs at least:
 * 9GiB memory
 * 24GiB disk storage
 
+[#installation]
 == Installation
 
 Please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
