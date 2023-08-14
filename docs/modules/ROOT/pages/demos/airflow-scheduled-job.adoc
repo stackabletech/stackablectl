@@ -22,6 +22,15 @@ You can see the deployed products as well as their relationship in the following
 
 image::demo-airflow-scheduled-job/overview.png[]
 
+== System requirements
+
+To run this demo, your system needs at least:
+
+* 2.5 https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#cpu[cpu units] (core/hyperthread)
+* 9GiB memory
+* 24GiB disk storage
+
+
 == List deployed Stackable services
 To list the installed Stackable services run the following command:
 
