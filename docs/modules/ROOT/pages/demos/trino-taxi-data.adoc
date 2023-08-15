@@ -22,7 +22,7 @@ image::demo-trino-taxi-data/overview.png[]
 
 To run this demo, your system needs at least:
 
-* 6.8 https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#cpu[cpu units] (core/hyperthread)
+* 7 https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#cpu[cpu units] (core/hyperthread)
 * 16GiB memory
 * 28GiB disk storage
 

@@ -32,7 +32,7 @@ image::demo-nifi-kafka-druid-water-level-data/overview.png[]
 
 To run this demo, your system needs at least:
 
-* 8.9 https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#cpu[cpu units] (core/hyperthread)
+* 9 https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#cpu[cpu units] (core/hyperthread)
 * 28GiB memory
 * 75GiB disk storage
 
