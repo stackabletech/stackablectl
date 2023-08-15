@@ -53,7 +53,7 @@ In addition to these nodes the operators will request multiple persistent volume
 == Installation
 
 Please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
-To put it simply you have to run `stackablectl demo install data-lakehouse-iceberg-trino-spark`.
+To put it simply you just have to run `stackablectl demo install data-lakehouse-iceberg-trino-spark`.
 
 == Apache Iceberg
 As Apache Iceberg states on their https://iceberg.apache.org/docs/latest/[website]:
