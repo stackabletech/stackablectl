@@ -30,7 +30,7 @@ To run this demo, your system needs at least:
 == Installation
 
 Please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
-To put it simply you have to run `stackablectl demo install trino-taxi-data`.
+To put it simply you just have to run `stackablectl demo install trino-taxi-data`.
 
 == List deployed Stackable services
 To list the installed Stackable services run the following command:
