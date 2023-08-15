@@ -1,12 +1,5 @@
 = hbase-hdfs-cycling-data
 
-[NOTE]
-====
-This guide assumes that you already have the demo `hbase-hdfs-load-cycling-data` installed.
-If you don't have it installed please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
-To put it simply you have to run `stackablectl demo install hbase-hdfs-load-cycling-data`.
-====
-
 This demo will
 
 * Install the required Stackable operators
@@ -21,6 +14,21 @@ This demo will
 You can see the deployed products as well as their relationship in the following diagram:
 
 image::demo-hbase-hdfs-load-cycling-data/overview.png[]
+
+[#system-requirements]
+== System requirements
+
+To run this demo, your system needs at least:
+
+* 3 https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#cpu[cpu units] (core/hyperthread)
+* 6GiB memory
+* 16GiB disk storage
+
+[#installation]
+== Installation
+
+Please follow the xref:commands/demo.adoc#_install_demo[documentation on how to install a demo].
+To put it simply you just have to run `stackablectl demo install hbase-hdfs-load-cycling-data`.
 
 == List deployed Stackable services
 To list the installed Stackable services run the following command:
