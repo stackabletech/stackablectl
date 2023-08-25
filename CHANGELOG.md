@@ -6,6 +6,10 @@
 
 - Also print stack parameters when describing a demo ([#251](https://github.com/stackabletech/stackablectl/pull/251))
 
+### Changed
+
+- Update demo Spark image definitions to the latest CRD version ([#281](https://github.com/stackabletech/stackablectl/pull/281))
+
 ### Fixed
 
 - Check HTTP status code when fetching resources via HTTP ([#258](https://github.com/stackabletech/stackablectl/pull/258))

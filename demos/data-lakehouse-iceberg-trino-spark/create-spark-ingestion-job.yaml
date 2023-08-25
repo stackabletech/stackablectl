@@ -41,8 +41,10 @@ data:
       name: spark-ingest-into-lakehouse
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable23.4
-      sparkImagePullPolicy: Always
+      sparkImage:
+        custom: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable23.4
+        productVersion: 3.3.0
+        pullPolicy: Always
       mode: cluster
       mainApplicationFile: local:///stackable/spark/jobs/spark-ingest-into-lakehouse.py
       # deps:
