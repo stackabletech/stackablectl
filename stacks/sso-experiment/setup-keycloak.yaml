@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keycloak-client-secrets
+stringData:
+  superset: "{{ keycloakSupersetClientSecret }}"
+  trino: "{{ keycloakTrinoClientSecret }}"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keycloak-users
+stringData:
+  alice: "{{ alicePassword }}"
+  bob: "{{ bobPassword }}"
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: setup-keycloak
+spec:
+  template:
+    spec:
+      containers:
+      - name: setup-keycloak
+        image: quay.io/keycloak/keycloak:22.0.3
+        env:
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-admin-credentials
+                key: admin
+          - name: ALICE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-users
+                key: alice
+          - name: BOB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-users
+                key: bob
+          - name: SUPERSET_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-client-secrets
+                key: superset
+          - name: TRINO_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-client-secrets
+                key: trino
+        command:
+          - bash
+          - -x
+          - -euo
+          - pipefail
+          - -c
+          - |
+            /opt/keycloak/bin/kcadm.sh config credentials --server http://keycloak:8080/ --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
+            /opt/keycloak/bin/kcadm.sh create users -s username=alice -s enabled=true || true
+            /opt/keycloak/bin/kcadm.sh create users -s username=bob -s enabled=true || true
+            /opt/keycloak/bin/kcadm.sh set-password --username alice --new-password "$ALICE_PASSWORD"
+            /opt/keycloak/bin/kcadm.sh set-password --username bob --new-password "$BOB_PASSWORD"
+            /opt/keycloak/bin/kcadm.sh create clients -f - << EOF
+            {
+              "clientId": "superset",
+              "enabled": true,
+              "clientAuthenticatorType": "client-secret",
+              "secret": "$SUPERSET_CLIENT_SECRET",
+              "redirectUris": [
+                "*"
+              ],
+              "webOrigins": [
+                "*"
+              ],
+              "standardFlowEnabled": true,
+              "protocol": "openid-connect"
+            }
+            EOF
+            /opt/keycloak/bin/kcadm.sh create clients -f - << EOF
+            {
+              "clientId": "trino",
+              "enabled": true,
+              "clientAuthenticatorType": "client-secret",
+              "secret": "$TRINO_CLIENT_SECRET",
+              "redirectUris": [
+                "*"
+              ],
+              "webOrigins": [
+                "*"
+              ],
+              "standardFlowEnabled": true,
+              "protocol": "openid-connect"
+            }
+            EOF
+      serviceAccountName: demo-serviceaccount
+      restartPolicy: OnFailure
+  backoffLimit: 20 # give some time for the Keycloak to be available

@@ -426,3 +426,42 @@ stacks:
       pvc: 0Gi
     # TODO: Parameterize
     parameters: []
+  sso-experiment:
+    description: Test
+    stackableRelease: 23.7
+    stackableOperators:
+      - commons
+      - secret
+      - trino
+      - superset
+    labels:
+      - authentication
+      - sso
+    manifests:
+      - plainYaml: stacks/sso-experiment/serviceaccount.yaml
+      - plainYaml: stacks/sso-experiment/keycloak.yaml
+      - plainYaml: stacks/sso-experiment/setup-keycloak.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/sso-experiment/superset.yaml
+    supportedNamespaces: ["default"] # TODO check before merging
+    # resourceRequests: {} # TODO
+    parameters:
+      - name: alicePassword
+        description: Password of the user alice, which can log into Trino and Superset
+        default: alicealice
+      - name: bobPassword
+        description: Password of the user bob, which can log into Trino and Superset
+        default: bobbob
+
+      - name: keycloakAdminPassword
+        description: Password of the Keycloak admin user
+        default: adminadmin
+      - name: keycloakSupersetClientSecret
+        description: Secret ID of the Keycloak Superset client that is used by Superset to connect to Keycloak to authenticate users
+        default: supersetsuperset
+      - name: keycloakTrinoClientSecret
+        description: Secret ID of the Keycloak Trino client that is used by Trino to connect to Keycloak to authenticate users
+        default: trinotrino
+      - name: supersetSecretKey
+        description: Superset's secret key used to generate e.g. user session tokens
+        default: supersetSecretKey
