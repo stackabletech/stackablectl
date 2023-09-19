@@ -59,6 +59,7 @@ metadata:
 stringData:
   admin: "{{ keycloakAdminPassword }}"
 ---
+# This job creates a ConfigMap with connection info for Keycloak
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -81,7 +82,7 @@ spec:
             echo "Found Keycloak running at $KEYCLOAK_ADDRESS"
 
             echo "Writing Keycloak address to ConfigMap keycloak"
-            kubectl create configmap keycloak "--from-literal=KEYCLOAK=$KEYCLOAK_ADDRESS" -o yaml --dry-run | kubectl apply -f -
+            kubectl create configmap keycloak --from-literal="KEYCLOAK=$KEYCLOAK_ADDRESS" --from-literal="KEYCLOAK_DISCOVERY_URL=http://$KEYCLOAK_ADDRESS/realms/master/.well-known/openid-configuration" -o yaml --dry-run | kubectl apply -f -
       serviceAccountName: demo-serviceaccount
       restartPolicy: OnFailure
   backoffLimit: 20 # give some time for the Keycloak to be available

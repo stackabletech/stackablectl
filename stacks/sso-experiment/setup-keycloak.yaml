@@ -5,6 +5,8 @@ metadata:
 stringData:
   superset: "{{ keycloakSupersetClientSecret }}"
   trino: "{{ keycloakTrinoClientSecret }}"
+  druid: "{{ keycloakDruidClientSecret }}"
+  druidCookiePassphrase: "{{ keycloakDruidCookiePassphrase }}"
 ---
 apiVersion: v1
 kind: Secret
@@ -50,6 +52,11 @@ spec:
               secretKeyRef:
                 name: keycloak-client-secrets
                 key: trino
+          - name: DRUID_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-client-secrets
+                key: druid
         command:
           - bash
           - -x
@@ -84,6 +91,22 @@ spec:
               "enabled": true,
               "clientAuthenticatorType": "client-secret",
               "secret": "$TRINO_CLIENT_SECRET",
+              "redirectUris": [
+                "*"
+              ],
+              "webOrigins": [
+                "*"
+              ],
+              "standardFlowEnabled": true,
+              "protocol": "openid-connect"
+            }
+            EOF
+            /opt/keycloak/bin/kcadm.sh create clients -f - << EOF
+            {
+              "clientId": "druid",
+              "enabled": true,
+              "clientAuthenticatorType": "client-secret",
+              "secret": "$DRUID_CLIENT_SECRET",
               "redirectUris": [
                 "*"
               ],

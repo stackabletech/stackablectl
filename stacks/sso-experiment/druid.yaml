@@ -1,0 +1,74 @@
+---
+apiVersion: druid.stackable.tech/v1alpha1
+kind: DruidCluster
+metadata:
+  name: simple-druid
+spec:
+  image:
+    productVersion: 26.0.0
+    stackableVersion: 23.7.0
+  clusterConfig:
+    listenerClass: external-unstable
+    deepStorage:
+      hdfs:
+        configMapName: simple-hdfs
+        directory: /data
+    metadataStorageDatabase:
+      dbType: derby
+      connString: jdbc:derby://localhost:1527/var/druid/metadata.db;create=true
+      host: localhost
+      port: 1527
+    tls: null
+    zookeeperConfigMapName: simple-druid-znode
+  brokers:
+    roleGroups:
+      default:
+        replicas: 1
+  coordinators:
+    roleGroups:
+      default:
+        replicas: 1
+  historicals:
+    roleGroups:
+      default:
+        replicas: 1
+  middleManagers:
+    roleGroups:
+      default:
+        replicas: 1
+  routers:
+    roleGroups:
+      default:
+        replicas: 1
+    podOverrides:
+      spec:
+        containers:
+          - name: druid
+            env:
+              - name: KEYCLOAK_DISCOVERY_URL
+                valueFrom:
+                  configMapKeyRef:
+                    name: keycloak
+                    key: KEYCLOAK_DISCOVERY_URL
+              - name: DRUID_CLIENT_SECRET
+                valueFrom:
+                  secretKeyRef:
+                    name: keycloak-client-secrets
+                    key: druid
+              - name: DRUID_COOKIE_PASSPHRASE
+                valueFrom:
+                  secretKeyRef:
+                    name: keycloak-client-secrets
+                    key: druidCookiePassphrase
+    configOverrides:
+      runtime.properties:
+        druid.extensions.loadList: "[\"druid-kafka-indexing-service\", \"druid-datasketches\", \"prometheus-emitter\", \"druid-basic-security\", \"druid-opa-authorizer\", \"druid-hdfs-storage\", \"druid-pac4j\"]"
+        druid.auth.authenticatorChain: "[\"pac4j\"]"
+        druid.auth.authenticator.pac4j.type: pac4j
+        druid.auth.pac4j.cookiePassphrase: '${env:DRUID_COOKIE_PASSPHRASE}'
+        druid.auth.pac4j.oidc.clientID: druid
+        druid.auth.pac4j.oidc.clientSecret: '{"type":"environment","variable":"DRUID_CLIENT_SECRET"}'
+        druid.auth.pac4j.oidc.discoveryURI: '${env:KEYCLOAK_DISCOVERY_URL}'
+        
+
+

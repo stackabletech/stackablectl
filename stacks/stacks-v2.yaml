@@ -434,6 +434,9 @@ stacks:
       - secret
       - trino
       - superset
+      - zookeeper
+      - druid
+      - hdfs
     labels:
       - authentication
       - sso
@@ -444,6 +447,9 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
       - plainYaml: stacks/sso-experiment/superset.yaml
       - plainYaml: stacks/sso-experiment/trino.yaml
+      - plainYaml: stacks/sso-experiment/zookeeper.yaml
+      - plainYaml: stacks/sso-experiment/druid.yaml
+      - plainYaml: stacks/sso-experiment/hdfs.yaml
     supportedNamespaces: ["default"] # TODO check before merging
     # resourceRequests: {} # TODO
     parameters:
@@ -463,6 +469,12 @@ stacks:
       - name: keycloakTrinoClientSecret
         description: Secret ID of the Keycloak Trino client that is used by Trino to connect to Keycloak to authenticate users
         default: trinotrino
+      - name: keycloakDruidClientSecret
+        description: Secret ID of the Keycloak Druid client that is used by Druid to connect to Keycloak to authenticate users
+        default: druiddruid
+      - name: keycloakDruidCookiePassphrase
+        description: Passphrase for encrypting the cookies used to manage authentication session with browser.
+        default: druiddruidcookiepassphrase
       - name: supersetSecretKey
         description: Superset's secret key used to generate e.g. user session tokens
         default: supersetSecretKey
