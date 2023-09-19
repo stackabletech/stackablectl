@@ -443,6 +443,7 @@ stacks:
       - plainYaml: stacks/sso-experiment/setup-keycloak.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
       - plainYaml: stacks/sso-experiment/superset.yaml
+      - plainYaml: stacks/sso-experiment/trino.yaml
     supportedNamespaces: ["default"] # TODO check before merging
     # resourceRequests: {} # TODO
     parameters:
