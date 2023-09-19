@@ -6,7 +6,7 @@
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/stackabletech/druid-operator/graphs/commit-activity)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](https://docs.stackable.tech/home/stable/contributor/index.html)
-[![Apache License 2.0](https://img.shields.io/badge/license-Apache--2.0-green)](./LICENSE)
+[![License OSL3.0](https://img.shields.io/badge/license-OSL3.0-green)](./LICENSE)
 
 [Documentation](https://docs.stackable.tech/stackablectl/stable/index.html) | [Stackable Data Platform](https://stackable.tech/) | [Platform Docs](https://docs.stackable.tech/) | [Discussions](https://github.com/orgs/stackabletech/discussions) | [Discord](https://discord.gg/7kZ3BNnCAF)
 
@@ -89,7 +89,7 @@ Contributions are welcome. Follow our [Contributors Guide](https://docs.stackabl
 
 ## License
 
-[Apache License 2.0](./LICENSE).
+[Open Software License version 3.0](./LICENSE).
 
 ## Support
 
