@@ -437,6 +437,7 @@ stacks:
       - zookeeper
       - druid
       - hdfs
+      - opa
     labels:
       - authentication
       - sso
@@ -450,6 +451,8 @@ stacks:
       - plainYaml: stacks/sso-experiment/zookeeper.yaml
       - plainYaml: stacks/sso-experiment/druid.yaml
       - plainYaml: stacks/sso-experiment/hdfs.yaml
+      - plainYaml: stacks/sso-experiment/opa.yaml
+      - plainYaml: stacks/sso-experiment/policies.yaml
     supportedNamespaces: ["default"] # TODO check before merging
     # resourceRequests: {} # TODO
     parameters:

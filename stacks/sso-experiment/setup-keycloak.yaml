@@ -16,6 +16,7 @@ stringData:
   alice: "{{ alicePassword }}"
   bob: "{{ bobPassword }}"
 ---
+# This job creates a ConfigMap with connection info for Keycloak
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -25,7 +26,7 @@ spec:
     spec:
       containers:
       - name: setup-keycloak
-        image: quay.io/keycloak/keycloak:22.0.3
+        image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable0.0.0-dev # We need 0.0.0-dev, so we get kubectl
         env:
           - name: KEYCLOAK_ADMIN_PASSWORD
             valueFrom:
@@ -64,12 +65,18 @@ spec:
           - pipefail
           - -c
           - |
-            /opt/keycloak/bin/kcadm.sh config credentials --server http://keycloak:8080/ --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
-            /opt/keycloak/bin/kcadm.sh create users -s username=alice -s enabled=true || true
-            /opt/keycloak/bin/kcadm.sh create users -s username=bob -s enabled=true || true
-            /opt/keycloak/bin/kcadm.sh set-password --username alice --new-password "$ALICE_PASSWORD"
-            /opt/keycloak/bin/kcadm.sh set-password --username bob --new-password "$BOB_PASSWORD"
-            /opt/keycloak/bin/kcadm.sh create clients -f - << EOF
+            echo "Download keycloak"
+            curl -LO https://github.com/keycloak/keycloak/releases/download/22.0.3/keycloak-22.0.3.zip
+            unzip keycloak-22.0.3.zip
+            cd keycloak-22.0.3/bin
+            ./kcadm.sh config credentials --config kcadm.conf --server http://keycloak:8080/ --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
+            ./kcadm.sh create users --config kcadm.conf -s username=alice -s enabled=true || true
+            ./kcadm.sh create users --config kcadm.conf -s username=bob -s enabled=true || true
+            ./kcadm.sh create users --config kcadm.conf -s username=druid_system -s enabled=true || true
+            ./kcadm.sh set-password --config kcadm.conf --username alice --new-password "$ALICE_PASSWORD"
+            ./kcadm.sh set-password --config kcadm.conf --username bob --new-password "$BOB_PASSWORD"
+            ./kcadm.sh set-password --config kcadm.conf --username druid_system --new-password "password2"
+            ./kcadm.sh create clients --config kcadm.conf -f - << EOF || true
             {
               "clientId": "superset",
               "enabled": true,
@@ -85,7 +92,7 @@ spec:
               "protocol": "openid-connect"
             }
             EOF
-            /opt/keycloak/bin/kcadm.sh create clients -f - << EOF
+            ./kcadm.sh create clients --config kcadm.conf -f - << EOF || true
             {
               "clientId": "trino",
               "enabled": true,
@@ -101,7 +108,7 @@ spec:
               "protocol": "openid-connect"
             }
             EOF
-            /opt/keycloak/bin/kcadm.sh create clients -f - << EOF
+            ./kcadm.sh create clients --config kcadm.conf -f - << EOF || true
             {
               "clientId": "druid",
               "enabled": true,
@@ -117,6 +124,163 @@ spec:
               "protocol": "openid-connect"
             }
             EOF
+            ADMIN_ID=$(./kcadm.sh get users --config kcadm.conf -r master -q username=admin | sed -ne 's/^  "id" : \(.*\),$/\1/p')
+            ALICE_ID=$(./kcadm.sh get users --config kcadm.conf -r master -q username=alice | sed -ne 's/^  "id" : \(.*\),$/\1/p')
+            echo "Writing Keycloak address to ConfigMap keycloak"
+            kubectl create configmap opagroups --from-literal="data.json={\"admins\": [$ADMIN_ID, $ALICE_ID]}" -o yaml --dry-run | kubectl apply -f -
+            kubectl label configmap opagroups opa.stackable.tech/bundle=true
       serviceAccountName: demo-serviceaccount
       restartPolicy: OnFailure
   backoffLimit: 20 # give some time for the Keycloak to be available
+
+# ---
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: setup-keycloak
+# spec:
+#   template:
+#     spec:
+#       containers:
+#       - name: setup-keycloak
+#         image: quay.io/keycloak/keycloak:22.0.3
+#         env:
+#           - name: KEYCLOAK_ADMIN_PASSWORD
+#             valueFrom:
+#               secretKeyRef:
+#                 name: keycloak-admin-credentials
+#                 key: admin
+#           - name: ALICE_PASSWORD
+#             valueFrom:
+#               secretKeyRef:
+#                 name: keycloak-users
+#                 key: alice
+#           - name: BOB_PASSWORD
+#             valueFrom:
+#               secretKeyRef:
+#                 name: keycloak-users
+#                 key: bob
+#           - name: SUPERSET_CLIENT_SECRET
+#             valueFrom:
+#               secretKeyRef:
+#                 name: keycloak-client-secrets
+#                 key: superset
+#           - name: TRINO_CLIENT_SECRET
+#             valueFrom:
+#               secretKeyRef:
+#                 name: keycloak-client-secrets
+#                 key: trino
+#           - name: DRUID_CLIENT_SECRET
+#             valueFrom:
+#               secretKeyRef:
+#                 name: keycloak-client-secrets
+#                 key: druid
+#         command:
+#           - bash
+#           - -x
+#           - -euo
+#           - pipefail
+#           - -c
+#           - |
+#             /opt/keycloak/bin/kcadm.sh config credentials --server http://keycloak:8080/ --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
+#             /opt/keycloak/bin/kcadm.sh create users -s username=alice -s enabled=true || true
+#             /opt/keycloak/bin/kcadm.sh create users -s username=bob -s enabled=true || true
+#             /opt/keycloak/bin/kcadm.sh create users -s username=druid_system -s enabled=true || true
+#             /opt/keycloak/bin/kcadm.sh set-password --username alice --new-password "$ALICE_PASSWORD"
+#             /opt/keycloak/bin/kcadm.sh set-password --username bob --new-password "$BOB_PASSWORD"
+#             /opt/keycloak/bin/kcadm.sh set-password --username druid_system --new-password "password2"
+#             /opt/keycloak/bin/kcadm.sh create clients -f - << EOF
+#             {
+#               "clientId": "superset",
+#               "enabled": true,
+#               "clientAuthenticatorType": "client-secret",
+#               "secret": "$SUPERSET_CLIENT_SECRET",
+#               "redirectUris": [
+#                 "*"
+#               ],
+#               "webOrigins": [
+#                 "*"
+#               ],
+#               "standardFlowEnabled": true,
+#               "protocol": "openid-connect"
+#             }
+#             EOF || true
+#             /opt/keycloak/bin/kcadm.sh create clients -f - << EOF
+#             {
+#               "clientId": "trino",
+#               "enabled": true,
+#               "clientAuthenticatorType": "client-secret",
+#               "secret": "$TRINO_CLIENT_SECRET",
+#               "redirectUris": [
+#                 "*"
+#               ],
+#               "webOrigins": [
+#                 "*"
+#               ],
+#               "standardFlowEnabled": true,
+#               "protocol": "openid-connect"
+#             }
+#             EOF || true
+#             /opt/keycloak/bin/kcadm.sh create clients -f - << EOF
+#             {
+#               "clientId": "druid",
+#               "enabled": true,
+#               "clientAuthenticatorType": "client-secret",
+#               "secret": "$DRUID_CLIENT_SECRET",
+#               "redirectUris": [
+#                 "*"
+#               ],
+#               "webOrigins": [
+#                 "*"
+#               ],
+#               "standardFlowEnabled": true,
+#               "protocol": "openid-connect"
+#             }
+#             EOF || true
+#             curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+#             chmod +x kubectl
+#             ADMIN_ID=$(/opt/keycloak/bin/kcadm.sh get users -r master -q username=admin | sed -ne 's/^  "id" : \(.*\)$,/\1/p')
+#             ALICE_ID=$(/opt/keycloak/bin/kcadm.sh get users -r master -q username=alice | sed -ne 's/^  "id" : \(.*\)$,/\1/p')
+#             echo "Writing Keycloak address to ConfigMap keycloak"
+#             ./kubectl create configmap groups --from-literal="data.json={\"admins\": [$ADMIN_ID, $ALICE_ID]}" -o yaml --dry-run | ./kubectl apply -f -
+#       serviceAccountName: demo-serviceaccount
+#       restartPolicy: OnFailure
+#   backoffLimit: 20 # give some time for the Keycloak to be available
+# ---
+# apiVersion: batch/v1
+# kind: CronJob
+# metadata:
+#   name: extract-keycloak-groups
+# spec:
+#   schedule: "* * * * *"
+#   jobTemplate:
+#     spec:
+#       template:
+#         spec:
+#           containers:
+#           - name: extract-keycloak-groups
+#             image: quay.io/keycloak/keycloak:22.0.3
+#             env:
+#               - name: KEYCLOAK_ADMIN_PASSWORD
+#                 valueFrom:
+#                   secretKeyRef:
+#                     name: keycloak-admin-credentials
+#                     key: admin
+#             command:
+#               - bash
+#               - -x
+#               - -euo
+#               - pipefail
+#               - -c
+#               - |
+#                 /opt/keycloak/bin/kcadm.sh config credentials --server http://keycloak:8080/ --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
+#                 ADMIN_ID=$(/opt/keycloak/bin/kcadm.sh get users -r master -q username=admin | sed -ne 's/^  "id" : \(.*\)$,/\1/p')
+#                 ALICE_ID=$(/opt/keycloak/bin/kcadm.sh get users -r master -q username=alice | sed -ne 's/^  "id" : \(.*\)$,/\1/p')
+#                 BOB_ID=$(/opt/keycloak/bin/kcadm.sh get users -r master -q username=bob | sed -ne 's/^  "id" : \(.*\)$,/\1/p')
+
+#                 echo "Writing Keycloak address to ConfigMap keycloak"
+#                 kubectl create configmap groups --from-literal="data.json={\"admins\": [$ADMIN_ID, $ALICE_ID]}" -o yaml --dry-run | kubectl apply -f -
+      
+#           serviceAccountName: demo-serviceaccount
+#           restartPolicy: Never
+#       backoffLimit: 20 # give some time for the Keycloak to be available

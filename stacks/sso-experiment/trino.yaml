@@ -14,6 +14,10 @@ spec:
     catalogLabelSelector:
       matchLabels:
         trino: simple-trino
+    authorization:
+      opa:
+        configMapName: simple-opa
+        package: trino
   coordinators:
     podOverrides:
       spec:
