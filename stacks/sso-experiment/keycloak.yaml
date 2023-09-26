@@ -27,8 +27,6 @@ spec:
                 secretKeyRef:
                   name: keycloak-admin-credentials
                   key: admin
-            # - name: KC_PROXY
-            #   value: "edge"
           ports:
             - name: http
               containerPort: 8080
