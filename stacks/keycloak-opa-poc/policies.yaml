@@ -11,7 +11,7 @@ data:
     import data.bundles.opagroups.admins
     import future.keywords.in
 
-    default allow = true
+    default allow = false
 
     allow {
       input.context.identity.user in admins
