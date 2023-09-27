@@ -459,7 +459,7 @@ stacks:
       - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
       - plainYaml: stacks/keycloak-opa-poc/opa.yaml
       - plainYaml: stacks/keycloak-opa-poc/policies.yaml
-    supportedNamespaces: ["default"] # TODO check before merging
+    supportedNamespaces: ["default"] # ClusterRoleBinding needs explicit namespace
     resourceRequests:
       cpu: 7600m
       memory: 22886Mi
