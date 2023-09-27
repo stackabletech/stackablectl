@@ -74,7 +74,6 @@ spec:
             ./kcadm.sh config credentials --config kcadm.conf --server http://keycloak:8080/ --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
             ./kcadm.sh create users --config kcadm.conf -s username=alice -s enabled=true || true
             ./kcadm.sh create users --config kcadm.conf -s username=bob -s enabled=true || true
-            ./kcadm.sh create users --config kcadm.conf -s username=druid_system -s enabled=true || true
             ./kcadm.sh set-password --config kcadm.conf --username alice --new-password "$ALICE_PASSWORD"
             ./kcadm.sh set-password --config kcadm.conf --username bob --new-password "$BOB_PASSWORD"
             ./kcadm.sh create clients --config kcadm.conf -f - << EOF || true
