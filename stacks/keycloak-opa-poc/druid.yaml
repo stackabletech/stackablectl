@@ -13,7 +13,6 @@ spec:
       hdfs:
         configMapName: simple-hdfs
         directory: /data
-    tls: null
     metadataStorageDatabase:
       dbType: postgresql
       connString: jdbc:postgresql://postgresql-druid/druid
@@ -59,6 +58,7 @@ spec:
       runtime.properties: &runtime-properties
         druid.extensions.loadList: >-
           ["postgresql-metadata-storage",
+          "simple-client-sslcontext",
           "druid-kafka-indexing-service",
           "druid-datasketches",
           "prometheus-emitter",
