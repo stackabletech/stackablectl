@@ -13,12 +13,14 @@ spec:
       hdfs:
         configMapName: simple-hdfs
         directory: /data
-    metadataStorageDatabase:
-      dbType: derby
-      connString: jdbc:derby://localhost:1527/var/druid/metadata.db;create=true
-      host: localhost
-      port: 1527
     tls: null
+    metadataStorageDatabase:
+      dbType: postgresql
+      connString: jdbc:postgresql://postgresql-druid/druid
+      host: postgresql-druid
+      port: 5432
+      user: druid
+      password: druid
     zookeeperConfigMapName: simple-druid-znode
     authorization:
       opa:
@@ -50,9 +52,15 @@ spec:
                     key: druidCookiePassphrase
     configOverrides:
       runtime.properties: &runtime-properties
-        druid.extensions.loadList: "[\"druid-kafka-indexing-service\", \"druid-datasketches\", \"prometheus-emitter\", \"druid-basic-security\", \"druid-opa-authorizer\", \"druid-hdfs-storage\", \"druid-pac4j\"]"
-
-
+        druid.extensions.loadList: >-
+          ["postgresql-metadata-storage",
+          "druid-kafka-indexing-service",
+          "druid-datasketches",
+          "prometheus-emitter",
+          "druid-basic-security",
+          "druid-opa-authorizer",
+          "druid-hdfs-storage",
+          "druid-pac4j"]
 
         druid.auth.authenticator.MyBasicMetadataAuthenticator.type: basic
         
