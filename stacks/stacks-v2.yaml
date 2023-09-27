@@ -487,6 +487,9 @@ stacks:
       - name: keycloakDruidCookiePassphrase
         description: Passphrase for encrypting the cookies used to manage authentication session with browser.
         default: druiddruidcookiepassphrase
+      - name: druidSystemUserPassword
+        description: Password for the Druid user druid_system
+        default: druidsystemuserpassword
       - name: supersetSecretKey
         description: Superset's secret key used to generate e.g. user session tokens
         default: supersetSecretKey

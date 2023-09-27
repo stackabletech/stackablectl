@@ -7,6 +7,7 @@ stringData:
   trino: "{{ keycloakTrinoClientSecret }}"
   druid: "{{ keycloakDruidClientSecret }}"
   druidCookiePassphrase: "{{ keycloakDruidCookiePassphrase }}"
+  druidSystemUserPassword: "{{ druidSystemUserPassword }}"
 ---
 apiVersion: v1
 kind: Secret
@@ -76,7 +77,6 @@ spec:
             ./kcadm.sh create users --config kcadm.conf -s username=druid_system -s enabled=true || true
             ./kcadm.sh set-password --config kcadm.conf --username alice --new-password "$ALICE_PASSWORD"
             ./kcadm.sh set-password --config kcadm.conf --username bob --new-password "$BOB_PASSWORD"
-            ./kcadm.sh set-password --config kcadm.conf --username druid_system --new-password "password2"
             ./kcadm.sh create clients --config kcadm.conf -f - << EOF || true
             {
               "clientId": "superset",

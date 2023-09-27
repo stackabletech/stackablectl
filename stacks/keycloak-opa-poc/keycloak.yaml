@@ -1,4 +1,4 @@
-# TODO: Fix "2023-09-18 14:43:46,327 WARN  [org.keycloak.quarkus.runtime.KeycloakMain] (main) Running the server in development mode. DO NOT use this configuration in production."
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,6 +18,9 @@ spec:
       containers:
         - name: keycloak
           image: quay.io/keycloak/keycloak:22.0.3
+          # Keycloak is running in development mode: https://www.keycloak.org/server/configuration#_starting_keycloak
+          # production mode disables HTTP and requires a TLS configuration, which is currently very difficult to configure
+          # given that we're running on a NodePort
           args: ["start-dev"]
           env:
             - name: KEYCLOAK_ADMIN
