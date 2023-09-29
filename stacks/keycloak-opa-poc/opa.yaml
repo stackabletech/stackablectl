@@ -2,7 +2,7 @@
 apiVersion: opa.stackable.tech/v1alpha1
 kind: OpaCluster
 metadata:
-  name: simple-opa
+  name: opa
 spec:
   image:
     productVersion: "0.51.0"

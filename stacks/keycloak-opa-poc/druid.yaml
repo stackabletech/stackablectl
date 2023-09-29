@@ -2,7 +2,7 @@
 apiVersion: druid.stackable.tech/v1alpha1
 kind: DruidCluster
 metadata:
-  name: simple-druid
+  name: druid
 spec:
   image:
     productVersion: 26.0.0
@@ -11,7 +11,7 @@ spec:
     listenerClass: external-unstable
     deepStorage:
       hdfs:
-        configMapName: simple-hdfs
+        configMapName: hdfs
         directory: /data
     metadataStorageDatabase:
       dbType: postgresql
@@ -20,10 +20,10 @@ spec:
       port: 5432
       user: druid
       password: druid
-    zookeeperConfigMapName: simple-druid-znode
+    zookeeperConfigMapName: druid-znode
     authorization:
       opa:
-        configMapName: simple-opa 
+        configMapName: opa
         package: druid
   brokers:
     roleGroups:
@@ -84,6 +84,7 @@ spec:
         druid.auth.pac4j.oidc.clientID: druid
         druid.auth.pac4j.oidc.clientSecret: '{"type":"environment","variable":"DRUID_CLIENT_SECRET"}'
         druid.auth.pac4j.oidc.discoveryURI: '${env:KEYCLOAK_DISCOVERY_URL}'
+        # druid.auth.pac4j.oidc.oidcClaim: preferred_username  # setting doesn't work, but should?
         
         druid.auth.authenticatorChain: '["MyBasicMetadataAuthenticator","pac4j"]'
 

@@ -14,7 +14,12 @@ data:
     default allow = false
 
     allow {
-      input.context.identity.user in admins
+      input.context.identity.user in ["alice", "admin"]
+    }
+
+    allow {
+      input.action.operation == "ImpersonateUser"
+      input.action.resource.user.name == input.context.identity.user
     }
 ---
 apiVersion: v1
@@ -36,6 +41,7 @@ data:
 
     allow if input.user == "druid_system"
 # A CM like this is created by the setup keycloak Job:
+# ---
 # apiVersion: v1
 # kind: ConfigMap
 # metadata:

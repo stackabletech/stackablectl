@@ -2,7 +2,7 @@
 apiVersion: trino.stackable.tech/v1alpha1
 kind: TrinoCluster
 metadata:
-  name: simple-trino
+  name: trino
 spec:
   image:
     productVersion: "414"
@@ -13,10 +13,10 @@ spec:
       serverSecretClass: tls
     catalogLabelSelector:
       matchLabels:
-        trino: simple-trino
+        trino: trino
     authorization:
       opa:
-        configMapName: simple-opa
+        configMapName: opa
         package: trino
   coordinators:
     podOverrides:
@@ -36,11 +36,11 @@ spec:
                     key: trino
     configOverrides:
       config.properties:
-        web-ui.authentication.type: oauth2
+        http-server.authentication.type: oauth2
         http-server.authentication.oauth2.client-id: trino
         http-server.authentication.oauth2.client-secret: ${ENV:TRINO_CLIENT_SECRET}
         http-server.authentication.oauth2.issuer: http://${ENV:KEYCLOAK_ADDRESS}/realms/master
-        http-server.authentication.oauth2.scopes: openid
+        http-server.authentication.oauth2.principal-field: preferred_username
     roleGroups:
       default:
         replicas: 1

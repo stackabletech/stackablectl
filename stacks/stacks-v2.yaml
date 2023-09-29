@@ -448,18 +448,18 @@ stacks:
       - authentication
       - sso
     manifests:
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
       - plainYaml: stacks/keycloak-opa-poc/serviceaccount.yaml
       - plainYaml: stacks/keycloak-opa-poc/keycloak.yaml
       - plainYaml: stacks/keycloak-opa-poc/setup-keycloak.yaml
-      - plainYaml: stacks/keycloak-opa-poc/superset.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - plainYaml: stacks/keycloak-opa-poc/trino.yaml
-      - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
-      - plainYaml: stacks/keycloak-opa-poc/druid.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
-      - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
       - plainYaml: stacks/keycloak-opa-poc/opa.yaml
       - plainYaml: stacks/keycloak-opa-poc/policies.yaml
+      - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
+      - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
+      - plainYaml: stacks/keycloak-opa-poc/druid.yaml
+      - plainYaml: stacks/keycloak-opa-poc/trino.yaml
+      - plainYaml: stacks/keycloak-opa-poc/superset.yaml
     supportedNamespaces: ["default"] # ClusterRoleBinding needs explicit namespace
     resourceRequests:
       cpu: 7850m
