@@ -1,0 +1,122 @@
+---
+apiVersion: druid.stackable.tech/v1alpha1
+kind: DruidCluster
+metadata:
+  name: druid
+spec:
+  image:
+    productVersion: 26.0.0
+    stackableVersion: 23.7.0
+  clusterConfig:
+    listenerClass: external-unstable
+    deepStorage:
+      hdfs:
+        configMapName: hdfs
+        directory: /data
+    metadataStorageDatabase:
+      dbType: postgresql
+      connString: jdbc:postgresql://postgresql-druid/druid
+      host: postgresql-druid
+      port: 5432
+      user: druid
+      password: druid
+    zookeeperConfigMapName: druid-znode
+    authorization:
+      opa:
+        configMapName: opa
+        package: druid
+  brokers:
+    roleGroups:
+      default:
+        replicas: 1
+    podOverrides: &pod-overrides
+      spec:
+        containers:
+          - name: druid
+            env:
+              - name: KEYCLOAK_DISCOVERY_URL
+                valueFrom:
+                  configMapKeyRef:
+                    name: keycloak
+                    key: KEYCLOAK_DISCOVERY_URL
+              - name: DRUID_CLIENT_SECRET
+                valueFrom:
+                  secretKeyRef:
+                    name: keycloak-client-secrets
+                    key: druid
+              - name: DRUID_COOKIE_PASSPHRASE
+                valueFrom:
+                  secretKeyRef:
+                    name: keycloak-client-secrets
+                    key: druidCookiePassphrase
+              - name: DRUID_SYSTEM_USER_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: keycloak-client-secrets
+                    key: druidSystemUserPassword
+    configOverrides:
+      runtime.properties: &runtime-properties
+        druid.extensions.loadList: >-
+          ["postgresql-metadata-storage",
+          "simple-client-sslcontext",
+          "druid-kafka-indexing-service",
+          "druid-datasketches",
+          "prometheus-emitter",
+          "druid-basic-security",
+          "druid-opa-authorizer",
+          "druid-hdfs-storage",
+          "druid-pac4j"]
+
+        # basic authenticator needed for internal authentication among Druid processes
+        # Trying to use the pac4j authenticator in the escalator below leads to 302 errors, 
+        # it seems like the Druid processes cannot handle the OIDC authentication flow.
+        druid.auth.authenticator.MyBasicMetadataAuthenticator.type: basic
+        druid.auth.authenticator.MyBasicMetadataAuthenticator.initialInternalClientPassword: '${env:DRUID_SYSTEM_USER_PASSWORD}' # Default password for internal 'druid_system' user
+        druid.auth.authenticator.MyBasicMetadataAuthenticator.skipOnFailure: "true"  # for any non system user, skip to the pac4j authenticator
+        druid.auth.authenticator.MyBasicMetadataAuthenticator.authorizerName: OpaAuthorizer
+
+        # pac4j authenticator
+        druid.auth.authenticator.pac4j.type: pac4j
+        druid.auth.authenticator.pac4j.authorizerName: OpaAuthorizer
+        # pac4j common config
+        druid.auth.pac4j.cookiePassphrase: '${env:DRUID_COOKIE_PASSPHRASE}'
+        # OIDC common config
+        druid.auth.pac4j.oidc.clientID: druid
+        druid.auth.pac4j.oidc.clientSecret: '{"type":"environment","variable":"DRUID_CLIENT_SECRET"}'
+        druid.auth.pac4j.oidc.discoveryURI: '${env:KEYCLOAK_DISCOVERY_URL}'
+        # druid.auth.pac4j.oidc.oidcClaim: preferred_username  # setting doesn't work, but should?
+        
+        druid.auth.authenticatorChain: '["MyBasicMetadataAuthenticator","pac4j"]'
+
+        druid.escalator.type: basic
+        druid.escalator.internalClientUsername: druid_system
+        druid.escalator.internalClientPassword: '{"type":"environment","variable":"DRUID_SYSTEM_USER_PASSWORD"}'
+        druid.escalator.authorizerName: OpaAuthorizer
+  coordinators:
+    roleGroups:
+      default:
+        replicas: 1
+    podOverrides: *pod-overrides
+    configOverrides:
+      runtime.properties: *runtime-properties
+  historicals:
+    roleGroups:
+      default:
+        replicas: 1
+    podOverrides: *pod-overrides
+    configOverrides:
+      runtime.properties: *runtime-properties
+  middleManagers:
+    roleGroups:
+      default:
+        replicas: 1
+    podOverrides: *pod-overrides
+    configOverrides:
+      runtime.properties: *runtime-properties
+  routers:
+    roleGroups:
+      default:
+        replicas: 1
+    podOverrides: *pod-overrides
+    configOverrides:
+      runtime.properties: *runtime-properties

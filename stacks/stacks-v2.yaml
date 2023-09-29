@@ -426,3 +426,70 @@ stacks:
       pvc: 0Gi
     # TODO: Parameterize
     parameters: []
+  keycloak-opa-poc:
+    description: >-
+      A Superset, Trino, Druid, Keycloak and OPA instance.
+      Superset, Trino and Druid have single sign-on with Keycloak enabled.
+      Trino and Druid have OPA authorization enabled.
+      3 users are created in Keycloak: admin:adminadmin, alice:alicealice, bob:bobbob. admin and alice are admins with
+      full authorization in Druid and Trino, bob is not authorized.
+      This is a proof-of-concept and the mechanisms used here are subject to change.
+    stackableRelease: 23.7
+    stackableOperators:
+      - commons
+      - secret
+      - trino
+      - superset
+      - zookeeper
+      - druid
+      - hdfs
+      - opa
+    labels:
+      - authentication
+      - sso
+    manifests:
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
+      - plainYaml: stacks/keycloak-opa-poc/serviceaccount.yaml
+      - plainYaml: stacks/keycloak-opa-poc/keycloak.yaml
+      - plainYaml: stacks/keycloak-opa-poc/setup-keycloak.yaml
+      - plainYaml: stacks/keycloak-opa-poc/opa.yaml
+      - plainYaml: stacks/keycloak-opa-poc/policies.yaml
+      - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
+      - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
+      - plainYaml: stacks/keycloak-opa-poc/druid.yaml
+      - plainYaml: stacks/keycloak-opa-poc/trino.yaml
+      - plainYaml: stacks/keycloak-opa-poc/superset.yaml
+    supportedNamespaces: ["default"] # ClusterRoleBinding needs explicit namespace
+    resourceRequests:
+      cpu: 7850m
+      memory: 23142Mi
+      pvc: 34Gi
+    parameters:
+      - name: alicePassword
+        description: Password of the user alice, which can log into Trino and Superset
+        default: alicealice
+      - name: bobPassword
+        description: Password of the user bob, which can log into Trino and Superset
+        default: bobbob
+      - name: keycloakAdminPassword
+        description: Password of the Keycloak admin user
+        default: adminadmin
+      - name: keycloakSupersetClientSecret
+        description: Secret ID of the Keycloak Superset client that is used by Superset to connect to Keycloak to authenticate users
+        default: supersetsuperset
+      - name: keycloakTrinoClientSecret
+        description: Secret ID of the Keycloak Trino client that is used by Trino to connect to Keycloak to authenticate users
+        default: trinotrino
+      - name: keycloakDruidClientSecret
+        description: Secret ID of the Keycloak Druid client that is used by Druid to connect to Keycloak to authenticate users
+        default: druiddruid
+      - name: keycloakDruidCookiePassphrase
+        description: Passphrase for encrypting the cookies used to manage authentication session with browser.
+        default: druiddruidcookiepassphrase
+      - name: druidSystemUserPassword
+        description: Password for the Druid user druid_system
+        default: druidsystemuserpassword
+      - name: supersetSecretKey
+        description: Superset's secret key used to generate e.g. user session tokens
+        default: supersetSecretKey

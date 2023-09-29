@@ -1,0 +1,50 @@
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  image:
+    productVersion: "414"
+    stackableVersion: 23.7.0
+  clusterConfig:
+    listenerClass: external-unstable
+    tls:
+      serverSecretClass: tls
+    catalogLabelSelector:
+      matchLabels:
+        trino: trino
+    authorization:
+      opa:
+        configMapName: opa
+        package: trino
+  coordinators:
+    podOverrides:
+      spec:
+        containers:
+          - name: trino
+            env:
+              - name: KEYCLOAK_ADDRESS
+                valueFrom:
+                  configMapKeyRef:
+                    name: keycloak
+                    key: KEYCLOAK
+              - name: TRINO_CLIENT_SECRET
+                valueFrom:
+                  secretKeyRef:
+                    name: keycloak-client-secrets
+                    key: trino
+    configOverrides:
+      config.properties:
+        http-server.authentication.type: oauth2
+        http-server.authentication.oauth2.client-id: trino
+        http-server.authentication.oauth2.client-secret: ${ENV:TRINO_CLIENT_SECRET}
+        http-server.authentication.oauth2.issuer: http://${ENV:KEYCLOAK_ADDRESS}/realms/master
+        http-server.authentication.oauth2.principal-field: preferred_username
+    roleGroups:
+      default:
+        replicas: 1
+  workers:
+    roleGroups:
+      default:
+        replicas: 1
