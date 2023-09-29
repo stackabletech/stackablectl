@@ -8,7 +8,6 @@ metadata:
 data:
   trino.rego: |
     package trino
-    import data.bundles.opagroups.admins
     import future.keywords.in
 
     default allow = false
