@@ -40,7 +40,8 @@ data:
     allow if input.user in admins
 
     allow if input.user == "druid_system"
-# A CM like this is created by the setup keycloak Job:
+# A CM like this is created by the setup keycloak Job
+# It is used for Druid roles, as we currently need to write them based on the user uuids.
 # ---
 # apiVersion: v1
 # kind: ConfigMap
