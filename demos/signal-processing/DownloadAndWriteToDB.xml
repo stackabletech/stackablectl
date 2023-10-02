@@ -61,7 +61,7 @@
             <bundle>
                 <artifact>nifi-dbcp-service-nar</artifact>
                 <group>org.apache.nifi</group>
-                <version>1.18.0</version>
+                <version>1.21.0</version>
             </bundle>
             <comments></comments>
             <descriptors>
@@ -189,7 +189,7 @@
                 </entry>
                 <entry>
                     <key>database-driver-locations</key>
-                    <value>/stackable/nifi-1.18.0/postgresql-42.6.0.jar</value>
+                    <value>/stackable/nifi/postgresql-42.6.0.jar</value>
                 </entry>
                 <entry>
                     <key>kerberos-user-service</key>
@@ -258,7 +258,7 @@
             <bundle>
                 <artifact>nifi-record-serialization-services-nar</artifact>
                 <group>org.apache.nifi</group>
-                <version>1.18.0</version>
+                <version>1.21.0</version>
             </bundle>
             <comments></comments>
             <descriptors>
@@ -584,7 +584,7 @@ through "future" data that has already been persisted.</label>
             <bundle>
                 <artifact>nifi-standard-nar</artifact>
                 <group>org.apache.nifi</group>
-                <version>1.18.0</version>
+                <version>1.21.0</version>
             </bundle>
             <config>
                 <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
@@ -1069,7 +1069,7 @@ through "future" data that has already been persisted.</label>
             <bundle>
                 <artifact>nifi-standard-nar</artifact>
                 <group>org.apache.nifi</group>
-                <version>1.18.0</version>
+                <version>1.21.0</version>
             </bundle>
             <config>
                 <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
@@ -1223,7 +1223,7 @@ from conditions_temp;</value>
             <bundle>
                 <artifact>nifi-standard-nar</artifact>
                 <group>org.apache.nifi</group>
-                <version>1.18.0</version>
+                <version>1.21.0</version>
             </bundle>
             <config>
                 <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
