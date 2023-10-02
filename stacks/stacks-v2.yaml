@@ -496,7 +496,7 @@ stacks:
   signal-processing:
     description: >-
       A stack used for creating, streaming and processing in-flight data and persisting it to TimescaleDB before it is displayed in Grafana
-    stackableRelease: 23.4
+    stackableRelease: 23.7
     stackableOperators:
       - commons
       - secret
