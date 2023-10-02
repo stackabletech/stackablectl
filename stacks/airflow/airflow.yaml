@@ -6,28 +6,28 @@ metadata:
   name: airflow
 spec:
   image:
-    productVersion: 2.4.1
-    stackableVersion: "23.4"
+    productVersion: 2.6.1
+    stackableVersion: "23.7"
   clusterConfig:
     listenerClass: external-unstable
-  executor: CeleryExecutor
-  loadExamples: false
-  exposeConfig: false
-  credentialsSecret: airflow-credentials
-  volumes:
-    - name: airflow-dags
-      configMap:
-        name: airflow-dags
-  volumeMounts:
-    - name: airflow-dags
-      mountPath: /dags/date_demo.py
-      subPath: date_demo.py
-    - name: airflow-dags
-      mountPath: /dags/pyspark_pi.py
-      subPath: pyspark_pi.py
-    - name: airflow-dags
-      mountPath: /dags/pyspark_pi.yaml
-      subPath: pyspark_pi.yaml
+    executor: CeleryExecutor
+    loadExamples: false
+    exposeConfig: false
+    credentialsSecret: airflow-credentials
+    volumes:
+      - name: airflow-dags
+        configMap:
+          name: airflow-dags
+    volumeMounts:
+      - name: airflow-dags
+        mountPath: /dags/date_demo.py
+        subPath: date_demo.py
+      - name: airflow-dags
+        mountPath: /dags/pyspark_pi.py
+        subPath: pyspark_pi.py
+      - name: airflow-dags
+        mountPath: /dags/pyspark_pi.yaml
+        subPath: pyspark_pi.yaml
   webservers:
     roleGroups:
       default:

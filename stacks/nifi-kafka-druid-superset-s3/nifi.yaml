@@ -5,8 +5,8 @@ metadata:
   name: nifi
 spec:
   image:
-    productVersion: 1.18.0
-    stackableVersion: "23.4"
+    productVersion: 1.21.0
+    stackableVersion: "23.7"
   clusterConfig:
     listenerClass: external-unstable
     zookeeperConfigMapName: nifi-znode

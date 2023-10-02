@@ -5,18 +5,15 @@ metadata:
   name: trino
 spec:
   image:
-    productVersion: "403"
-    stackableVersion: "23.4"
+    productVersion: "414"
+    stackableVersion: "23.7"
   clusterConfig:
     listenerClass: external-unstable
     catalogLabelSelector:
       matchLabels:
         trino: trino
     authentication:
-      method:
-        multiUser:
-          userCredentialsSecret:
-            name: trino-users
+      - authenticationClass: trino-users
     authorization:
       opa:
         configMapName: opa
@@ -35,33 +32,32 @@ spec:
         replicas: 1
   workers:
     config:
-      queryMaxMemoryPerNode: 5GB
+      queryMaxMemoryPerNode: 8GB
       resources:
         cpu:
           min: "2"
-          max: "4"
+          max: "6"
         memory:
-          limit: '10Gi'
+          limit: '16Gi'
     roleGroups:
       default:
         replicas: 4
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: trino-users
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: trino-users
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: trino-users
 type: kubernetes.io/opaque
-stringData:
-  # htpasswd -n -B -C 10 admin
-  # Hack: Trino requires bcrypt version 2Y, the bcrypt crate generates 2B hashes. See https://github.com/trinodb/trino/issues/11314 for details
-  # This can be removed once the bcrypt crate starts generating 2Y hashes
-  admin: "{{ bcrypt(password=trinoAdminPassword) | replace(from="$2b$", to="$2y$") }}"
----
-# As the demo needs to have access to Trino using the admin user we need to store the password somewhere
-apiVersion: v1
-kind: Secret
-metadata:
-  name: trino-credentials
 stringData:
   admin: "{{ trinoAdminPassword }}"
 ---
@@ -119,8 +115,8 @@ metadata:
   name: opa
 spec:
   image:
-    productVersion: 0.45.0
-    stackableVersion: "23.4"
+    productVersion: 0.51.0
+    stackableVersion: "23.7"
   servers:
     roleGroups:
       default:

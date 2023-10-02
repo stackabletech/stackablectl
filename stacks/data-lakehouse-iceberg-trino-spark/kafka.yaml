@@ -13,8 +13,8 @@ metadata:
   name: kafka
 spec:
   image:
-    productVersion: 3.3.1
-    stackableVersion: "23.4"
+    productVersion: 3.4.0
+    stackableVersion: "23.7"
   clusterConfig:
     zookeeperConfigMapName: kafka-znode
     authentication:

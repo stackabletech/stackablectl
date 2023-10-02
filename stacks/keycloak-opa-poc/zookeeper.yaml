@@ -2,11 +2,11 @@
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperCluster
 metadata:
-  name: zookeeper
+  name: zk
 spec:
   image:
     productVersion: 3.8.1
-    stackableVersion: "23.7"
+    stackableVersion: 23.7.0
   servers:
     roleGroups:
       default:
@@ -15,15 +15,15 @@ spec:
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode
 metadata:
-  name: hdfs-znode
+  name: druid-znode
 spec:
   clusterRef:
-    name: zookeeper
+    name: zk
 ---
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode
 metadata:
-  name: hbase-znode
+  name: hdfs-znode
 spec:
   clusterRef:
-    name: zookeeper
+    name: zk

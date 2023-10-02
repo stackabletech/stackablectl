@@ -12,7 +12,7 @@
 
 This repository is the home of the CLI application `stackablectl`, which makes it convenient to setup and interact with any Stackable cluster.
 
-It is part of the Stackable Data Platform, a curated selection of the best open source data apps like Kafka, Druid, Trino or Spark, [all](#other-operators) working together seamlessly. Based on Kubernetes, it runs everywhere – [on prem or in the cloud](#supported-platforms).
+It is part of the Stackable Data Platform, a curated selection of the best open source data apps like Apache Kafka, Apache Druid, Trino or Apache Spark, [all](#our-operators) working together seamlessly. Based on Kubernetes, it runs everywhere – [on prem or in the cloud](#supported-platforms).
 
 ## Installation
 
@@ -33,7 +33,7 @@ If you have a question about the Stackable Data Platform contact us via our [hom
 
 ## About The Stackable Data Platform
 
-This operator is written and maintained by [Stackable](https://www.stackable.tech) and it is part of a larger data platform.
+This operator is written and maintained by [Stackable](https://stackable.tech) and it is part of a larger data platform.
 
 ![Stackable Data Platform Overview](./.readme/static/borrowed/sdp_overview.png)
 
@@ -54,11 +54,8 @@ We develop and test our operators on the following cloud platforms:
 * GKE on Google Cloud Platform (GCP)
 * [IONOS Cloud Managed Kubernetes](https://cloud.ionos.com/managed/kubernetes)
 * K3s
-* Kubernetes 1.23-1.26
-
-We are currently working to support:
-
-* OpenShift
+* Kubernetes (for an up to date list of supported versions please check the release notes in our [docs](https://docs.stackable.tech))
+* Red Hat OpenShift
 
 ## Our Operators
 

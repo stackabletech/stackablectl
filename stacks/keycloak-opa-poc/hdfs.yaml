@@ -1,3 +1,4 @@
+---
 apiVersion: hdfs.stackable.tech/v1alpha1
 kind: HdfsCluster
 metadata:
@@ -5,35 +6,19 @@ metadata:
 spec:
   image:
     productVersion: 3.3.4
-    stackableVersion: "23.7"
+    stackableVersion: 23.7.0
   clusterConfig:
     dfsReplication: 1
-    listenerClass: external-unstable
     zookeeperConfigMapName: hdfs-znode
   nameNodes:
-    config:
-      resources:
-        storage:
-          data:
-            capacity: 5Gi
     roleGroups:
       default:
         replicas: 2
   dataNodes:
-    config:
-      resources:
-        storage:
-          data:
-            capacity: 5Gi
     roleGroups:
       default:
         replicas: 1
   journalNodes:
-    config:
-      resources:
-        storage:
-          data:
-            capacity: 5Gi
     roleGroups:
       default:
         replicas: 1
