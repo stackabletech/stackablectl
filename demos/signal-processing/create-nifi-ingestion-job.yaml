@@ -7,17 +7,13 @@ spec:
   template:
     spec:
       serviceAccountName: demo-serviceaccount
-      initContainers:
-        - name: download-driver
-          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
-          command: ["bash", "-c", "curl -O https://repo.stackable.tech/repository/misc/postgresql-timescaledb/postgresql-42.6.0.jar && kubectl cp ./postgresql-42.6.0.jar nifi-node-default-0:/stackable/nifi/"]
       containers:
         - name: create-nifi-ingestion-job
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
           command: ["bash", "-c", "export PGPASSWORD=$(cat /timescale-admin-credentials/password) && \
-          curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/signal-processing/demos/signal-processing/DownloadAndWriteToDB.xml && \
-          sed -i \"s/PLACEHOLDERPGPASSWORD/$PGPASSWORD/g\" DownloadAndWriteToDB.xml && \
-          python -u /tmp/script/script.py"]
+            curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/signal-processing/demos/signal-processing/DownloadAndWriteToDB.xml && \
+            sed -i \"s/PLACEHOLDERPGPASSWORD/$PGPASSWORD/g\" DownloadAndWriteToDB.xml && \
+            python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script

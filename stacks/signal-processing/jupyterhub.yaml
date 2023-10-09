@@ -27,7 +27,7 @@ options:
   singleuser:
     cmd: null
     image:
-      name: jupyter/pyspark-notebook
+      name: docker.stackable.tech/demos/jupyter-pyspark-with-alibi-detect
       tag: python-3.9
     serviceAccountName: spark
     networkPolicy:
