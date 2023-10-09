@@ -81,7 +81,9 @@ stacks:
         default: airflowSecretKey
   data-lakehouse-iceberg-trino-spark:
     description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
-    stackableRelease: 23.7
+    stackableRelease: 23.7 # TODO (sbernauer): When upgrading to 23.11, please
+    # 1. Use truststore from secret-op here https://github.com/stackabletech/stackablectl/blob/eda45945cfcf5c6581cf1b88c782d98fada8065f/demos/data-lakehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml#L128
+    # 2. Use spark.jars dependency resolution instead of having custom Spark image. See https://github.com/stackabletech/spark-k8s-operator/pull/281
     stackableOperators:
       - commons
       - secret

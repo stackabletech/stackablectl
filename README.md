@@ -4,11 +4,11 @@
 
 <h1 align="center">Stackablectl</h1>
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/stackabletech/druid-operator/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/stackabletech/stackablectl/graphs/commit-activity)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](https://docs.stackable.tech/home/stable/contributor/index.html)
 [![License OSL3.0](https://img.shields.io/badge/license-OSL3.0-green)](./LICENSE)
 
-[Documentation](https://docs.stackable.tech/stackablectl/stable/index.html) | [Stackable Data Platform](https://stackable.tech/) | [Platform Docs](https://docs.stackable.tech/) | [Discussions](https://github.com/orgs/stackabletech/discussions) | [Discord](https://discord.gg/7kZ3BNnCAF)
+[Documentation](https://docs.stackable.tech/management/stable/stackablectl/) | [Stackable Data Platform](https://stackable.tech/) | [Platform Docs](https://docs.stackable.tech/) | [Discussions](https://github.com/orgs/stackabletech/discussions) | [Discord](https://discord.gg/7kZ3BNnCAF)
 
 This repository is the home of the CLI application `stackablectl`, which makes it convenient to setup and interact with any Stackable cluster.
 
@@ -16,15 +16,15 @@ It is part of the Stackable Data Platform, a curated selection of the best open 
 
 ## Installation
 
-To install stackablectl, follow the instructions [in the docs](https://docs.stackable.tech/stackablectl/stable/installation.html).
+To install stackablectl, follow the instructions [in the docs](https://docs.stackable.tech/management/stable/stackablectl/installation).
 
 ## Getting Started
 
-You can find a usage example in this [tutorial](https://docs.stackable.tech/stackablectl/stable/quickstart.html).
+You can find a usage example in this [tutorial](https://docs.stackable.tech/management/stable/stackablectl/quickstart).
 
 ## Documentation
 
-The stable documentation for this tool can be found [here](https://docs.stackable.tech/stackablectl/stable/installation.html).
+The stable documentation for this tool can be found [here](https://docs.stackable.tech/management/stable/stackablectl/).
 
 The documentation for all Stackable products can be found at [docs.stackable.tech](https://docs.stackable.tech).
 
