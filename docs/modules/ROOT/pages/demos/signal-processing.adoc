@@ -51,7 +51,7 @@ http://localhost:8000
 
 You should see the JupyterHub login page where you can login with username `admin` and password `adminadmin`.
 
-You should arrive at your workspace where you can click on the `notebooks` folder on the left, open the file and run it. Click on the double arrow to execute the Python scripts, first commenting-in the `pip install` statements:
+You should arrive at your workspace where you can click on the `notebooks` folder on the left, open the file and run it. Click on the double arrow to execute the Python scripts:
 
 image::demo-signal-processing/notebook.png[]
 
@@ -61,7 +61,7 @@ The notebook reads the measurement data in windowed batches using a loop, comput
 
 The enriched data is calculated using an online, unsupervised https://docs.seldon.io/projects/alibi-detect/en/stable/od/methods/sr.html[model] that uses a technique called http://www.houxiaodi.com/assets/papers/cvpr07.pdf[Spectral Residuals].
 
-- `online`: in this context this means that the model does not require a training phase and can apply the algorithm to a batch in isolation. However, a light-weight training phase can be introduced if an estimated threshold value is required. This would take the form of a single batch "up front" used to determine some baselines.
+- `online`: in this context this means that the model does not require a training phase and can apply the algorithm to a batch in isolation. However, a light-weight training phase can be introduced if an estimated threshold value is required. This would take the form of a single batch "up front" used to determine some baselines. This is not implemented in this demo.
 - `unsupervised`: the data is not labelled and the algorithm seeks to extract useful information (alerts etc.) from the raw data alone.
 - `spectral residuals`: this algorithm executes a double Fourier transformation to reconstruct the original data, with the reconstruction error being used as a measure of outlier-ness.
 
