@@ -7,6 +7,12 @@ spec:
   template:
     spec:
       serviceAccountName: demo-serviceaccount
+      initContainers:
+        - name: wait-for-timescale-job
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          command: ["bash", "-c", "echo 'Waiting for timescaleDB tables to be ready'
+                    && kubectl wait --for=condition=complete job/create-timescale-tables-job"
+                  ]
       containers:
         - name: create-nifi-ingestion-job
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
