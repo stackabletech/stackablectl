@@ -41,12 +41,12 @@ spec:
               'remote_app': {
                 'client_id': 'superset',
                 'client_secret': f'{os.environ.get("SUPERSET_CLIENT_SECRET")}',
-                'api_base_url': f'http://{os.environ.get("KEYCLOAK_ADDRESS")}/realms/master/protocol/openid-connect',
+                'api_base_url': f'http://{os.environ.get("KEYCLOAK_ADDRESS")}/realms/gaia-x/protocol/openid-connect',
                 'client_kwargs': {
                   'scope': 'email profile openid'
                 },
-                'access_token_url': f'http://{os.environ.get("KEYCLOAK_ADDRESS")}/realms/master/protocol/openid-connect/token',
-                'authorize_url': f'http://{os.environ.get("KEYCLOAK_ADDRESS")}/realms/master/protocol/openid-connect/auth',
+                'access_token_url': f'http://{os.environ.get("KEYCLOAK_ADDRESS")}/realms/gaia-x/protocol/openid-connect/token',
+                'authorize_url': f'http://{os.environ.get("KEYCLOAK_ADDRESS")}/realms/gaia-x/protocol/openid-connect/auth',
                 'request_token_url': None,
               },
             }

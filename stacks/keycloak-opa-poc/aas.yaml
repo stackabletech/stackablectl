@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-server
+  labels:
+    app: aas
+spec:
+  ports:
+    - name: http
+      port: 9000
+      targetPort: 9000
+  selector:
+    app: aas
+  type: NodePort
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: aas
+  labels:
+    app: aas
+spec:
+  containers:
+    - name: aas
+      image: aas-service:current
+      ports:
+        - name: web
+          containerPort: 9000
+          protocol: TCP
+      env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: test
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://postgresql-aas:5432/aas
+        - name: SPRING_DATASOURCE_USERNAME
+          value: aas
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: aas 
+        - name: AAS_IAM_BASEURI
+          value: http://key-server:8080
+          # valueFrom:
+          #   configMapKeyRef:
+          #     name: keycloak
+          #     key: KEYCLOAK_BASE_URI

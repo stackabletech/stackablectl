@@ -15,13 +15,17 @@ spec:
       labels:
         app: keycloak
     spec:
+      volumes:
+        - name: keycloak-import-dir
+          configMap:
+            name: keycloak-gaia-x-realm
       containers:
         - name: keycloak
           image: quay.io/keycloak/keycloak:22.0.3
           # Keycloak is running in development mode: https://www.keycloak.org/server/configuration#_starting_keycloak
           # production mode disables HTTP and requires a TLS configuration, which is currently very difficult to configure
           # given that we're running on a NodePort
-          args: ["start-dev"]
+          args: ["start-dev", "--import-realm", "--hostname-url=http://key-server:8080"]
           env:
             - name: KEYCLOAK_ADMIN
               value: admin
@@ -30,6 +34,9 @@ spec:
                 secretKeyRef:
                   name: keycloak-admin-credentials
                   key: admin
+          volumeMounts:
+            - name: keycloak-import-dir
+              mountPath: /opt/keycloak/data/import
           ports:
             - name: http
               containerPort: 8080
@@ -41,7 +48,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: keycloak
+  name: key-server
   labels:
     app: keycloak
 spec:
@@ -79,11 +86,14 @@ spec:
           - -c
           - |
             echo "Determining Keycloak public reachable address"
-            KEYCLOAK_ADDRESS=$(kubectl get svc keycloak -o json | jq -r --argfile endpoints <(kubectl get endpoints keycloak -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "http") | .nodePort | tostring)')
+            KEYCLOAK_ADDRESS=$(kubectl get svc key-server -o json | jq -r --argfile endpoints <(kubectl get endpoints key-server -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "http") | .nodePort | tostring)')
             echo "Found Keycloak running at $KEYCLOAK_ADDRESS"
 
             echo "Writing Keycloak address to ConfigMap keycloak"
-            kubectl create configmap keycloak --from-literal="KEYCLOAK=$KEYCLOAK_ADDRESS" --from-literal="KEYCLOAK_DISCOVERY_URL=http://$KEYCLOAK_ADDRESS/realms/master/.well-known/openid-configuration" -o yaml --dry-run | kubectl apply -f -
+            kubectl create configmap keycloak --from-literal="KEYCLOAK=key-server:8080" --from-literal="KEYCLOAK_BASE_URI=http://key-server:8080" --from-literal="KEYCLOAK_DISCOVERY_URL=http://key-server:8080/realms/gaia-x/.well-known/openid-configuration" -o yaml --dry-run | kubectl apply -f -
       serviceAccountName: demo-serviceaccount
       restartPolicy: OnFailure
   backoffLimit: 20 # give some time for the Keycloak to be available
+
+
+  # kubectl create configmap keycloak --from-literal="KEYCLOAK=$KEYCLOAK_ADDRESS" --from-literal="KEYCLOAK_BASE_URI=http://$KEYCLOAK_ADDRESS" --from-literal="KEYCLOAK_DISCOVERY_URL=http://$KEYCLOAK_ADDRESS/realms/gaia-x/.well-known/openid-configuration" -o yaml --dry-run | kubectl apply -f -
