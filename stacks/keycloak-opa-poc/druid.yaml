@@ -21,10 +21,6 @@ spec:
       user: druid
       password: druid
     zookeeperConfigMapName: druid-znode
-    authorization:
-      opa:
-        configMapName: opa
-        package: druid
   brokers:
     roleGroups:
       default:
@@ -63,7 +59,6 @@ spec:
           "druid-datasketches",
           "prometheus-emitter",
           "druid-basic-security",
-          "druid-opa-authorizer",
           "druid-hdfs-storage",
           "druid-pac4j"]
 
@@ -73,11 +68,9 @@ spec:
         druid.auth.authenticator.MyBasicMetadataAuthenticator.type: basic
         druid.auth.authenticator.MyBasicMetadataAuthenticator.initialInternalClientPassword: '${env:DRUID_SYSTEM_USER_PASSWORD}' # Default password for internal 'druid_system' user
         druid.auth.authenticator.MyBasicMetadataAuthenticator.skipOnFailure: "true"  # for any non system user, skip to the pac4j authenticator
-        druid.auth.authenticator.MyBasicMetadataAuthenticator.authorizerName: OpaAuthorizer
 
         # pac4j authenticator
         druid.auth.authenticator.pac4j.type: pac4j
-        druid.auth.authenticator.pac4j.authorizerName: OpaAuthorizer
         # pac4j common config
         druid.auth.pac4j.cookiePassphrase: '${env:DRUID_COOKIE_PASSPHRASE}'
         # OIDC common config
@@ -87,11 +80,6 @@ spec:
         # druid.auth.pac4j.oidc.oidcClaim: preferred_username  # setting doesn't work, but should?
         
         druid.auth.authenticatorChain: '["MyBasicMetadataAuthenticator","pac4j"]'
-
-        druid.escalator.type: basic
-        druid.escalator.internalClientUsername: druid_system
-        druid.escalator.internalClientPassword: '{"type":"environment","variable":"DRUID_SYSTEM_USER_PASSWORD"}'
-        druid.escalator.authorizerName: OpaAuthorizer
   coordinators:
     roleGroups:
       default:

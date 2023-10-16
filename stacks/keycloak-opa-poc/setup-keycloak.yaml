@@ -92,6 +92,38 @@ spec:
               "protocol": "openid-connect"
             }
             EOF
+            ./kcadm.sh create clients -r gaia-x --config kcadm.conf -f - << EOF || true
+            {
+              "clientId": "superset",
+              "enabled": true,
+              "clientAuthenticatorType": "client-secret",
+              "secret": "$SUPERSET_CLIENT_SECRET",
+              "redirectUris": [
+                "*"
+              ],
+              "webOrigins": [
+                "*"
+              ],
+              "standardFlowEnabled": true,
+              "protocol": "openid-connect"
+            }
+            EOF
+            ./kcadm.sh create clients -r gaia-x --config kcadm.conf -f - << EOF || true
+            {
+              "clientId": "druid",
+              "enabled": true,
+              "clientAuthenticatorType": "client-secret",
+              "secret": "$DRUID_CLIENT_SECRET",
+              "redirectUris": [
+                "*"
+              ],
+              "webOrigins": [
+                "*"
+              ],
+              "standardFlowEnabled": true,
+              "protocol": "openid-connect"
+            }
+            EOF
             ADMIN_ID=$(./kcadm.sh get users --config kcadm.conf -r gaia-x -q username=admin | sed -ne 's/^  "id" : \(.*\),$/\1/p')
             ALICE_ID=$(./kcadm.sh get users --config kcadm.conf -r gaia-x -q username=alice | sed -ne 's/^  "id" : \(.*\),$/\1/p')
             echo "Writing Keycloak address to ConfigMap keycloak"

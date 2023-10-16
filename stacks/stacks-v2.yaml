@@ -458,13 +458,12 @@ stacks:
       - plainYaml: stacks/keycloak-opa-poc/keycloak.yaml
       - plainYaml: stacks/keycloak-opa-poc/setup-keycloak.yaml
       - plainYaml: stacks/keycloak-opa-poc/aas.yaml
-      - plainYaml: stacks/keycloak-opa-poc/opa.yaml
       - plainYaml: stacks/keycloak-opa-poc/policies.yaml
-      #- plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
-      #- plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
-      #- plainYaml: stacks/keycloak-opa-poc/druid.yaml
+      - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
+      - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
+      - plainYaml: stacks/keycloak-opa-poc/druid.yaml
       - plainYaml: stacks/keycloak-opa-poc/trino.yaml
-      #- plainYaml: stacks/keycloak-opa-poc/superset.yaml
+      - plainYaml: stacks/keycloak-opa-poc/superset.yaml
     supportedNamespaces: ["default"] # ClusterRoleBinding needs explicit namespace
     resourceRequests:
       cpu: 7850m
