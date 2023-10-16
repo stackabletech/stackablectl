@@ -1,0 +1,44 @@
+---
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: superset
+spec:
+  image:
+    productVersion: 3.0.0
+    custom: docker.stackable.tech/sandbox/sbernauer/superset:3.0.0-stackable0.0 # FIXME
+  clusterConfig:
+    listenerClass: external-unstable
+    credentialsSecret: superset-credentials
+    mapboxSecret: superset-mapbox-api-key
+  nodes:
+    configOverrides:
+      superset_config.py:
+        # FIXME: Remove and let superset-operator handle this properly
+        # Breaking change in Superset 3.0: https://github.com/apache/superset/pull/24262
+        TALISMAN_ENABLED: "False"
+    roleGroups:
+      default:
+        replicas: 1
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: superset-credentials
+type: Opaque
+stringData:
+  adminUser.username: admin
+  adminUser.firstname: Superset
+  adminUser.lastname: Admin
+  adminUser.email: admin@superset.com
+  adminUser.password: {{ supersetAdminPassword }}
+  connections.secretKey: {{ supersetSecretKey }}
+  connections.sqlalchemyDatabaseUri: postgresql://superset:superset@postgresql-superset/superset
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: superset-mapbox-api-key
+type: Opaque
+stringData:
+  connections.mapboxApiKey: "pk.eyJ1IjoibXVlbGxlcmNlbGluZSIsImEiOiJjbDZwM3llMTAwNGpmM2psdHU0Y21wZHJwIn0.kXFJKBbeyhbwf0z460JcTQ"

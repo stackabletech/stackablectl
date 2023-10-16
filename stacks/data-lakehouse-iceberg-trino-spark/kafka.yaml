@@ -14,7 +14,6 @@ metadata:
 spec:
   image:
     productVersion: 3.4.0
-    stackableVersion: "23.7"
   clusterConfig:
     zookeeperConfigMapName: kafka-znode
     authentication:

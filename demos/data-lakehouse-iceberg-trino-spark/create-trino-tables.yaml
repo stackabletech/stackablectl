@@ -572,6 +572,7 @@ data:
 
 
     # At this point Spark should have created the needed underlying tables
+    # Ideally in the future Iceberg would allow Spark and Trino to share views, in that case Spark can create the views instead of Trino
     run_query(connection, """
         create or replace view lakehouse.smart_city.shared_bikes_station_status_latest as
         select * from lakehouse.smart_city.shared_bikes_station_status

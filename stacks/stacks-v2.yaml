@@ -81,7 +81,7 @@ stacks:
         default: airflowSecretKey
   data-lakehouse-iceberg-trino-spark:
     description: Data lakehouse using Iceberg lakehouse on S3, Trino as query engine, Spark for streaming ingest and Superset for data visualization
-    stackableRelease: 23.7 # TODO (sbernauer): When upgrading to 23.11, please
+    stackableRelease: dev # TODO (sbernauer): When upgrading to 23.11, please
     # 1. Use truststore from secret-op here https://github.com/stackabletech/stackablectl/blob/eda45945cfcf5c6581cf1b88c782d98fada8065f/demos/data-lakehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml#L128
     # 2. Use spark.jars dependency resolution instead of having custom Spark image. See https://github.com/stackabletech/spark-k8s-operator/pull/281
     stackableOperators:
@@ -105,17 +105,17 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-distributed.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/s3-connection.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/superset.yaml # Reuse
+      - helmChart: stacks/_templates/minio-distributed.yaml
+      - helmChart: stacks/_templates/postgresql-hive.yaml
+      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/s3-connection.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/superset.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: "71"

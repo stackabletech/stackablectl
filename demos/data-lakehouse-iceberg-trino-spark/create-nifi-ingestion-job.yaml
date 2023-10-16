@@ -14,7 +14,8 @@ spec:
       containers:
         - name: create-nifi-ingestion-job
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
-          command: ["bash", "-c", "curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/LakehouseKafkaIngest.xml && python -u /tmp/script/script.py"]
+          # FIXME
+          command: ["bash", "-c", "curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/feat/smart-city-demo/demos/data-lakehouse-iceberg-trino-spark/LakehouseKafkaIngest.xml && python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
