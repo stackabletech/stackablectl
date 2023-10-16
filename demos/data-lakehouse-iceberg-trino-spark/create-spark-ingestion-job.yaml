@@ -52,7 +52,7 @@ data:
       s3connection:
         reference: minio
       sparkConf:
-        # TODO: Link ticket that we will create
+        # Work around https://github.com/stackabletech/spark-k8s-operator/issues/296
         spark.driver.userClassPathFirst: "false"
         spark.executor.userClassPathFirst: "false"
         spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
