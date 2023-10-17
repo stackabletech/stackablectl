@@ -148,6 +148,7 @@ data:
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_bike_status (bike_id string, vehicle_type_id string, latitude double, longitude double, is_reserved boolean, is_disabled boolean, last_reported timestamp) USING iceberg PARTITIONED BY (days(last_reported)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_information (station_id string, name string, latitude double, longitude double) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_status (station_id string, num_bikes_available short, is_installed boolean, is_renting boolean, is_returning boolean, last_reported timestamp) USING iceberg PARTITIONED BY (days(last_reported)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.car_parking (id string, timestamp timestamp, name string, capacity long, free long, removed boolean, data_type string, traffic_type string, quantity_spaces_reserved_for_mobility_impeded_persons string, type string, uri string, operator_id string, geometry string, location string, city string, state string, country_code string, properties array<string>) USING iceberg PARTITIONED BY (days(timestamp)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
 
     kafkaOptions = {
       "kafka.bootstrap.servers": "kafka-broker-default.default.svc.cluster.local:9093",
@@ -425,6 +426,65 @@ data:
 
 
 
+    def upsertCarParking(microBatchOutputDF, batchId):
+      microBatchOutputDF.createOrReplaceTempView("carParkingUpserts")
+
+      microBatchOutputDF._jdf.sparkSession().sql("""
+        MERGE INTO lakehouse.smart_city.car_parking as t
+        USING (SELECT DISTINCT * FROM carParkingUpserts) as u
+        ON u.id = t.id AND u.timestamp = t.timestamp
+        WHEN NOT MATCHED THEN INSERT *
+      """)
+
+    schema = StructType([ \
+        StructField("id", StringType(), True), \
+        StructField("timestamp", TimestampType(), True), \
+        StructField("name", StringType(), True), \
+        StructField("capacity", LongType(), True), \
+        StructField("free", LongType(), True), \
+        StructField("removed", BooleanType(), True), \
+        StructField("dataType", StringType(), True), \
+        StructField("trafficType", StringType(), True), \
+        StructField("quantitySpacesReservedForMobilityImpededPersons", LongType(), True), \
+        StructField("type", StringType(), True), \
+        StructField("uri", StringType(), True), \
+        StructField("operatorId", StringType(), True), \
+        # We parse the whole GeoJSON as string and let the consumers (e.g. Trino or Superset) parse it
+        StructField("geometry", StringType(), True), \
+        # We parse the whole GeoJSON as string and let the consumers (e.g. Trino or Superset) parse it
+        StructField("location", StringType(), True), \
+        StructField("address", \
+            StructType([StructField("city", StringType(), True), StructField("state", StringType(), True), StructField("countryCode", StringType(), True)]), \
+        True), \
+        StructField("properties", ArrayType(StringType(), True), True),
+    ])
+    spark \
+    .readStream \
+    .format("kafka") \
+    .options(**kafkaOptions) \
+    .option("subscribe", "car_parking") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 500000) \
+    .option("failOnDataLoss", "false") \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .withColumn("json", from_json(col("value"), schema)) \
+    .selectExpr("json.id", "json.timestamp", "json.name", "json.capacity", "json.free", "json.removed", "json.dataType as data_type", "json.trafficType as traffic_type", "json.quantitySpacesReservedForMobilityImpededPersons as quantity_spaces_reserved_for_mobility_impeded_persons", "json.type", "json.uri", "json.operatorId as operator_id", "json.geometry", "json.location", "json.address.city", "json.address.state", "json.address.countryCode as country_code", "json.properties") \
+    .writeStream \
+    .queryName("ingest smart_city car_parking") \
+    .format("iceberg") \
+    .foreachBatch(upsertCarParking) \
+    .outputMode("update") \
+    .trigger(processingTime='2 minutes') \
+    .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/car_parking") \
+    .start()
+
+
+
+
+
+
+
     # key: table name
     # value: compaction strategy
     tables_to_compact = {
@@ -433,6 +493,7 @@ data:
         "lakehouse.smart_city.shared_bikes_station_information": "",
         "lakehouse.smart_city.shared_bikes_station_status": ", strategy => 'sort', sort_order => 'last_reported DESC NULLS LAST,station_id ASC NULLS LAST'",
         "lakehouse.smart_city.shared_bikes_bike_status": "",
+        "lakehouse.smart_city.car_parking": ", strategy => 'sort', sort_order => 'timestamp DESC NULLS LAST,id ASC NULLS LAST'",
     }
 
     while True:
