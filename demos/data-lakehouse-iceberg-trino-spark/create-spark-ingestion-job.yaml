@@ -149,6 +149,9 @@ data:
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_information (station_id string, name string, latitude double, longitude double) USING iceberg TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.shared_bikes_station_status (station_id string, num_bikes_available short, is_installed boolean, is_renting boolean, is_returning boolean, last_reported timestamp) USING iceberg PARTITIONED BY (days(last_reported)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
     spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.car_parking (id string, timestamp timestamp, name string, capacity long, free long, removed boolean, data_type string, traffic_type string, quantity_spaces_reserved_for_mobility_impeded_persons string, type string, uri string, operator_id string, geometry string, location string, city string, state string, country_code string, properties array<string>) USING iceberg PARTITIONED BY (days(timestamp)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.road_closures (id string, timestamp timestamp, extent string, latitude double, longitude double, icon string, is_blocked boolean, description array<string>, title string, display_type string, future boolean, subtitle string, start_timestamp timestamp) USING iceberg PARTITIONED BY (days(timestamp)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.road_warnings (id string, timestamp timestamp, extent string, latitude double, longitude double, icon string, is_blocked boolean, description array<string>, title string, display_type string, future boolean, subtitle string, start_timestamp timestamp) USING iceberg PARTITIONED BY (days(timestamp)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
+    spark.sql("CREATE TABLE IF NOT EXISTS lakehouse.smart_city.road_roadworks (id string, timestamp timestamp, extent string, latitude double, longitude double, icon string, is_blocked boolean, description array<string>, title string, display_type string, future boolean, subtitle string, start_timestamp timestamp) USING iceberg PARTITIONED BY (days(timestamp)) TBLPROPERTIES ('format-version' = 2, format = 'PARQUET')")
 
     kafkaOptions = {
       "kafka.bootstrap.servers": "kafka-broker-default.default.svc.cluster.local:9093",
@@ -479,6 +482,120 @@ data:
     .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/car_parking") \
     .start()
 
+    # All of the APIs below use the same schema, so we can re-use it :)
+    commonRoadSchema = StructType([ \
+        StructField("identifier", StringType(), True), \
+        StructField("timestamp", TimestampType(), True), \
+        StructField("extent", StringType(), True), \
+        # TODO: Add routeRecommendation, which I could not find any documentation on the format.
+        StructField("coordinate", \
+            StructType([StructField("lat", StringType(), True), StructField("long", StringType(), True)]), \
+        True), \
+        # TODO: Add footer, which I could not find any documentation on the format.
+        StructField("icon", StringType(), True), \
+        StructField("isBlocked", StringType(), True), \
+        StructField("description", ArrayType(StringType(), True), True),
+        StructField("title", StringType(), True), \
+        StructField("display_type", StringType(), True), \
+        # TODO: Add lorryParkingFeatureIcons, which I could not find any documentation on the format.
+        StructField("future", BooleanType(), True), \
+        StructField("subtitle", StringType(), True), \
+        StructField("startTimestamp", TimestampType(), True),
+    ])
+
+    def upsertRoadClosures(microBatchOutputDF, batchId):
+      microBatchOutputDF.createOrReplaceTempView("roadClosuresUpserts")
+
+      microBatchOutputDF._jdf.sparkSession().sql("""
+        MERGE INTO lakehouse.smart_city.road_closures as t
+        USING (SELECT DISTINCT * FROM roadClosuresUpserts) as u
+        ON u.id = t.id AND u.timestamp = t.timestamp
+        WHEN NOT MATCHED THEN INSERT *
+      """)
+
+    spark \
+    .readStream \
+    .format("kafka") \
+    .options(**kafkaOptions) \
+    .option("subscribe", "road_closures") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 100000) \
+    .option("failOnDataLoss", "false") \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .withColumn("json", from_json(col("value"), commonRoadSchema)) \
+    .selectExpr("json.identifier as id", "json.timestamp", "json.extent", "cast(json.coordinate.lat as double) as latitude", "cast(json.coordinate.long as double) as longitude", "json.icon", "cast(json.isBlocked as boolean) as is_blocked", "json.description", "json.title", "json.display_type", "json.future", "json.subtitle", "json.startTimestamp as start_timestamp") \
+    .writeStream \
+    .queryName("ingest smart_city road_closures") \
+    .format("iceberg") \
+    .foreachBatch(upsertRoadClosures) \
+    .outputMode("update") \
+    .trigger(processingTime='2 minutes') \
+    .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/road_closures") \
+    .start()
+
+    def upsertRoadWarnings(microBatchOutputDF, batchId):
+      microBatchOutputDF.createOrReplaceTempView("roadWarningsUpserts")
+
+      microBatchOutputDF._jdf.sparkSession().sql("""
+        MERGE INTO lakehouse.smart_city.road_warnings as t
+        USING (SELECT DISTINCT * FROM roadWarningsUpserts) as u
+        ON u.id = t.id AND u.timestamp = t.timestamp
+        WHEN NOT MATCHED THEN INSERT *
+      """)
+
+    spark \
+    .readStream \
+    .format("kafka") \
+    .options(**kafkaOptions) \
+    .option("subscribe", "road_warnings") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 100000) \
+    .option("failOnDataLoss", "false") \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .withColumn("json", from_json(col("value"), commonRoadSchema)) \
+    .selectExpr("json.identifier as id", "json.timestamp", "json.extent", "cast(json.coordinate.lat as double) as latitude", "cast(json.coordinate.long as double) as longitude", "json.icon", "cast(json.isBlocked as boolean) as is_blocked", "json.description", "json.title", "json.display_type", "json.future", "json.subtitle", "json.startTimestamp as start_timestamp") \
+    .writeStream \
+    .queryName("ingest smart_city road_warnings") \
+    .format("iceberg") \
+    .foreachBatch(upsertRoadWarnings) \
+    .outputMode("update") \
+    .trigger(processingTime='2 minutes') \
+    .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/road_warnings") \
+    .start()
+
+    def upsertRoadRoadworks(microBatchOutputDF, batchId):
+      microBatchOutputDF.createOrReplaceTempView("roadRoadworksUpserts")
+
+      microBatchOutputDF._jdf.sparkSession().sql("""
+        MERGE INTO lakehouse.smart_city.road_roadworks as t
+        USING (SELECT DISTINCT * FROM roadRoadworksUpserts) as u
+        ON u.id = t.id AND u.timestamp = t.timestamp
+        WHEN NOT MATCHED THEN INSERT *
+      """)
+
+    spark \
+    .readStream \
+    .format("kafka") \
+    .options(**kafkaOptions) \
+    .option("subscribe", "road_roadworks") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 100000) \
+    .option("failOnDataLoss", "false") \
+    .load() \
+    .selectExpr("cast(key as string)", "cast(value as string)") \
+    .withColumn("json", from_json(col("value"), commonRoadSchema)) \
+    .selectExpr("json.identifier as id", "json.timestamp", "json.extent", "cast(json.coordinate.lat as double) as latitude", "cast(json.coordinate.long as double) as longitude", "json.icon", "cast(json.isBlocked as boolean) as is_blocked", "json.description", "json.title", "json.display_type", "json.future", "json.subtitle", "json.startTimestamp as start_timestamp") \
+    .writeStream \
+    .queryName("ingest smart_city road_roadworks") \
+    .format("iceberg") \
+    .foreachBatch(upsertRoadRoadworks) \
+    .outputMode("update") \
+    .trigger(processingTime='2 minutes') \
+    .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/road_roadworks") \
+    .start()
+
 
 
 
@@ -494,6 +611,9 @@ data:
         "lakehouse.smart_city.shared_bikes_station_status": ", strategy => 'sort', sort_order => 'last_reported DESC NULLS LAST,station_id ASC NULLS LAST'",
         "lakehouse.smart_city.shared_bikes_bike_status": "",
         "lakehouse.smart_city.car_parking": ", strategy => 'sort', sort_order => 'timestamp DESC NULLS LAST,id ASC NULLS LAST'",
+        "lakehouse.smart_city.road_closures": ", strategy => 'sort', sort_order => 'timestamp DESC NULLS LAST,id ASC NULLS LAST'",
+        "lakehouse.smart_city.road_warnings": ", strategy => 'sort', sort_order => 'timestamp DESC NULLS LAST,id ASC NULLS LAST'",
+        "lakehouse.smart_city.road_roadworks": ", strategy => 'sort', sort_order => 'timestamp DESC NULLS LAST,id ASC NULLS LAST'",
     }
 
     while True:
