@@ -5,8 +5,8 @@ metadata:
   name: superset
 spec:
   image:
-    productVersion: 3.0.0
-    custom: docker.stackable.tech/sandbox/sbernauer/superset:3.0.0-stackable0.0 # FIXME
+    productVersion: 2.1.0
+    custom: docker.stackable.tech/sandbox/freiburg/superset:2.1.0-stackable23.7.0-1
   clusterConfig:
     listenerClass: external-unstable
     credentialsSecret: superset-credentials
@@ -16,7 +16,8 @@ spec:
       superset_config.py:
         # FIXME: Remove and let superset-operator handle this properly
         # Breaking change in Superset 3.0: https://github.com/apache/superset/pull/24262
-        TALISMAN_ENABLED: "False"
+        # TALISMAN_ENABLED: "False"
+        FEATURE_FLAGS: "{'ENABLE_JAVASCRIPT_CONTROLS': True}"
     roleGroups:
       default:
         replicas: 1
