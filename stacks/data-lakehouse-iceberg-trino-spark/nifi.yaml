@@ -15,6 +15,9 @@ spec:
       keySecret: nifi-sensitive-property-key
       autoGenerate: true
   nodes:
+    roleConfig:
+      podDisruptionBudget:
+        enabled: false
     config:
       resources:
         cpu:

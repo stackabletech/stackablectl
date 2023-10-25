@@ -19,6 +19,9 @@ spec:
     authentication:
       - authenticationClass: kafka-client-tls
   brokers:
+    roleConfig:
+      podDisruptionBudget:
+        enabled: false
     config:
       resources:
         storage:

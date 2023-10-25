@@ -109,7 +109,7 @@ data:
               min: "2"
               max: "4"
             memory:
-              limit: "8Gi"
+              limit: "12Gi"
           volumeMounts:
             - name: script
               mountPath: /stackable/spark/jobs

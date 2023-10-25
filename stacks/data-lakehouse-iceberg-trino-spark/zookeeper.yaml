@@ -7,6 +7,9 @@ spec:
   image:
     productVersion: 3.8.1
   servers:
+    roleConfig:
+      podDisruptionBudget:
+        enabled: false
     roleGroups:
       default:
         replicas: 3

@@ -12,6 +12,9 @@ spec:
     credentialsSecret: superset-credentials
     mapboxSecret: superset-mapbox-api-key
   nodes:
+    roleConfig:
+      podDisruptionBudget:
+        enabled: false
     configOverrides:
       superset_config.py:
         # FIXME: Remove and let superset-operator handle this properly

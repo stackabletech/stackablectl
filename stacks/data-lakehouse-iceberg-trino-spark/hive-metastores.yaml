@@ -15,6 +15,9 @@ spec:
     s3:
       reference: minio
   metastore:
+    roleConfig:
+      podDisruptionBudget:
+        enabled: false
     roleGroups:
       default:
         replicas: 1
@@ -35,6 +38,9 @@ spec:
     s3:
       reference: minio
   metastore:
+    roleConfig:
+      podDisruptionBudget:
+        enabled: false
     roleGroups:
       default:
         replicas: 1
