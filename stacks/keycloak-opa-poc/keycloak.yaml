@@ -21,8 +21,23 @@ spec:
           # Keycloak is running in development mode: https://www.keycloak.org/server/configuration#_starting_keycloak
           # production mode disables HTTP and requires a TLS configuration, which is currently very difficult to configure
           # given that we're running on a NodePort
-          args: ["start-dev"]
+          args:
+            - start
+            - --hostname-strict=false
+            # - --optimized
+            # - --hostname-strict-https=false
+            # - --http-enabled=false
+            # - –-hostname-strict=false
+            # - --hostname-url=https://localhost:8443
+            # - --hostname=localhost
+            # - --hostname-strict-https=false
+            - --https-key-store-file=/tls/keystore.p12
+            - --https-key-store-password=changeit
           env:
+            # - name: KC_HOSTNAME_STRICT_HTTPS
+            #   value: "false"
+            # - name: KEYCLOAK_ENABLE_HTTPS
+            #   value: "true"
             - name: KEYCLOAK_ADMIN
               value: admin
             - name: KEYCLOAK_ADMIN_PASSWORD
@@ -31,15 +46,18 @@ spec:
                   name: keycloak-admin-credentials
                   key: admin
           ports:
-            - name: http
-              containerPort: 8080
+            - name: https
+              containerPort: 8443
           readinessProbe:
             httpGet:
+              scheme: HTTPS
               path: /realms/master
-              port: 8080
+              port: https
           volumeMounts:
             - name: data
               mountPath: /opt/keycloak/data/
+            - name: tls
+              mountPath: /tls/
         - name: create-auth-class
           image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable0.0.0-dev # We need 0.0.0-dev, so we get kubectl
           command:
@@ -49,7 +67,7 @@ spec:
               while :
               do
                 echo "Determining Keycloak public reachable address"
-                KEYCLOAK_ADDRESS=$(kubectl get svc keycloak -o json | jq -r --argfile endpoints <(kubectl get endpoints keycloak -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "http") | .nodePort | tostring)')
+                KEYCLOAK_ADDRESS=$(kubectl get svc keycloak -o json | jq -r --argfile endpoints <(kubectl get endpoints keycloak -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "https") | .nodePort | tostring)')
                 echo "Found Keycloak running at $KEYCLOAK_ADDRESS"
 
                 if [ ! -z "$KEYCLOAK_ADDRESS" ]; then
@@ -68,8 +86,11 @@ spec:
                           port: $KEYCLOAK_PORT
                           rootPath: /realms/master
                           scopes: [openid]
-                          # TODO Use SecretClass to issue TLS cert and put it in here
-                          tls: null
+                          tls:
+                            verification:
+                              server:
+                                caCert:
+                                  secretClass: tls
               EOF
                 fi
 
@@ -79,6 +100,22 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: keycloak-data
+        - name: tls
+          ephemeral:
+            volumeClaimTemplate:
+              metadata:
+                annotations:
+                  secrets.stackable.tech/class: tls
+                  secrets.stackable.tech/format: tls-pkcs12
+                  secrets.stackable.tech/format.compatibility.tls-pkcs12.password: changeit
+                  secrets.stackable.tech/scope: pod
+              spec:
+                storageClassName: secrets.stackable.tech
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: "1"
       serviceAccountName: keycloak-serviceaccount
 ---
 apiVersion: v1
@@ -100,9 +137,9 @@ spec:
   selector:
     app: keycloak
   ports:
-    - name: http
-      port: 8080
-      targetPort: 8080
+    - name: https
+      port: 8443
+      targetPort: 8443
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
