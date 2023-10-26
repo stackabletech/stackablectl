@@ -37,6 +37,13 @@ spec:
             httpGet:
               path: /realms/master
               port: 8080
+          volumeMounts:
+            - name: data
+              mountPath: /opt/keycloak/data/
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: keycloak-data
 ---
 apiVersion: v1
 kind: Service
@@ -45,6 +52,14 @@ metadata:
   labels:
     app: keycloak
 spec:
+# FIXME: We want a stable Keycloak address that does not change when Keycloak reboots.
+# We could simply pick LoadBalancer here, but on-prem clusters often times don't support LBs,
+# so the demo would not run on their environments. Additionally, LB addresses often take a while to allocate
+# (order of minutes on GCP iirc). So there's no way for us to know whether there's no LB address because it's still
+# in progress, or if there's no LB address because it's unsupported.
+#
+# We should at least make sure to reconcile the AuthClass once Keycloak restarts.
+# We could achieve this by letting the keycloak itself propagate it's address instead of a separate Job.
   type: NodePort
   selector:
     app: keycloak
@@ -52,6 +67,16 @@ spec:
     - name: http
       port: 8080
       targetPort: 8080
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: keycloak-data
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
 ---
 apiVersion: v1
 kind: Secret
