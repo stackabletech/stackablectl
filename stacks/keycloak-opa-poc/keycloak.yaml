@@ -40,10 +40,46 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /opt/keycloak/data/
+        - name: create-auth-class
+          image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable0.0.0-dev # We need 0.0.0-dev, so we get kubectl
+          command:
+            - bash
+            - -c
+            - |
+              while :
+              do
+                echo "Determining Keycloak public reachable address"
+                KEYCLOAK_ADDRESS=$(kubectl get svc keycloak -o json | jq -r --argfile endpoints <(kubectl get endpoints keycloak -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "http") | .nodePort | tostring)')
+                echo "Found Keycloak running at $KEYCLOAK_ADDRESS"
+
+                if [ ! -z "$KEYCLOAK_ADDRESS" ]; then
+                  KEYCLOAK_HOSTNAME="$(echo $KEYCLOAK_ADDRESS | grep -oP '^[^:]+')"
+                  KEYCLOAK_PORT="$(echo $KEYCLOAK_ADDRESS | grep -oP '[0-9]+$')"
+
+                  cat << EOF | kubectl apply -f -
+                    apiVersion: authentication.stackable.tech/v1alpha1
+                    kind: AuthenticationClass
+                    metadata:
+                      name: keycloak
+                    spec:
+                      provider:
+                        oidc:
+                          hostname: "$KEYCLOAK_HOSTNAME"
+                          port: $KEYCLOAK_PORT
+                          rootPath: /realms/master
+                          scopes: [openid]
+                          # TODO Use SecretClass to issue TLS cert and put it in here
+                          tls: null
+              EOF
+                fi
+
+                sleep 60
+              done
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: keycloak-data
+      serviceAccountName: keycloak-serviceaccount
 ---
 apiVersion: v1
 kind: Service
@@ -84,31 +120,3 @@ metadata:
   name: keycloak-admin-credentials
 stringData:
   admin: "{{ keycloakAdminPassword }}"
----
-# This job creates a ConfigMap with connection info for Keycloak
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: propagate-keycloak-address
-spec:
-  template:
-    spec:
-      containers:
-      - name: propagate-keycloak-address
-        image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable0.0.0-dev # We need 0.0.0-dev, so we get kubectl
-        command:
-          - bash
-          - -x
-          - -euo
-          - pipefail
-          - -c
-          - |
-            echo "Determining Keycloak public reachable address"
-            KEYCLOAK_ADDRESS=$(kubectl get svc keycloak -o json | jq -r --argfile endpoints <(kubectl get endpoints keycloak -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "http") | .nodePort | tostring)')
-            echo "Found Keycloak running at $KEYCLOAK_ADDRESS"
-
-            echo "Writing Keycloak address to ConfigMap keycloak"
-            kubectl create configmap keycloak --from-literal="KEYCLOAK=$KEYCLOAK_ADDRESS" --from-literal="KEYCLOAK_DISCOVERY_URL=http://$KEYCLOAK_ADDRESS/realms/master/.well-known/openid-configuration" -o yaml --dry-run | kubectl apply -f -
-      serviceAccountName: demo-serviceaccount
-      restartPolicy: OnFailure
-  backoffLimit: 20 # give some time for the Keycloak to be available

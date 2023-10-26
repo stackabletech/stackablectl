@@ -1,0 +1,111 @@
+# Use the following configs in Keycloak
+# ldap://openldap:1389
+# bind DN cn=admin,dc=example,dc=org
+# bind password adminadmin
+# edit mode READONLY
+# users dn ou=users,dc=example,dc=org
+
+
+# To check the existing users
+# ldapsearch -H ldap://localhost:1389 -D cn=admin,dc=example,dc=org -w adminadmin -b ou=users,dc=example,dc=org
+
+# To check the new user
+# ldapsearch -H ldap://localhost:1389 -D cn=integrationtest,ou=users,dc=example,dc=org -w integrationtest -b ou=users,dc=example,dc=org
+
+# cat << 'EOF' | ldapadd -H ldap://localhost:1389 -D cn=admin,dc=example,dc=org -w adminadmin
+# dn: cn=integrationtest,ou=users,dc=example,dc=org
+# objectClass: inetOrgPerson
+# objectClass: posixAccount
+# objectClass: shadowAccount
+# cn: integrationtest
+# uid: integrationtest
+# givenName: Stackable
+# sn: Integration-Test
+# mail: integrationtest@stackable.de
+# uidNumber: 16842
+# gidNumber: 100
+# homeDirectory: /home/integrationtest
+# loginShell: /bin/bash
+# userPassword: {crypt}x
+# shadowLastChange: 0
+# shadowMax: 0
+# shadowWarning: 0
+# EOF
+
+# ldappasswd -H ldap://localhost:1389 -D cn=admin,dc=example,dc=org -w adminadmin -s integrationtest "cn=integrationtest,ou=users,dc=example,dc=org"
+
+
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openldap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: openldap
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: openldap
+    spec:
+      containers:
+        - name: openldap
+          image: docker.io/bitnami/openldap:2.6
+          env:
+            - name: LDAP_ADMIN_USERNAME
+              value: admin
+            - name: LDAP_ADMIN_PASSWORD
+              value: adminadmin
+            - name: LDAP_USERS
+              value: user01,user02
+            - name: LDAP_PASSWORDS
+              value: user01user01,user02user02
+            - name: LDAP_ENABLE_TLS
+              value: "yes"
+            - name: LDAP_TLS_CERT_FILE
+              value: /tls/tls.crt
+            - name: LDAP_TLS_KEY_FILE
+              value: /tls/tls.key
+            - name: LDAP_TLS_CA_FILE
+              value: /tls/ca.crt
+          ports:
+            - name: ldap
+              containerPort: 1389
+            - name: tls-ldap
+              containerPort: 1636
+          volumeMounts:
+            - name: tls
+              mountPath: /tls
+          startupProbe:
+            tcpSocket:
+              port: 1389
+          readinessProbe:
+            tcpSocket:
+              port: 1389
+      volumes:
+        - name: tls
+          csi:
+            driver: secrets.stackable.tech
+            volumeAttributes:
+              secrets.stackable.tech/class: tls
+              secrets.stackable.tech/scope: pod
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openldap
+spec:
+  type: ClusterIP
+  ports:
+    - name: ldap
+      port: 1389
+      targetPort: ldap
+    - name: tls-ldap
+      port: 1636
+      targetPort: tls-ldap
+  selector:
+    app.kubernetes.io/name: openldap

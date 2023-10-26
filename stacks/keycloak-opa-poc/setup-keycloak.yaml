@@ -1,24 +1,23 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: keycloak-client-secrets
-stringData:
-  superset: "{{ keycloakSupersetClientSecret }}"
-  trino: "{{ keycloakTrinoClientSecret }}"
-  druid: "{{ keycloakDruidClientSecret }}"
-  druidCookiePassphrase: "{{ keycloakDruidCookiePassphrase }}"
-  druidSystemUserPassword: "{{ druidSystemUserPassword }}"
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: keycloak-client-secrets
+# stringData:
+#   superset: "{{ keycloakSupersetClientSecret }}"
+#   trino: "{{ keycloakTrinoClientSecret }}"
+#   druid: "{{ keycloakDruidClientSecret }}"
+#   # FIXME: They don't belong here
+#   # druidCookiePassphrase: "{{ keycloakDruidCookiePassphrase }}"
+#   # druidSystemUserPassword: "{{ druidSystemUserPassword }}"
+# ---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: keycloak-users
+# stringData:
+#   alice: "{{ alicePassword }}"
+#   bob: "{{ bobPassword }}"
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: keycloak-users
-stringData:
-  alice: "{{ alicePassword }}"
-  bob: "{{ bobPassword }}"
----
-# This job creates users and clients in Keycloak.
-# It also creates a ConfigMap with user IDs used by OPA
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -72,30 +71,15 @@ spec:
             unzip keycloak-22.0.3.zip
             cd keycloak-22.0.3/bin
             ./kcadm.sh config credentials --config kcadm.conf --server http://keycloak:8080/ --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
-            ./kcadm.sh create users --config kcadm.conf -s username=alice -s enabled=true || true
-            ./kcadm.sh create users --config kcadm.conf -s username=bob -s enabled=true || true
+            ./kcadm.sh create users --config kcadm.conf -s username=alice -s firstName=Alice -s lastName=Adams -s email=alice@mycorp.org -s enabled=true || true
+            ./kcadm.sh create users --config kcadm.conf -s username=bob   -s firstName=Bob   -s lastName=Bush  -s email=bob@mycorp.org   -s enabled=true || true
             ./kcadm.sh set-password --config kcadm.conf --username alice --new-password "$ALICE_PASSWORD"
-            ./kcadm.sh set-password --config kcadm.conf --username bob --new-password "$BOB_PASSWORD"
-            ./kcadm.sh create clients --config kcadm.conf -f - << EOF || true
-            {
-              "clientId": "superset",
-              "enabled": true,
-              "clientAuthenticatorType": "client-secret",
-              "secret": "$SUPERSET_CLIENT_SECRET",
-              "redirectUris": [
-                "*"
-              ],
-              "webOrigins": [
-                "*"
-              ],
-              "standardFlowEnabled": true,
-              "protocol": "openid-connect"
-            }
-            EOF
+            ./kcadm.sh set-password --config kcadm.conf --username bob   --new-password "$BOB_PASSWORD"
             ./kcadm.sh create clients --config kcadm.conf -f - << EOF || true
             {
               "clientId": "trino",
               "enabled": true,
+              "protocol": "openid-connect",
               "clientAuthenticatorType": "client-secret",
               "secret": "$TRINO_CLIENT_SECRET",
               "redirectUris": [
@@ -105,13 +89,61 @@ spec:
                 "*"
               ],
               "standardFlowEnabled": true,
-              "protocol": "openid-connect"
+              "protocolMappers": [
+                {
+                  "name": "username",
+                  "protocol": "openid-connect",
+                  "protocolMapper": "oidc-usermodel-attribute-mapper",
+                  "consentRequired": false,
+                  "config": {
+                    "userinfo.token.claim": "true",
+                    "user.attribute": "username",
+                    "id.token.claim": "true",
+                    "access.token.claim": "true",
+                    "claim.name": "sub",
+                    "jsonType.label": "String"
+                  }
+                }
+              ]
+            }
+            EOF
+            ./kcadm.sh create clients --config kcadm.conf -f - << EOF || true
+            {
+              "clientId": "superset",
+              "enabled": true,
+              "protocol": "openid-connect",
+              "clientAuthenticatorType": "client-secret",
+              "secret": "$SUPERSET_CLIENT_SECRET",
+              "redirectUris": [
+                "*"
+              ],
+              "webOrigins": [
+                "*"
+              ],
+              "standardFlowEnabled": true,
+              "protocolMappers": [
+                {
+                  "name": "username",
+                  "protocol": "openid-connect",
+                  "protocolMapper": "oidc-usermodel-attribute-mapper",
+                  "consentRequired": false,
+                  "config": {
+                    "userinfo.token.claim": "true",
+                    "user.attribute": "username",
+                    "id.token.claim": "true",
+                    "access.token.claim": "true",
+                    "claim.name": "sub",
+                    "jsonType.label": "String"
+                  }
+                }
+              ]
             }
             EOF
             ./kcadm.sh create clients --config kcadm.conf -f - << EOF || true
             {
               "clientId": "druid",
               "enabled": true,
+              "protocol": "openid-connect",
               "clientAuthenticatorType": "client-secret",
               "secret": "$DRUID_CLIENT_SECRET",
               "redirectUris": [
@@ -121,13 +153,23 @@ spec:
                 "*"
               ],
               "standardFlowEnabled": true,
-              "protocol": "openid-connect"
+              "protocolMappers": [
+                {
+                  "name": "username",
+                  "protocol": "openid-connect",
+                  "protocolMapper": "oidc-usermodel-attribute-mapper",
+                  "consentRequired": false,
+                  "config": {
+                    "userinfo.token.claim": "true",
+                    "user.attribute": "username",
+                    "id.token.claim": "true",
+                    "access.token.claim": "true",
+                    "claim.name": "sub",
+                    "jsonType.label": "String"
+                  }
+                }
+              ]
             }
             EOF
-            ADMIN_ID=$(./kcadm.sh get users --config kcadm.conf -r master -q username=admin | sed -ne 's/^  "id" : \(.*\),$/\1/p')
-            ALICE_ID=$(./kcadm.sh get users --config kcadm.conf -r master -q username=alice | sed -ne 's/^  "id" : \(.*\),$/\1/p')
-            kubectl create configmap opagroups --from-literal="data.json={\"admins\": [$ADMIN_ID, $ALICE_ID]}" -o yaml --dry-run | kubectl apply -f -
-            kubectl label configmap --overwrite opagroups opa.stackable.tech/bundle=true
-      serviceAccountName: demo-serviceaccount
       restartPolicy: OnFailure
   backoffLimit: 20 # give some time for the Keycloak to be available

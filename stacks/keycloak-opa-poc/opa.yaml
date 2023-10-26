@@ -10,3 +10,61 @@ spec:
   servers:
     roleGroups:
       default: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opa-bundle-trino
+  labels:
+    opa.stackable.tech/bundle: "true"
+data:
+  trino.rego: |
+    package trino
+
+    import data.bundles.opagroups.admins
+    import future.keywords.in
+    import future.keywords.if
+
+    default allow = false
+
+    allow if input.context.identity.user in admins
+
+    allow {
+      input.action.operation == "ImpersonateUser"
+      input.action.resource.user.name == input.context.identity.user
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opa-bundle-druid
+  labels:
+    opa.stackable.tech/bundle: "true"
+data:
+  druid.rego: |
+    package druid
+
+    import data.bundles.opagroups.admins
+    import future.keywords.in
+    import future.keywords.if
+
+    default allow = false
+
+    allow if input.user == "druid_system"
+
+    allow if input.user in admins
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opagroups
+  labels:
+    opa.stackable.tech/bundle: "true"
+data:
+  data.json: |
+    {
+      "admins": [
+        "admin",
+        "alice"
+      ]
+    }

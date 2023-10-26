@@ -438,9 +438,9 @@ stacks:
       This is a proof-of-concept and the mechanisms used here are subject to change.
     stackableRelease: 23.7
     stackableOperators:
-      - commons
+      # - commons => Needs to be installed from https://github.com/stackabletech/commons-operator/tree/feat/oidc
       - secret
-      - trino
+      # - trino => Needs to be installed from https://github.com/stackabletech/trino-operator/tree/feature/support-oauth2
       - superset
       - zookeeper
       - druid
@@ -450,23 +450,24 @@ stacks:
       - authentication
       - sso
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
-      - plainYaml: stacks/keycloak-opa-poc/serviceaccount.yaml
+      # - helmChart: stacks/_templates/postgresql-superset.yaml
+      # - helmChart: stacks/_templates/postgresql-druid.yaml
+      - plainYaml: stacks/keycloak-opa-poc/openldap.yaml
+      - plainYaml: stacks/keycloak-opa-poc/keycloak-serviceaccount.yaml
       - plainYaml: stacks/keycloak-opa-poc/keycloak.yaml
       - plainYaml: stacks/keycloak-opa-poc/setup-keycloak.yaml
       - plainYaml: stacks/keycloak-opa-poc/opa.yaml
-      - plainYaml: stacks/keycloak-opa-poc/policies.yaml
-      - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
-      - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
-      - plainYaml: stacks/keycloak-opa-poc/druid.yaml
+      # - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
+      # - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
+      # - plainYaml: stacks/keycloak-opa-poc/druid.yaml
       - plainYaml: stacks/keycloak-opa-poc/trino.yaml
-      - plainYaml: stacks/keycloak-opa-poc/superset.yaml
+      # - plainYaml: stacks/keycloak-opa-poc/superset.yaml
     supportedNamespaces: ["default"] # ClusterRoleBinding needs explicit namespace
-    resourceRequests:
-      cpu: 7850m
-      memory: 23142Mi
-      pvc: 34Gi
+    # FIXME: Re-check
+    # resourceRequests:
+    #   cpu: 7850m
+    #   memory: 23142Mi
+    #   pvc: 34Gi
     parameters:
       - name: alicePassword
         description: Password of the user alice, which can log into Trino and Superset
@@ -488,10 +489,10 @@ stacks:
         default: druiddruid
       - name: keycloakDruidCookiePassphrase
         description: Passphrase for encrypting the cookies used to manage authentication session with browser.
-        default: druiddruidcookiepassphrase
+        default: keycloakDruidCookiePassphrase
       - name: druidSystemUserPassword
         description: Password for the Druid user druid_system
-        default: druidsystemuserpassword
+        default: druidSystemUserPassword
       - name: supersetSecretKey
         description: Superset's secret key used to generate e.g. user session tokens
         default: supersetSecretKey
