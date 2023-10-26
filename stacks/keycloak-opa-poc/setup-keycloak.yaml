@@ -126,7 +126,6 @@ spec:
             EOF
             ADMIN_ID=$(./kcadm.sh get users --config kcadm.conf -r master -q username=admin | sed -ne 's/^  "id" : \(.*\),$/\1/p')
             ALICE_ID=$(./kcadm.sh get users --config kcadm.conf -r master -q username=alice | sed -ne 's/^  "id" : \(.*\),$/\1/p')
-            echo "Writing Keycloak address to ConfigMap keycloak"
             kubectl create configmap opagroups --from-literal="data.json={\"admins\": [$ADMIN_ID, $ALICE_ID]}" -o yaml --dry-run | kubectl apply -f -
             kubectl label configmap --overwrite opagroups opa.stackable.tech/bundle=true
       serviceAccountName: demo-serviceaccount
