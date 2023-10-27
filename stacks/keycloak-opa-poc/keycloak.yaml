@@ -88,14 +88,21 @@ spec:
                           scopes: [openid]
                           tls:
                             verification:
-                              server:
-                                caCert:
-                                  secretClass: tls
+                              none: {}
+                              # We can't use this yet, as the cert of Keycloak has no SAN for the NodePort address.
+                              # We can switch to this once we include the listener scope in tls certificates.
+                              # server:
+                              #   caCert:
+                              #     secretClass: tls
               EOF
                 fi
 
                 sleep 60
               done
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsUser: 1000
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -108,7 +115,7 @@ spec:
                   secrets.stackable.tech/class: tls
                   secrets.stackable.tech/format: tls-pkcs12
                   secrets.stackable.tech/format.compatibility.tls-pkcs12.password: changeit
-                  secrets.stackable.tech/scope: pod
+                  secrets.stackable.tech/scope: service=keycloak
               spec:
                 storageClassName: secrets.stackable.tech
                 accessModes:
