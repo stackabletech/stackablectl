@@ -1,0 +1,2209 @@
+{% raw %}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stackable-grafana-dashboards
+data:
+  gas_measurements.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "target": {
+              "limit": 100,
+              "matchAny": false,
+              "tags": [],
+              "type": "dashboard"
+            },
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": 2,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r1"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r2"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r1_score"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "#8AB8FF",
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r2_score"
+                },
+                "properties": [
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  },
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r1_score_lttb"
+                },
+                "properties": [
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 0
+          },
+          "id": 8,
+          "interval": "5s",
+          "maxDataPoints": 200,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT \"time\"\n, AVG(r1) AS \"r1\"\n, AVG(r2) AS \"r2\"\nFROM conditions\nWHERE $__timeFilter(\"time\")\nGROUP BY \"time\" ORDER BY \"time\"",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"time\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "alias": "\"r1\"",
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "alias": "\"r2\"",
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r2",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "orderBy": {
+                  "property": {
+                    "name": "\"time\"",
+                    "type": "string"
+                  },
+                  "type": "property"
+                },
+                "whereJsonTree": {
+                  "children1": [],
+                  "id": "b89ba889-89ab-4cde-b012-3187c6fbe147",
+                  "type": "group"
+                }
+              },
+              "table": "conditions"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT \"time\"\n, AVG(r1_score) AS \"r1_score\"\n, AVG(r2_score) AS \"r2_score\"\nFROM scores_sr\nWHERE $__timeFilter(\"time\")\nGROUP BY \"time\" ORDER BY \"time\"",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r1_score_lttb\nFROM unnest((\n    SELECT lttb(time, r1_score, 6 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "C",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            }
+          ],
+          "title": "R-values",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r3"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r4"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 0
+          },
+          "id": 9,
+          "interval": "5s",
+          "maxDataPoints": 200,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT \"time\"\n, AVG(r3) AS \"r3\"\n, AVG(r4) AS \"r4\"\nFROM conditions\nWHERE $__timeFilter(\"time\")\nGROUP BY \"time\" ORDER BY \"time\"",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"time\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "alias": "\"r1\"",
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "alias": "\"r2\"",
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r2",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "orderBy": {
+                  "property": {
+                    "name": "\"time\"",
+                    "type": "string"
+                  },
+                  "type": "property"
+                },
+                "whereJsonTree": {
+                  "children1": [],
+                  "id": "b89ba889-89ab-4cde-b012-3187c6fbe147",
+                  "type": "group"
+                }
+              },
+              "table": "conditions"
+            }
+          ],
+          "title": "R-values",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r3"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r4"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r6"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r5"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 8
+          },
+          "id": 10,
+          "interval": "5s",
+          "maxDataPoints": 200,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT \"time\"\n, AVG(r5) AS \"r5\"\n, AVG(r6) AS \"r6\"\nFROM conditions\nWHERE $__timeFilter(\"time\")\nGROUP BY \"time\" ORDER BY \"time\"",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"time\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "alias": "\"r1\"",
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "alias": "\"r2\"",
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r2",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "orderBy": {
+                  "property": {
+                    "name": "\"time\"",
+                    "type": "string"
+                  },
+                  "type": "property"
+                },
+                "whereJsonTree": {
+                  "children1": [],
+                  "id": "b89ba889-89ab-4cde-b012-3187c6fbe147",
+                  "type": "group"
+                }
+              },
+              "table": "conditions"
+            }
+          ],
+          "title": "R-values",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r3"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r4"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 8
+          },
+          "id": 11,
+          "interval": "5s",
+          "maxDataPoints": 200,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT \"time\"\n, AVG(r7) AS \"r7\"\n, AVG(r8) AS \"r8\"\nFROM conditions\nWHERE $__timeFilter(\"time\")\nGROUP BY \"time\" ORDER BY \"time\"",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"time\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "alias": "\"r1\"",
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "alias": "\"r2\"",
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r2",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "orderBy": {
+                  "property": {
+                    "name": "\"time\"",
+                    "type": "string"
+                  },
+                  "type": "property"
+                },
+                "whereJsonTree": {
+                  "children1": [],
+                  "id": "b89ba889-89ab-4cde-b012-3187c6fbe147",
+                  "type": "group"
+                }
+              },
+              "table": "conditions"
+            }
+          ],
+          "title": "R-values",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 16
+          },
+          "id": 6,
+          "interval": "5s",
+          "maxDataPoints": 200,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT \"time\", avg(heatervoltage) as heatervoltage \nFROM conditions \nWHERE $__timeFilter(\"time\")\ngroup by \"time\" order by \"time\"",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"time\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "parameters": [
+                      {
+                        "name": "heatervoltage",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "conditions"
+            }
+          ],
+          "title": "Heater Voltage",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 16
+          },
+          "id": 4,
+          "interval": "5s",
+          "maxDataPoints": 200,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT \"time\", avg(humidity) as humidity \nFROM conditions \nWHERE $__timeFilter(\"time\")\ngroup by \"time\" \norder by \"time\"",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"time\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "conditions"
+            }
+          ],
+          "title": "Humidity",
+          "type": "timeseries"
+        }
+      ],
+      "refresh": "5s",
+      "revision": 1,
+      "schemaVersion": 38,
+      "style": "dark",
+      "tags": [],
+      "templating": {
+        "list": []
+      },
+      "time": {
+        "from": "now-5m",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "",
+      "title": "Gas measurements",
+      "uid": "YG_P2MyVk",
+      "version": 4,
+      "weekStart": ""
+    }
+  spectral_residuals.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "target": {
+              "limit": 100,
+              "matchAny": false,
+              "tags": [],
+              "type": "dashboard"
+            },
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": 3,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 4
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 10,
+          "interval": "5s",
+          "maxDataPoints": 200,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "select \n  time, \n  (r1_score+r2_score+r3_score+r4_score+r5_score+r6_score+r7_score\n    +r8_score+r9_score+r10_score+r11_score+r12_score+r13_score+r14_score)/14 \n    as signal\nfrom (\n  SELECT time\n  , AVG(r1_score) AS r1_score\n  , AVG(r2_score) AS r2_score\n  , AVG(r3_score) AS r3_score\n  , AVG(r4_score) AS r4_score\n  , AVG(r5_score) AS r5_score\n  , AVG(r6_score) AS r6_score\n  , AVG(r7_score) AS r7_score\n  , AVG(r8_score) AS r8_score\n  , AVG(r9_score) AS r9_score\n  , AVG(r10_score) AS r10_score\n  , AVG(r11_score) AS r11_score\n  , AVG(r12_score) AS r12_score\n  , AVG(r13_score) AS r13_score\n  , AVG(r14_score) AS r14_score\n  FROM scores_sr\n  WHERE $__timeFilter(time)\n  GROUP BY time ORDER BY time\n) x",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            }
+          ],
+          "title": "R-scores: averaged",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r1"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r2"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r1_score"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "#8AB8FF",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r2_score"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r1_score_lttb"
+                },
+                "properties": [
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 8
+          },
+          "id": 8,
+          "interval": "5s",
+          "maxDataPoints": 200,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT \"time\"\n, AVG(r1_score) AS r1_score\n, AVG(r2_score) AS r2_score\n, AVG(r3_score) AS r3_score\n, AVG(r4_score) AS r4_score\n, AVG(r5_score) AS r5_score\n, AVG(r6_score) AS r6_score\n, AVG(r7_score) AS r7_score\n, AVG(r8_score) AS r8_score\n, AVG(r9_score) AS r9_score\n, AVG(r10_score) AS r10_score\n, AVG(r11_score) AS r11_score\n, AVG(r12_score) AS r12_score\n, AVG(r13_score) AS r13_score\n, AVG(r14_score) AS r14_score\nFROM scores_sr\nWHERE $__timeFilter(\"time\")\nGROUP BY \"time\" ORDER BY \"time\"",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            }
+          ],
+          "title": "R-scores",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r1"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r2"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r1_score"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "#8AB8FF",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "r2_score"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 16
+          },
+          "id": 9,
+          "interval": "5s",
+          "maxDataPoints": 200,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r1_score\nFROM unnest((\n    SELECT lttb(time, r1_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "C",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r2_score\nFROM unnest((\n    SELECT lttb(time, r2_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r3_score\nFROM unnest((\n    SELECT lttb(time, r3_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r4_score\nFROM unnest((\n    SELECT lttb(time, r4_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "D",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r5_score\nFROM unnest((\n    SELECT lttb(time, r5_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "E",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r6_score\nFROM unnest((\n    SELECT lttb(time, r6_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "F",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r7_score\nFROM unnest((\n    SELECT lttb(time, r7_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "G",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r8_score\nFROM unnest((\n    SELECT lttb(time, r8_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "H",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r9_score\nFROM unnest((\n    SELECT lttb(time, r9_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "I",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r10_score\nFROM unnest((\n    SELECT lttb(time, r10_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "J",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r11_score\nFROM unnest((\n    SELECT lttb(time, r11_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "K",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r12_score\nFROM unnest((\n    SELECT lttb(time, r12_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "L",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r13_score\nFROM unnest((\n    SELECT lttb(time, r13_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "M",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "postgres"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  value AS r14_score\nFROM unnest((\n    SELECT lttb(time, r14_score, 2 * (($__to - $__from) / $__interval_ms)::int)\n    FROM scores_sr\n    WHERE $__timeFilter(\"time\"))\n)\n",
+              "refId": "N",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "AVG",
+                    "parameters": [
+                      {
+                        "name": "r1_score",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "name": "\"time\"",
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "scores_sr"
+            }
+          ],
+          "title": "R-scores: downsampled (LTTB algorithm)",
+          "type": "timeseries"
+        }
+      ],
+      "refresh": "5s",
+      "revision": 1,
+      "schemaVersion": 38,
+      "style": "dark",
+      "tags": [],
+      "templating": {
+        "list": []
+      },
+      "time": {
+        "from": "now-5m",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "",
+      "title": "Spectral Residuals",
+      "uid": "e8b97c0f-67f7-4672-82b5-c7d1a01147ee",
+      "version": 7,
+      "weekStart": ""
+    }
+{% endraw %}

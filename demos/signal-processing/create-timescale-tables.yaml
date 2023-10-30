@@ -1,0 +1,116 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-timescale-tables-job
+spec:
+  template:
+    spec:
+      serviceAccountName: demo-serviceaccount
+      initContainers:
+        - name: wait-for-timescale
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          command: ["bash", "-c", "echo 'Waiting for timescaleDB to be ready'
+                    && kubectl wait --for=condition=ready --timeout=30m pod -l app.kubernetes.io/name=postgresql-timescaledb"
+                  ]
+      containers:
+        - name: create-timescale-tables-job
+          image: postgres
+          command: ["bash", "-c", "export PGPASSWORD=$(cat /timescale-admin-credentials/password) && \
+            echo 'Submitting DDL...' && \
+            psql -U admin -h postgresql-timescaledb.default.svc.cluster.local postgres -c '\\x' -c 'CREATE DATABASE tsdb' -c '\\c tsdb' -f /tmp/sql/timescaledb.sql -c 'select count(*) from conditions' -c '\\q' && \
+            echo 'Creating extension as superuser...' && \
+            psql -U postgres -h postgresql-timescaledb.default.svc.cluster.local postgres -c '\\x' -c '\\c tsdb' -c 'CREATE EXTENSION timescaledb_toolkit' -c '\\q'"]
+          volumeMounts:
+            - name: script
+              mountPath: /tmp/sql
+            - name: timescale-admin-credentials
+              mountPath: /timescale-admin-credentials
+      volumes:
+        - name: script
+          configMap:
+            name: create-timescale-tables-job-script
+        - name: timescale-admin-credentials
+          secret:
+            secretName: timescale-admin-credentials
+      restartPolicy: OnFailure
+  backoffLimit: 50
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-timescale-tables-job-script
+data:
+  timescaledb.sql: |
+    CREATE TABLE conditions (
+      time         TIMESTAMPTZ     NOT NULL,
+      timesecs     NUMERIC(12, 6)  NOT NULL,
+      coppm        NUMERIC(12, 6)  NOT NULL,
+      humidity     NUMERIC(12, 6)  NOT NULL,
+      temperature  NUMERIC(12, 6)  NOT NULL,
+      flowrate     NUMERIC(12, 6)  NOT NULL,
+      heatervoltage     NUMERIC(12, 6)  NOT NULL,
+      r1     NUMERIC(12, 6)  NOT NULL,
+      r2     NUMERIC(12, 6)  NOT NULL,
+      r3     NUMERIC(12, 6)  NOT NULL,
+      r4     NUMERIC(12, 6)  NOT NULL,
+      r5     NUMERIC(12, 6)  NOT NULL,
+      r6     NUMERIC(12, 6)  NOT NULL,
+      r7     NUMERIC(12, 6)  NOT NULL,
+      r8     NUMERIC(12, 6)  NOT NULL,
+      r9     NUMERIC(12, 6)  NOT NULL,
+      r10    NUMERIC(12, 6)  NOT NULL,
+      r11    NUMERIC(12, 6)  NOT NULL,
+      r12    NUMERIC(12, 6)  NOT NULL,
+      r13    NUMERIC(12, 6)  NOT NULL,
+      r14    NUMERIC(12, 6)  NOT NULL
+    );
+
+    CREATE UNIQUE INDEX idx_conditions ON conditions(timesecs, time);
+
+    SELECT create_hypertable('conditions', 'time');
+
+    CREATE TABLE conditions_temp (
+      timesecs     NUMERIC(12, 6)  NOT NULL,
+      coppm        NUMERIC(12, 6)  NOT NULL,
+      humidity     NUMERIC(12, 6)  NOT NULL,
+      temperature  NUMERIC(12, 6)  NOT NULL,
+      flowrate     NUMERIC(12, 6)  NOT NULL,
+      heatervoltage     NUMERIC(12, 6)  NOT NULL,
+      r1     NUMERIC(12, 6)  NOT NULL,
+      r2     NUMERIC(12, 6)  NOT NULL,
+      r3     NUMERIC(12, 6)  NOT NULL,
+      r4     NUMERIC(12, 6)  NOT NULL,
+      r5     NUMERIC(12, 6)  NOT NULL,
+      r6     NUMERIC(12, 6)  NOT NULL,
+      r7     NUMERIC(12, 6)  NOT NULL,
+      r8     NUMERIC(12, 6)  NOT NULL,
+      r9     NUMERIC(12, 6)  NOT NULL,
+      r10    NUMERIC(12, 6)  NOT NULL,
+      r11    NUMERIC(12, 6)  NOT NULL,
+      r12    NUMERIC(12, 6)  NOT NULL,
+      r13    NUMERIC(12, 6)  NOT NULL,
+      r14    NUMERIC(12, 6)  NOT NULL
+    );
+
+    CREATE TABLE scores_sr (
+      time          TIMESTAMPTZ     NOT NULL,
+      r1_score      NUMERIC(12, 6)  NOT NULL,
+      r2_score      NUMERIC(12, 6)  NOT NULL,
+      r3_score      NUMERIC(12, 6)  NOT NULL,
+      r4_score      NUMERIC(12, 6)  NOT NULL,
+      r5_score      NUMERIC(12, 6)  NOT NULL,
+      r6_score      NUMERIC(12, 6)  NOT NULL,
+      r7_score      NUMERIC(12, 6)  NOT NULL,
+      r8_score      NUMERIC(12, 6)  NOT NULL,
+      r9_score      NUMERIC(12, 6)  NOT NULL,
+      r10_score     NUMERIC(12, 6)  NOT NULL,
+      r11_score     NUMERIC(12, 6)  NOT NULL,
+      r12_score     NUMERIC(12, 6)  NOT NULL,
+      r13_score     NUMERIC(12, 6)  NOT NULL,
+      r14_score     NUMERIC(12, 6)  NOT NULL
+    );
+
+    CREATE UNIQUE INDEX idx_scores_sr ON scores_sr(time);
+
+    SELECT create_hypertable('scores_sr', 'time');

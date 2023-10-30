@@ -1,0 +1,49 @@
+releaseName: jupyterhub
+name: jupyterhub
+repo:
+  name: jupyterhub
+  url: https://jupyterhub.github.io/helm-chart/
+version: 2.0.0
+options:
+  hub:
+    config:
+      Authenticator:
+        allowed_users:
+          - admin
+      DummyAuthenticator:
+        password: {{ jupyterHubAdminPassword }}
+      JupyterHub:
+        authenticator_class: dummy
+  proxy:
+    service:
+      type: NodePort
+  prePuller:
+    hook:
+      enabled: false
+    continuous:
+      enabled: false
+  rbac:
+    create: true
+  singleuser:
+    cmd: null
+    image:
+      name: docker.stackable.tech/demos/jupyter-pyspark-with-alibi-detect
+      tag: python-3.9
+    serviceAccountName: spark
+    networkPolicy:
+      enabled: false
+    initContainers:
+      - name: download-notebook
+        image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+        command: ['sh', '-c', 'curl https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/signal-processing/tsdb.ipynb -o /notebook/tsdb.ipynb']
+        volumeMounts:
+          - mountPath: /notebook
+            name: notebook
+    storage:
+      extraVolumes:
+        - name: notebook
+          emptyDir:
+            sizeLimit: 500Mi
+      extraVolumeMounts:
+        - name: notebook
+          mountPath: /home/jovyan/notebook

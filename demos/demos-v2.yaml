@@ -188,3 +188,21 @@ demos:
       cpu: 6500m
       memory: 5098Mi
       pvc: 27Gi
+  signal-processing:
+    description: Demo showing signal processing on time-series data
+    documentation: https://docs.stackable.tech/stackablectl/stable/demos/signal-processing.html
+    stackableStack: signal-processing
+    labels:
+      - nifi
+      - jupyterhub
+      - grafana-dashboards
+      - zookeeper
+    manifests:
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/signal-processing/serviceaccount.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/signal-processing/create-timescale-tables.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/signal-processing/create-nifi-ingestion-job.yaml
+    supportedNamespaces: []
+    resourceRequests:
+      cpu: "3"
+      memory: 5098Mi
+      pvc: 16Gi

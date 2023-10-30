@@ -1,0 +1,1507 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<template encoding-version="1.3">
+    <description></description>
+    <groupId>e6d5bf94-0187-1000-0ee7-b84ef2a3037a</groupId>
+    <name>DownloadAndWriteToDB</name>
+    <snippet>
+        <connections>
+            <id>1df138f7-6a8d-33f6-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
+            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
+            <destination>
+                <groupId>3d31a075-192a-38f3-0000-000000000000</groupId>
+                <id>6e68cc32-20f8-3d76-0000-000000000000</id>
+                <type>PROCESSOR</type>
+            </destination>
+            <flowFileExpiration>0 sec</flowFileExpiration>
+            <labelIndex>1</labelIndex>
+            <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+            <loadBalancePartitionAttribute></loadBalancePartitionAttribute>
+            <loadBalanceStatus>LOAD_BALANCE_NOT_CONFIGURED</loadBalanceStatus>
+            <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+            <name></name>
+            <selectedRelationships>Response</selectedRelationships>
+            <source>
+                <groupId>3d31a075-192a-38f3-0000-000000000000</groupId>
+                <id>4bcb7570-148b-3521-0000-000000000000</id>
+                <type>PROCESSOR</type>
+            </source>
+            <zIndex>0</zIndex>
+        </connections>
+        <connections>
+            <id>bc077070-b57b-3923-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
+            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
+            <destination>
+                <groupId>3d31a075-192a-38f3-0000-000000000000</groupId>
+                <id>4d2fd50c-ff65-382a-0000-000000000000</id>
+                <type>PROCESSOR</type>
+            </destination>
+            <flowFileExpiration>0 sec</flowFileExpiration>
+            <labelIndex>1</labelIndex>
+            <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+            <loadBalancePartitionAttribute></loadBalancePartitionAttribute>
+            <loadBalanceStatus>LOAD_BALANCE_NOT_CONFIGURED</loadBalanceStatus>
+            <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+            <name></name>
+            <selectedRelationships>success</selectedRelationships>
+            <source>
+                <groupId>3d31a075-192a-38f3-0000-000000000000</groupId>
+                <id>6e68cc32-20f8-3d76-0000-000000000000</id>
+                <type>PROCESSOR</type>
+            </source>
+            <zIndex>0</zIndex>
+        </connections>
+        <controllerServices>
+            <id>af0e7074-b312-3e72-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
+            <bulletinLevel>WARN</bulletinLevel>
+            <bundle>
+                <artifact>nifi-dbcp-service-nar</artifact>
+                <group>org.apache.nifi</group>
+                <version>1.21.0</version>
+            </bundle>
+            <comments></comments>
+            <descriptors>
+                <entry>
+                    <key>Database Connection URL</key>
+                    <value>
+                        <name>Database Connection URL</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Database Driver Class Name</key>
+                    <value>
+                        <name>Database Driver Class Name</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>database-driver-locations</key>
+                    <value>
+                        <name>database-driver-locations</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>kerberos-user-service</key>
+                    <value>
+                        <identifiesControllerService>org.apache.nifi.kerberos.KerberosUserService</identifiesControllerService>
+                        <name>kerberos-user-service</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>kerberos-credentials-service</key>
+                    <value>
+                        <identifiesControllerService>org.apache.nifi.kerberos.KerberosCredentialsService</identifiesControllerService>
+                        <name>kerberos-credentials-service</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>kerberos-principal</key>
+                    <value>
+                        <name>kerberos-principal</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>kerberos-password</key>
+                    <value>
+                        <name>kerberos-password</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Database User</key>
+                    <value>
+                        <name>Database User</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Password</key>
+                    <value>
+                        <name>Password</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Max Wait Time</key>
+                    <value>
+                        <name>Max Wait Time</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Max Total Connections</key>
+                    <value>
+                        <name>Max Total Connections</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Validation-query</key>
+                    <value>
+                        <name>Validation-query</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>dbcp-min-idle-conns</key>
+                    <value>
+                        <name>dbcp-min-idle-conns</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>dbcp-max-idle-conns</key>
+                    <value>
+                        <name>dbcp-max-idle-conns</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>dbcp-max-conn-lifetime</key>
+                    <value>
+                        <name>dbcp-max-conn-lifetime</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>dbcp-time-between-eviction-runs</key>
+                    <value>
+                        <name>dbcp-time-between-eviction-runs</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>dbcp-min-evictable-idle-time</key>
+                    <value>
+                        <name>dbcp-min-evictable-idle-time</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>dbcp-soft-min-evictable-idle-time</key>
+                    <value>
+                        <name>dbcp-soft-min-evictable-idle-time</name>
+                    </value>
+                </entry>
+            </descriptors>
+            <name>DBCPConnectionPool</name>
+            <persistsState>false</persistsState>
+            <properties>
+                <entry>
+                    <key>Database Connection URL</key>
+                    <value>jdbc:postgresql://postgresql-timescaledb.default.svc.cluster.local:5432/tsdb</value>
+                </entry>
+                <entry>
+                    <key>Database Driver Class Name</key>
+                    <value>org.postgresql.Driver</value>
+                </entry>
+                <entry>
+                    <key>database-driver-locations</key>
+                    <value>/stackable/nifi/postgresql-42.6.0.jar</value>
+                </entry>
+                <entry>
+                    <key>kerberos-user-service</key>
+                </entry>
+                <entry>
+                    <key>kerberos-credentials-service</key>
+                </entry>
+                <entry>
+                    <key>kerberos-principal</key>
+                </entry>
+                <entry>
+                    <key>kerberos-password</key>
+                </entry>
+                <entry>
+                    <key>Database User</key>
+                    <value>admin</value>
+                </entry>
+                <entry>
+                    <key>Password</key>
+                    <value>PLACEHOLDERPGPASSWORD</value>
+                </entry>
+                <entry>
+                    <key>Max Wait Time</key>
+                    <value>500 millis</value>
+                </entry>
+                <entry>
+                    <key>Max Total Connections</key>
+                    <value>8</value>
+                </entry>
+                <entry>
+                    <key>Validation-query</key>
+                    <value>select count(*) from conditions;</value>
+                </entry>
+                <entry>
+                    <key>dbcp-min-idle-conns</key>
+                    <value>0</value>
+                </entry>
+                <entry>
+                    <key>dbcp-max-idle-conns</key>
+                    <value>8</value>
+                </entry>
+                <entry>
+                    <key>dbcp-max-conn-lifetime</key>
+                    <value>-1</value>
+                </entry>
+                <entry>
+                    <key>dbcp-time-between-eviction-runs</key>
+                    <value>-1</value>
+                </entry>
+                <entry>
+                    <key>dbcp-min-evictable-idle-time</key>
+                    <value>30 mins</value>
+                </entry>
+                <entry>
+                    <key>dbcp-soft-min-evictable-idle-time</key>
+                    <value>-1</value>
+                </entry>
+            </properties>
+            <state>ENABLED</state>
+            <type>org.apache.nifi.dbcp.DBCPConnectionPool</type>
+        </controllerServices>
+        <controllerServices>
+            <id>e6f67d2c-4c6e-3549-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
+            <bulletinLevel>WARN</bulletinLevel>
+            <bundle>
+                <artifact>nifi-record-serialization-services-nar</artifact>
+                <group>org.apache.nifi</group>
+                <version>1.21.0</version>
+            </bundle>
+            <comments></comments>
+            <descriptors>
+                <entry>
+                    <key>schema-access-strategy</key>
+                    <value>
+                        <name>schema-access-strategy</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>schema-registry</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>confluent-encoded</dependentValues>
+                            <dependentValues>schema-name</dependentValues>
+                            <dependentValues>hwx-schema-ref-attributes</dependentValues>
+                            <dependentValues>hwx-content-encoded-schema</dependentValues>
+                            <propertyName>schema-access-strategy</propertyName>
+                        </dependencies>
+                        <identifiesControllerService>org.apache.nifi.schemaregistry.services.SchemaRegistry</identifiesControllerService>
+                        <name>schema-registry</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>schema-name</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>schema-name</dependentValues>
+                            <propertyName>schema-access-strategy</propertyName>
+                        </dependencies>
+                        <name>schema-name</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>schema-version</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>schema-name</dependentValues>
+                            <propertyName>schema-access-strategy</propertyName>
+                        </dependencies>
+                        <name>schema-version</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>schema-branch</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>schema-name</dependentValues>
+                            <propertyName>schema-access-strategy</propertyName>
+                        </dependencies>
+                        <name>schema-branch</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>schema-text</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>schema-text-property</dependentValues>
+                            <propertyName>schema-access-strategy</propertyName>
+                        </dependencies>
+                        <name>schema-text</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>csv-reader-csv-parser</key>
+                    <value>
+                        <name>csv-reader-csv-parser</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Date Format</key>
+                    <value>
+                        <name>Date Format</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Time Format</key>
+                    <value>
+                        <name>Time Format</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Timestamp Format</key>
+                    <value>
+                        <name>Timestamp Format</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>CSV Format</key>
+                    <value>
+                        <name>CSV Format</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Value Separator</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>custom</dependentValues>
+                            <propertyName>CSV Format</propertyName>
+                        </dependencies>
+                        <name>Value Separator</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Record Separator</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>custom</dependentValues>
+                            <propertyName>CSV Format</propertyName>
+                        </dependencies>
+                        <name>Record Separator</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Skip Header Line</key>
+                    <value>
+                        <name>Skip Header Line</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>ignore-csv-header</key>
+                    <value>
+                        <name>ignore-csv-header</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Quote Character</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>custom</dependentValues>
+                            <propertyName>CSV Format</propertyName>
+                        </dependencies>
+                        <name>Quote Character</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Escape Character</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>custom</dependentValues>
+                            <propertyName>CSV Format</propertyName>
+                        </dependencies>
+                        <name>Escape Character</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Comment Marker</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>custom</dependentValues>
+                            <propertyName>CSV Format</propertyName>
+                        </dependencies>
+                        <name>Comment Marker</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Null String</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>custom</dependentValues>
+                            <propertyName>CSV Format</propertyName>
+                        </dependencies>
+                        <name>Null String</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Trim Fields</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>custom</dependentValues>
+                            <propertyName>CSV Format</propertyName>
+                        </dependencies>
+                        <name>Trim Fields</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>csvutils-character-set</key>
+                    <value>
+                        <name>csvutils-character-set</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>csvutils-allow-duplicate-header-names</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>custom</dependentValues>
+                            <propertyName>CSV Format</propertyName>
+                        </dependencies>
+                        <name>csvutils-allow-duplicate-header-names</name>
+                    </value>
+                </entry>
+                <entry>
+                    <key>Trim double quote</key>
+                    <value>
+                        <dependencies>
+                            <dependentValues>rfc-4180</dependentValues>
+                            <propertyName>CSV Format</propertyName>
+                        </dependencies>
+                        <name>Trim double quote</name>
+                    </value>
+                </entry>
+            </descriptors>
+            <name>CSVReader</name>
+            <persistsState>false</persistsState>
+            <properties>
+                <entry>
+                    <key>schema-access-strategy</key>
+                    <value>infer-schema</value>
+                </entry>
+                <entry>
+                    <key>schema-registry</key>
+                </entry>
+                <entry>
+                    <key>schema-name</key>
+                    <value>${schema.name}</value>
+                </entry>
+                <entry>
+                    <key>schema-version</key>
+                </entry>
+                <entry>
+                    <key>schema-branch</key>
+                </entry>
+                <entry>
+                    <key>schema-text</key>
+                    <value>${avro.schema}</value>
+                </entry>
+                <entry>
+                    <key>csv-reader-csv-parser</key>
+                    <value>commons-csv</value>
+                </entry>
+                <entry>
+                    <key>Date Format</key>
+                </entry>
+                <entry>
+                    <key>Time Format</key>
+                </entry>
+                <entry>
+                    <key>Timestamp Format</key>
+                </entry>
+                <entry>
+                    <key>CSV Format</key>
+                    <value>custom</value>
+                </entry>
+                <entry>
+                    <key>Value Separator</key>
+                    <value>,</value>
+                </entry>
+                <entry>
+                    <key>Record Separator</key>
+                    <value>\n</value>
+                </entry>
+                <entry>
+                    <key>Skip Header Line</key>
+                    <value>true</value>
+                </entry>
+                <entry>
+                    <key>ignore-csv-header</key>
+                    <value>false</value>
+                </entry>
+                <entry>
+                    <key>Quote Character</key>
+                    <value>"</value>
+                </entry>
+                <entry>
+                    <key>Escape Character</key>
+                    <value>\</value>
+                </entry>
+                <entry>
+                    <key>Comment Marker</key>
+                </entry>
+                <entry>
+                    <key>Null String</key>
+                </entry>
+                <entry>
+                    <key>Trim Fields</key>
+                    <value>true</value>
+                </entry>
+                <entry>
+                    <key>csvutils-character-set</key>
+                    <value>UTF-8</value>
+                </entry>
+                <entry>
+                    <key>csvutils-allow-duplicate-header-names</key>
+                    <value>true</value>
+                </entry>
+                <entry>
+                    <key>Trim double quote</key>
+                    <value>true</value>
+                </entry>
+            </properties>
+            <state>ENABLED</state>
+            <type>org.apache.nifi.csv.CSVReader</type>
+        </controllerServices>
+        <labels>
+            <id>186870f8-9fb7-3efb-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
+            <position>
+                <x>304.0</x>
+                <y>416.0</y>
+            </position>
+            <height>88.0</height>
+            <label>This flow downloads a dataset, writing it to a temporary table in TimescaleDB.
+This data is then written to the target table with the time offsets preserved, 
+but re-based to the current time. This means that the data can be displayed
+in Grafana as if it were being streamed, whereas in fact the dashboard moves
+through "future" data that has already been persisted.</label>
+            <style>
+                <entry>
+                    <key>font-size</key>
+                    <value>12px</value>
+                </entry>
+            </style>
+            <width>432.0</width>
+            <zIndex>0</zIndex>
+        </labels>
+        <processors>
+            <id>4bcb7570-148b-3521-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
+            <position>
+                <x>3.0</x>
+                <y>0.0</y>
+            </position>
+            <bundle>
+                <artifact>nifi-standard-nar</artifact>
+                <group>org.apache.nifi</group>
+                <version>1.21.0</version>
+            </bundle>
+            <config>
+                <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
+                <bulletinLevel>WARN</bulletinLevel>
+                <comments></comments>
+                <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
+                <descriptors>
+                    <entry>
+                        <key>HTTP Method</key>
+                        <value>
+                            <name>HTTP Method</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Remote URL</key>
+                        <value>
+                            <name>Remote URL</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>disable-http2</key>
+                        <value>
+                            <name>disable-http2</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>SSL Context Service</key>
+                        <value>
+                            <identifiesControllerService>org.apache.nifi.ssl.SSLContextService</identifiesControllerService>
+                            <name>SSL Context Service</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Connection Timeout</key>
+                        <value>
+                            <name>Connection Timeout</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Read Timeout</key>
+                        <value>
+                            <name>Read Timeout</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>idle-timeout</key>
+                        <value>
+                            <name>idle-timeout</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>max-idle-connections</key>
+                        <value>
+                            <name>max-idle-connections</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>proxy-configuration-service</key>
+                        <value>
+                            <identifiesControllerService>org.apache.nifi.proxy.ProxyConfigurationService</identifiesControllerService>
+                            <name>proxy-configuration-service</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Proxy Host</key>
+                        <value>
+                            <name>Proxy Host</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Proxy Port</key>
+                        <value>
+                            <dependencies>
+<propertyName>Proxy Host</propertyName>
+                            </dependencies>
+                            <name>Proxy Port</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Proxy Type</key>
+                        <value>
+                            <dependencies>
+<propertyName>Proxy Host</propertyName>
+                            </dependencies>
+                            <name>Proxy Type</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>invokehttp-proxy-user</key>
+                        <value>
+                            <dependencies>
+<propertyName>Proxy Host</propertyName>
+                            </dependencies>
+                            <name>invokehttp-proxy-user</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>invokehttp-proxy-password</key>
+                        <value>
+                            <dependencies>
+<propertyName>Proxy Host</propertyName>
+                            </dependencies>
+                            <name>invokehttp-proxy-password</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>oauth2-access-token-provider</key>
+                        <value>
+                            <identifiesControllerService>org.apache.nifi.oauth2.OAuth2AccessTokenProvider</identifiesControllerService>
+                            <name>oauth2-access-token-provider</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Basic Authentication Username</key>
+                        <value>
+                            <name>Basic Authentication Username</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Basic Authentication Password</key>
+                        <value>
+                            <name>Basic Authentication Password</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Digest Authentication</key>
+                        <value>
+                            <dependencies>
+<propertyName>Basic Authentication Username</propertyName>
+                            </dependencies>
+                            <name>Digest Authentication</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Penalize on "No Retry"</key>
+                        <value>
+                            <name>Penalize on "No Retry"</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>send-message-body</key>
+                        <value>
+                            <dependencies>
+<dependentValues>POST</dependentValues>
+<dependentValues>PATCH</dependentValues>
+<dependentValues>PUT</dependentValues>
+<propertyName>HTTP Method</propertyName>
+                            </dependencies>
+                            <name>send-message-body</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>form-body-form-name</key>
+                        <value>
+                            <dependencies>
+<dependentValues>true</dependentValues>
+<propertyName>send-message-body</propertyName>
+                            </dependencies>
+                            <name>form-body-form-name</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>set-form-filename</key>
+                        <value>
+                            <dependencies>
+<propertyName>form-body-form-name</propertyName>
+                            </dependencies>
+                            <name>set-form-filename</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Use Chunked Encoding</key>
+                        <value>
+                            <dependencies>
+<dependentValues>POST</dependentValues>
+<dependentValues>PATCH</dependentValues>
+<dependentValues>PUT</dependentValues>
+<propertyName>HTTP Method</propertyName>
+                            </dependencies>
+                            <name>Use Chunked Encoding</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Content-Encoding</key>
+                        <value>
+                            <dependencies>
+<dependentValues>POST</dependentValues>
+<dependentValues>PATCH</dependentValues>
+<dependentValues>PUT</dependentValues>
+<propertyName>HTTP Method</propertyName>
+                            </dependencies>
+                            <name>Content-Encoding</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Content-Type</key>
+                        <value>
+                            <dependencies>
+<dependentValues>POST</dependentValues>
+<dependentValues>PATCH</dependentValues>
+<dependentValues>PUT</dependentValues>
+<propertyName>HTTP Method</propertyName>
+                            </dependencies>
+                            <name>Content-Type</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Include Date Header</key>
+                        <value>
+                            <name>Include Date Header</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Attributes to Send</key>
+                        <value>
+                            <name>Attributes to Send</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Useragent</key>
+                        <value>
+                            <name>Useragent</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Put Response Body In Attribute</key>
+                        <value>
+                            <name>Put Response Body In Attribute</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Max Length To Put In Attribute</key>
+                        <value>
+                            <dependencies>
+<propertyName>Put Response Body In Attribute</propertyName>
+                            </dependencies>
+                            <name>Max Length To Put In Attribute</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>ignore-response-content</key>
+                        <value>
+                            <name>ignore-response-content</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>use-etag</key>
+                        <value>
+                            <name>use-etag</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>etag-max-cache-size</key>
+                        <value>
+                            <dependencies>
+<dependentValues>true</dependentValues>
+<propertyName>use-etag</propertyName>
+                            </dependencies>
+                            <name>etag-max-cache-size</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>cookie-strategy</key>
+                        <value>
+                            <name>cookie-strategy</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Always Output Response</key>
+                        <value>
+                            <name>Always Output Response</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>flow-file-naming-strategy</key>
+                        <value>
+                            <name>flow-file-naming-strategy</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Add Response Headers to Request</key>
+                        <value>
+                            <name>Add Response Headers to Request</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Follow Redirects</key>
+                        <value>
+                            <name>Follow Redirects</name>
+                        </value>
+                    </entry>
+                </descriptors>
+                <executionNode>ALL</executionNode>
+                <lossTolerant>false</lossTolerant>
+                <maxBackoffPeriod>10 mins</maxBackoffPeriod>
+                <penaltyDuration>30 sec</penaltyDuration>
+                <properties>
+                    <entry>
+                        <key>HTTP Method</key>
+                        <value>GET</value>
+                    </entry>
+                    <entry>
+                        <key>Remote URL</key>
+                        <value>https://repo.stackable.tech/repository/misc/datasets/gas-sensor-data/20160930_203718.csv</value>
+                    </entry>
+                    <entry>
+                        <key>disable-http2</key>
+                        <value>False</value>
+                    </entry>
+                    <entry>
+                        <key>SSL Context Service</key>
+                    </entry>
+                    <entry>
+                        <key>Connection Timeout</key>
+                        <value>5 secs</value>
+                    </entry>
+                    <entry>
+                        <key>Read Timeout</key>
+                        <value>15 secs</value>
+                    </entry>
+                    <entry>
+                        <key>idle-timeout</key>
+                        <value>5 mins</value>
+                    </entry>
+                    <entry>
+                        <key>max-idle-connections</key>
+                        <value>5</value>
+                    </entry>
+                    <entry>
+                        <key>proxy-configuration-service</key>
+                    </entry>
+                    <entry>
+                        <key>Proxy Host</key>
+                    </entry>
+                    <entry>
+                        <key>Proxy Port</key>
+                    </entry>
+                    <entry>
+                        <key>Proxy Type</key>
+                        <value>http</value>
+                    </entry>
+                    <entry>
+                        <key>invokehttp-proxy-user</key>
+                    </entry>
+                    <entry>
+                        <key>invokehttp-proxy-password</key>
+                    </entry>
+                    <entry>
+                        <key>oauth2-access-token-provider</key>
+                    </entry>
+                    <entry>
+                        <key>Basic Authentication Username</key>
+                    </entry>
+                    <entry>
+                        <key>Basic Authentication Password</key>
+                    </entry>
+                    <entry>
+                        <key>Digest Authentication</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>Penalize on "No Retry"</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>send-message-body</key>
+                        <value>true</value>
+                    </entry>
+                    <entry>
+                        <key>form-body-form-name</key>
+                    </entry>
+                    <entry>
+                        <key>set-form-filename</key>
+                        <value>true</value>
+                    </entry>
+                    <entry>
+                        <key>Use Chunked Encoding</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>Content-Encoding</key>
+                        <value>DISABLED</value>
+                    </entry>
+                    <entry>
+                        <key>Content-Type</key>
+                        <value>${mime.type}</value>
+                    </entry>
+                    <entry>
+                        <key>Include Date Header</key>
+                        <value>True</value>
+                    </entry>
+                    <entry>
+                        <key>Attributes to Send</key>
+                    </entry>
+                    <entry>
+                        <key>Useragent</key>
+                    </entry>
+                    <entry>
+                        <key>Put Response Body In Attribute</key>
+                    </entry>
+                    <entry>
+                        <key>Max Length To Put In Attribute</key>
+                        <value>256</value>
+                    </entry>
+                    <entry>
+                        <key>ignore-response-content</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>use-etag</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>etag-max-cache-size</key>
+                        <value>10MB</value>
+                    </entry>
+                    <entry>
+                        <key>cookie-strategy</key>
+                        <value>DISABLED</value>
+                    </entry>
+                    <entry>
+                        <key>Always Output Response</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>flow-file-naming-strategy</key>
+                        <value>RANDOM</value>
+                    </entry>
+                    <entry>
+                        <key>Add Response Headers to Request</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>Follow Redirects</key>
+                        <value>True</value>
+                    </entry>
+                </properties>
+                <retryCount>10</retryCount>
+                <runDurationMillis>0</runDurationMillis>
+                <schedulingPeriod>365000 days</schedulingPeriod>
+                <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+                <yieldDuration>1 sec</yieldDuration>
+            </config>
+            <executionNodeRestricted>false</executionNodeRestricted>
+            <name>InvokeHTTP</name>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>Failure</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>No Retry</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>Original</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>false</autoTerminate>
+                <name>Response</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>Retry</name>
+                <retry>false</retry>
+            </relationships>
+            <state>RUNNING</state>
+            <style/>
+            <type>org.apache.nifi.processors.standard.InvokeHTTP</type>
+        </processors>
+        <processors>
+            <id>4d2fd50c-ff65-382a-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
+            <position>
+                <x>0.0</x>
+                <y>544.0</y>
+            </position>
+            <bundle>
+                <artifact>nifi-standard-nar</artifact>
+                <group>org.apache.nifi</group>
+                <version>1.21.0</version>
+            </bundle>
+            <config>
+                <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
+                <bulletinLevel>WARN</bulletinLevel>
+                <comments></comments>
+                <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
+                <descriptors>
+                    <entry>
+                        <key>JDBC Connection Pool</key>
+                        <value>
+                            <identifiesControllerService>org.apache.nifi.dbcp.DBCPService</identifiesControllerService>
+                            <name>JDBC Connection Pool</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>putsql-sql-statement</key>
+                        <value>
+                            <name>putsql-sql-statement</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Support Fragmented Transactions</key>
+                        <value>
+                            <name>Support Fragmented Transactions</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>database-session-autocommit</key>
+                        <value>
+                            <name>database-session-autocommit</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Transaction Timeout</key>
+                        <value>
+                            <name>Transaction Timeout</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Batch Size</key>
+                        <value>
+                            <name>Batch Size</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Obtain Generated Keys</key>
+                        <value>
+                            <name>Obtain Generated Keys</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>rollback-on-failure</key>
+                        <value>
+                            <name>rollback-on-failure</name>
+                        </value>
+                    </entry>
+                </descriptors>
+                <executionNode>ALL</executionNode>
+                <lossTolerant>false</lossTolerant>
+                <maxBackoffPeriod>10 mins</maxBackoffPeriod>
+                <penaltyDuration>30 sec</penaltyDuration>
+                <properties>
+                    <entry>
+                        <key>JDBC Connection Pool</key>
+                        <value>af0e7074-b312-3e72-0000-000000000000</value>
+                    </entry>
+                    <entry>
+                        <key>putsql-sql-statement</key>
+                        <value>insert into conditions
+select now() + timesecs * interval '1 second'
+, timesecs
+, coppm
+, humidity
+, temperature
+, flowrate
+, heatervoltage
+, r1
+, r2
+, r3
+, r4
+, r5
+, r6
+, r7
+, r8
+, r9
+, r10
+, r11
+, r12
+, r13
+, r14
+from conditions_temp;</value>
+                    </entry>
+                    <entry>
+                        <key>Support Fragmented Transactions</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>database-session-autocommit</key>
+                        <value>true</value>
+                    </entry>
+                    <entry>
+                        <key>Transaction Timeout</key>
+                    </entry>
+                    <entry>
+                        <key>Batch Size</key>
+                        <value>100</value>
+                    </entry>
+                    <entry>
+                        <key>Obtain Generated Keys</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>rollback-on-failure</key>
+                        <value>false</value>
+                    </entry>
+                </properties>
+                <retryCount>10</retryCount>
+                <runDurationMillis>0</runDurationMillis>
+                <schedulingPeriod>0 sec</schedulingPeriod>
+                <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+                <yieldDuration>1 sec</yieldDuration>
+            </config>
+            <executionNodeRestricted>false</executionNodeRestricted>
+            <name>Update hypertable</name>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>failure</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>retry</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>success</name>
+                <retry>false</retry>
+            </relationships>
+            <state>RUNNING</state>
+            <style/>
+            <type>org.apache.nifi.processors.standard.PutSQL</type>
+        </processors>
+        <processors>
+            <id>6e68cc32-20f8-3d76-0000-000000000000</id>
+            <parentGroupId>3d31a075-192a-38f3-0000-000000000000</parentGroupId>
+            <position>
+                <x>0.0</x>
+                <y>256.0</y>
+            </position>
+            <bundle>
+                <artifact>nifi-standard-nar</artifact>
+                <group>org.apache.nifi</group>
+                <version>1.21.0</version>
+            </bundle>
+            <config>
+                <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
+                <bulletinLevel>WARN</bulletinLevel>
+                <comments></comments>
+                <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
+                <descriptors>
+                    <entry>
+                        <key>put-db-record-record-reader</key>
+                        <value>
+                            <identifiesControllerService>org.apache.nifi.serialization.RecordReaderFactory</identifiesControllerService>
+                            <name>put-db-record-record-reader</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>db-type</key>
+                        <value>
+                            <name>db-type</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-statement-type</key>
+                        <value>
+                            <name>put-db-record-statement-type</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Statement Type Record Path</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Use Record Path</dependentValues>
+<propertyName>put-db-record-statement-type</propertyName>
+                            </dependencies>
+                            <name>Statement Type Record Path</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Data Record Path</key>
+                        <value>
+                            <name>Data Record Path</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-dcbp-service</key>
+                        <value>
+                            <identifiesControllerService>org.apache.nifi.dbcp.DBCPService</identifiesControllerService>
+                            <name>put-db-record-dcbp-service</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-catalog-name</key>
+                        <value>
+                            <name>put-db-record-catalog-name</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-schema-name</key>
+                        <value>
+                            <name>put-db-record-schema-name</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-table-name</key>
+                        <value>
+                            <name>put-db-record-table-name</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-translate-field-names</key>
+                        <value>
+                            <name>put-db-record-translate-field-names</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-unmatched-field-behavior</key>
+                        <value>
+                            <name>put-db-record-unmatched-field-behavior</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-unmatched-column-behavior</key>
+                        <value>
+                            <name>put-db-record-unmatched-column-behavior</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-update-keys</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Use statement.type Attribute</dependentValues>
+<dependentValues>Use Record Path</dependentValues>
+<dependentValues>UPSERT</dependentValues>
+<dependentValues>UPDATE</dependentValues>
+<dependentValues>SQL</dependentValues>
+<propertyName>put-db-record-statement-type</propertyName>
+                            </dependencies>
+                            <name>put-db-record-update-keys</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-field-containing-sql</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Use statement.type Attribute</dependentValues>
+<dependentValues>Use Record Path</dependentValues>
+<propertyName>put-db-record-statement-type</propertyName>
+                            </dependencies>
+                            <name>put-db-record-field-containing-sql</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-allow-multiple-statements</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Use statement.type Attribute</dependentValues>
+<dependentValues>Use Record Path</dependentValues>
+<propertyName>put-db-record-statement-type</propertyName>
+                            </dependencies>
+                            <name>put-db-record-allow-multiple-statements</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-quoted-identifiers</key>
+                        <value>
+                            <name>put-db-record-quoted-identifiers</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-quoted-table-identifiers</key>
+                        <value>
+                            <name>put-db-record-quoted-table-identifiers</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-query-timeout</key>
+                        <value>
+                            <name>put-db-record-query-timeout</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>rollback-on-failure</key>
+                        <value>
+                            <name>rollback-on-failure</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>table-schema-cache-size</key>
+                        <value>
+                            <name>table-schema-cache-size</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-max-batch-size</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Use statement.type Attribute</dependentValues>
+<dependentValues>Use Record Path</dependentValues>
+<dependentValues>INSERT</dependentValues>
+<dependentValues>UPDATE</dependentValues>
+<propertyName>put-db-record-statement-type</propertyName>
+                            </dependencies>
+                            <name>put-db-record-max-batch-size</name>
+                        </value>
+                    </entry>
+                </descriptors>
+                <executionNode>ALL</executionNode>
+                <lossTolerant>false</lossTolerant>
+                <maxBackoffPeriod>10 mins</maxBackoffPeriod>
+                <penaltyDuration>30 sec</penaltyDuration>
+                <properties>
+                    <entry>
+                        <key>put-db-record-record-reader</key>
+                        <value>e6f67d2c-4c6e-3549-0000-000000000000</value>
+                    </entry>
+                    <entry>
+                        <key>db-type</key>
+                        <value>PostgreSQL</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-statement-type</key>
+                        <value>INSERT</value>
+                    </entry>
+                    <entry>
+                        <key>Statement Type Record Path</key>
+                    </entry>
+                    <entry>
+                        <key>Data Record Path</key>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-dcbp-service</key>
+                        <value>af0e7074-b312-3e72-0000-000000000000</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-catalog-name</key>
+                        <value>tsdb</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-schema-name</key>
+                        <value>public</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-table-name</key>
+                        <value>conditions_temp</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-translate-field-names</key>
+                        <value>true</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-unmatched-field-behavior</key>
+                        <value>Ignore Unmatched Fields</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-unmatched-column-behavior</key>
+                        <value>Fail on Unmatched Columns</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-update-keys</key>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-field-containing-sql</key>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-allow-multiple-statements</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-quoted-identifiers</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-quoted-table-identifiers</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-query-timeout</key>
+                        <value>0 seconds</value>
+                    </entry>
+                    <entry>
+                        <key>rollback-on-failure</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>table-schema-cache-size</key>
+                        <value>100</value>
+                    </entry>
+                    <entry>
+                        <key>put-db-record-max-batch-size</key>
+                        <value>0</value>
+                    </entry>
+                </properties>
+                <retryCount>10</retryCount>
+                <runDurationMillis>0</runDurationMillis>
+                <schedulingPeriod>0 sec</schedulingPeriod>
+                <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+                <yieldDuration>1 sec</yieldDuration>
+            </config>
+            <executionNodeRestricted>false</executionNodeRestricted>
+            <name>PutDatabaseRecord</name>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>failure</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>retry</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>false</autoTerminate>
+                <name>success</name>
+                <retry>false</retry>
+            </relationships>
+            <state>RUNNING</state>
+            <style/>
+            <type>org.apache.nifi.processors.standard.PutDatabaseRecord</type>
+        </processors>
+    </snippet>
+    <timestamp>05/04/2023 13:30:52 UTC</timestamp>
+</template>

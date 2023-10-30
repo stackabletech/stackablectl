@@ -1,0 +1,57 @@
+---
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: nifi
+spec:
+  image:
+    productVersion: 1.21.0
+    custom: docker.stackable.tech/demos/nifi:1.21.0-postgresql
+  clusterConfig:
+    listenerClass: external-unstable
+    zookeeperConfigMapName: nifi-znode
+    authentication:
+      method:
+        singleUser:
+          adminCredentialsSecret: nifi-admin-credentials
+    sensitiveProperties:
+      keySecret: nifi-sensitive-property-key
+      autoGenerate: true
+  nodes:
+    config:
+      resources:
+        cpu:
+          min: "500m"
+          max: "4"
+        memory:
+          limit: '6Gi'
+        storage:
+          contentRepo:
+            capacity: "10Gi"
+          databaseRepo:
+            capacity: "1Gi"
+          flowfileRepo:
+            capacity: "2Gi"
+          provenanceRepo:
+            capacity: "4Gi"
+          stateRepo:
+            capacity: "1Gi"
+    roleGroups:
+      default:
+        replicas: 1
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nifi-admin-credentials
+stringData:
+  username: admin
+  password: {{ nifiAdminPassword }}
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperZnode
+metadata:
+  name: nifi-znode
+spec:
+  clusterRef:
+    name: zookeeper

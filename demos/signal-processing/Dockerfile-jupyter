@@ -1,0 +1,8 @@
+# docker build -f ./Dockerfile-jupyter -t docker.stackable.tech/demos/jupyter-pyspark-with-alibi-detect:python-3.9 .
+
+FROM jupyter/pyspark-notebook:python-3.9
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r ./requirements.txt
