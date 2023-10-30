@@ -9,7 +9,7 @@ Please keep in mind that a stack requires a release to run on.
 In the most cases the stackable provided release should work absolutely fine, but you can also have a look at the chapter xref:customization/add_release.adoc[] on how to create your own release.
 
 == 1. Create a stacks.yaml
-For a custom stack you need to create a `mycorp-stacks.yaml` containing stacks according to the format defined by https://github.com/stackabletech/stackablectl/blob/main/stacks/stacks-v1.yaml[the Stackable provided stacks].
+For a custom stack you need to create a `mycorp-stacks.yaml` containing stacks according to the format defined by https://github.com/stackabletech/stackablectl/blob/main/stacks/stacks-v2.yaml[the Stackable provided stacks].
 
 As of writing a `stacks.yaml` file could look as follows:
 

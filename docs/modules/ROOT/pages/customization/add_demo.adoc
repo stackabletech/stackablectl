@@ -8,7 +8,7 @@ Please keep in mind that a demo requires a stack to run on.
 Have a look at the chapter xref:customization/add_stack.adoc[] on how to create your own stack.
 
 == 1. Create a demos.yaml
-For a custom demo you need to create a `mycorp-demos.yaml` containing demos according to the format defined by https://github.com/stackabletech/stackablectl/blob/main/demos/demos-v1.yaml[the Stackable provided demos].
+For a custom demo you need to create a `mycorp-demos.yaml` containing demos according to the format defined by https://github.com/stackabletech/stackablectl/blob/main/demos/demos-v2.yaml[the Stackable provided demos].
 
 As of writing a `demos.yaml` file could look as follows:
 
