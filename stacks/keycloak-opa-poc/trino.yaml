@@ -14,10 +14,6 @@ spec:
     catalogLabelSelector:
       matchLabels:
         trino: trino
-    authorization:
-      opa:
-        configMapName: opa
-        package: trino
   coordinators:
     podOverrides:
       spec:
@@ -39,8 +35,8 @@ spec:
         http-server.authentication.type: oauth2
         http-server.authentication.oauth2.client-id: trino
         http-server.authentication.oauth2.client-secret: ${ENV:TRINO_CLIENT_SECRET}
-        http-server.authentication.oauth2.issuer: http://${ENV:KEYCLOAK_ADDRESS}/realms/master
-        http-server.authentication.oauth2.principal-field: preferred_username
+        http-server.authentication.oauth2.issuer: http://${ENV:KEYCLOAK_ADDRESS}/realms/gaia-x
+        http-server.authentication.oauth2.principal-field: sub
     roleGroups:
       default:
         replicas: 1

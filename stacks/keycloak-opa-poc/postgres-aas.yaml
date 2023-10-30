@@ -1,0 +1,11 @@
+releaseName: postgresql-aas
+name: postgresql
+repo:
+  name: bitnami
+  url: https://charts.bitnami.com/bitnami/
+version: 12.6.6
+options:
+  auth:
+    username: aas
+    password: aas
+    database: aas

@@ -452,10 +452,12 @@ stacks:
     manifests:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
+      - helmChart: stacks/keycloak-opa-poc/postgres-aas.yaml
       - plainYaml: stacks/keycloak-opa-poc/serviceaccount.yaml
+      - plainYaml: stacks/keycloak-opa-poc/realm.yaml
       - plainYaml: stacks/keycloak-opa-poc/keycloak.yaml
       - plainYaml: stacks/keycloak-opa-poc/setup-keycloak.yaml
-      - plainYaml: stacks/keycloak-opa-poc/opa.yaml
+      - plainYaml: stacks/keycloak-opa-poc/aas.yaml
       - plainYaml: stacks/keycloak-opa-poc/policies.yaml
       - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
       - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
