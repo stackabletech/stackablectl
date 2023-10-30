@@ -17,7 +17,7 @@ spec:
         - name: create-nifi-ingestion-job
           image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
           command: ["bash", "-c", "export PGPASSWORD=$(cat /timescale-admin-credentials/password) && \
-            curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/signal-processing/demos/signal-processing/DownloadAndWriteToDB.xml && \
+            curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/signal-processing/DownloadAndWriteToDB.xml && \
             sed -i \"s/PLACEHOLDERPGPASSWORD/$PGPASSWORD/g\" DownloadAndWriteToDB.xml && \
             python -u /tmp/script/script.py"]
           volumeMounts:

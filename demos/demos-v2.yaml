@@ -198,9 +198,9 @@ demos:
       - grafana-dashboards
       - zookeeper
     manifests:
-      - plainYaml: demos/signal-processing/serviceaccount.yaml
-      - plainYaml: demos/signal-processing/create-timescale-tables.yaml
-      - plainYaml: demos/signal-processing/create-nifi-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/signal-processing/serviceaccount.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/signal-processing/create-timescale-tables.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/signal-processing/create-nifi-ingestion-job.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: "3"
