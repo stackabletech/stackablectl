@@ -1,32 +1,34 @@
 # DataHub config
 #
-source:
-  type: trino
-  config:
-    host_port: 'trino-coordinator-default:8443'
-    username: admin
-    password: adminadmin
-    database: lakehouse
-    include_views: true
-    include_tables: true
-    profiling:
-        enabled: true
-        profile_table_level_only: true
-    stateful_ingestion:
-        enabled: true
-    options:
-      connect_args:
-        http_scheme: https
-        verify: false
-    # schema_pattern:
-    #   allow:
-    #     - '.*'
-    # table_pattern:
-    #   allow:
-    #     - '.*'
-    # view_pattern:
-    #   allow:
-    #     - '.*'
+# source:
+#   type: trino
+#   config:
+#     host_port: 'trino-coordinator-default:8443'
+#     username: admin
+#     password: adminadmin
+#     database: lakehouse
+#     include_views: true
+#     include_tables: true
+#     profiling:
+#         enabled: true
+#         profile_table_level_only: true
+#     stateful_ingestion:
+#         enabled: true
+#     options:
+#       connect_args:
+#         http_scheme: https
+#         verify: false
+
+# source:
+#   type: superset
+#   config:
+#     # While this is more generic, putting in the LoadBalancer address enables you to click "View in Superset"
+#     # in datahub and getting a public-resolvable URL :)
+#     # connect_uri: 'http://superset-external:8088'
+#     connect_uri: 'http://85.215.225.119:8088'
+#     username: admin
+#     password: adminadmin
+#     provider: db
 
 releaseName: datahub
 name: datahub
