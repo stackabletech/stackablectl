@@ -7,7 +7,7 @@ spec:
   image:
     productVersion: "414"
   clusterConfig:
-    listenerClass: external-unstable
+    listenerClass: external-stable
     catalogLabelSelector:
       matchLabels:
         trino: trino

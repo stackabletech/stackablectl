@@ -1,0 +1,18 @@
+releaseName: prerequisites # Needs to be called this way, as datahub chart expects this name
+name: datahub-prerequisites
+repo:
+  name: datahub
+  url: https://helm.datahubproject.io/
+version: 0.1.3
+options:
+  neo4j:
+    neo4j:
+      # For better security, add password to neo4j-secrets k8s secret with  neo4j-username neo4j-passwordn and NEO4J_AUTH and uncomment below
+      # NEO4J_AUTH: should be composed like so: {Username}/{Password}
+      passwordFromSecret: neo4j-secrets
+    volumes:
+      data:
+        mode: defaultStorageClass
+  # mysql:
+  #   auth:
+  #     existingSecret: datahub-mysql-credentials

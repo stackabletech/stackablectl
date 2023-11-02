@@ -116,6 +116,10 @@ stacks:
       - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
       - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
       - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/superset.yaml
+      - helmChart: stacks/data-lakehouse-iceberg-trino-spark/jupyterhub.yaml
+      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/datahub-credentials.yaml
+      - helmChart: stacks/data-lakehouse-iceberg-trino-spark/datahub-prerequisites.yaml
+      - helmChart: stacks/data-lakehouse-iceberg-trino-spark/datahub.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: "71"
@@ -137,6 +141,9 @@ stacks:
       - name: supersetSecretKey
         description: Superset's secret key used to generate e.g. user session tokens
         default: supersetSecretKey
+      - name: jupyterHubPassword
+        description: Password for *all* JupyterHub users
+        default: adminadmin
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
     stackableRelease: 23.7

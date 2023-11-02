@@ -1,0 +1,101 @@
+releaseName: jupyterhub
+name: jupyterhub
+repo:
+  name: jupyterhub
+  url: https://jupyterhub.github.io/helm-chart/
+version: 3.0.0
+options:
+  hub:
+    config:
+      Authenticator:
+        admin_users:
+          - admin
+      DummyAuthenticator:
+        password: "{{ jupyterHubPassword }}"
+      JupyterHub:
+        authenticator_class: dummy
+  proxy:
+    service:
+      type: LoadBalancer
+  rbac:
+    create: true
+  prePuller:
+    hook:
+      enabled: false
+    continuous:
+      enabled: false
+  cull:
+    timeout: 2678400 # 1 month, IONOS will restart the Pod weekly anyway
+  scheduling:
+    userScheduler:
+      enabled: false
+  singleuser:
+    cmd: null
+    # Needed to modify the Secrets that contain Python scripts used by Deployments
+    serviceAccountName: hub
+    # image:
+    #   name: jupyter/pyspark-notebook
+    #   tag: python-3.9
+    # cpu:
+    #   limit: 14 # Nodes have 14 cores
+    #   guarantee: 2
+    # memory:
+    #   limit: 4G
+    #   guarantee: 4G
+    networkPolicy:
+      enabled: false
+    storage:
+      extraVolumes:
+        - name: trino-ca-cert
+          ephemeral:
+            volumeClaimTemplate:
+              metadata:
+                annotations:
+                  secrets.stackable.tech/class: tls
+                  secrets.stackable.tech/scope: pod,node
+                  secrets.stackable.tech/backend.autotls.cert.lifetime: 14d # To prevent frequent restarts
+                creationTimestamp: null
+              spec:
+                storageClassName: secrets.stackable.tech
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: "1"
+      extraVolumeMounts:
+        - name: trino-ca-cert
+          mountPath: /stackable/secrets/trino-ca-cert
+    profileList:
+      - display_name: "Default"
+        description: "Default profile"
+        default: true
+        profile_options:
+          cpu:
+            display_name: CPU
+            choices:
+{% for cpu in ["1","2","4","8","16","32"] %}
+              "{{cpu}}":
+                display_name: "{{cpu}}"
+                kubespawner_override:
+                  cpu_guarantee: {{cpu}}
+                  cpu_limit: {{cpu}}
+{% endfor %}
+          memory:
+            display_name: Memory
+            choices:
+{% for memory in ["1","2","4","8","16","32","64","128"] %}
+              "{{memory}} GB":
+                display_name: "{{memory}} GB"
+                kubespawner_override:
+                  mem_guarantee: "{{memory}}G"
+                  mem_limit: "{{memory}}G"
+{% endfor %}
+          image:
+            display_name: Image
+            choices:
+{% for image in ["jupyter/pyspark-notebook:python-3.11", "jupyter/pyspark-notebook:python-3.9"] %}
+              "{{image}}":
+                display_name: "{{image}}"
+                kubespawner_override:
+                  image: "{{image}}"
+{% endfor %}

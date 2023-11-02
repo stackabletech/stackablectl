@@ -8,7 +8,7 @@ spec:
     productVersion: 2.1.0
     custom: docker.stackable.tech/sandbox/freiburg/superset:2.1.0-stackable23.7.0-1
   clusterConfig:
-    listenerClass: external-unstable
+    listenerClass: external-stable
     credentialsSecret: superset-credentials
     mapboxSecret: superset-mapbox-api-key
   nodes:
