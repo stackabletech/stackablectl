@@ -291,7 +291,7 @@ stacks:
         default: supersetSecretKey
   trino-iceberg:
     description: Stack containing Trino using Apache Iceberg as a S3 data lakehouse
-    stackableRelease: 23.7
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
@@ -308,8 +308,8 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-distributed-small.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/s3-connection.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/hive-metastores.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/trino.yaml
+      - plainYaml: stacks/trino-iceberg/hive-metastores.yaml
+      - plainYaml: stacks/trino-iceberg/trino.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 8550m
