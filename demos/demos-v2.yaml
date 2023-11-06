@@ -182,7 +182,7 @@ demos:
       - vector
       - zookeeper
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/logging/zookeeper.yaml
+      - plainYaml: demos/logging/zookeeper.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 6500m

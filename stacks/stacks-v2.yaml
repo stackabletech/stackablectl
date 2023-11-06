@@ -23,7 +23,7 @@ stacks:
         default: adminadmin
   logging:
     description: Stack containing OpenSearch, OpenSearch Dashboards (Kibana) and Vector aggregator
-    stackableRelease: 23.7
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret

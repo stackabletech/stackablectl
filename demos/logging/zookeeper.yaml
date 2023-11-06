@@ -5,11 +5,9 @@ metadata:
   name: simple-zk
 spec:
   image:
-    productVersion: 3.8.0
-    stackableVersion: "23.7"
+    productVersion: 3.8.3
   clusterConfig:
-    logging:
-      vectorAggregatorConfigMapName: vector-aggregator-discovery
+    vectorAggregatorConfigMapName: vector-aggregator-discovery
   servers:
     roleGroups:
       default:
