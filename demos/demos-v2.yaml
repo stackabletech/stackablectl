@@ -86,8 +86,8 @@ demos:
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/serviceaccount.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/load-test-data.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/create-spark-anomaly-detection-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/setup-superset.yaml
+      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/create-spark-anomaly-detection-job.yaml
+      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/setup-superset.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 6400m

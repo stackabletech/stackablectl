@@ -206,7 +206,7 @@ stacks:
         default: adminadmin
   spark-trino-superset-s3:
     description: Stack containing MinIO, Trino and Superset for data visualization
-    stackableRelease: 23.7
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
@@ -226,10 +226,10 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/s3-connection.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/hive-metastore.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
+      - plainYaml: stacks/trino-superset-s3/trino.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino-prediction-catalog.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
+      - plainYaml: stacks/trino-superset-s3/superset.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 7100m

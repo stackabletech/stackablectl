@@ -6,7 +6,6 @@ metadata:
 spec:
   image:
     productVersion: "414"
-    stackableVersion: "23.7"
   clusterConfig:
     listenerClass: external-unstable
     catalogLabelSelector:
@@ -72,8 +71,7 @@ metadata:
   name: opa
 spec:
   image:
-    productVersion: 0.51.0
-    stackableVersion: "23.7"
+    productVersion: 0.57.0
   servers:
     roleGroups:
       default:
