@@ -515,7 +515,7 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/signal-processing/grafana.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-timescaledb.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/signal-processing/nifi.yaml
+      - plainYaml: stacks/signal-processing/nifi.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/signal-processing/jupyterhub.yaml
