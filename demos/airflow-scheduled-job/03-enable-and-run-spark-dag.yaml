@@ -14,8 +14,7 @@ spec:
           # below are not "water-tight" but add a layer of stability by at least ensuring that the db is initialized and ready and that
           # all pods are reachable (albeit independent of each other).
           command: ["bash", "-c", "
-            kubectl wait airflowdb/airflow --for jsonpath='{.status.condition}'=Ready --timeout 600s
-            && kubectl rollout status --watch statefulset/airflow-webserver-default
+            kubectl rollout status --watch statefulset/airflow-webserver-default
             && kubectl rollout status --watch statefulset/airflow-worker-default
             && kubectl rollout status --watch statefulset/airflow-scheduler-default
             && export AIRFLOW_ADMIN_PASSWORD=$(cat /airflow-credentials/adminUser.password)
