@@ -6,7 +6,7 @@ metadata:
   name: airflow
 spec:
   image:
-    productVersion: 2.6.1
+    productVersion: 2.7.2
   clusterConfig:
     listenerClass: external-unstable
     loadExamples: false
