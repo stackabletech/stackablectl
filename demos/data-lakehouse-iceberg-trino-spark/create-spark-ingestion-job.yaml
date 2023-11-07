@@ -41,8 +41,9 @@ data:
       name: spark-ingest-into-lakehouse
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable23.4
-      sparkImagePullPolicy: Always
+      sparkImage:
+        custom: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0
+        productVersion: 3.3.0
       mode: cluster
       mainApplicationFile: local:///stackable/spark/jobs/spark-ingest-into-lakehouse.py
       # deps:
@@ -79,35 +80,38 @@ data:
                     storage: "1"
                 storageClassName: secrets.stackable.tech
       job:
-        resources:
-          cpu:
-            min: "100m"
-            max: "1"
+        config:
+          resources:
+            cpu:
+              min: "100m"
+              max: "1"
       driver:
-        resources:
-          cpu:
-            min: "1"
-            max: "1"
-          memory:
-            limit: "8Gi"
-        volumeMounts:
-          - name: script
-            mountPath: /stackable/spark/jobs
-          - name: tls
-            mountPath: /stackable/tls
+        config:
+          resources:
+            cpu:
+              min: "1"
+              max: "1"
+            memory:
+              limit: "8Gi"
+          volumeMounts:
+            - name: script
+              mountPath: /stackable/spark/jobs
+            - name: tls
+              mountPath: /stackable/tls
       executor:
-        instances: 4
-        resources:
-          cpu:
-            min: "2"
-            max: "4"
-          memory:
-            limit: "8Gi"
-        volumeMounts:
-          - name: script
-            mountPath: /stackable/spark/jobs
-          - name: tls
-            mountPath: /stackable/tls
+        replicas: 4
+        config:
+          resources:
+            cpu:
+              min: "2"
+              max: "4"
+            memory:
+              limit: "8Gi"
+          volumeMounts:
+            - name: script
+              mountPath: /stackable/spark/jobs
+            - name: tls
+              mountPath: /stackable/tls
 ---
 apiVersion: v1
 kind: ConfigMap
