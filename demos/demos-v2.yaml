@@ -1,0 +1,8 @@
+---
+demos:
+  please-update:
+    description: This version of stackablectl is outdated, please visit https://docs.stackable.tech/management/stable/stackablectl/installation.html on how to get the latest version
+    stackableStack: does-not-exist
+    labels: []
+    manifests: []
+    supportedNamespaces: []
