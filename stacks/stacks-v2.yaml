@@ -139,7 +139,7 @@ stacks:
         default: supersetSecretKey
   hdfs-hbase:
     description: HBase cluster using HDFS as underlying storage
-    stackableRelease: 23.7
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
@@ -150,9 +150,9 @@ stacks:
       - hbase
       - hdfs
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/zookeeper.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hdfs.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hbase.yaml
+      - plainYaml: stacks/hdfs-hbase/zookeeper.yaml
+      - plainYaml: stacks/hdfs-hbase/hdfs.yaml
+      - plainYaml: stacks/hdfs-hbase/hbase.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 4200m
