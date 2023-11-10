@@ -436,7 +436,7 @@ stacks:
       3 users are created in Keycloak: admin:adminadmin, alice:alicealice, bob:bobbob. admin and alice are admins with
       full authorization in Druid and Trino, bob is not authorized.
       This is a proof-of-concept and the mechanisms used here are subject to change.
-    stackableRelease: 23.7
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
