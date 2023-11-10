@@ -389,7 +389,7 @@ stacks:
       The bind user credentials are: ldapadmin:ldapadminpassword.
       No AuthenticationClass is configured, The AuthenticationClass is created manually in the tutorial.
       Use the 'openldap' Stack for an OpenLDAD with an AuthenticationClass already installed.
-    stackableRelease: 23.7
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
@@ -411,7 +411,7 @@ stacks:
       The bind user credentials are: ldapadmin:ldapadminpassword.
       The LDAP AuthenticationClass is called 'ldap' and the SecretClass for the bind credentials is called 'ldap-bind-credentials'.
       The stack already creates an appropriate Secret, so referring to the 'ldap' AuthenticationClass in your ProductCluster should be enough.
-    stackableRelease: 23.7
+    stackableRelease: dev
     stackableOperators:
       - commons
       - secret
