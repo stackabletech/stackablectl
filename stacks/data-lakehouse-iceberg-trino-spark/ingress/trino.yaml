@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: trino
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    # Maybe(!) remove and switch trino to http
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - trino.sdpdemo.stackable.de
+    secretName: ingress-trino
+  rules:
+  - host: trino.sdpdemo.stackable.de
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: trino-coordinator
+            port:
+              number: 8443

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: superset
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.org/proxy-connect-timeout: "300s" # Only Superset things
+    nginx.org/proxy-read-timeout: "300s"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - superset.sdpdemo.stackable.de
+    secretName: ingress-superset
+  rules:
+  - host: superset.sdpdemo.stackable.de
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: superset-external
+            port:
+              number: 8088

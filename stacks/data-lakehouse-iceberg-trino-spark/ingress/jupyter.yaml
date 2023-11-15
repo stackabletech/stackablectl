@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jupyter
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - jupyter.sdpdemo.stackable.de
+    secretName: ingress-jupyter
+  rules:
+  - host: jupyter.sdpdemo.stackable.de
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: proxy-public
+            port:
+              number: 80

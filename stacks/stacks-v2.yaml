@@ -120,6 +120,7 @@ stacks:
       - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/datahub-credentials.yaml
       - helmChart: stacks/data-lakehouse-iceberg-trino-spark/datahub-prerequisites.yaml
       - helmChart: stacks/data-lakehouse-iceberg-trino-spark/datahub.yaml
+      # helm upgrade --install stackable-cockpit stackable-dev/stackable-cockpit --devel --set service.type=LoadBalancer
     supportedNamespaces: []
     resourceRequests:
       cpu: "71"

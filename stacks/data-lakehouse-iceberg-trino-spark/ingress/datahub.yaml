@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: datahub
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - datahub.sdpdemo.stackable.de
+    secretName: ingress-datahub
+  rules:
+  - host: datahub.sdpdemo.stackable.de
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: datahub-datahub-frontend
+            port:
+              number: 9002

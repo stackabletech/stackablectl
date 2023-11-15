@@ -27,21 +27,21 @@ spec:
             name: create-spark-ingestion-job-manifest
       restartPolicy: OnFailure
   backoffLimit: 50
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: spark-ui
-spec:
-  type: LoadBalancer
-  ports:
-  - name: http-ui
-    port: 80
-    targetPort: 4040
-  selector:
-    app.kubernetes.io/name: spark-k8s
-    app.kubernetes.io/instance: spark-ingest-into-lakehouse
-    spark-role: driver
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: spark-ui
+# spec:
+#   type: LoadBalancer
+#   ports:
+#   - name: http-ui
+#     port: 80
+#     targetPort: 4040
+#   selector:
+#     app.kubernetes.io/name: spark-k8s
+#     app.kubernetes.io/instance: spark-ingest-into-lakehouse
+#     spark-role: driver
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -121,14 +121,14 @@ data:
             - name: tls
               mountPath: /stackable/tls
       executor:
-        replicas: 4
+        replicas: 5
         config:
           resources:
             cpu:
               min: "2"
               max: "4"
             memory:
-              limit: "12Gi"
+              limit: "16Gi"
           volumeMounts:
             - name: script
               mountPath: /stackable/spark/jobs
