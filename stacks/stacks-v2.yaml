@@ -445,22 +445,22 @@ stacks:
       - zookeeper
       - druid
       - hdfs
-      - opa
+      # - opa
     labels:
       - authentication
       - sso
     manifests:
-      # - helmChart: stacks/_templates/postgresql-superset.yaml
-      # - helmChart: stacks/_templates/postgresql-druid.yaml
       - plainYaml: stacks/keycloak-opa-poc/openldap.yaml
       - plainYaml: stacks/keycloak-opa-poc/keycloak-serviceaccount.yaml
       - plainYaml: stacks/keycloak-opa-poc/keycloak.yaml
       - plainYaml: stacks/keycloak-opa-poc/setup-keycloak.yaml
+      # - helmChart: stacks/_templates/postgresql-superset.yaml
+      # - helmChart: stacks/_templates/postgresql-druid.yaml
       - plainYaml: stacks/keycloak-opa-poc/opa.yaml
       # - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
       # - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
       # - plainYaml: stacks/keycloak-opa-poc/druid.yaml
-      - plainYaml: stacks/keycloak-opa-poc/trino.yaml
+      # - plainYaml: stacks/keycloak-opa-poc/trino.yaml
       # - plainYaml: stacks/keycloak-opa-poc/superset.yaml
     supportedNamespaces: ["default"] # ClusterRoleBinding needs explicit namespace
     # FIXME: Re-check
@@ -478,6 +478,9 @@ stacks:
       - name: keycloakAdminPassword
         description: Password of the Keycloak admin user
         default: adminadmin
+      - name: keycloakUserinfoFetcherClientSecret
+        description: Secret ID of the Keycloak UserinfoFetcher client that is used by the UserinfoFetcher to retrieve user information
+        default: userinfofetcheruserinfofetcher
       - name: keycloakSupersetClientSecret
         description: Secret ID of the Keycloak Superset client that is used by Superset to connect to Keycloak to authenticate users
         default: supersetsuperset

@@ -7,9 +7,31 @@ spec:
   image:
     productVersion: "0.51.0"
     stackableVersion: "23.7.0"
+  clusterConfig:
+    userInfo:
+      backend:
+        keycloak:
+          hostname: keycloak.default.svc.cluster.local
+          port: 8443
+          clientCredentialsSecret: opa-userinfo-fetcher-client-credentials
+          adminRealm: master
+          userRealm: master
+          tls:
+            verification:
+              server:
+                caCert:
+                  secretClass: tls
   servers:
     roleGroups:
       default: {}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: opa-userinfo-fetcher-client-credentials
+stringData:
+  clientId: userinfo-fetcher
+  clientSecret: "{{ keycloakUserinfoFetcherClientSecret }}"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -24,6 +46,8 @@ data:
     import data.bundles.opagroups.admins
     import future.keywords.in
     import future.keywords.if
+
+    userInfo(userId) := http.send({"method": "POST", "url": "http://127.0.0.1:9476/user", "body": {"userId": userId}, "headers": {"Content-Type": "application/json"}, "raise_error": true}).body
 
     default allow = false
 

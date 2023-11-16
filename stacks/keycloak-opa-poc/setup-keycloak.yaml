@@ -3,6 +3,7 @@ kind: Secret
 metadata:
   name: keycloak-clients
 stringData:
+  userinfoFetcher: "{{ keycloakUserinfoFetcherClientSecret }}"
   superset: "{{ keycloakSupersetClientSecret }}"
   trino: "{{ keycloakTrinoClientSecret }}"
   druid: "{{ keycloakDruidClientSecret }}"
@@ -44,6 +45,11 @@ spec:
               secretKeyRef:
                 name: keycloak-users
                 key: bob
+          - name: USERINFO_FETCHER_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-clients
+                key: userinfoFetcher
           - name: SUPERSET_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
@@ -89,23 +95,27 @@ spec:
               "webOrigins": [
                 "*"
               ],
-              "standardFlowEnabled": true,
-              "protocolMappers": [
-                {
-                  "name": "username",
-                  "protocol": "openid-connect",
-                  "protocolMapper": "oidc-usermodel-attribute-mapper",
-                  "consentRequired": false,
-                  "config": {
-                    "userinfo.token.claim": "true",
-                    "user.attribute": "username",
-                    "id.token.claim": "true",
-                    "access.token.claim": "true",
-                    "claim.name": "sub",
-                    "jsonType.label": "String"
-                  }
-                }
-              ]
+              "standardFlowEnabled": true
+            }
+            EOF
+            ./kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
+            {
+              "clientId": "userinfo-fetcher",
+              "enabled": true,
+              "protocol": "openid-connect",
+              "clientAuthenticatorType": "client-secret",
+              "secret": "$USERINFO_FETCHER_CLIENT_SECRET",
+              "redirectUris": [
+                "*"
+              ],
+              "webOrigins": [
+                "*"
+              ],
+              "standardFlowEnabled": false,
+              "serviceAccountsEnabled": true,
+              "attributes": {
+                "oidc.ciba.grant.enabled": true
+              }
             }
             EOF
             ./kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
@@ -121,23 +131,7 @@ spec:
               "webOrigins": [
                 "*"
               ],
-              "standardFlowEnabled": true,
-              "protocolMappers": [
-                {
-                  "name": "username",
-                  "protocol": "openid-connect",
-                  "protocolMapper": "oidc-usermodel-attribute-mapper",
-                  "consentRequired": false,
-                  "config": {
-                    "userinfo.token.claim": "true",
-                    "user.attribute": "username",
-                    "id.token.claim": "true",
-                    "access.token.claim": "true",
-                    "claim.name": "sub",
-                    "jsonType.label": "String"
-                  }
-                }
-              ]
+              "standardFlowEnabled": true
             }
             EOF
             ./kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
@@ -153,23 +147,7 @@ spec:
               "webOrigins": [
                 "*"
               ],
-              "standardFlowEnabled": true,
-              "protocolMappers": [
-                {
-                  "name": "username",
-                  "protocol": "openid-connect",
-                  "protocolMapper": "oidc-usermodel-attribute-mapper",
-                  "consentRequired": false,
-                  "config": {
-                    "userinfo.token.claim": "true",
-                    "user.attribute": "username",
-                    "id.token.claim": "true",
-                    "access.token.claim": "true",
-                    "claim.name": "sub",
-                    "jsonType.label": "String"
-                  }
-                }
-              ]
+              "standardFlowEnabled": true
             }
             EOF
         volumeMounts:

@@ -24,20 +24,9 @@ spec:
           args:
             - start
             - --hostname-strict=false
-            # - --optimized
-            # - --hostname-strict-https=false
-            # - --http-enabled=false
-            # - –-hostname-strict=false
-            # - --hostname-url=https://localhost:8443
-            # - --hostname=localhost
-            # - --hostname-strict-https=false
             - --https-key-store-file=/tls/keystore.p12
             - --https-key-store-password=changeit
           env:
-            # - name: KC_HOSTNAME_STRICT_HTTPS
-            #   value: "false"
-            # - name: KEYCLOAK_ENABLE_HTTPS
-            #   value: "true"
             - name: KEYCLOAK_ADMIN
               value: admin
             - name: KEYCLOAK_ADMIN_PASSWORD
@@ -88,12 +77,12 @@ spec:
                           scopes: [openid]
                           tls:
                             verification:
-                              none: {}
-                              # We can't use this yet, as the cert of Keycloak has no SAN for the NodePort address.
-                              # We can switch to this once we include the listener scope in tls certificates.
-                              # server:
-                              #   caCert:
-                              #     secretClass: tls
+                            #  none: {}
+                            #  We can't use this yet, as the cert of Keycloak has no SAN for the NodePort address.
+                            #  We can switch to this once we include the listener scope in tls certificates.
+                              server:
+                                caCert:
+                                  secretClass: tls
               EOF
                 fi
 
@@ -115,7 +104,7 @@ spec:
                   secrets.stackable.tech/class: tls
                   secrets.stackable.tech/format: tls-pkcs12
                   secrets.stackable.tech/format.compatibility.tls-pkcs12.password: changeit
-                  secrets.stackable.tech/scope: service=keycloak
+                  secrets.stackable.tech/scope: service=keycloak,node
               spec:
                 storageClassName: secrets.stackable.tech
                 accessModes:
