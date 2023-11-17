@@ -111,10 +111,14 @@ spec:
               "webOrigins": [
                 "*"
               ],
+              "publicClient": false,
               "standardFlowEnabled": false,
+              "implicitFlowEnabled": false,
+              "directAccessGrantsEnabled": false,
               "serviceAccountsEnabled": true,
               "attributes": {
-                "oidc.ciba.grant.enabled": true
+                "oidc.ciba.grant.enabled": "true",
+                "oauth2.device.authorization.grant.enabled": false
               }
             }
             EOF
@@ -174,5 +178,6 @@ spec:
                 resources:
                   requests:
                     storage: "1"
+      serviceAccountName: keycloak-serviceaccount
       restartPolicy: OnFailure
   backoffLimit: 20 # give some time for the Keycloak to be available
