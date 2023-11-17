@@ -499,3 +499,6 @@ stacks:
       - name: supersetSecretKey
         description: Superset's secret key used to generate e.g. user session tokens
         default: supersetSecretKey
+      - name: trinoSupersetUserPassword
+        description: Password of the service Superset uses to connect to Trino. Superset itself will use impersonation for Trino users
+        default: supersetsuperset

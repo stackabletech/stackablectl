@@ -15,10 +15,13 @@ spec:
       matchLabels:
         trino: trino
     authentication:
-      - authenticationClass: keycloak
+      - authenticationClass: trino-superset-user-for-impersonation
         # FIXME
-        secret:
-          oidc: trino-keycloak-client
+        oidc:
+          clientCredentialsSecret: foo-bar
+      - authenticationClass: keycloak
+        oidc:
+          clientCredentialsSecret: trino-keycloak-client
     authorization:
       opa:
         configMapName: opa
@@ -39,3 +42,21 @@ metadata:
 stringData:
   clientId: trino
   clientSecret: "{{ keycloakTrinoClientSecret }}"
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: trino-superset-user-for-impersonation
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: trino-superset-user
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trino-superset-user
+type: kubernetes.io/opaque
+stringData:
+  superset: "{{ trinoSupersetUserPassword }}"

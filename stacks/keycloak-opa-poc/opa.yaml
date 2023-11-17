@@ -53,6 +53,15 @@ data:
 
     allow if input.context.identity.user in admins
 
+    allow if input.context.identity.user == "superset"
+
+    allow {
+      currentUserInfo := userInfo(input.context.identity.user)
+
+      some group
+      currentUserInfo.groups[group].name = "/admin"
+    }
+
     allow {
       input.action.operation == "ImpersonateUser"
       input.action.resource.user.name == input.context.identity.user
