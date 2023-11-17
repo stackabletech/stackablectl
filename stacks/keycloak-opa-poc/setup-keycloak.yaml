@@ -122,6 +122,8 @@ spec:
               }
             }
             EOF
+            ./kcadm.sh add-roles --uusername service-account-userinfo-fetcher --rolename admin $COMMON_FLAGS
+
             ./kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
             {
               "clientId": "superset",
