@@ -51,9 +51,7 @@ data:
 
     default allow = false
 
-    allow if input.context.identity.user in admins
-
-    allow if input.context.identity.user == "superset"
+    allow if input.context.identity.user == "admin"
 
     allow {
       currentUserInfo := userInfo(input.context.identity.user)
@@ -64,8 +62,21 @@ data:
 
     allow {
       input.action.operation == "ImpersonateUser"
-      input.action.resource.user.name == input.context.identity.user
+      input.context.identity.principal.name == input.action.resource.user.name
     }
+
+    allow {
+      input.action.operation == "ImpersonateUser"
+      input.context.identity.principal.name == "superset"
+    }
+
+    # DOES NOT WORK, as userinfo-fetcher does not return the actual username
+    # allow {
+    #   currentUserInfo := userInfo(input.context.identity.principal.name)
+    #
+    #   input.action.operation == "ImpersonateUser"
+    #   input.action.resource.user.name == currentUserInfo().userName
+    # }
 ---
 apiVersion: v1
 kind: ConfigMap

@@ -180,6 +180,5 @@ spec:
                 resources:
                   requests:
                     storage: "1"
-      serviceAccountName: keycloak-serviceaccount
       restartPolicy: OnFailure
   backoffLimit: 20 # give some time for the Keycloak to be available
