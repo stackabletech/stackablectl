@@ -441,11 +441,12 @@ stacks:
       # - commons => Needs to be installed from https://github.com/stackabletech/commons-operator/tree/feat/oidc
       # - secret => Needs nightly
       # - trino => Needs to be installed from https://github.com/stackabletech/trino-operator/tree/feature/support-oauth2
-      - superset
-      - zookeeper
-      - druid
-      - hdfs
-      # - opa
+      # - superset => Needs to be installed from https://github.com/stackabletech/superset-operator/tree/feat/oidc
+      # - zookeeper
+      # - druid
+      # - hdfs
+      # - opa => Needs to be installed from https://github.com/stackabletech/opa-operator/tree/spike/user-info-fetcher
+      - i-dont-need-one-thx-bye
     labels:
       - authentication
       - sso
@@ -454,14 +455,14 @@ stacks:
       - plainYaml: stacks/keycloak-opa-poc/keycloak-serviceaccount.yaml
       - plainYaml: stacks/keycloak-opa-poc/keycloak.yaml
       - plainYaml: stacks/keycloak-opa-poc/setup-keycloak.yaml
-      # - helmChart: stacks/_templates/postgresql-superset.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
       # - helmChart: stacks/_templates/postgresql-druid.yaml
       - plainYaml: stacks/keycloak-opa-poc/opa.yaml
       # - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
       # - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
       # - plainYaml: stacks/keycloak-opa-poc/druid.yaml
-      # - plainYaml: stacks/keycloak-opa-poc/trino.yaml
-      # - plainYaml: stacks/keycloak-opa-poc/superset.yaml
+      - plainYaml: stacks/keycloak-opa-poc/trino.yaml
+      - plainYaml: stacks/keycloak-opa-poc/superset.yaml
     supportedNamespaces: ["default"] # ClusterRoleBinding needs explicit namespace
     # FIXME: Re-check
     # resourceRequests:
