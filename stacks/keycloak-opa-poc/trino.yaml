@@ -16,9 +16,6 @@ spec:
         trino: trino
     authentication:
       - authenticationClass: trino-superset-user-for-impersonation
-        # FIXME
-        oidc:
-          clientCredentialsSecret: foo-bar
       - authenticationClass: keycloak
         oidc:
           clientCredentialsSecret: trino-keycloak-client

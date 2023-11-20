@@ -7,9 +7,6 @@ stringData:
   superset: "{{ keycloakSupersetClientSecret }}"
   trino: "{{ keycloakTrinoClientSecret }}"
   druid: "{{ keycloakDruidClientSecret }}"
-  # FIXME: They don't belong here
-  # druidCookiePassphrase: "{{ keycloakDruidCookiePassphrase }}"
-  # druidSystemUserPassword: "{{ druidSystemUserPassword }}"
 ---
 apiVersion: v1
 kind: Secret
