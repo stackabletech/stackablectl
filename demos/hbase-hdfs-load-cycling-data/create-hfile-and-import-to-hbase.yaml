@@ -11,6 +11,8 @@ spec:
         - name: create-hfile-and-import-to-hbase
           image: docker.stackable.tech/stackable/hbase:2.4.12-stackable23.4
           env:
+            - name: HADOOP_USER_NAME
+              value: stackable
             - name: HBASE_CONF_DIR
               value: "/stackable/conf/"
           volumeMounts:

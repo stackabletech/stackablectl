@@ -10,6 +10,8 @@ spec:
         - name: distcp-cycling-data
           image: docker.stackable.tech/stackable/hadoop:3.3.4-stackable23.4
           env:
+            - name: HADOOP_USER_NAME
+              value: stackable
             - name: HADOOP_CONF_DIR
               value: "/stackable/conf/hdfs"
             - name: HADOOP_CLASSPATH
