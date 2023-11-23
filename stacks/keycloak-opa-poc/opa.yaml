@@ -49,7 +49,7 @@ data:
     import future.keywords.in
     import future.keywords.if
 
-    userInfo(userId) := http.send({"method": "POST", "url": "http://127.0.0.1:9476/user", "body": {"userId": userId}, "headers": {"Content-Type": "application/json"}, "raise_error": true}).body
+    userInfo(userId) := http.send({"method": "POST", "url": "http://127.0.0.1:9476/user", "body": {"id": userId}, "headers": {"Content-Type": "application/json"}, "raise_error": true}).body
 
     default allow = false
 
@@ -72,7 +72,6 @@ data:
       input.context.identity.principal.name == "superset"
     }
 
-    # DOES NOT WORK, as userinfo-fetcher does not return the actual username
     # allow {
     #   currentUserInfo := userInfo(input.context.identity.principal.name)
     #
