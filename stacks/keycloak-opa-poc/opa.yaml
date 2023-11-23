@@ -21,6 +21,8 @@ spec:
               server:
                 caCert:
                   secretClass: tls
+      cache:
+        entryTimeToLive: 5s # For fast feedback during the demo
   servers:
     roleGroups:
       default: {}

@@ -15,6 +15,7 @@ spec:
           clientCredentialsSecret: superset-keycloak-client
         # FIXME: Move to correct oidc location
         # apiPath: protocol
+        userRegistrationRole: Admin # For easier demo purposes
   nodes:
     roleGroups:
       default:
