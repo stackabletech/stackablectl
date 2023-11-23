@@ -458,11 +458,11 @@ stacks:
       - helmChart: stacks/_templates/postgresql-superset.yaml
       # - helmChart: stacks/_templates/postgresql-druid.yaml
       - plainYaml: stacks/keycloak-opa-poc/opa.yaml
+      - plainYaml: stacks/keycloak-opa-poc/trino.yaml
+      - plainYaml: stacks/keycloak-opa-poc/superset.yaml
       # - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
       # - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
       # - plainYaml: stacks/keycloak-opa-poc/druid.yaml
-      - plainYaml: stacks/keycloak-opa-poc/trino.yaml
-      - plainYaml: stacks/keycloak-opa-poc/superset.yaml
     supportedNamespaces: ["default"] # ClusterRoleBinding needs explicit namespace
     # FIXME: Re-check
     # resourceRequests:
