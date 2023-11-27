@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: setup-superset
-          image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable23.7
+          image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable23.11.0
           command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/superset-assets.zip && python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script

@@ -64,8 +64,8 @@ stacks:
     labels:
       - airflow
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-airflow.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/redis-airflow.yaml
+      - helmChart: stacks/_templates/postgresql-airflow.yaml
+      - helmChart: stacks/_templates/redis-airflow.yaml
       - plainYaml: stacks/airflow/airflow.yaml
     supportedNamespaces: []
     resourceRequests:
@@ -214,7 +214,7 @@ stacks:
       - trino
       - opa
       - superset
-      - spark-k8s # Some demo does schedule a Spark job
+      - spark-k8s # a demo based on this stack schedules a Spark job
     labels:
       - trino
       - superset
