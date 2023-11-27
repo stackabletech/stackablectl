@@ -119,9 +119,9 @@ demos:
       - s3
       - ny-taxi-data
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/load-test-data.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/create-table-in-trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
+      - plainYaml: demos/trino-taxi-data/load-test-data.yaml
+      - plainYaml: demos/trino-taxi-data/create-table-in-trino.yaml
+      - plainYaml: demos/trino-taxi-data/setup-superset.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 6800m

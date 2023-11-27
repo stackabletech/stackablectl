@@ -178,9 +178,9 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - helmChart: stacks/_templates/minio.yaml
+      - helmChart: stacks/_templates/postgresql-druid.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
       - plainYaml: stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
       - plainYaml: stacks/nifi-kafka-druid-superset-s3/kafka.yaml
       - plainYaml: stacks/nifi-kafka-druid-superset-s3/druid.yaml
@@ -221,14 +221,14 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/s3-connection.yaml
+      - helmChart: stacks/_templates/minio.yaml
+      - helmChart: stacks/_templates/postgresql-hive.yaml
+      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/trino-superset-s3/s3-connection.yaml
       - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
       - plainYaml: stacks/trino-superset-s3/trino.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino-prediction-catalog.yaml
+      - plainYaml: stacks/spark-trino-superset-s3/trino-prediction-catalog.yaml
       - plainYaml: stacks/trino-superset-s3/superset.yaml
     supportedNamespaces: []
     resourceRequests:
@@ -264,10 +264,10 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/s3-connection.yaml
+      - helmChart: stacks/_templates/minio.yaml
+      - helmChart: stacks/_templates/postgresql-hive.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
+      - plainYaml: stacks/trino-superset-s3/s3-connection.yaml
       - plainYaml: stacks/trino-superset-s3/hive-metastore.yaml
       - plainYaml: stacks/trino-superset-s3/trino.yaml
       - plainYaml: stacks/trino-superset-s3/superset.yaml
@@ -305,9 +305,9 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-distributed-small.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/s3-connection.yaml
+      - helmChart: stacks/_templates/minio-distributed-small.yaml
+      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
+      - plainYaml: stacks/trino-iceberg/s3-connection.yaml
       - plainYaml: stacks/trino-iceberg/hive-metastores.yaml
       - plainYaml: stacks/trino-iceberg/trino.yaml
     supportedNamespaces: []

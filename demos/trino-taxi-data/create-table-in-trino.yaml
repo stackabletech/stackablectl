@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: create-ny-taxi-data-table-in-trino
-          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
+          image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable23.11.0
           command: ["bash", "-c", "python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
