@@ -45,8 +45,8 @@ demos:
       - earthquakes
     manifests:
       - plainYaml: demos/nifi-kafka-druid-earthquake-data/create-nifi-ingestion-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml
+      - plainYaml: demos/nifi-kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
+      - plainYaml: demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml
     supportedNamespaces: ["default"]
     resourceRequests:
       cpu: 8700m
@@ -66,8 +66,8 @@ demos:
       - water-levels
     manifests:
       - plainYaml: demos/nifi-kafka-druid-water-level-data/create-nifi-ingestion-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/setup-superset.yaml
+      - plainYaml: demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml
+      - plainYaml: demos/nifi-kafka-druid-water-level-data/setup-superset.yaml
     supportedNamespaces: ["default"]
     resourceRequests:
       cpu: 8900m

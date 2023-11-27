@@ -3,7 +3,7 @@ name: postgresql
 repo:
   name: bitnami
   url: https://charts.bitnami.com/bitnami/
-version: 12.6.6
+version: 13.2.18
 options:
   auth:
     username: superset
