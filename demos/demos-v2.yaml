@@ -24,8 +24,8 @@ demos:
       - hdfs
       - cycling-tripdata
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/distcp-cycling-data.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/create-hfile-and-import-to-hbase.yaml
+      - plainYaml: demos/hbase-hdfs-load-cycling-data/distcp-cycling-data.yaml
+      - plainYaml: demos/hbase-hdfs-load-cycling-data/create-hfile-and-import-to-hbase.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: "3"
