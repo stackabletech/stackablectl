@@ -15,7 +15,6 @@ spec:
           # all pods are reachable (albeit independent of each other).
           command: ["bash", "-c", "
             kubectl rollout status --watch statefulset/airflow-webserver-default
-            && kubectl rollout status --watch statefulset/airflow-worker-default
             && kubectl rollout status --watch statefulset/airflow-scheduler-default
             && export AIRFLOW_ADMIN_PASSWORD=$(cat /airflow-credentials/adminUser.password)
             && curl -i -s --user admin:$AIRFLOW_ADMIN_PASSWORD http://airflow-webserver-default:8080/api/v1/dags/date_demo
