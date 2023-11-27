@@ -3,7 +3,7 @@ name: opensearch
 repo:
   name: opensearch
   url: https://opensearch-project.github.io/helm-charts
-version: 2.13.3
+version: 2.16.1
 options:
   config:
     opensearch.yml: |
