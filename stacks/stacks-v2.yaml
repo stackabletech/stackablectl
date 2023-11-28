@@ -9,9 +9,9 @@ stacks:
       - prometheus
       - grafana
     manifests:
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/monitoring/grafana-dashboards.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/prometheus.yaml
-      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/prometheus-service-monitor.yaml
+      - plainYaml: stacks/monitoring/grafana-dashboards.yaml
+      - helmChart: stacks/_templates/prometheus.yaml
+      - plainYaml: stacks/_templates/prometheus-service-monitor.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 1750m
