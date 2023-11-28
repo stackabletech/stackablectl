@@ -9,9 +9,9 @@ stacks:
       - prometheus
       - grafana
     manifests:
-      - plainYaml: stacks/monitoring/grafana-dashboards.yaml
-      - helmChart: stacks/_templates/prometheus.yaml
-      - plainYaml: stacks/_templates/prometheus-service-monitor.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/monitoring/grafana-dashboards.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/prometheus.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/prometheus-service-monitor.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 1750m
@@ -64,9 +64,9 @@ stacks:
     labels:
       - airflow
     manifests:
-      - helmChart: stacks/_templates/postgresql-airflow.yaml
-      - helmChart: stacks/_templates/redis-airflow.yaml
-      - plainYaml: stacks/airflow/airflow.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-airflow.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/redis-airflow.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/airflow/airflow.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 3400m
@@ -150,9 +150,9 @@ stacks:
       - hbase
       - hdfs
     manifests:
-      - plainYaml: stacks/hdfs-hbase/zookeeper.yaml
-      - plainYaml: stacks/hdfs-hbase/hdfs.yaml
-      - plainYaml: stacks/hdfs-hbase/hbase.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/hdfs-hbase/hbase.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 4200m
@@ -178,14 +178,14 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: stacks/_templates/minio.yaml
-      - helmChart: stacks/_templates/postgresql-druid.yaml
-      - helmChart: stacks/_templates/postgresql-superset.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/kafka.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/druid.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/superset.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/nifi.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main//_templates/postgresql-druid.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/kafka.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/druid.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/nifi.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 8900m
@@ -221,15 +221,15 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: stacks/_templates/minio.yaml
-      - helmChart: stacks/_templates/postgresql-hive.yaml
-      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
-      - helmChart: stacks/_templates/postgresql-superset.yaml
-      - plainYaml: stacks/trino-superset-s3/s3-connection.yaml
-      - plainYaml: stacks/spark-trino-superset-s3/hive-metastore.yaml
-      - plainYaml: stacks/trino-superset-s3/trino.yaml
-      - plainYaml: stacks/spark-trino-superset-s3/trino-prediction-catalog.yaml
-      - plainYaml: stacks/trino-superset-s3/superset.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/s3-connection.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/hive-metastore.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/spark-trino-superset-s3/trino-prediction-catalog.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 7100m
@@ -264,13 +264,13 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: stacks/_templates/minio.yaml
-      - helmChart: stacks/_templates/postgresql-hive.yaml
-      - helmChart: stacks/_templates/postgresql-superset.yaml
-      - plainYaml: stacks/trino-superset-s3/s3-connection.yaml
-      - plainYaml: stacks/trino-superset-s3/hive-metastore.yaml
-      - plainYaml: stacks/trino-superset-s3/trino.yaml
-      - plainYaml: stacks/trino-superset-s3/superset.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/s3-connection.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/hive-metastore.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-superset-s3/superset.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 6800m
@@ -305,11 +305,11 @@ stacks:
       - minio
       - s3
     manifests:
-      - helmChart: stacks/_templates/minio-distributed-small.yaml
-      - helmChart: stacks/_templates/postgresql-hive-iceberg.yaml
-      - plainYaml: stacks/trino-iceberg/s3-connection.yaml
-      - plainYaml: stacks/trino-iceberg/hive-metastores.yaml
-      - plainYaml: stacks/trino-iceberg/trino.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio-distributed-small.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/s3-connection.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/hive-metastores.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/trino-iceberg/trino.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 8550m
@@ -337,8 +337,8 @@ stacks:
       - pyspark
     manifests:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/jupyterhub.yaml
-      - plainYaml: stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
-      - plainYaml: stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/hdfs.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
       # TODO Use patched JHub that created service for us from customer setup (ask Sebastian)
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
@@ -514,11 +514,11 @@ stacks:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/signal-processing/grafana-dashboards.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/signal-processing/grafana.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-timescaledb.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
-      - plainYaml: stacks/signal-processing/nifi.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/signal-processing/nifi.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/serviceaccount.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/jupyterhub-pyspark-hdfs/spark_driver_service.yaml
-      - helmChart: stacks/signal-processing/jupyterhub.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/signal-processing/jupyterhub.yaml
     parameters:
       - name: nifiAdminPassword
         description: Password of the NiFI admin user

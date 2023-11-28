@@ -9,8 +9,8 @@ demos:
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/01-airflow-spark-clusterrole.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/02-airflow-spark-clusterrolebinding.yaml
-      - plainYaml: demos/airflow-scheduled-job/03-enable-and-run-spark-dag.yaml
-      - plainYaml: demos/airflow-scheduled-job/04-enable-and-run-date-dag.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/03-enable-and-run-spark-dag.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/airflow-scheduled-job/04-enable-and-run-date-dag.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 2401m
@@ -24,8 +24,8 @@ demos:
       - hdfs
       - cycling-tripdata
     manifests:
-      - plainYaml: demos/hbase-hdfs-load-cycling-data/distcp-cycling-data.yaml
-      - plainYaml: demos/hbase-hdfs-load-cycling-data/create-hfile-and-import-to-hbase.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/distcp-cycling-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/hbase-hdfs-load-cycling-data/create-hfile-and-import-to-hbase.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: "3"
@@ -44,9 +44,9 @@ demos:
       - s3
       - earthquakes
     manifests:
-      - plainYaml: demos/nifi-kafka-druid-earthquake-data/create-nifi-ingestion-job.yaml
-      - plainYaml: demos/nifi-kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
-      - plainYaml: demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-nifi-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/create-druid-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-earthquake-data/setup-superset.yaml
     supportedNamespaces: ["default"]
     resourceRequests:
       cpu: 8700m
@@ -65,9 +65,9 @@ demos:
       - s3
       - water-levels
     manifests:
-      - plainYaml: demos/nifi-kafka-druid-water-level-data/create-nifi-ingestion-job.yaml
-      - plainYaml: demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml
-      - plainYaml: demos/nifi-kafka-druid-water-level-data/setup-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-nifi-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/create-druid-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/nifi-kafka-druid-water-level-data/setup-superset.yaml
     supportedNamespaces: ["default"]
     resourceRequests:
       cpu: 8900m
@@ -86,8 +86,8 @@ demos:
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/serviceaccount.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/load-test-data.yaml
-      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/create-spark-anomaly-detection-job.yaml
-      - plainYaml: demos/spark-k8s-anomaly-detection-taxi-data/setup-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/create-spark-anomaly-detection-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/spark-k8s-anomaly-detection-taxi-data/setup-superset.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 6400m
@@ -119,9 +119,9 @@ demos:
       - s3
       - ny-taxi-data
     manifests:
-      - plainYaml: demos/trino-taxi-data/load-test-data.yaml
-      - plainYaml: demos/trino-taxi-data/create-table-in-trino.yaml
-      - plainYaml: demos/trino-taxi-data/setup-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/load-test-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/create-table-in-trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/trino-taxi-data/setup-superset.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 6800m
@@ -199,8 +199,8 @@ demos:
       - zookeeper
     manifests:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/signal-processing/serviceaccount.yaml
-      - plainYaml: demos/signal-processing/create-timescale-tables.yaml
-      - plainYaml: demos/signal-processing/create-nifi-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/signal-processing/create-timescale-tables.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/signal-processing/create-nifi-ingestion-job.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: "3"
