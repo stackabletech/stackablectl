@@ -110,12 +110,12 @@ stacks:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-hive-iceberg.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/s3-connection.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
-      - plainYaml: stacks/nifi-kafka-druid-superset-s3/superset.yaml # Reuse
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/kafka.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/data-lakehouse-iceberg-trino-spark/nifi.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/superset.yaml # Reuse
     supportedNamespaces: []
     resourceRequests:
       cpu: "71"
@@ -179,7 +179,7 @@ stacks:
       - s3
     manifests:
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/minio.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main//_templates/postgresql-druid.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
       - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/zookeeper.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/nifi-kafka-druid-superset-s3/kafka.yaml
@@ -450,8 +450,8 @@ stacks:
       - authentication
       - sso
     manifests:
-      - helmChart: stacks/_templates/postgresql-superset.yaml
-      - helmChart: stacks/_templates/postgresql-druid.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
+      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
       - plainYaml: stacks/keycloak-opa-poc/serviceaccount.yaml
       - plainYaml: stacks/keycloak-opa-poc/keycloak.yaml
       - plainYaml: stacks/keycloak-opa-poc/setup-keycloak.yaml

@@ -147,8 +147,8 @@ demos:
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/serviceaccount.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/load-test-data.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/create-trino-tables.yaml
-      - plainYaml: demos/data-lakehouse-iceberg-trino-spark/create-nifi-ingestion-job.yaml
-      - plainYaml: demos/data-lakehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/create-nifi-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
       - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/setup-superset.yaml
     supportedNamespaces: ["default"]
     resourceRequests:
@@ -165,7 +165,7 @@ demos:
       - pyspark
       - ny-taxi-data
     manifests:
-      - plainYaml: demos/jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/load-test-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data/load-test-data.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 3350m
@@ -182,7 +182,7 @@ demos:
       - vector
       - zookeeper
     manifests:
-      - plainYaml: demos/logging/zookeeper.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/logging/zookeeper.yaml
     supportedNamespaces: []
     resourceRequests:
       cpu: 6500m
