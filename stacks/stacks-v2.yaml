@@ -450,8 +450,8 @@ stacks:
       - authentication
       - sso
     manifests:
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-superset.yaml
-      - helmChart: https://raw.githubusercontent.com/stackabletech/stackablectl/main/stacks/_templates/postgresql-druid.yaml
+      - helmChart: stacks/_templates/postgresql-superset.yaml
+      - helmChart: stacks/_templates/postgresql-druid.yaml
       - plainYaml: stacks/keycloak-opa-poc/serviceaccount.yaml
       - plainYaml: stacks/keycloak-opa-poc/keycloak.yaml
       - plainYaml: stacks/keycloak-opa-poc/setup-keycloak.yaml

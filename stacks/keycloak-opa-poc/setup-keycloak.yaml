@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: setup-keycloak
-        image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable0.0.0-dev # We need 0.0.0-dev, so we get kubectl
+        image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable23.11.0
         env:
           - name: KEYCLOAK_ADMIN_PASSWORD
             valueFrom:
@@ -68,9 +68,9 @@ spec:
           - -c
           - |
             echo "Download keycloak"
-            curl -LO https://github.com/keycloak/keycloak/releases/download/22.0.3/keycloak-22.0.3.zip
-            unzip keycloak-22.0.3.zip
-            cd keycloak-22.0.3/bin
+            curl -LO https://github.com/keycloak/keycloak/releases/download/23.0.0/keycloak-23.0.0.zip
+            unzip keycloak-23.0.0.zip
+            cd keycloak-23.0.0/bin
             ./kcadm.sh config credentials --config kcadm.conf --server http://keycloak:8080/ --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
             ./kcadm.sh create users --config kcadm.conf -s username=alice -s enabled=true || true
             ./kcadm.sh create users --config kcadm.conf -s username=bob -s enabled=true || true
