@@ -12,11 +12,11 @@ spec:
       serviceAccountName: demo-serviceaccount
       initContainers:
         - name: wait-for-kafka
-          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.11.0
           command: ["bash", "-c", "echo 'Waiting for all kafka brokers to be ready' && kubectl wait --for=condition=ready --timeout=30m pod -l app.kubernetes.io/instance=kafka -l app.kubernetes.io/name=kafka"]
       containers:
         - name: create-spark-ingestion-job
-          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.11.0
           command: ["bash", "-c", "echo 'Submitting Spark job' && kubectl apply -f /tmp/manifest/spark-ingestion-job.yaml"]
           volumeMounts:
             - name: manifest

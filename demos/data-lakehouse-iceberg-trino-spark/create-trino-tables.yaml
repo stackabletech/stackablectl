@@ -9,11 +9,11 @@ spec:
       serviceAccountName: demo-serviceaccount
       initContainers:
         - name: wait-for-testdata
-          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.11.0
           command: ["bash", "-c", "echo 'Waiting for job load-test-data to finish' && kubectl wait --for=condition=complete --timeout=30m job/load-test-data"]
       containers:
         - name: create-tables-in-trino
-          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
+          image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable23.11.0
           command: ["bash", "-c", "python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
