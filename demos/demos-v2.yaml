@@ -144,12 +144,12 @@ demos:
       - water-levels
       - earthquakes
     manifests:
-      - plainYaml: demos/data-lakehouse-iceberg-trino-spark/serviceaccount.yaml
-      - plainYaml: demos/data-lakehouse-iceberg-trino-spark/load-test-data.yaml
-      - plainYaml: demos/data-lakehouse-iceberg-trino-spark/create-trino-tables.yaml
-      - plainYaml: demos/data-lakehouse-iceberg-trino-spark/create-nifi-ingestion-job.yaml
-      - plainYaml: demos/data-lakehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
-      - plainYaml: demos/data-lakehouse-iceberg-trino-spark/setup-superset.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/serviceaccount.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/load-test-data.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/create-trino-tables.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/create-nifi-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/create-spark-ingestion-job.yaml
+      - plainYaml: https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/setup-superset.yaml
     supportedNamespaces: ["default"]
     resourceRequests:
       cpu: "80"
