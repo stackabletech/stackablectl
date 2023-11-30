@@ -3,7 +3,7 @@ name: kube-prometheus-stack
 repo:
   name: prometheus-community
   url: https://prometheus-community.github.io/helm-charts
-version: 48.1.1
+version: 54.2.2
 options:
   prometheus:
     prometheusSpec:

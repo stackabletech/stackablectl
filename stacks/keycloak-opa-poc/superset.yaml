@@ -19,8 +19,7 @@ metadata:
   name: superset
 spec:
   image:
-    productVersion: 2.1.0
-    stackableVersion: 23.7.0
+    productVersion: 3.0.1
   clusterConfig:
     credentialsSecret: superset-credentials
     listenerClass: external-unstable

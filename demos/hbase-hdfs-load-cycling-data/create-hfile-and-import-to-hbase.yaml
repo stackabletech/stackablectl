@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
         - name: create-hfile-and-import-to-hbase
-          image: docker.stackable.tech/stackable/hbase:2.4.12-stackable23.4
+          image: docker.stackable.tech/stackable/hbase:2.4.17-stackable23.11.0
           env:
             - name: HADOOP_USER_NAME
               value: stackable

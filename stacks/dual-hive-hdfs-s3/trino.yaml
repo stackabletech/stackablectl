@@ -62,7 +62,6 @@ metadata:
 spec:
   image:
     productVersion: "414"
-    stackableVersion: "23.7"
   clusterConfig:
     authorization:
       opa:
@@ -88,7 +87,6 @@ metadata:
 spec:
   image:
     productVersion: 0.51.0
-    stackableVersion: "23.7"
   servers:
     roleGroups:
       default:

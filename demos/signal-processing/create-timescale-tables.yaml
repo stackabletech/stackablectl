@@ -9,7 +9,7 @@ spec:
       serviceAccountName: demo-serviceaccount
       initContainers:
         - name: wait-for-timescale
-          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.11.0
           command: ["bash", "-c", "echo 'Waiting for timescaleDB to be ready'
                     && kubectl wait --for=condition=ready --timeout=30m pod -l app.kubernetes.io/name=postgresql-timescaledb"
                   ]

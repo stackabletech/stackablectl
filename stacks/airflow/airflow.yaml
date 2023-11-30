@@ -6,11 +6,9 @@ metadata:
   name: airflow
 spec:
   image:
-    productVersion: 2.6.1
-    stackableVersion: "23.7"
+    productVersion: 2.7.2
   clusterConfig:
     listenerClass: external-unstable
-    executor: CeleryExecutor
     loadExamples: false
     exposeConfig: false
     credentialsSecret: airflow-credentials
@@ -29,20 +27,33 @@ spec:
         mountPath: /dags/pyspark_pi.yaml
         subPath: pyspark_pi.yaml
   webservers:
+    config:
+      resources:
+        cpu:
+          min: 400m
+          max: "1"
+        memory:
+          limit: 1Gi
+      gracefulShutdownTimeout: 30s
     roleGroups:
       default:
         envOverrides:
           AIRFLOW__CORE__DAGS_FOLDER: "/dags"
           AIRFLOW_CONN_KUBERNETES_IN_CLUSTER: "kubernetes://?__extra__=%7B%22extra__kubernetes__in_cluster%22%3A+true%2C+%22extra__kubernetes__kube_config%22%3A+%22%22%2C+%22extra__kubernetes__kube_config_path%22%3A+%22%22%2C+%22extra__kubernetes__namespace%22%3A+%22%22%7D"
         replicas: 1
-  workers:
-    roleGroups:
-      default:
-        envOverrides:
-          AIRFLOW__CORE__DAGS_FOLDER: "/dags"
-          AIRFLOW_CONN_KUBERNETES_IN_CLUSTER: "kubernetes://?__extra__=%7B%22extra__kubernetes__in_cluster%22%3A+true%2C+%22extra__kubernetes__kube_config%22%3A+%22%22%2C+%22extra__kubernetes__kube_config_path%22%3A+%22%22%2C+%22extra__kubernetes__namespace%22%3A+%22%22%7D"
-        replicas: 2
+  kubernetesExecutors:
+    envOverrides:
+      AIRFLOW__CORE__DAGS_FOLDER: "/dags"
+      AIRFLOW_CONN_KUBERNETES_IN_CLUSTER: "kubernetes://?__extra__=%7B%22extra__kubernetes__in_cluster%22%3A+true%2C+%22extra__kubernetes__kube_config%22%3A+%22%22%2C+%22extra__kubernetes__kube_config_path%22%3A+%22%22%2C+%22extra__kubernetes__namespace%22%3A+%22%22%7D"
   schedulers:
+    config:
+      gracefulShutdownTimeout: 30s
+      resources:
+        cpu:
+          min: 400m
+          max: "1"
+        memory:
+          limit: 1Gi
     roleGroups:
       default:
         envOverrides:
@@ -260,17 +271,35 @@ data:
       name: pyspark-pi
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/stackable/pyspark-k8s:3.3.0-stackable23.4
+      sparkImage:
+        productVersion: 3.5.0
       mode: cluster
       mainApplicationFile: local:///stackable/spark/examples/src/main/python/pi.py
+      job:
+        config:
+          resources:
+            cpu:
+              min: 500m
+              max: 500m
+            memory:
+              limit: 512Mi
       driver:
-        cores: 1
-        coreLimit: "1200m"
-        memory: "512m"
+        config:
+          resources: 
+            cpu:
+              min: 1000m
+              max: 1200m
+            memory:
+              limit: 1024Mi
       executor:
-        cores: 1
-        instances: 3
-        memory: "512m"
+        config:
+          resources: 
+            cpu:
+              min: 500m
+              max: 1000m
+            memory:
+              limit: 1024Mi
+        replicas: 3
 {% endraw %}
 ---
 apiVersion: v1

@@ -5,8 +5,7 @@ metadata:
   name: druid
 spec:
   image:
-    productVersion: 26.0.0
-    stackableVersion: "23.7"
+    productVersion: 27.0.0
   clusterConfig:
     listenerClass: external-unstable
     zookeeperConfigMapName: druid-znode

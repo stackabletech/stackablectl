@@ -5,8 +5,7 @@ metadata:
   name: trino
 spec:
   image:
-    productVersion: "414"
-    stackableVersion: "23.7"
+    productVersion: "428"
   clusterConfig:
     listenerClass: external-unstable
     catalogLabelSelector:
@@ -115,14 +114,10 @@ metadata:
   name: opa
 spec:
   image:
-    productVersion: 0.51.0
-    stackableVersion: "23.7"
+    productVersion: 0.57.0
   servers:
     roleGroups:
-      default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
+      default: {}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -137,5 +132,14 @@ data:
     default allow = false
 
     allow {
+      is_admin
+    }
+    extended[i] {
+      some i
+      input.action.filterResources[i]
+      is_admin
+    }
+
+    is_admin() {
       input.context.identity.user == "admin"
     }

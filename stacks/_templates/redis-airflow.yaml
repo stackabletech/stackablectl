@@ -3,7 +3,7 @@ name: redis
 repo:
   name: bitnami
   url: https://charts.bitnami.com/bitnami/
-version: 17.13.2
+version: 18.1.6
 options:
   auth:
     password: airflow

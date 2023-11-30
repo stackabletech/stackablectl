@@ -13,8 +13,7 @@ metadata:
   name: hdfs
 spec:
   image:
-    productVersion: 3.3.4
-    stackableVersion: "23.7"
+    productVersion: 3.3.6
   clusterConfig:
     listenerClass: external-unstable
     dfsReplication: 1

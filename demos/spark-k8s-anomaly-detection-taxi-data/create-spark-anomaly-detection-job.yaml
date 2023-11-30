@@ -8,11 +8,11 @@ spec:
     spec:
       initContainers:
         - name: wait-for-testdata
-          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.11.0
           command: ["bash", "-c", "echo 'Waiting for job load-ny-taxi-data to finish' && kubectl wait --for=condition=complete --timeout=30m job/load-ny-taxi-data"]
       containers:
         - name: create-spark-anomaly-detection-job
-          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.11.0
           command: ["bash", "-c", "echo 'Submitting Spark job' && kubectl apply -f /tmp/manifest/spark-ad-job.yaml"]
           volumeMounts:
             - name: manifest
@@ -37,7 +37,9 @@ data:
       name: spark-ad
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0
+      sparkImage:
+        custom: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0
+        productVersion: 3.3.0
       mode: cluster
       mainApplicationFile: local:///spark-scripts/spark-ad.py
       deps:
@@ -50,33 +52,36 @@ data:
           configMap:
             name: cm-spark
       job:
-        resources:
-          cpu:
-            min: "100m"
-            max: "500m"
-          memory:
-            limit: "1Gi"
+        config:
+          resources:
+            cpu:
+              min: "100m"
+              max: "500m"
+            memory:
+              limit: "1Gi"
       driver:
-        resources:
-          cpu:
-            min: "2"
-            max: "3"
-          memory:
-            limit: "2Gi"
-        volumeMounts:
-          - name: cm-spark
-            mountPath: /spark-scripts
+        config:
+          resources:
+            cpu:
+              min: "2"
+              max: "3"
+            memory:
+              limit: "2Gi"
+          volumeMounts:
+            - name: cm-spark
+              mountPath: /spark-scripts
       executor:
-        instances: 2
-        resources:
-          cpu:
-            min: "2"
-            max: "3"
-          memory:
-            limit: "5Gi"
-        volumeMounts:
-          - name: cm-spark
-            mountPath: /spark-scripts
+        replicas: 2
+        config:
+          resources:
+            cpu:
+              min: "2"
+              max: "3"
+            memory:
+              limit: "5Gi"
+          volumeMounts:
+            - name: cm-spark
+              mountPath: /spark-scripts
       sparkConf:
         spark.kubernetes.submission.waitAppCompletion: "false"
         spark.kubernetes.driver.pod.name: "spark-ad-driver"

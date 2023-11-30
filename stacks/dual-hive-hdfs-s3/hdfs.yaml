@@ -6,7 +6,6 @@ metadata:
 spec:
   image:
     productVersion: 3.8.1
-    stackableVersion: "23.7"
   servers:
     roleGroups:
       default:
@@ -27,7 +26,6 @@ metadata:
 spec:
   image:
     productVersion: 3.3.4
-    stackableVersion: "23.7"
   clusterConfig:
     listenerClass: external-unstable
     dfsReplication: 1

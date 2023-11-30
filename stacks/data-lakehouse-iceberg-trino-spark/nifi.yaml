@@ -5,18 +5,15 @@ metadata:
   name: nifi
 spec:
   image:
-    productVersion: 1.21.0
-    stackableVersion: "23.7"
+    productVersion: 1.23.2
   clusterConfig:
-    listenerClass: external-unstable
-    zookeeperConfigMapName: nifi-znode
     authentication:
-      method:
-        singleUser:
-          adminCredentialsSecret: nifi-admin-credentials
+      - authenticationClass: nifi-admin-credentials
+    listenerClass: external-unstable
     sensitiveProperties:
       keySecret: nifi-sensitive-property-key
       autoGenerate: true
+    zookeeperConfigMapName: nifi-znode
   nodes:
     config:
       resources:
@@ -40,13 +37,22 @@ spec:
       default:
         replicas: 2
 ---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: nifi-admin-credentials
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: nifi-admin-credentials-secret
+---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: nifi-admin-credentials
+  name: nifi-admin-credentials-secret
 stringData:
-  username: admin
-  password: {{ nifiAdminPassword }}
+  admin: {{ nifiAdminPassword }}
 ---
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode

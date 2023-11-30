@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: load-ny-taxi-data
-          image: "docker.stackable.tech/stackable/hadoop:3.3.4-stackable23.4"
+          image: docker.stackable.tech/stackable/hadoop:3.3.6-stackable23.11.0
           command: ["bash", "-c", "/stackable/hadoop/bin/hdfs dfs -mkdir -p /ny-taxi-data/raw \
           && cd /tmp \
           && for month in 2020-09; do \

@@ -12,11 +12,11 @@ spec:
       serviceAccountName: demo-serviceaccount
       initContainers:
         - name: wait-for-kafka
-          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.11.0
           command: ["bash", "-c", "echo 'Waiting for all kafka brokers to be ready' && kubectl wait --for=condition=ready --timeout=30m pod -l app.kubernetes.io/instance=kafka -l app.kubernetes.io/name=kafka"]
       containers:
         - name: create-spark-ingestion-job
-          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.11.0
           command: ["bash", "-c", "echo 'Submitting Spark job' && kubectl apply -f /tmp/manifest/spark-ingestion-job.yaml"]
           volumeMounts:
             - name: manifest
@@ -41,8 +41,9 @@ data:
       name: spark-ingest-into-lakehouse
     spec:
       version: "1.0"
-      sparkImage: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable23.4
-      sparkImagePullPolicy: Always
+      sparkImage:
+        custom: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0
+        productVersion: 3.3.0
       mode: cluster
       mainApplicationFile: local:///stackable/spark/jobs/spark-ingest-into-lakehouse.py
       # deps:
@@ -60,6 +61,9 @@ data:
         # Every merge into statements creates 8 files.
         # Paralleling is enough for the demo, might need to be increased (or omitted entirely) when merge larger data volumes
         spark.sql.shuffle.partitions: "8"
+    
+        # As of 2023-10-31 the operator does not set this
+        spark.executor.cores: "4"
       volumes:
         - name: script
           configMap:
@@ -71,6 +75,9 @@ data:
                 annotations:
                   secrets.stackable.tech/class: tls
                   secrets.stackable.tech/scope: pod
+                  secrets.stackable.tech/format: tls-pkcs12
+                  secrets.stackable.tech/format.compatibility.tls-pkcs12.password: changeit
+                  secrets.stackable.tech/backend.autotls.cert.lifetime: 14d # To prevent frequent restarts
               spec:
                 accessModes:
                   - ReadWriteOnce
@@ -79,35 +86,38 @@ data:
                     storage: "1"
                 storageClassName: secrets.stackable.tech
       job:
-        resources:
-          cpu:
-            min: "100m"
-            max: "1"
+        config:
+          resources:
+            cpu:
+              min: "100m"
+              max: "1"
       driver:
-        resources:
-          cpu:
-            min: "1"
-            max: "1"
-          memory:
-            limit: "8Gi"
-        volumeMounts:
-          - name: script
-            mountPath: /stackable/spark/jobs
-          - name: tls
-            mountPath: /stackable/tls
+        config:
+          resources:
+            cpu:
+              min: "1"
+              max: "1"
+            memory:
+              limit: "8Gi"
+          volumeMounts:
+            - name: script
+              mountPath: /stackable/spark/jobs
+            - name: tls
+              mountPath: /stackable/tls
       executor:
-        instances: 4
-        resources:
-          cpu:
-            min: "2"
-            max: "4"
-          memory:
-            limit: "8Gi"
-        volumeMounts:
-          - name: script
-            mountPath: /stackable/spark/jobs
-          - name: tls
-            mountPath: /stackable/tls
+        replicas: 4
+        config:
+          resources:
+            cpu:
+              min: "2"
+              max: "4"
+            memory:
+              limit: "8Gi"
+          volumeMounts:
+            - name: script
+              mountPath: /stackable/spark/jobs
+            - name: tls
+              mountPath: /stackable/tls
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -124,26 +134,6 @@ data:
 
     spark = SparkSession.builder.appName("spark-ingest-into-lakehouse").getOrCreate()
     # spark.sparkContext.setLogLevel("DEBUG")
-
-    def createTrustStore(partitionData):
-      print("Creating truststore")
-      subprocess.run("keytool -importcert -file /stackable/tls/ca.crt -keystore /stackable/tls/truststore.p12 -storetype pkcs12 -noprompt -alias ca_cert -storepass changeit", shell=True)
-      print("Creating certificate chain")
-      subprocess.run("cat /stackable/tls/ca.crt /stackable/tls/tls.crt > /stackable/tls/chain.crt", shell=True)
-      print("Creating keystore")
-      subprocess.run("openssl pkcs12 -export -in /stackable/tls/chain.crt -inkey /stackable/tls/tls.key -out /stackable/tls/keystore.p12 --password pass:changeit", shell=True)
-      # We have to return some value
-      return partitionData
-      
-    # We have to wait until executors are ready, otherwise they will join later on and will be missing the /stackable/tls/keystore.p12
-    time.sleep(5 * 50)
-
-    # Run on driver
-    createTrustStore("dummy")
-    # Get Spark to execute this function on every executor
-    rdd = spark._sc.parallelize(["dummy"])
-    rdd = rdd.mapPartitions(createTrustStore)
-    print(rdd.collect())
 
     spark.sql("CREATE SCHEMA IF NOT EXISTS lakehouse.water_levels LOCATION 's3a://lakehouse/water-levels/'")
     spark.sql("CREATE SCHEMA IF NOT EXISTS lakehouse.smart_city LOCATION 's3a://lakehouse/smart-city/'")
@@ -236,9 +226,6 @@ data:
     .start()
 
 
-
-
-
     def upsertWaterLevelsMeasurements(microBatchOutputDF, batchId):
       microBatchOutputDF.createOrReplaceTempView("waterLevelsMeasurementsUpserts")
 
@@ -274,12 +261,6 @@ data:
     .trigger(processingTime='2 minutes') \
     .option("checkpointLocation", "s3a://lakehouse/water-levels/checkpoints/measurements") \
     .start()
-
-
-
-
-
-
 
 
     def upsertSharedBikesStationInformation(microBatchOutputDF, batchId):
@@ -327,10 +308,6 @@ data:
     .trigger(processingTime='2 minutes') \
     .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/shared_bikes_station_information") \
     .start()
-
-
-
-
 
 
     def upsertSharedBikesStationStatus(microBatchOutputDF, batchId):
@@ -387,10 +364,6 @@ data:
     .start()
 
 
-
-
-
-
     def upsertSharedBikesBikeStatus(microBatchOutputDF, batchId):
       microBatchOutputDF.createOrReplaceTempView("sharedBikesBikeStatusUpserts")
 
@@ -430,12 +403,6 @@ data:
     .trigger(processingTime='2 minutes') \
     .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/shared_bikes_bike_status") \
     .start()
-
-
-
-
-
-
 
 
     # key: table name

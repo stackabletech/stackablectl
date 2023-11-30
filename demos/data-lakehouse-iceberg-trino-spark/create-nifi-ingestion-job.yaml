@@ -9,17 +9,17 @@ spec:
       serviceAccountName: demo-serviceaccount
       initContainers:
         - name: wait-for-kafka
-          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.11.0
           command: ["bash", "-c", "echo 'Waiting for all kafka brokers to be ready' && kubectl wait --for=condition=ready --timeout=30m pod -l app.kubernetes.io/instance=kafka -l app.kubernetes.io/name=kafka"]
       containers:
         - name: create-nifi-ingestion-job
-          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
+          image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable23.11.0
           command: ["bash", "-c", "curl -O https://raw.githubusercontent.com/stackabletech/stackablectl/main/demos/data-lakehouse-iceberg-trino-spark/LakehouseKafkaIngest.xml && python -u /tmp/script/script.py"]
           volumeMounts:
             - name: script
               mountPath: /tmp/script
-            - name: nifi-admin-credentials
-              mountPath: /nifi-admin-credentials
+            - name: nifi-admin-credentials-secret
+              mountPath: /nifi-admin-credentials-secret
           env:
             - name: NAMESPACE
               valueFrom:
@@ -29,9 +29,9 @@ spec:
         - name: script
           configMap:
             name: create-nifi-ingestion-job-script
-        - name: nifi-admin-credentials
+        - name: nifi-admin-credentials-secret
           secret:
-            secretName: nifi-admin-credentials
+            secretName: nifi-admin-credentials-secret
       restartPolicy: OnFailure
   backoffLimit: 50
 ---
@@ -50,8 +50,8 @@ data:
 
     # As of 2022-08-29 we cant use "https://nifi:8443" here because <h2>The request contained an invalid host header [<code>nifi:8443</code>] in the request [<code>/nifi-api</code>]. Check for request manipulation or third-party intercept.</h2>
     ENDPOINT = f"https://nifi-node-default-0.nifi-node-default.{os.environ['NAMESPACE']}.svc.cluster.local:8443" # For local testing / developing replace it, afterwards change back to f"https://nifi-node-default-0.nifi-node-default.{os.environ['NAMESPACE']}.svc.cluster.local:8443"
-    USERNAME = open("/nifi-admin-credentials/username").read()
-    PASSWORD = open("/nifi-admin-credentials/password").read()
+    USERNAME = "admin"
+    PASSWORD = open("/nifi-admin-credentials-secret/admin").read()
     TEMPLATE_NAME = "LakehouseKafkaIngest"
     TEMPLATE_FILE = f"{TEMPLATE_NAME}.xml"
 

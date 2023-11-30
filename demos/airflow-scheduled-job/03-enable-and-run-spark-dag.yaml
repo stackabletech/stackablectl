@@ -8,15 +8,13 @@ spec:
     spec:
       containers:
         - name: start-pyspark-job
-          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.4
+          image: docker.stackable.tech/stackable/tools:1.0.0-stackable23.11.0
           # N.B. it is possible for the scheduler to report that a DAG exists, only for the worker task to fail if a pod is unexpectedly
           # restarted. Additionally, the db-init job takes a few minutes to complete before the cluster is deployed. The wait/watch steps
           # below are not "water-tight" but add a layer of stability by at least ensuring that the db is initialized and ready and that
           # all pods are reachable (albeit independent of each other).
           command: ["bash", "-c", "
-            kubectl wait airflowdb/airflow --for jsonpath='{.status.condition}'=Ready --timeout 600s
-            && kubectl rollout status --watch statefulset/airflow-webserver-default
-            && kubectl rollout status --watch statefulset/airflow-worker-default
+            kubectl rollout status --watch statefulset/airflow-webserver-default
             && kubectl rollout status --watch statefulset/airflow-scheduler-default
             && export AIRFLOW_ADMIN_PASSWORD=$(cat /airflow-credentials/adminUser.password)
             && curl -i -s --user admin:$AIRFLOW_ADMIN_PASSWORD http://airflow-webserver-default:8080/api/v1/dags/sparkapp_dag
