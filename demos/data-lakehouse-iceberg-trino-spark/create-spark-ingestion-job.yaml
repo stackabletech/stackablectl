@@ -42,19 +42,18 @@ data:
     spec:
       version: "1.0"
       sparkImage:
-        productVersion: 3.4.0
+        custom: docker.stackable.tech/demos/pyspark-k8s-with-kafka-and-iceberg:3.3.0-stackable0.2.0
+        productVersion: 3.3.0
       mode: cluster
       mainApplicationFile: local:///stackable/spark/jobs/spark-ingest-into-lakehouse.py
-      deps:
-        packages:
-          - org.apache.iceberg:iceberg-spark-runtime-3.4_2.12:1.4.0
-          - org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.0
+      # deps:
+      #   packages:
+      #     - org.apache.iceberg:iceberg-spark-runtime-3.3_2.12:1.1.0
+      #     - org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0
       s3connection:
         reference: minio
       sparkConf:
-        # Work around https://github.com/stackabletech/spark-k8s-operator/issues/296
-        spark.driver.userClassPathFirst: "false"
-        spark.executor.userClassPathFirst: "false"
+        spark.kubernetes.container.image.pullPolicy: Always
         spark.sql.extensions: org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
         spark.sql.catalog.lakehouse: org.apache.iceberg.spark.SparkCatalog
         spark.sql.catalog.lakehouse.type: hive
@@ -62,7 +61,7 @@ data:
         # Every merge into statements creates 8 files.
         # Paralleling is enough for the demo, might need to be increased (or omitted entirely) when merge larger data volumes
         spark.sql.shuffle.partitions: "8"
-
+    
         # As of 2023-10-31 the operator does not set this
         spark.executor.cores: "4"
       volumes:
@@ -404,6 +403,7 @@ data:
     .trigger(processingTime='2 minutes') \
     .option("checkpointLocation", "s3a://lakehouse/smart-city/checkpoints/shared_bikes_bike_status") \
     .start()
+
 
     # key: table name
     # value: compaction strategy
