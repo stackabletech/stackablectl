@@ -45,39 +45,62 @@ data:
   trino.rego: |
     package trino
 
-    import data.bundles.opagroups.admins
-    import future.keywords.in
     import future.keywords.if
+    import future.keywords.in
 
-    userInfo(userId) := http.send({"method": "POST", "url": "http://127.0.0.1:9476/user", "body": {"id": userId}, "headers": {"Content-Type": "application/json"}, "raise_error": true}).body
+    user_info_by_name(username) := http.send({"method": "POST", "url": "http://127.0.0.1:9476/user", "body": {"userName": username}, "headers": {"Content-Type": "application/json"}, "raise_error": true}).body
+
+    is_group_member(group) if group in user_info_by_name(input.context.identity.user).groups
 
     default allow = false
 
-    allow if input.context.identity.user == "admin"
-
+    # Admins can do anything
     allow {
-      currentUserInfo := userInfo(input.context.identity.user)
+      # We need to exclude ImpersonateUser, as otherwise everyone would be able to impersonate this users
+      input.action.operation != "ImpersonateUser"
 
-      some group
-      currentUserInfo.groups[group].name = "/admin"
+      is_group_member("/trino-admins")
+    }
+    extended[i] {
+        some i
+        input.action.filterResources[i]
+
+        is_group_member("/trino-admins")
     }
 
+    # Everyone can execute queries
     allow {
-      input.action.operation == "ImpersonateUser"
-      input.context.identity.principal.name == input.action.resource.user.name
+        input.action.operation in ["ExecuteQuery", "ExecuteFunction", "ReadSystemInformation"]
     }
 
+    # Everyone can see and kill his own queries
+    allow {
+        input.action.operation in ["ViewQueryOwnedBy", "KillQueryOwnedBy"]
+        input.action.resource.user.name == input.context.identity.user
+    }
+
+    # Superset can impersonate anyone, but not admins
     allow {
       input.action.operation == "ImpersonateUser"
       input.context.identity.principal.name == "superset"
+
+      # Commented out as this made things more complicated in the demo
+      # not "/trino-admins" in user_info_by_name(input.action.resource.user.name).groups
     }
 
+<<<<<<< HEAD
     # allow {
     #   currentUserInfo := userInfo(input.context.identity.principal.name)
     #
     #   input.action.operation == "ImpersonateUser"
     #   input.action.resource.user.name == currentUserInfo().userName
     # }
+=======
+    allow {
+      input.action.operation == "ImpersonateUser"
+      input.action.resource.user.name == input.context.identity.principal.name
+    }
+>>>>>>> dc75ab8 (WIP)
 ---
 apiVersion: v1
 kind: ConfigMap

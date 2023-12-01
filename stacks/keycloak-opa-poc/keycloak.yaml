@@ -75,6 +75,7 @@ spec:
                           port: $KEYCLOAK_PORT
                           rootPath: /realms/master
                           scopes: [openid]
+                          principalClaim: preferred_username
                           tls:
                             verification:
                             #  none: {}

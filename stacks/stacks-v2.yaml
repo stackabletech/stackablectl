@@ -451,15 +451,15 @@ stacks:
       - authentication
       - sso
     manifests:
-      - plainYaml: stacks/keycloak-opa-poc/openldap.yaml
-      - plainYaml: stacks/keycloak-opa-poc/keycloak-serviceaccount.yaml
-      - plainYaml: stacks/keycloak-opa-poc/keycloak.yaml
-      - plainYaml: stacks/keycloak-opa-poc/setup-keycloak.yaml
-      - helmChart: stacks/_templates/postgresql-superset.yaml
+      # - plainYaml: stacks/keycloak-opa-poc/openldap.yaml
+      # - plainYaml: stacks/keycloak-opa-poc/keycloak-serviceaccount.yaml
+      # - plainYaml: stacks/keycloak-opa-poc/keycloak.yaml
+      # - plainYaml: stacks/keycloak-opa-poc/setup-keycloak.yaml
+      # - helmChart: stacks/_templates/postgresql-superset.yaml
       # - helmChart: stacks/_templates/postgresql-druid.yaml
       - plainYaml: stacks/keycloak-opa-poc/opa.yaml
-      - plainYaml: stacks/keycloak-opa-poc/trino.yaml
-      - plainYaml: stacks/keycloak-opa-poc/superset.yaml
+      # - plainYaml: stacks/keycloak-opa-poc/trino.yaml
+      # - plainYaml: stacks/keycloak-opa-poc/superset.yaml
       # - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
       # - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
       # - plainYaml: stacks/keycloak-opa-poc/druid.yaml

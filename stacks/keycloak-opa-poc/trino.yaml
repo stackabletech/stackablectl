@@ -24,6 +24,9 @@ spec:
         configMapName: opa
         package: trino
   coordinators:
+    configOverrides:
+      config.properties:
+        http-server.authentication.oauth2.principal-field: preferred_username # Works with Keycloak, username did not work (NPE), name returned "Alice Adams"
     roleGroups:
       default:
         replicas: 1
@@ -31,6 +34,26 @@ spec:
     roleGroups:
       default:
         replicas: 1
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: tpcds
+  labels:
+    trino: trino
+spec:
+  connector:
+    tpcds: {}
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: tpch
+  labels:
+    trino: trino
+spec:
+  connector:
+    tpch: {}
 ---
 apiVersion: v1
 kind: Secret
