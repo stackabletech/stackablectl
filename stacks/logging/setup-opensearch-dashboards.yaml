@@ -1,0 +1,62 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: setup-opensearch-dashboards
+spec:
+  template:
+    spec:
+      containers:
+        - name: setup-opensearch-dashboards
+          image: docker.stackable.tech/stackable/testing-tools:0.2.0-stackable23.11.0
+          env:
+            - name: OPEN_SEARCH_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: opensearch-user
+                  key: password
+          command:
+            - bash
+            - -x
+            - -euo
+            - pipefail
+            - -c
+            - |
+              #!/bin/bash
+              curl \
+                  --retry-connrefused \
+                  --retry 120 \
+                  --retry-delay 5 \
+                  --header "Content-Type:application/json" \
+                  --header "osd-xsrf:true" \
+                  --header "securitytenant: global" \
+                  --data '{
+                            "attributes": {
+                              "title": "vector-*",
+                              "timeFieldName": "timestamp"
+                              }
+                          }' \
+                  "http://admin:${OPEN_SEARCH_ADMIN_PASSWORD}@opensearch-dashboards:5601/api/saved_objects/index-pattern/vector-*"
+              curl \
+                  --header "Content-Type:application/json" \
+                  --header "osd-xsrf:true" \
+                  --header "securitytenant: global" \
+                  --data '{
+                            "attributes": {
+                              "title":"Logs",
+                              "columns": ["pod", "container", "logger", "level", "message"],
+                              "kibanaSavedObjectMeta": {
+                                "searchSourceJSON": "{\"indexRefName\": \"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+                              }
+                            },
+                            "references": [
+                              {
+                                "id": "vector-*",
+                                "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+                                "type": "index-pattern"
+                              }
+                            ]
+                          }' \
+                  http://admin:${OPEN_SEARCH_ADMIN_PASSWORD}@opensearch-dashboards:5601/api/saved_objects/search/logs
+      restartPolicy: OnFailure
+  backoffLimit: 50
