@@ -62,6 +62,10 @@ spec:
               secretKeyRef:
                 name: keycloak-clients
                 key: druid
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
         command:
           - bash
           - -x
@@ -70,11 +74,30 @@ spec:
           - -c
           - |
             COMMON_FLAGS="--config kcadm.conf --truststore /tls/truststore.p12 --trustpass changeit"
-            kcadm.sh config credentials $COMMON_FLAGS --server https://keycloak.default.svc.cluster.local:8443 --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
-            kcadm.sh create users $COMMON_FLAGS -s username=alice -s firstName=Alice -s lastName=Adams -s email=alice@mycorp.org -s enabled=true || true
-            kcadm.sh create users $COMMON_FLAGS -s username=bob   -s firstName=Bob   -s lastName=Bush  -s email=bob@mycorp.org   -s enabled=true || true
+
+            echo "Configuring credentials"
+            kcadm.sh config credentials $COMMON_FLAGS --server https://keycloak.$NAMESPACE.svc.cluster.local:8443 --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
+
+            echo "Adding users"
+            ALICE_UUID=$(kcadm.sh create users $COMMON_FLAGS -s username=alice -s firstName=Alice -s lastName=Adams -s email=alice@mycorp.org -s enabled=true -o | jq -r .id)
+            BOB_UUID=$(  kcadm.sh create users $COMMON_FLAGS -s username=bob   -s firstName=Bob   -s lastName=Bush  -s email=bob@mycorp.org   -s enabled=true -o | jq -r .id)
+
+            echo "Setting user passwords"
             kcadm.sh set-password $COMMON_FLAGS --username alice --new-password "$ALICE_PASSWORD"
             kcadm.sh set-password $COMMON_FLAGS --username bob   --new-password "$BOB_PASSWORD"
+
+
+            echo "Creating groups"
+            SUPERSET_ADMIN_GROUP_UUID=$(kcadm.sh create groups $COMMON_FLAGS -s name=superset-admin -o | jq -r .id)
+            TRINO_ADMIN_GROUP_UUID=$(kcadm.sh create groups $COMMON_FLAGS -s name=trino-admin -o | jq -r .id)
+            DRUID_ADMIN_GROUP_UUID=$(kcadm.sh create groups $COMMON_FLAGS -s name=druid-admin -o | jq -r .id)
+
+            echo "Adding users to groups"
+            kcadm.sh update $COMMON_FLAGS "users/$ALICE_UUID/groups/$SUPERSET_ADMIN_GROUP_UUID"
+            kcadm.sh update $COMMON_FLAGS "users/$ALICE_UUID/groups/$TRINO_ADMIN_GROUP_UUID"
+            kcadm.sh update $COMMON_FLAGS "users/$ALICE_UUID/groups/$DRUID_ADMIN_GROUP_UUID"
+
+            echo "Creating oauth2 clients"
             kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
             {
               "clientId": "trino",
