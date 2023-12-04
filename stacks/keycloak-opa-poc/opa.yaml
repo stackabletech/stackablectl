@@ -82,7 +82,7 @@ data:
     # Superset can impersonate anyone, but not admins
     allow {
       input.action.operation == "ImpersonateUser"
-      input.context.identity.principal.name == "superset"
+      input.context.identity.principal.name == "superset" # TODO Authorize based on group membership "trino-impersonating"
 
       # Commented out as this made things more complicated in the demo
       # not "/trino-admins" in user_info_by_name(input.action.resource.user.name).groups
