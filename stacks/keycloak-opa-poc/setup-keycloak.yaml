@@ -69,17 +69,13 @@ spec:
           - pipefail
           - -c
           - |
-            echo "Download keycloak"
-            curl -LO https://github.com/keycloak/keycloak/releases/download/22.0.3/keycloak-22.0.3.zip
-            unzip keycloak-22.0.3.zip
-            cd keycloak-22.0.3/bin
             COMMON_FLAGS="--config kcadm.conf --truststore /tls/truststore.p12 --trustpass changeit"
-            ./kcadm.sh config credentials $COMMON_FLAGS --server https://keycloak.default.svc.cluster.local:8443 --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
-            ./kcadm.sh create users $COMMON_FLAGS -s username=alice -s firstName=Alice -s lastName=Adams -s email=alice@mycorp.org -s enabled=true || true
-            ./kcadm.sh create users $COMMON_FLAGS -s username=bob   -s firstName=Bob   -s lastName=Bush  -s email=bob@mycorp.org   -s enabled=true || true
-            ./kcadm.sh set-password $COMMON_FLAGS --username alice --new-password "$ALICE_PASSWORD"
-            ./kcadm.sh set-password $COMMON_FLAGS --username bob   --new-password "$BOB_PASSWORD"
-            ./kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
+            kcadm.sh config credentials $COMMON_FLAGS --server https://keycloak.default.svc.cluster.local:8443 --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
+            kcadm.sh create users $COMMON_FLAGS -s username=alice -s firstName=Alice -s lastName=Adams -s email=alice@mycorp.org -s enabled=true || true
+            kcadm.sh create users $COMMON_FLAGS -s username=bob   -s firstName=Bob   -s lastName=Bush  -s email=bob@mycorp.org   -s enabled=true || true
+            kcadm.sh set-password $COMMON_FLAGS --username alice --new-password "$ALICE_PASSWORD"
+            kcadm.sh set-password $COMMON_FLAGS --username bob   --new-password "$BOB_PASSWORD"
+            kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
             {
               "clientId": "trino",
               "enabled": true,
@@ -95,7 +91,7 @@ spec:
               "standardFlowEnabled": true
             }
             EOF
-            ./kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
+            kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
             {
               "clientId": "userinfo-fetcher",
               "enabled": true,
@@ -119,9 +115,9 @@ spec:
               }
             }
             EOF
-            ./kcadm.sh add-roles --uusername service-account-userinfo-fetcher --rolename admin $COMMON_FLAGS
+            kcadm.sh add-roles --uusername service-account-userinfo-fetcher --rolename admin $COMMON_FLAGS
 
-            ./kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
+            kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
             {
               "clientId": "superset",
               "enabled": true,
@@ -137,7 +133,7 @@ spec:
               "standardFlowEnabled": true
             }
             EOF
-            ./kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
+            kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
             {
               "clientId": "druid",
               "enabled": true,
