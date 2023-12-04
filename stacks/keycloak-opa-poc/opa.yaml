@@ -88,19 +88,10 @@ data:
       # not "/trino-admins" in user_info_by_name(input.action.resource.user.name).groups
     }
 
-<<<<<<< HEAD
-    # allow {
-    #   currentUserInfo := userInfo(input.context.identity.principal.name)
-    #
-    #   input.action.operation == "ImpersonateUser"
-    #   input.action.resource.user.name == currentUserInfo().userName
-    # }
-=======
     allow {
       input.action.operation == "ImpersonateUser"
       input.action.resource.user.name == input.context.identity.principal.name
     }
->>>>>>> dc75ab8 (WIP)
 ---
 apiVersion: v1
 kind: ConfigMap
