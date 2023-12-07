@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: vector-aggregator-discovery
-data:
-  ADDRESS: vector-aggregator:6000
