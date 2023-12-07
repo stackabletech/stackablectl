@@ -35,7 +35,7 @@ stacks:
     labels:
       - foo
     manifests:
-      - plainYaml: stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
+      - plainYaml: main/stacks/data-lakehouse-iceberg-trino-spark/hive-metastores.yaml
       - plainYaml: main/stacks/data-lakehouse-iceberg-trino-spark/trino.yaml
       - plainYaml: main/stacks/data-lakehouse-iceberg-trino-spark/zookeeper.yaml
 ----
