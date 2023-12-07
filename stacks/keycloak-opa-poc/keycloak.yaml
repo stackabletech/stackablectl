@@ -78,9 +78,6 @@ spec:
                           principalClaim: preferred_username
                           tls:
                             verification:
-                            #  none: {}
-                            #  We can't use this yet, as the cert of Keycloak has no SAN for the NodePort address.
-                            #  We can switch to this once we include the listener scope in tls certificates.
                               server:
                                 caCert:
                                   secretClass: tls
