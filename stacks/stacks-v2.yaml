@@ -460,6 +460,7 @@ stacks:
       - plainYaml: stacks/keycloak-opa-poc/opa.yaml
       - plainYaml: stacks/keycloak-opa-poc/trino.yaml
       - plainYaml: stacks/keycloak-opa-poc/superset.yaml
+      - plainYaml: stacks/keycloak-opa-poc/setup-superset.yaml
       # - plainYaml: stacks/keycloak-opa-poc/zookeeper.yaml
       # - plainYaml: stacks/keycloak-opa-poc/hdfs.yaml
       # - plainYaml: stacks/keycloak-opa-poc/druid.yaml

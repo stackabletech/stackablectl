@@ -52,6 +52,13 @@ data:
 
     is_group_member(group) if group in user_info_by_name(input.context.identity.user).groups
 
+    # We do this because we are automating the import of the DB connections (and other things) into 
+    # Superset as the local "admin" user in Superset which will not be in Keycloak.
+    # Because we are using User Impersonation, this user will be used to check the database 
+    # connection (read catalog).
+    # This is not recommended in production.
+    is_group_member(group) if input.context.identity.user == "admin"
+
     default allow = false
 
     # Admins can do anything

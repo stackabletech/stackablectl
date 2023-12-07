@@ -1,0 +1,131 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: setup-superset
+spec:
+  template:
+    spec:
+      containers:
+        - name: setup-superset
+          image: docker.stackable.tech/stackable/testing-tools:0.1.0-stackable0.1.0
+          command: ["bash", "-c", "curl -o superset-assets.zip https://raw.githubusercontent.com/stackabletech/stackablectl/improve-sso-demo/demos/keycloak-opa/superset-assets.zip && python -u /tmp/script/script.py"]
+          volumeMounts:
+            - name: script
+              mountPath: /tmp/script
+            - name: trino-superset-user
+              mountPath: /trino-superset-user
+            - name: superset-credentials
+              mountPath: /superset-credentials
+      volumes:
+        - name: script
+          configMap:
+            name: setup-superset-script
+        - name: superset-credentials
+          secret:
+            secretName: superset-credentials
+        - name: trino-superset-user
+          secret:
+            secretName: trino-superset-user
+      restartPolicy: OnFailure
+  backoffLimit: 50
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: setup-superset-script
+data:
+  script.py: |
+    #!/usr/bin/env python
+    import logging
+    import requests
+    import json
+
+    base_url = "http://superset-external:8088"
+    superset_username = open("/superset-credentials/adminUser.username").read()
+    superset_password = open("/superset-credentials/adminUser.password").read()
+    trino_connection_password = open("/trino-superset-user/superset").read()
+
+    logging.basicConfig(level=logging.INFO)
+    logging.info("Starting setup of Superset")
+
+    logging.info("Getting access token from /api/v1/security/login")
+    session = requests.session()
+    access_token = session.post(f"{base_url}/api/v1/security/login", json={"username": superset_username, "password": superset_password, "provider": "db", "refresh": True}).json()['access_token']
+    # print(f"access_token: {access_token}")
+
+    logging.info("Getting csrf token from /api/v1/security/csrf_token")
+    csrf_token = session.get(f"{base_url}/api/v1/security/csrf_token", headers={"Authorization": f"Bearer {access_token}"}).json()["result"]
+    # print(f"csrf_token: {csrf_token}")
+
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {access_token}",
+        "X-CSRFToken": csrf_token,
+    }
+
+    # # To retrieve all of the assets (datasources, datasets, charts and dashboards) run the following commands
+    # logging.info("Exporting all assets")
+    # result = session.get(f"{base_url}/api/v1/assets/export", headers=headers)
+    # assert result.status_code == 200
+    # with open("superset-assets.zip", "wb") as f:
+    #     f.write(result.content)
+    # exit(0)
+
+    # import the zip file into superset
+    logging.info("Importing all assets")
+    files = {
+        "bundle": ("superset-assets.zip", open("superset-assets.zip", "rb")),
+    }
+    data = {
+        "passwords": '{"databases/Trino_tpch.yaml": "' + trino_connection_password + '"}'
+    }
+
+    result = session.post(f"{base_url}/api/v1/assets/import", headers=headers, files=files, data=data)
+    assert result.status_code == 200, f"{result.status_code}: {result.content}"
+
+
+    # Now we must hit the API to set the DB Connection to `impersonate_user: true`, because the export and import doesn't allow for it
+    # See the incomplete PR: https://github.com/apache/superset/pull/14718
+
+    headers = headers | {"content-type": "application/json"}
+
+    # todo: make this next part iterable so other demos can use the same script
+    db_connection_name = "Trino tpch"
+    query = {
+      "columns": ["id","database_name", "impersonate_user"],
+      "filters": [
+        {
+          "col": "database_name",
+          "opr": "eq",
+          "value": db_connection_name
+        }
+      ],
+      "keys": ["none"]
+    }
+
+    # Lookup the DB Connection to get the ID
+    result = session.get(f"{base_url}/api/v1/database", params={"q": json.dumps(query)}, headers=headers)
+    assert result.status_code == 200, f"{result.status_code}: {result.content}"
+    result = result.json()
+    assert result['count'] == 1, f"there should only be one result returned, but got {result['count']}"
+    result = result['result'][0]
+    assert result['database_name'] == db_connection_name, f"the superset search filter appears to be invalid, expected: db_connection_name, got: result['database_name']" # extra check to ensure we are looking at the right DB, since the API returns all if the filter has an invalid `opr` value.
+    trino_tpch_db_id = result["id"]
+    logging.info(f"Got database connection id for '{db_connection_name}': {trino_tpch_db_id}")
+
+    # lookup result from above, since the search doesn't return `impersonate_user`
+    result = session.get(f"{base_url}/api/v1/database/{trino_tpch_db_id}", headers=headers)
+    assert result.status_code == 200, f"{result.status_code}: {result.content}"
+    result = result.json()
+    impersonate_user = result["result"]["impersonate_user"]
+    logging.info(f"The value of impersonate_user for '{db_connection_name}' was set to {impersonate_user}")
+
+    # Enable impersonation (this is done as the superset admin user)
+    result = session.put(f"{base_url}/api/v1/database/{trino_tpch_db_id}", headers=headers, data=json.dumps({"impersonate_user": True}))
+    assert result.status_code == 200, f"{result.status_code}: {result.content}"
+    result = result.json()
+    impersonate_user = result["result"]["impersonate_user"]
+    logging.info(f"The value of impersonate_user for '{db_connection_name}' is now {impersonate_user}")
+
+    logging.info("Finished setup of Superset")
