@@ -477,6 +477,12 @@ stacks:
       - name: bobPassword
         description: Password of the user bob, which can log into Trino and Superset
         default: bobbob
+      - name: janePassword
+        description: Password of the user jane, which can log into Trino and Superset
+        default: janejane
+      - name: mikePassword
+        description: Password of the user mike, which can log into Trino and Superset
+        default: mikemike
       - name: keycloakAdminPassword
         description: Password of the Keycloak admin user
         default: adminadmin

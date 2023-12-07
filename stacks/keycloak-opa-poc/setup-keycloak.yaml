@@ -15,6 +15,8 @@ metadata:
 stringData:
   alice: "{{ alicePassword }}"
   bob: "{{ bobPassword }}"
+  jane: "{{ janePassword }}"
+  mike: "{{ mikePassword }}"
 ---
 apiVersion: batch/v1
 kind: Job
@@ -42,6 +44,16 @@ spec:
               secretKeyRef:
                 name: keycloak-users
                 key: bob
+          - name: JANE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-users
+                key: jane
+          - name: MIKE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-users
+                key: mike
           - name: USERINFO_FETCHER_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
@@ -79,23 +91,28 @@ spec:
             kcadm.sh config credentials $COMMON_FLAGS --server https://keycloak.$NAMESPACE.svc.cluster.local:8443 --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
 
             echo "Adding users"
-            ALICE_UUID=$(kcadm.sh create users $COMMON_FLAGS -s username=alice -s firstName=Alice -s lastName=Adams -s email=alice@mycorp.org -s enabled=true -o | jq -r .id)
-            BOB_UUID=$(  kcadm.sh create users $COMMON_FLAGS -s username=bob   -s firstName=Bob   -s lastName=Bush  -s email=bob@mycorp.org   -s enabled=true -o | jq -r .id)
+            ALICE_UUID=$(kcadm.sh create users $COMMON_FLAGS -s username=alice -s firstName=Alice -s lastName=Adams  -s email=alice@mycorp.org -s enabled=true -o | jq -r .id)
+            BOB_UUID=$(  kcadm.sh create users $COMMON_FLAGS -s username=bob   -s firstName=Bob   -s lastName=Bush   -s email=bob@mycorp.org   -s enabled=true -o | jq -r .id)
+            JANE_UUID=$( kcadm.sh create users $COMMON_FLAGS -s username=jane  -s firstName=Jane  -s lastName=Carrat -s email=jane@mycorp.org  -s enabled=true -o | jq -r .id)
+            MIKE_UUID=$( kcadm.sh create users $COMMON_FLAGS -s username=mike  -s firstName=Mike  -s lastName=Truk   -s email=mike@mycorp.org  -s enabled=true -o | jq -r .id)
 
             echo "Setting user passwords"
             kcadm.sh set-password $COMMON_FLAGS --username alice --new-password "$ALICE_PASSWORD"
             kcadm.sh set-password $COMMON_FLAGS --username bob   --new-password "$BOB_PASSWORD"
-
+            kcadm.sh set-password $COMMON_FLAGS --username jane  --new-password "$JANE_PASSWORD"
+            kcadm.sh set-password $COMMON_FLAGS --username mike  --new-password "$MIKE_PASSWORD"
 
             echo "Creating groups"
-            SUPERSET_ADMIN_GROUP_UUID=$(kcadm.sh create groups $COMMON_FLAGS -s name=superset-admin -o | jq -r .id)
-            TRINO_ADMIN_GROUP_UUID=$(kcadm.sh create groups $COMMON_FLAGS -s name=trino-admin -o | jq -r .id)
-            DRUID_ADMIN_GROUP_UUID=$(kcadm.sh create groups $COMMON_FLAGS -s name=druid-admin -o | jq -r .id)
+            TRINO_ADMIN_GROUP_UUID=$(    kcadm.sh create groups $COMMON_FLAGS -s name=trino-admin     -o | jq -r .id)
+            TRINO_READWRITE_GROUP_UUID=$(kcadm.sh create groups $COMMON_FLAGS -s name=trino-readwrite -o | jq -r .id)
+            TRINO_READONLY_GROUP_UUID=$( kcadm.sh create groups $COMMON_FLAGS -s name=trino-readonly  -o | jq -r .id)
+            DRUID_ADMIN_GROUP_UUID=$(    kcadm.sh create groups $COMMON_FLAGS -s name=druid-admin     -o | jq -r .id)
 
             echo "Adding users to groups"
-            kcadm.sh update $COMMON_FLAGS "users/$ALICE_UUID/groups/$SUPERSET_ADMIN_GROUP_UUID"
             kcadm.sh update $COMMON_FLAGS "users/$ALICE_UUID/groups/$TRINO_ADMIN_GROUP_UUID"
             kcadm.sh update $COMMON_FLAGS "users/$ALICE_UUID/groups/$DRUID_ADMIN_GROUP_UUID"
+            kcadm.sh update $COMMON_FLAGS "users/$BOB_UUID/groups/$TRINO_READWRITE_GROUP_UUID"
+            kcadm.sh update $COMMON_FLAGS "users/$JANE_UUID/groups/$TRINO_READONLY_GROUP_UUID"
 
             echo "Creating oauth2 clients"
             kcadm.sh create clients $COMMON_FLAGS -f - << EOF || true
