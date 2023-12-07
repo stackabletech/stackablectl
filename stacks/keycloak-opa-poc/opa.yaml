@@ -66,13 +66,13 @@ data:
       # We need to exclude ImpersonateUser, as otherwise everyone would be able to impersonate this users
       input.action.operation != "ImpersonateUser"
 
-      is_group_member("/trino-admins")
+      is_group_member("/trino-admin")
     }
     extended[i] {
         some i
         input.action.filterResources[i]
 
-        is_group_member("/trino-admins")
+        is_group_member("/trino-admin")
     }
 
     # Everyone can execute queries
@@ -92,13 +92,18 @@ data:
       input.context.identity.principal.name == "superset" # TODO Authorize based on group membership "trino-impersonating"
 
       # Commented out as this made things more complicated in the demo
-      # not "/trino-admins" in user_info_by_name(input.action.resource.user.name).groups
+      # not "/trino-admin" in user_info_by_name(input.action.resource.user.name).groups
     }
 
     allow {
       input.action.operation == "ImpersonateUser"
       input.action.resource.user.name == input.context.identity.principal.name
     }
+
+    # todo:
+    # /trino-admin can do it all (create tables, insert data, select data)
+    # /trino-readwrite can can insert/delete rows, but not create or delete tables
+    # /trino-readonly can do all read operations
 ---
 apiVersion: v1
 kind: ConfigMap
