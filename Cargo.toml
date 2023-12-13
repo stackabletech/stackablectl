@@ -11,7 +11,7 @@ repository = "https://github.com/stackabletech/stackablectl"
 bcrypt = "0.14"
 cached = { version = "0.42", features = ['async_tokio_rt_multi_thread'] }
 clap = { version = "4.1", features = ["derive", "cargo"] }
-clap_complete = "4.1"
+clap_complete = "4.4"
 comfy-table = "6.1"
 env_logger = "0.10"
 indexmap = { version = "1.9", features = ["serde"] }
