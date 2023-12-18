@@ -10,7 +10,7 @@ spec:
       searchBase: ou=users,dc=example,dc=org
       # The bind credentials are used so an application can bind to the LDAP server
       bindCredentials:
-        secretClass: ldap-bind-credentials
+        secretClass: openldap-bind-credentials
       port: 1636
       tls:
         verification:
