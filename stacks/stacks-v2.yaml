@@ -438,7 +438,7 @@ stacks:
       This is a proof-of-concept and the mechanisms used here are subject to change.
     stackableRelease: 23.7
     stackableOperators:
-      # - commons => Needs to be installed from https://github.com/stackabletech/commons-operator/tree/feat/oidc
+      # - commons => Needs nightly
       # - secret => Needs nightly
       # - trino => Needs to be installed from https://github.com/stackabletech/trino-operator/tree/feature/support-oauth2
       # - superset => Needs to be installed from https://github.com/stackabletech/superset-operator/tree/feat/oidc
