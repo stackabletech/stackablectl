@@ -4,11 +4,14 @@
 
 <h1 align="center">Stackablectl</h1>
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/stackabletech/stackablectl/graphs/commit-activity)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](https://docs.stackable.tech/home/stable/contributor/index.html)
 [![License OSL3.0](https://img.shields.io/badge/license-OSL3.0-green)](./LICENSE)
 
 [Documentation](https://docs.stackable.tech/management/stable/stackablectl/) | [Stackable Data Platform](https://stackable.tech/) | [Platform Docs](https://docs.stackable.tech/) | [Discussions](https://github.com/orgs/stackabletech/discussions) | [Discord](https://discord.gg/7kZ3BNnCAF)
+
+> [!IMPORTANT]
+> This repository has been archived, due to a restructuring of the repositories. Please see below for where to find the current code. 
+> Development of `stackablectl` has been moved to the [`stackabletech/stackable-cockpit`](https://github.com/stackabletech/stackable-cockpit) repository.
+> The demos have been moved to the [`stackabletech/demos`](https://github.com/stackabletech/demos) repository.
 
 This repository is the home of the CLI application `stackablectl`, which makes it convenient to setup and interact with any Stackable cluster.
 
