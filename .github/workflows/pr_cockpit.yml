@@ -7,7 +7,6 @@ on:
       - ".github/workflows/pr_cockpit.yml"
       - "rust/stackable-cockpitd/**"
       - "rust/stackable-cockpit/**"
-      - "docs/modules/cockpit/**"
       - "docs/modules/ROOT/**"
       - "Cargo.lock"
       - "deploy/**"

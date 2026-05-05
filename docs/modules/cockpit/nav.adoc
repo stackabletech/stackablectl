@@ -1,2 +1,0 @@
-* xref:index.adoc[Cockpit]
-** xref:installation.adoc[Installation]
