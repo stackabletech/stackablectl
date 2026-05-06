@@ -2,7 +2,6 @@ use std::net::SocketAddr;
 
 use axum::{
     Router,
-    response::Redirect,
     routing::{get, post},
 };
 use clap::Parser;
@@ -53,9 +52,7 @@ async fn main() -> Result<(), Whatever> {
 
     let router = Router::new()
         .nest("/api/", api)
-        .nest("/ui/", handlers::ui::router())
-        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", api_doc::openapi()))
-        .route("/", get(|| async { Redirect::permanent("/ui/") }));
+        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", api_doc::openapi()));
 
     let listen_addr = SocketAddr::new(cli.address, cli.port);
     info!(addr = %listen_addr, "Starting server");

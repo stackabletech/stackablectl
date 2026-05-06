@@ -14,8 +14,6 @@ custom_build(
     deps=[
       # Rust
       'rust', 'Cargo.toml', 'Cargo.lock', 'vendor',
-      # Web UI
-      'web', 'yarn.lock',
       # Nix
       'nix', 'default.nix',
     ],

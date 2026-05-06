@@ -12,9 +12,6 @@ and exposes functionality via an HTTP REST API. Core community-provided dependen
 - [`tracing`][tracing-link] is used for context-rich application logging. Our complete stack emits tracing events that can be consumed via multiple different subscribers.
 - [`snafu`][snafu-link] for easy custom error handling.
 
-The Stackable UI is bundled into the final binary during the build process. The source code for the front end is located
-in [web](../../web). Detailed information about the frontend stack can be found in the [README](../../web/README.me).
-
 ## Development
 
 ```shell

@@ -31,15 +31,6 @@ RUN GO_VERSION=1.26.0 \
     && ln -s /opt/go/bin/go /usr/local/bin
 WORKDIR /
 
-##PATCH: Install node (for UI build)
-WORKDIR /opt/node
-RUN NODE_VERSION=18.16.0 \
-    ARCH=$(arch | sed 's/^x86_64$/x64/' | sed 's/^aarch64$/arm64/') \
-    && curl --location "https://repo.stackable.tech/repository/packages/node/node-v${NODE_VERSION}-linux-${ARCH}.tar.xz" | tar xvJ --strip-components=1 \
-    && ln -s /opt/node/bin/{node,corepack} /usr/local/bin \
-    && corepack enable yarn
-WORKDIR /
-
 # IMPORTANT
 # If you change the toolchain version here, make sure to also change the "rust_version"
 # property in operator-templating/repositories.yaml
@@ -58,9 +49,9 @@ COPY docker/ubi8-rust-builder/copy_artifacts.sh /
 WORKDIR /src
 COPY . /src
 
-## PATCH: disabled cyclonedx, run yarn install, build stackable-cockpitd with ui feature enabled
+## PATCH: disabled cyclonedx
 # hadolint ignore=SC1091
-RUN . "$HOME/.cargo/env" && yarn && cargo build --release --workspace --features stackable-cockpitd/ui
+RUN . "$HOME/.cargo/env" && cargo build --release --workspace
 # ONBUILD RUN . "$HOME/.cargo/env" && cargo auditable build --release --workspace && cargo cyclonedx --output-pattern package --all --output-cdx
 
 # Copy the "interesting" files into /app.

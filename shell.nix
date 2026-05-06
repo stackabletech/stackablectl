@@ -43,9 +43,6 @@ pkgs.mkShell rec {
       rustup
 
       # additions for this repo
-      yarn
-      typescript
-      vite
       go
     ]);
 

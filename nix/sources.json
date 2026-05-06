@@ -24,18 +24,6 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz",
         "version": "1.5.0"
     },
-    "js2nix": {
-        "branch": "main",
-        "description": "Node.js modules installation using Nix",
-        "homepage": "",
-        "owner": "canva-public",
-        "repo": "js2nix",
-        "rev": "8cd32b5c87767b019e0960b27599f6b9d195ddb0",
-        "sha256": "0mp62ai0n6k57cx8sn118qis37xvfylskagghxja00gdcank3nxr",
-        "type": "tarball",
-        "url": "https://github.com/canva-public/js2nix/archive/8cd32b5c87767b019e0960b27599f6b9d195ddb0.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
     "nixpkgs": {
         "branch": "nixpkgs-unstable",
         "description": "Nix Packages collection",

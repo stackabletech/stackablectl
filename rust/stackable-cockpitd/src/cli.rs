@@ -5,8 +5,7 @@ use clap::Parser;
 #[derive(Debug, Parser)]
 #[command(author, version, about, propagate_version = true)]
 #[command(
-    about = "Run the Stackable daemon which exposes the Stackable library via an HTTP
-REST API and provides a web-based application."
+    about = "Run the Stackable daemon which exposes the Stackable library via an HTTP REST API."
 )]
 pub struct Cli {
     /// Port the daemon listens on

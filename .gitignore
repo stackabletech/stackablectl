@@ -1,15 +1,10 @@
 # Rust
 /target
 
-# Frontend
-/node_modules
 htpasswd
-.yarn
 
 # Misc
 /demos
 /stacks
 /result
 .env
-.pnp
-.pnp.*

@@ -11,7 +11,7 @@ repos:
     hooks:
       - id: trailing-whitespace
         # Generated file
-        exclude: ^web/src/api/schema\.d\.ts|extra/.*$
+        exclude: ^extra/.*$
       - id: end-of-file-fixer
         exclude: Cargo.nix
       - id: detect-aws-credentials
@@ -66,14 +66,6 @@ repos:
         files: ^rust/stackablectl/
         language: system
         entry: cargo xtask gen-comp
-        stages: [pre-commit, pre-merge-commit, manual]
-        pass_filenames: false
-
-      - id: gen-openapi
-        name: gen-openapi
-        files: ^web/
-        language: system
-        entry: cargo xtask gen-openapi
         stages: [pre-commit, pre-merge-commit, manual]
         pass_filenames: false
 

@@ -32,12 +32,6 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: 18
-          cache: yarn
-      - run: yarn install --frozen-lockfile
-
       - uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc9fb29c4c0 # v2.8.0
         with:
           key: udeps
@@ -84,11 +78,6 @@ jobs:
         with:
           key: doc
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: 18
-          cache: yarn
-      - run: yarn install --frozen-lockfile
       - run: cargo doc --document-private-items
 
   run_tests:
@@ -111,11 +100,6 @@ jobs:
         with:
           key: test
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: 18
-          cache: yarn
-      - run: yarn install --frozen-lockfile
       - run: cargo test
 
   tests_passed:

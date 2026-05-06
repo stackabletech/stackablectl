@@ -11,16 +11,6 @@
   cargo ? import ./Cargo.nix {
     inherit nixpkgs pkgs release;
     defaultCrateOverrides = pkgs.defaultCrateOverrides // {
-      stackable-cockpit-web = attrs: {
-        nativeBuildInputs = [
-          pkgs.nodePackages.yarn
-          pkgs.nodejs_20
-        ];
-        preConfigure = ''
-          [[ ! -e node_modules ]] || rm -r node_modules
-          ln -s ${web.nodeModules} node_modules
-        '';
-      };
       helm-sys = attrs: {
         GO_HELM_WRAPPER = goHelmWrapper + "/bin";
         LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
@@ -41,20 +31,6 @@
   meta ? pkgs.lib.importJSON ./nix/meta.json,
   dockerName ? "oci.stackable.tech/sandbox/${meta.operator.name}",
   dockerTag ? null,
-  web ? js2nix.buildEnv {
-    # js2nix doesn't import peer dependencies, so we use overlays to patch them in explicitly
-    # https://github.com/canva-public/js2nix/blob/d37912f6cc824e7f41bea7a481af1739ca195c8f/docs/usage.md#overriding
-    package-json = ./web/package.json;
-    yarn-lock = ./yarn.lock;
-    overlays = [
-      (self: super: {
-        # TODO: remove once this https://github.com/canva-public/js2nix/issues/20 is resolved
-        buildNodeModule = pkgs.lib.makeOverridable (
-          args: (super.buildNodeModule args).override { doCheck = false; }
-        );
-      })
-    ];
-  },
   goHelmWrapper ? pkgs.buildGoApplication {
     go = pkgs.go_1_26;
     pname = "go-helm-wrapper";
@@ -75,7 +51,6 @@
       done
     '';
   },
-  js2nix ? pkgs.callPackage sources.js2nix { nodejs = pkgs.nodejs_20; },
   gomod2nix ? pkgs.callPackage sources.gomod2nix { },
 }:
 rec {
@@ -85,9 +60,7 @@ rec {
     pkgs
     meta
     ;
-  build = cargo.workspaceMembers.stackable-cockpitd.build.override {
-    features = [ "ui" ];
-  };
+  build = cargo.workspaceMembers.stackable-cockpitd.build;
   entrypoint = build + "/bin/stackable-cockpitd";
   # crds = pkgs.runCommand "${meta.operator.name}-crds.yaml" {}
   # ''

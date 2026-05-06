@@ -1,9 +1,7 @@
-web/src/api/schema.d.ts linguist-generated
 extra/completions/* linguist-generated
 crate-hashes.json linguist-generated
 extra/man/* linguist-generated
 Cargo.nix linguist-generated
-yarn.lock linguist-generated
 nix/** linguist-generated
 go.sum linguist-generated
 gomod2nix.toml linguist-generated

@@ -10,10 +10,5 @@ crate-hashes.json
 result
 image.tar
 
-node_modules
-.pnp
-.pnp.*
-.yarn
-
 # We do NOT want to ignore .git because we use the `built` crate to gather the current git commit hash at built time
 # This means we need the .git directory in our Docker image, it will be thrown away and won't be included in the final image

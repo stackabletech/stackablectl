@@ -2,14 +2,12 @@ use clap::Parser;
 use snafu::Snafu;
 
 use crate::{
-    completions::GenCompError, docs::GenDocsError, man::GenManError, openapi::GenOpenapiError,
-    readme::GenReadmeError,
+    completions::GenCompError, docs::GenDocsError, man::GenManError, readme::GenReadmeError,
 };
 
 mod completions;
 mod docs;
 mod man;
-mod openapi;
 mod readme;
 
 #[derive(clap::Parser)]
@@ -18,7 +16,6 @@ enum XtaskCommand {
     GenAll,
     GenMan,
     GenComp,
-    GenOpenapi,
     GenCtlReadme,
     GenDocs,
 }
@@ -30,12 +27,6 @@ enum TaskError {
 
     #[snafu(display("failed to generate shell completions"), context(false))]
     Comp { source: GenCompError },
-
-    #[snafu(
-        display("failed to generate OpenAPI TypeScript schema based on the OpenAPI JSON spec"),
-        context(false)
-    )]
-    Openapi { source: GenOpenapiError },
 
     #[snafu(
         display("failed to generate stackablectl usage README file"),
@@ -54,13 +45,11 @@ fn main() -> Result<(), TaskError> {
             // IMPORTANT (@NickLarsenNZ): ensure all commands defined below are also in here.
             man::generate()?;
             completions::generate()?;
-            openapi::generate()?;
             readme::generate()?;
             docs::generate()?;
         }
         XtaskCommand::GenMan => man::generate()?,
         XtaskCommand::GenComp => completions::generate()?,
-        XtaskCommand::GenOpenapi => openapi::generate()?,
         XtaskCommand::GenCtlReadme => readme::generate()?,
         XtaskCommand::GenDocs => docs::generate()?,
     }

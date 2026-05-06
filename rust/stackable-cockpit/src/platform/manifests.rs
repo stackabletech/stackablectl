@@ -56,6 +56,10 @@ pub enum Error {
         source: helm::Error,
     },
 
+    /// This error indicates that the Helm chart source kind is not supported.
+    #[snafu(display("local Helm chart sources are not yet supported (source: {chart_source:?})"))]
+    UnsupportedChartSource { chart_source: String },
+
     /// This error indicates that Helm chart options could not be serialized
     /// into YAML.
     #[snafu(display("failed to serialize Helm chart options"))]
@@ -104,12 +108,23 @@ pub trait InstallManifestsExt {
 
                     info!(helm_chart.name, helm_chart.version, "Installing Helm chart",);
 
-                    // Assumption: that all manifest helm charts refer to repos not registries
-                    helm::add_repo(&helm_chart.repo.name, &helm_chart.repo.url).context(
-                        AddHelmRepositorySnafu {
-                            repo_name: helm_chart.repo.name.clone(),
-                        },
-                    )?;
+                    let chart_source = match helm_chart.repo.source_kind() {
+                        helm::ChartSourceKind::Repo => {
+                            helm::add_repo(&helm_chart.repo.name, &helm_chart.repo.url).context(
+                                AddHelmRepositorySnafu {
+                                    repo_name: helm_chart.repo.name.clone(),
+                                },
+                            )?;
+                            &helm_chart.repo.name
+                        }
+                        helm::ChartSourceKind::Oci => &helm_chart.repo.url,
+                        helm::ChartSourceKind::Local => {
+                            return UnsupportedChartSourceSnafu {
+                                chart_source: helm_chart.repo.url.clone(),
+                            }
+                            .fail();
+                        }
+                    };
 
                     // Serialize chart options to string
                     let values_yaml = serde_yaml::to_string(&helm_chart.options)
@@ -119,7 +134,7 @@ pub trait InstallManifestsExt {
                     helm::upgrade_or_install_release_from_repo_or_registry(
                         &helm_chart.release_name,
                         helm::ChartVersion {
-                            chart_source: &helm_chart.repo.name,
+                            chart_source,
                             chart_name: &helm_chart.name,
                             chart_version: Some(&helm_chart.version),
                         },

@@ -1,6 +1,6 @@
 [package]
 name = "stackable-cockpitd"
-description = "Stackable cockpit daemon bundling the HTTP REST API and UI"
+description = "Stackable cockpit daemon bundling the HTTP REST API"
 version.workspace = true
 authors.workspace = true
 license.workspace = true
@@ -8,14 +8,8 @@ edition.workspace = true
 repository.workspace = true
 publish = false
 
-[features]
-default = []
-# The UI builds slowly, so run in API-only mode during development
-ui = ["dep:stackable-cockpit-web"]
-
 [dependencies]
 stackable-cockpit = { path = "../stackable-cockpit", features = ["openapi"] }
-stackable-cockpit-web = { path = "../../web", optional = true }
 
 axum.workspace = true
 axum-extra.workspace = true

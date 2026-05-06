@@ -63,16 +63,6 @@ rec {
       # File a bug if you depend on any for non-debug work!
       debug = internal.debugCrate { inherit packageId; };
     };
-    "stackable-cockpit-web" = rec {
-      packageId = "stackable-cockpit-web";
-      build = internal.buildRustCrateWithFeatures {
-        packageId = "stackable-cockpit-web";
-      };
-
-      # Debug support which might change between releases.
-      # File a bug if you depend on any for non-debug work!
-      debug = internal.debugCrate { inherit packageId; };
-    };
     "stackable-cockpitd" = rec {
       packageId = "stackable-cockpitd";
       build = internal.buildRustCrateWithFeatures {
@@ -1580,7 +1570,7 @@ rec {
           }
           {
             name = "phf";
-            packageId = "phf 0.11.3";
+            packageId = "phf";
             usesDefaultFeatures = false;
           }
         ];
@@ -1620,12 +1610,12 @@ rec {
           }
           {
             name = "phf";
-            packageId = "phf 0.11.3";
+            packageId = "phf";
             usesDefaultFeatures = false;
           }
           {
             name = "phf_codegen";
-            packageId = "phf_codegen 0.11.3";
+            packageId = "phf_codegen";
             usesDefaultFeatures = false;
           }
         ];
@@ -8121,7 +8111,7 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" ];
       };
-      "phf 0.11.3" = rec {
+      "phf" = rec {
         crateName = "phf";
         version = "0.11.3";
         edition = "2021";
@@ -8132,7 +8122,7 @@ rec {
         dependencies = [
           {
             name = "phf_shared";
-            packageId = "phf_shared 0.11.3";
+            packageId = "phf_shared";
             usesDefaultFeatures = false;
           }
         ];
@@ -8146,39 +8136,7 @@ rec {
           "unicase" = [ "phf_macros?/unicase" "phf_shared/unicase" ];
         };
       };
-      "phf 0.13.1" = rec {
-        crateName = "phf";
-        version = "0.13.1";
-        edition = "2021";
-        sha256 = "1pzswx5gdglgjgp4azyzwyr4gh031r0kcnpqq6jblga72z3jsmn1";
-        authors = [
-          "Steven Fackler <sfackler@gmail.com>"
-        ];
-        dependencies = [
-          {
-            name = "phf_shared";
-            packageId = "phf_shared 0.13.1";
-            usesDefaultFeatures = false;
-          }
-          {
-            name = "serde";
-            packageId = "serde";
-            optional = true;
-            usesDefaultFeatures = false;
-          }
-        ];
-        features = {
-          "default" = [ "std" ];
-          "macros" = [ "phf_macros" ];
-          "phf_macros" = [ "dep:phf_macros" ];
-          "serde" = [ "dep:serde" ];
-          "std" = [ "phf_shared/std" "serde?/std" ];
-          "uncased" = [ "phf_macros?/uncased" "phf_shared/uncased" ];
-          "unicase" = [ "phf_macros?/unicase" "phf_shared/unicase" ];
-        };
-        resolvedDefaultFeatures = [ "default" "std" ];
-      };
-      "phf_codegen 0.11.3" = rec {
+      "phf_codegen" = rec {
         crateName = "phf_codegen";
         version = "0.11.3";
         edition = "2021";
@@ -8189,36 +8147,16 @@ rec {
         dependencies = [
           {
             name = "phf_generator";
-            packageId = "phf_generator 0.11.3";
+            packageId = "phf_generator";
           }
           {
             name = "phf_shared";
-            packageId = "phf_shared 0.11.3";
+            packageId = "phf_shared";
           }
         ];
 
       };
-      "phf_codegen 0.13.1" = rec {
-        crateName = "phf_codegen";
-        version = "0.13.1";
-        edition = "2021";
-        sha256 = "1qfnsl2hiny0yg4lwn888xla5iwccszgxnx8dhbwl6s2h2fpzaj9";
-        authors = [
-          "Steven Fackler <sfackler@gmail.com>"
-        ];
-        dependencies = [
-          {
-            name = "phf_generator";
-            packageId = "phf_generator 0.13.1";
-          }
-          {
-            name = "phf_shared";
-            packageId = "phf_shared 0.13.1";
-          }
-        ];
-
-      };
-      "phf_generator 0.11.3" = rec {
+      "phf_generator" = rec {
         crateName = "phf_generator";
         version = "0.11.3";
         edition = "2021";
@@ -8230,7 +8168,7 @@ rec {
         dependencies = [
           {
             name = "phf_shared";
-            packageId = "phf_shared 0.11.3";
+            packageId = "phf_shared";
             usesDefaultFeatures = false;
           }
           {
@@ -8244,55 +8182,11 @@ rec {
           "criterion" = [ "dep:criterion" ];
         };
       };
-      "phf_generator 0.13.1" = rec {
-        crateName = "phf_generator";
-        version = "0.13.1";
-        edition = "2021";
-        crateBin = [];
-        sha256 = "0dwpp11l41dy9mag4phkyyvhpf66lwbp79q3ik44wmhyfqxcwnhk";
-        authors = [
-          "Steven Fackler <sfackler@gmail.com>"
-        ];
-        dependencies = [
-          {
-            name = "fastrand";
-            packageId = "fastrand";
-            usesDefaultFeatures = false;
-          }
-          {
-            name = "phf_shared";
-            packageId = "phf_shared 0.13.1";
-            usesDefaultFeatures = false;
-          }
-        ];
-
-      };
-      "phf_shared 0.11.3" = rec {
+      "phf_shared" = rec {
         crateName = "phf_shared";
         version = "0.11.3";
         edition = "2021";
         sha256 = "1rallyvh28jqd9i916gk5gk2igdmzlgvv5q0l3xbf3m6y8pbrsk7";
-        authors = [
-          "Steven Fackler <sfackler@gmail.com>"
-        ];
-        dependencies = [
-          {
-            name = "siphasher";
-            packageId = "siphasher";
-          }
-        ];
-        features = {
-          "default" = [ "std" ];
-          "uncased" = [ "dep:uncased" ];
-          "unicase" = [ "dep:unicase" ];
-        };
-        resolvedDefaultFeatures = [ "default" "std" ];
-      };
-      "phf_shared 0.13.1" = rec {
-        crateName = "phf_shared";
-        version = "0.13.1";
-        edition = "2021";
-        sha256 = "0rpjchnswm0x5l4mz9xqfpw0j4w68sjvyqrdrv13h7lqqmmyyzz5";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
         ];
@@ -10597,9 +10491,9 @@ rec {
       };
       "rustls-webpki" = rec {
         crateName = "rustls-webpki";
-        version = "0.103.11";
+        version = "0.103.13";
         edition = "2021";
-        sha256 = "1m3wpj1sfnpgwd6692lf42bcjsk6mbl6dwgarkn20jzadx8sz9i0";
+        sha256 = "0vkm7z9pnxz5qz66p2kmyy2pwx0g4jnsbqk5xzfhs4czcjl2ki31";
         libName = "webpki";
         dependencies = [
           {
@@ -11871,26 +11765,6 @@ rec {
         };
         resolvedDefaultFeatures = [ "full" "openapi" ];
       };
-      "stackable-cockpit-web" = rec {
-        crateName = "stackable-cockpit-web";
-        version = "0.0.0-dev";
-        edition = "2021";
-        src = lib.cleanSourceWith { filter = sourceFilter;  src = ./web; };
-        libName = "stackable_cockpit_web";
-        dependencies = [
-          {
-            name = "phf";
-            packageId = "phf 0.13.1";
-          }
-        ];
-        buildDependencies = [
-          {
-            name = "phf_codegen";
-            packageId = "phf_codegen 0.13.1";
-          }
-        ];
-
-      };
       "stackable-cockpitd" = rec {
         crateName = "stackable-cockpitd";
         version = "0.0.0-dev";
@@ -11947,11 +11821,6 @@ rec {
             features = [ "openapi" ];
           }
           {
-            name = "stackable-cockpit-web";
-            packageId = "stackable-cockpit-web";
-            optional = true;
-          }
-          {
             name = "tokio";
             packageId = "tokio";
             features = [ "rt-multi-thread" "macros" "fs" "process" "io-std" ];
@@ -11985,10 +11854,7 @@ rec {
             features = [ "v4" ];
           }
         ];
-        features = {
-          "ui" = [ "dep:stackable-cockpit-web" ];
-        };
-        resolvedDefaultFeatures = [ "default" "ui" ];
+
       };
       "stackable-operator" = rec {
         crateName = "stackable-operator";
@@ -18319,10 +18185,6 @@ rec {
             name = "snafu";
             packageId = "snafu 0.9.0";
             features = [ "futures" ];
-          }
-          {
-            name = "stackable-cockpitd";
-            packageId = "stackable-cockpitd";
           }
           {
             name = "stackablectl";
