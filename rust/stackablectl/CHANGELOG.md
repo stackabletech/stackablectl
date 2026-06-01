@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 - Add confirmation prompt to `install` subcommand for namespace selection ([#429]).
 - Add `--assume-yes` option for running commands non-interactively ([#429]).
 - Support Helm charts sourced from OCI registries in demo/stack manifests ([#440]).
+
+### Changed
+
 - Abort early if `uninstall` is issued for `default` namespace ([#442]).
 
 [#429]: https://github.com/stackabletech/stackable-cockpit/pull/429
