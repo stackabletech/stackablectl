@@ -178,6 +178,11 @@ pub enum CmdError {
         stack_name: String,
     },
 
+    #[snafu(display(
+        "stack {stack_name:?} cannot be uninstalled from the {DEFAULT_NAMESPACE:?} namespace, because Kubernetes does not allow deleting it. Pass --namespace <NAMESPACE> if the stack was installed in a different namespace, or delete the stack's resources manually"
+    ))]
+    UninstallFromDefaultNamespace { stack_name: String },
+
     #[snafu(display("failed to build labels for stack resources"))]
     BuildLabels { source: LabelError },
 
@@ -495,6 +500,13 @@ async fn uninstall_cmd(
     transfer_client: &xfer::Client,
 ) -> Result<String, CmdError> {
     let mut output = Cli::result();
+
+    ensure!(
+        args.namespaces.namespace != DEFAULT_NAMESPACE,
+        UninstallFromDefaultNamespaceSnafu {
+            stack_name: args.stack_name.clone(),
+        }
+    );
 
     let proceed_with_uninstall = args.prompt_args.assume_yes
         || tracing_indicatif::suspend_tracing_indicatif(|| -> Result<bool, CmdError> {

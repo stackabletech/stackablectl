@@ -183,6 +183,11 @@ pub enum CmdError {
         demo_name: String,
     },
 
+    #[snafu(display(
+        "demo {demo_name:?} cannot be uninstalled from the {DEFAULT_NAMESPACE:?} namespace, because Kubernetes does not allow deleting it. Pass --namespace <NAMESPACE> if the demo was installed in a different namespace, or delete the demo's resources manually"
+    ))]
+    UninstallFromDefaultNamespace { demo_name: String },
+
     #[snafu(display("failed to build labels for demo resources"))]
     BuildLabels { source: LabelError },
 
@@ -524,6 +529,13 @@ async fn uninstall_cmd(
 ) -> Result<String, CmdError> {
     // Init result output and progress output
     let mut output = Cli::result();
+
+    ensure!(
+        args.namespaces.namespace != DEFAULT_NAMESPACE,
+        UninstallFromDefaultNamespaceSnafu {
+            demo_name: args.demo_name.clone(),
+        }
+    );
 
     let proceed_with_uninstall = args.prompt_args.assume_yes
         || {
