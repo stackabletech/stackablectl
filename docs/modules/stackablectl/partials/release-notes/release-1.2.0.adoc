@@ -1,6 +1,6 @@
 == 1.2.0
 
 * Automatically detect Kubernetes environment (e.g. kind, k3s or IONOS) and choose a sensible https://docs.stackable.tech/home/nightly/listener-operator/listenerclass/#presets[ListenerClass preset] by default.
-  See https://github.com/stackabletech/stackable-cockpit/pull/414[stackable-cockpit#414].
+  See https://github.com/stackabletech/stackablectl/pull/414[stackablectl#414].
 * Support configuring the https://docs.stackable.tech/home/nightly/listener-operator/listenerclass/#presets[ListenerClass preset] using `--listener-class-preset`.
-  See https://github.com/stackabletech/stackable-cockpit/pull/414[stackable-cockpit#414].
+  See https://github.com/stackabletech/stackablectl/pull/414[stackablectl#414].

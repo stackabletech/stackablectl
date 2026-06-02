@@ -1,4 +1,4 @@
 == 1.4.0
 
 * Add `STACK` and `DEMO` templating parameters. Have a look at the `README.md` for details.
-  See https://github.com/stackabletech/stackable-cockpit/pull/432[stackable-cockpit#432].
+  See https://github.com/stackabletech/stackablectl/pull/432[stackablectl#432].

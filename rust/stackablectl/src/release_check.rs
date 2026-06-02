@@ -7,7 +7,7 @@ use stackable_cockpit::{utils::path::PathOrUrl, xfer};
 
 use crate::built_info::PKG_SEMVER;
 
-const URL: &str = "https://api.github.com/repos/stackabletech/stackable-cockpit/releases";
+const URL: &str = "https://api.github.com/repos/stackabletech/stackablectl/releases";
 const PREFIX: &str = "stackablectl-";
 
 #[derive(Debug, Snafu)]

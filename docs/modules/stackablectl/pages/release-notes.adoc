@@ -2,7 +2,7 @@
 :page-toclevels: 3
 :description: Learn about the latest features and changes in the release notes for stackablectl.
 
-A full list of changes is available directly in https://github.com/stackabletech/stackable-cockpit/blob/main/rust/stackablectl/CHANGELOG.md[stackablectl's changelog].
+A full list of changes is available directly in https://github.com/stackabletech/stackablectl/blob/main/rust/stackablectl/CHANGELOG.md[stackablectl's changelog].
 
 // WARNING: Please keep the empty newlines, otherwise headings are broken.
 
