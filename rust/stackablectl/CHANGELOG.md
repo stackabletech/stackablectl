@@ -16,10 +16,10 @@ All notable changes to this project will be documented in this file.
 
 - Abort early if `uninstall` is issued for `default` namespace ([#442]).
 
-[#429]: https://github.com/stackabletech/stackable-cockpit/pull/429
-[#438]: https://github.com/stackabletech/stackable-cockpit/pull/438
-[#440]: https://github.com/stackabletech/stackable-cockpit/pull/440
-[#442]: https://github.com/stackabletech/stackable-cockpit/pull/442
+[#429]: https://github.com/stackabletech/stackablectl/pull/429
+[#438]: https://github.com/stackabletech/stackablectl/pull/438
+[#440]: https://github.com/stackabletech/stackablectl/pull/440
+[#442]: https://github.com/stackabletech/stackablectl/pull/442
 
 ## [1.4.0] - 2026-03-18
 
@@ -27,7 +27,7 @@ All notable changes to this project will be documented in this file.
 
 - Add `STACK` and `DEMO` templating parameters. Have a look at the `README.md` for details ([#432]).
 
-[#432]: https://github.com/stackabletech/stackable-cockpit/pull/432
+[#432]: https://github.com/stackabletech/stackablectl/pull/432
 
 ## [1.3.0] - 2026-03-16
 
@@ -44,9 +44,9 @@ All notable changes to this project will be documented in this file.
 
 - Publish SBOM alongside artifacts ([#428]).
 
-[#425]: https://github.com/stackabletech/stackable-cockpit/pull/425
-[#426]: https://github.com/stackabletech/stackable-cockpit/pull/426
-[#428]: https://github.com/stackabletech/stackable-cockpit/pull/428
+[#425]: https://github.com/stackabletech/stackablectl/pull/425
+[#426]: https://github.com/stackabletech/stackablectl/pull/426
+[#428]: https://github.com/stackabletech/stackablectl/pull/428
 
 ## [1.2.2] - 2025-12-03
 
@@ -60,8 +60,8 @@ All notable changes to this project will be documented in this file.
   - A check automatically runs for all other commands (in parallel to not block the commands) and the status is reported
     as part of the final command output.
 
-[#421]: https://github.com/stackabletech/stackable-cockpit/pull/421
-[#422]: https://github.com/stackabletech/stackable-cockpit/pull/422
+[#421]: https://github.com/stackabletech/stackablectl/pull/421
+[#422]: https://github.com/stackabletech/stackablectl/pull/422
 
 ## [1.2.1] - 2025-11-18
 
@@ -70,7 +70,7 @@ All notable changes to this project will be documented in this file.
 - Don't crash during `release upgrade` for SDP 25.11.
   Previously it errored with `HTTP status client error (404 Not Found) for url (https://raw.githubusercontent.com/stackabletech/secret-operator/main/deploy/helm/secret-operator/crds/crds.yaml)`, as the secret-operator now maintains the CRD itself ([#418]).
 
-[#418]: https://github.com/stackabletech/stackable-cockpit/pull/418
+[#418]: https://github.com/stackabletech/stackablectl/pull/418
 
 ## [1.2.0] - 2025-10-29
 
@@ -79,7 +79,7 @@ All notable changes to this project will be documented in this file.
 - Automatically detect Kubernetes environment (e.g. kind, k3s or IONOS) and choose a sensible [ListenerClass preset] by default ([#414]).
 - Support configuring the [ListenerClass preset] using `--listener-class-preset` ([#414]).
 
-[#414]: https://github.com/stackabletech/stackable-cockpit/pull/414
+[#414]: https://github.com/stackabletech/stackablectl/pull/414
 [ListenerClass preset]: https://docs.stackable.tech/home/nightly/listener-operator/listenerclass/#presets
 
 ## [1.1.0] - 2025-07-16
@@ -96,10 +96,10 @@ All notable changes to this project will be documented in this file.
 - Ignore failed re-application of Jobs due to immutability in demo and stack installations.
   Display those manifests to the user, so they can decide if they need to delete and recreate it ([#386]).
 
-[#384]: https://github.com/stackabletech/stackable-cockpit/pull/384
-[#386]: https://github.com/stackabletech/stackable-cockpit/pull/386
-[#388]: https://github.com/stackabletech/stackable-cockpit/pull/388
-[#400]: https://github.com/stackabletech/stackable-cockpit/pull/400
+[#384]: https://github.com/stackabletech/stackablectl/pull/384
+[#386]: https://github.com/stackabletech/stackablectl/pull/386
+[#388]: https://github.com/stackabletech/stackablectl/pull/388
+[#400]: https://github.com/stackabletech/stackablectl/pull/400
 
 ## [1.0.0] - 2025-06-02
 
@@ -120,12 +120,12 @@ All notable changes to this project will be documented in this file.
 
 - Prefix `ui-http` port endpoints with `http://`, as e.g. used by hbase-operator ([#368]).
 
-[#355]: https://github.com/stackabletech/stackable-cockpit/pull/355
-[#368]: https://github.com/stackabletech/stackable-cockpit/pull/368
-[#373]: https://github.com/stackabletech/stackable-cockpit/pull/373
-[#376]: https://github.com/stackabletech/stackable-cockpit/pull/376
-[#380]: https://github.com/stackabletech/stackable-cockpit/pull/380
-[#379]: https://github.com/stackabletech/stackable-cockpit/pull/379
+[#355]: https://github.com/stackabletech/stackablectl/pull/355
+[#368]: https://github.com/stackabletech/stackablectl/pull/368
+[#373]: https://github.com/stackabletech/stackablectl/pull/373
+[#376]: https://github.com/stackabletech/stackablectl/pull/376
+[#380]: https://github.com/stackabletech/stackablectl/pull/380
+[#379]: https://github.com/stackabletech/stackablectl/pull/379
 
 ## [25.3.0] - 2025-03-27
 
@@ -135,9 +135,9 @@ All notable changes to this project will be documented in this file.
 - Use `heritage` label when looking up the `minio-console` stacklet ([#364]).
 - Improve tracing and log output ([#365]).
 
-[#351]: https://github.com/stackabletech/stackable-cockpit/pull/351
-[#364]: https://github.com/stackabletech/stackable-cockpit/pull/364
-[#365]: https://github.com/stackabletech/stackable-cockpit/pull/365
+[#351]: https://github.com/stackabletech/stackablectl/pull/351
+[#364]: https://github.com/stackabletech/stackablectl/pull/364
+[#365]: https://github.com/stackabletech/stackablectl/pull/365
 
 ## [24.11.3] - 2025-01-27
 
@@ -145,7 +145,7 @@ All notable changes to this project will be documented in this file.
 
 - Add new argument `--chart-source` so that operator charts can be pulled either from an OCI registry (the default) or from a index.yaml-based repository ([#344]).
 
-[#344]: https://github.com/stackabletech/stackable-cockpit/pull/344
+[#344]: https://github.com/stackabletech/stackablectl/pull/344
 
 ## [24.11.2] - 2025-01-15
 
@@ -157,7 +157,7 @@ All notable changes to this project will be documented in this file.
 
 - Remove argument `--offline` that was not implemented yet ([#340]).
 
-[#340]: https://github.com/stackabletech/stackable-cockpit/pull/340
+[#340]: https://github.com/stackabletech/stackablectl/pull/340
 
 ## [24.11.1] - 2024-11-20
 
@@ -170,9 +170,9 @@ All notable changes to this project will be documented in this file.
 
 - Sort operator versions by semver version instead of alphabetically ([#336]).
 
-[#328]: https://github.com/stackabletech/stackable-cockpit/pull/328
-[#336]: https://github.com/stackabletech/stackable-cockpit/pull/336
-[#337]: https://github.com/stackabletech/stackable-cockpit/pull/337
+[#328]: https://github.com/stackabletech/stackablectl/pull/328
+[#336]: https://github.com/stackabletech/stackablectl/pull/336
+[#337]: https://github.com/stackabletech/stackablectl/pull/337
 
 ## [24.11.0] - 2024-11-18
 
@@ -182,7 +182,7 @@ All notable changes to this project will be documented in this file.
   [CVE-2024-45311] ([#318]).
 - Bump Rust toolchain version to 1.80.1 ([#318]).
 
-[#318]: https://github.com/stackabletech/stackable-cockpit/pull/318
+[#318]: https://github.com/stackabletech/stackablectl/pull/318
 [CVE-2024-45311]: https://github.com/advisories/GHSA-vr26-jcq5-fjj8
 
 ## [24.7.1] - 2024-08-15
@@ -196,9 +196,9 @@ All notable changes to this project will be documented in this file.
 
 - nix: Fix broken build ([#311], [#314]).
 
-[#311]: https://github.com/stackabletech/stackable-cockpit/pull/311
-[#313]: https://github.com/stackabletech/stackable-cockpit/pull/313
-[#314]: https://github.com/stackabletech/stackable-cockpit/pull/314
+[#311]: https://github.com/stackabletech/stackablectl/pull/311
+[#313]: https://github.com/stackabletech/stackablectl/pull/313
+[#314]: https://github.com/stackabletech/stackablectl/pull/314
 [CVE-2024-41110]: https://github.com/advisories/GHSA-v23v-6jw2-98fq
 
 ## [24.7.0] - 2024-07-23
@@ -212,8 +212,8 @@ All notable changes to this project will be documented in this file.
 
 - helm-sys: Double the helm timeout to 20m ([#306]).
 
-[#306]: https://github.com/stackabletech/stackable-cockpit/pull/306
-[#307]: https://github.com/stackabletech/stackable-cockpit/pull/307
+[#306]: https://github.com/stackabletech/stackablectl/pull/306
+[#307]: https://github.com/stackabletech/stackablectl/pull/307
 
 ## [24.3.6] - 2024-06-24
 
@@ -221,7 +221,7 @@ All notable changes to this project will be documented in this file.
 
 - Remove error message trimming in error report ([#303]).
 
-[#303]: https://github.com/stackabletech/stackable-cockpit/pull/303
+[#303]: https://github.com/stackabletech/stackablectl/pull/303
 
 ## [24.3.5] - 2024-06-17
 
@@ -230,7 +230,7 @@ All notable changes to this project will be documented in this file.
 - Remove colons from error messages, because the snafu report removes all
   content after the colon which results in loss of detail ([#300]).
 
-[#300]: https://github.com/stackabletech/stackable-cockpit/pull/300
+[#300]: https://github.com/stackabletech/stackablectl/pull/300
 
 ## [24.3.4] - 2024-05-28
 
@@ -239,14 +239,14 @@ All notable changes to this project will be documented in this file.
 - Avoid unnecessary `k8s::Client` creations ([#295]).
 - Re-run GVK discovery after resolution failure ([#294]).
 
-[#294]: https://github.com/stackabletech/stackable-cockpit/pull/294
-[#295]: https://github.com/stackabletech/stackable-cockpit/pull/295
+[#294]: https://github.com/stackabletech/stackablectl/pull/294
+[#295]: https://github.com/stackabletech/stackablectl/pull/295
 
 ## [24.3.3] - 2024-05-13
 
 - Bump Rust, Go and Node dependencies ([#238]).
 
-[#238]: https://github.com/stackabletech/stackable-cockpit/pull/238
+[#238]: https://github.com/stackabletech/stackablectl/pull/238
 
 ## [24.3.2] - 2024-04-25
 
@@ -258,8 +258,8 @@ All notable changes to this project will be documented in this file.
 
 - Bump Rust dependencies ([#233]).
 
-[#232]: https://github.com/stackabletech/stackable-cockpit/pull/232
-[#233]: https://github.com/stackabletech/stackable-cockpit/pull/233
+[#232]: https://github.com/stackabletech/stackablectl/pull/232
+[#233]: https://github.com/stackabletech/stackablectl/pull/233
 
 ## [24.3.1] - 2024-03-21
 
@@ -267,7 +267,7 @@ All notable changes to this project will be documented in this file.
 
 - Added experimental `debug` command ([#204]).
 
-[#204]: https://github.com/stackabletech/stackable-cockpit/pull/204
+[#204]: https://github.com/stackabletech/stackablectl/pull/204
 
 ## [24.3.0] - 2024-03-20
 
@@ -284,9 +284,9 @@ All notable changes to this project will be documented in this file.
 
 - Fix `--cluster-name` not taking effect. The local test clusters always used the default cluster name ([#181]).
 
-[#181]: https://github.com/stackabletech/stackable-cockpit/pull/181
-[#202]: https://github.com/stackabletech/stackable-cockpit/pull/202
-[#213]: https://github.com/stackabletech/stackable-cockpit/pull/213
+[#181]: https://github.com/stackabletech/stackablectl/pull/181
+[#202]: https://github.com/stackabletech/stackablectl/pull/202
+[#213]: https://github.com/stackabletech/stackablectl/pull/213
 
 ## [23.11.3] - 2024-01-03
 
@@ -295,13 +295,13 @@ All notable changes to this project will be documented in this file.
 - Fix `stackablectl release uninstall` command. It now deletes the operators included in the selected release correctly
   ([#174]).
 
-[#174]: https://github.com/stackabletech/stackable-cockpit/pull/174
+[#174]: https://github.com/stackabletech/stackablectl/pull/174
 
 ### CI
 
 - Fix GitHub workflow syntax ([#175]).
 
-[#175]: https://github.com/stackabletech/stackable-cockpit/pull/175
+[#175]: https://github.com/stackabletech/stackablectl/pull/175
 
 ## [23.11.2] - 2024-01-02
 
@@ -312,14 +312,14 @@ All notable changes to this project will be documented in this file.
 - Rename old output style `plain` to `table`. The new output option `plain` will output a reduced view (which removes
   borders from tables for example) ([#142], [#163]).
 
-[#135]: https://github.com/stackabletech/stackable-cockpit/pull/135
-[#142]: https://github.com/stackabletech/stackable-cockpit/issues/142
-[#162]: https://github.com/stackabletech/stackable-cockpit/pull/162
-[#163]: https://github.com/stackabletech/stackable-cockpit/pull/163
-[#167]: https://github.com/stackabletech/stackable-cockpit/pull/167
-[#168]: https://github.com/stackabletech/stackable-cockpit/pull/168
-[#170]: https://github.com/stackabletech/stackable-cockpit/pull/170
-[#172]: https://github.com/stackabletech/stackable-cockpit/pull/172
+[#135]: https://github.com/stackabletech/stackablectl/pull/135
+[#142]: https://github.com/stackabletech/stackablectl/issues/142
+[#162]: https://github.com/stackabletech/stackablectl/pull/162
+[#163]: https://github.com/stackabletech/stackablectl/pull/163
+[#167]: https://github.com/stackabletech/stackablectl/pull/167
+[#168]: https://github.com/stackabletech/stackablectl/pull/168
+[#170]: https://github.com/stackabletech/stackablectl/pull/170
+[#172]: https://github.com/stackabletech/stackablectl/pull/172
 
 ## [23.11.1] - 2023-12-06
 
@@ -327,7 +327,7 @@ All notable changes to this project will be documented in this file.
 
 - Fix Helm repo selection mechanism ([#156]).
 
-[#156]: https://github.com/stackabletech/stackable-cockpit/pull/156
+[#156]: https://github.com/stackabletech/stackablectl/pull/156
 
 ## [23.11.0] - 2023-11-30
 
@@ -337,4 +337,4 @@ First official release of the `stackablectl` rewrite.
 
 - Bump Rust version from `1.73.0` to `1.74.0` ([#151]).
 
-[#151]: https://github.com/stackabletech/stackable-cockpit/pull/151
+[#151]: https://github.com/stackabletech/stackablectl/pull/151

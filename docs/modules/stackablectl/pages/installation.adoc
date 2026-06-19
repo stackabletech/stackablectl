@@ -1,7 +1,7 @@
 = Installation
 :page-aliases: stable@stackablectl::installation.adoc
 
-:latest-release: https://github.com/stackabletech/stackable-cockpit/releases/tag/stackablectl-1.4.0
+:latest-release: https://github.com/stackabletech/stackablectl/releases/tag/stackablectl-1.4.0
 :fish-comp-loations: https://fishshell.com/docs/current/completions.html#where-to-put-completions
 :nushell-comp-locations: https://www.nushell.sh/book/custom_commands.html#persisting
 
@@ -23,14 +23,14 @@ You can also use the following command:
 
 [source,console]
 ----
-$ curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.4.0/stackablectl-x86_64-unknown-linux-gnu
+$ curl -L -o stackablectl https://github.com/stackabletech/stackablectl/releases/download/stackablectl-1.4.0/stackablectl-x86_64-unknown-linux-gnu
 ----
 
 **aarch64** (arm64):
 
 [source,console]
 ----
-$ curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.4.0/stackablectl-aarch64-unknown-linux-gnu
+$ curl -L -o stackablectl https://github.com/stackabletech/stackablectl/releases/download/stackablectl-1.4.0/stackablectl-aarch64-unknown-linux-gnu
 ----
 
 Install the binary into a directory in the `$PATH`, and make it executable:
@@ -60,14 +60,14 @@ You can also use the following command:
 
 [source,console]
 ----
-$ curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.4.0/stackablectl-x86_64-apple-darwin
+$ curl -L -o stackablectl https://github.com/stackabletech/stackablectl/releases/download/stackablectl-1.4.0/stackablectl-x86_64-apple-darwin
 ----
 
 **aarch64** (arm64):
 
 [source,console]
 ----
-$ curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.4.0/stackablectl-aarch64-apple-darwin
+$ curl -L -o stackablectl https://github.com/stackabletech/stackablectl/releases/download/stackablectl-1.4.0/stackablectl-aarch64-apple-darwin
 ----
 
 Install the binary into a directory in the `$PATH`, and make it executable:
@@ -116,7 +116,7 @@ To build `stackablectl` from source you need to have the following tools install
   easily install all required tools.
 * *The Go toolchain:* Needed for compiling a wrapper around the Go library `go-helm-client`.
 
-Continue by cloning the repository located at https://github.com/stackabletech/stackable-cockpit. Then, compile the
+Continue by cloning the repository located at https://github.com/stackabletech/stackablectl. Then, compile the
 binary using the following command:
 
 [source,console]
@@ -155,7 +155,7 @@ Download the completions file and place it in `/usr/local/share/zsh/site-functio
 
 [source,console]
 ----
-$ curl -LO https://raw.githubusercontent.com/stackabletech/stackable-cockpit/main/extra/completions/_stackablectl
+$ curl -LO https://raw.githubusercontent.com/stackabletech/stackablectl/main/extra/completions/_stackablectl
 $ mv _stackablectl /usr/local/share/zsh/site-functions/
 ----
 --
@@ -167,7 +167,7 @@ Download the completions file and place it in any of the supported location list
 
 [source,console]
 ----
-$ curl -LO https://raw.githubusercontent.com/stackabletech/stackable-cockpit/main/extra/completions/stackablectl.fish
+$ curl -LO https://raw.githubusercontent.com/stackabletech/stackablectl/main/extra/completions/stackablectl.fish
 ----
 --
 
@@ -178,7 +178,7 @@ Download the completions file and place it in `/etc/bash_completion.d/` to load 
 
 [source,console]
 ----
-$ curl -LO https://raw.githubusercontent.com/stackabletech/stackable-cockpit/main/extra/completions/stackablectl.bash
+$ curl -LO https://raw.githubusercontent.com/stackabletech/stackablectl/main/extra/completions/stackablectl.bash
 $ mv stackablectl.bash /etc/bash_completion.d/
 ----
 --
@@ -190,7 +190,7 @@ Download the completions file at a location where it is loaded for all Nushell s
 
 [source,console]
 ----
-$ curl -LO https://raw.githubusercontent.com/stackabletech/stackable-cockpit/main/extra/completions/stackablectl.nu
+$ curl -LO https://raw.githubusercontent.com/stackabletech/stackablectl/main/extra/completions/stackablectl.nu
 ----
 --
 
@@ -199,7 +199,7 @@ Elvish::
 --
 [source,console]
 ----
-$ curl -LO https://raw.githubusercontent.com/stackabletech/stackable-cockpit/main/extra/completions/stackablectl.elv
+$ curl -LO https://raw.githubusercontent.com/stackabletech/stackablectl/main/extra/completions/stackablectl.elv
 ----
 --
 ====

@@ -2,10 +2,10 @@
 
 * Add the option for users to customize the behaviour of `stackablectl` through a user config located at `$HOME/.config/stackablectl/config.toml`.
   The first supported option is `version.check_enabled` which can be set to `true` or `false`.
-  See https://github.com/stackabletech/stackable-cockpit/pull/422[stackable-cockpit#422].
+  See https://github.com/stackabletech/stackablectl/pull/422[stackablectl#422].
 * Add a new release check which is used in two different ways:
 ** A new `stackablectl version check` command can be used to check if the current installation is up-to-date
 ** A check automatically runs for all other commands (in parallel to not block the commands) and the status is reported as part of the final command output.
 
 +
-See https://github.com/stackabletech/stackable-cockpit/pull/421[stackable-cockpit#421].
+See https://github.com/stackabletech/stackablectl/pull/421[stackablectl#421].

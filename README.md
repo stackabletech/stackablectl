@@ -11,8 +11,7 @@
 
 [Stackable Data Platform](https://stackable.tech/) | [Platform Docs](https://docs.stackable.tech/) | [Discussions](https://github.com/orgs/stackabletech/discussions) | [Discord](https://discord.gg/7kZ3BNnCAF)
 
-This repository contains the Stackable library `stackable-cockpit`, the Stackable CLI tool `stackablectl`, and the
-Stackable Cockpit server `stackable-cockpitd`.
+This repository contains the Stackable CLI tool `stackablectl` and related library crates.
 
 ## Components
 
@@ -30,8 +29,8 @@ Stackable Cockpit server `stackable-cockpitd`.
 ### Getting started
 
 ```shell
-git clone git@github.com:stackabletech/stackable-cockpit.git
-cd stackable-cockpit
+git clone https://github.com/stackabletech/stackablectl.git
+cd stackablectl
 ```
 
 Each component can be build separately like this:

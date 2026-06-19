@@ -18,4 +18,4 @@ helm install stackable-cockpit deploy/helm/stackable-cockpit
 
 ## Links
 
-[Source](https://github.com/stackabletech/stackable-cockpit)
+[Source](https://github.com/stackabletech/stackablectl)

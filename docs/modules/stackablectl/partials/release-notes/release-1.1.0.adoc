@@ -1,9 +1,9 @@
 == 1.1.0
 
 * We now support idempotent Helm installations for demos and stacks.
-  See https://github.com/stackabletech/stackable-cockpit/pull/386[stackable-cockpit#386].
+  See https://github.com/stackabletech/stackablectl/pull/386[stackablectl#386].
 * Ignore failed re-application of Jobs due to immutability in demo and stack installations.
   The user is now asked if these be deleted or recreated.
-  See https://github.com/stackabletech/stackable-cockpit/pull/386[stackable-cockpit#386].
+  See https://github.com/stackabletech/stackablectl/pull/386[stackablectl#386].
 * Default to release build for nix users.
-  See https://github.com/stackabletech/stackable-cockpit/pull/388[stackable-cockpit#388].
+  See https://github.com/stackabletech/stackablectl/pull/388[stackablectl#388].

@@ -2,4 +2,4 @@
 
 * Don't crash during `release upgrade` for SDP 25.11.
   Previously it errored with `HTTP status client error (404 Not Found) for url (https://raw.githubusercontent.com/stackabletech/secret-operator/main/deploy/helm/secret-operator/crds/crds.yaml)`, as the secret-operator now maintains the CRD itself ([#418]).
-  See https://github.com/stackabletech/stackable-cockpit/pull/418[stackable-cockpit#418].
+  See https://github.com/stackabletech/stackablectl/pull/418[stackablectl#418].

@@ -14,7 +14,7 @@ license = "OSL-3.0"
 # We can use 2024 as soon as https://github.com/rust-lang/cc-rs/issues/1409 is
 # fixed / supported.
 edition = "2021"
-repository = "https://github.com/stackabletech/stackable-cockpit/"
+repository = "https://github.com/stackabletech/stackablectl/"
 
 [workspace.dependencies]
 async-trait = "0.1"

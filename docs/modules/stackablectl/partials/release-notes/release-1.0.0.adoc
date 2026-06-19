@@ -9,7 +9,7 @@ We have since decided to version `stackablectl` independently of SDP, starting a
 
 * We have added visual progress reporting to more easily see what the tool is doing at any given moment in time.
   Previously, it looked like the tool was hanging as nothing was printed out to the terminal during the installation, but only after.
-  See https://github.com/stackabletech/stackable-cockpit/pull/376[stackable-cockpit#376].
+  See https://github.com/stackabletech/stackablectl/pull/376[stackablectl#376].
 * Releases can now be upgraded with the new `release upgrade` command.
   This makes it easier to upgrade installed operators to a newer SDP release.
-  See https://github.com/stackabletech/stackable-cockpit/pull/379[stackable-cockpit#379].
+  See https://github.com/stackabletech/stackablectl/pull/379[stackablectl#379].
