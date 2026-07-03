@@ -141,11 +141,12 @@ Installed release 23.7
 
 == Upgrading Releases
 
-As described in the xref:home::release-notes.adoc[Upgrade sections of the Release Notes], the upgrade process can be achieved by the following three steps:
+As described in the xref:home::release-notes.adoc[Upgrade sections of the Release Notes], the upgrade process can be achieved by the following two steps:
 
 . Uninstalling the previous release with `stackablectl release uninstall <RELEASE>`
-. Replacing the CRDs with `kubectl replace`
 . Installing the next release with `stackablectl release install <RELEASE>`
+
+The operators maintain their own CRDs and update them automatically on startup, so no manual CRD step is required (see xref:home:concepts:maintenance/crds.adoc[]).
 
 For convenience `stackablectl` also provides an upgrade functionality which executes those steps by itself.
 To upgrade a release, run the following command:
