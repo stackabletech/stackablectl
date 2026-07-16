@@ -23,7 +23,7 @@ pub fn render(content: &str, parameters: &HashMap<String, String>) -> TeraResult
     tera.register_function("bcrypt", bcrypt);
 
     // Render template
-    tera.render(content, &context)
+    tera.render_str(content, &context, false)
 }
 
 pub fn random_password(_: Kwargs, _: &State) -> TeraResult<String> {
