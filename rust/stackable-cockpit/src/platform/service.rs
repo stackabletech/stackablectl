@@ -58,9 +58,9 @@ pub async fn get_endpoints(
         .await;
     let listeners = match listeners {
         Ok(ok) => Ok(ok.items),
-        Err(k8s::Error::KubeClientFetch {
-            source: kube::Error::Api(err),
-        }) if err.code == 404 => {
+        Err(k8s::Error::KubeClientFetch { source })
+            if matches!(&*source, kube::Error::Api(err) if err.code == 404) =>
+        {
             // In case the listener-operator is not installed, this will return a 404. We should not fail, as this causes
             // stackablectl to fail with ApiError 404 on clusters without listener-operator.
             Ok(Vec::new())

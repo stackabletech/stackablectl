@@ -2,8 +2,7 @@ use std::collections::HashMap;
 
 use bcrypt::DEFAULT_COST;
 use rand::distr::{Alphanumeric, SampleString};
-use serde::de::DeserializeOwned;
-use tera::{Context, Function, Tera, Value};
+use tera::{Context, Kwargs, State, Tera, TeraResult};
 
 use crate::constants::PASSWORD_LENGTH;
 
@@ -14,47 +13,25 @@ use crate::constants::PASSWORD_LENGTH;
 /// - `random_password`: Returns a random password with a relatively secure RNG.
 ///   See [`rand::rng`] for more information.
 /// - `bcrypt`: Returns the bcyrpt hash of the provided `password` parameter.
-pub fn render(content: &str, parameters: &HashMap<String, String>) -> Result<String, tera::Error> {
+pub fn render(content: &str, parameters: &HashMap<String, String>) -> TeraResult<String> {
     // Create templating context
     let context = Context::from_serialize(parameters)?;
 
     // Create render engine
-    let mut tera = Tera::default();
-    tera.register_function("random_password", random_password());
-    tera.register_function("bcrypt", bcrypt());
+    let mut tera = Tera::new();
+    tera.register_function("random_password", random_password);
+    tera.register_function("bcrypt", bcrypt);
 
     // Render template
-    tera.render_str(content, &context)
+    tera.render(content, &context)
 }
 
-/// Internal helper function to retrieve value of type `T` from the `map` by
-/// `key`. If the `key` is not present in the `map`, it returns an error.
-fn get_from_map<T>(map: &HashMap<String, Value>, key: &str) -> tera::Result<T>
-where
-    T: DeserializeOwned,
-{
-    match map.get(key) {
-        Some(value) => match tera::from_value(value.to_owned()) {
-            Ok(extracted) => Ok(extracted),
-            Err(_) => Err(format!("Unable to retrieve value of argument {key:?}").into()),
-        },
-        None => Err(format!("Failed to retrieve missing parameter {key:?}").into()),
-    }
+pub fn random_password(_: Kwargs, _: &State) -> TeraResult<String> {
+    Ok(Alphanumeric.sample_string(&mut rand::rng(), PASSWORD_LENGTH))
 }
 
-fn random_password() -> impl Function {
-    |_args: &HashMap<String, Value>| -> tera::Result<Value> {
-        let password = Alphanumeric.sample_string(&mut rand::rng(), PASSWORD_LENGTH);
-        Ok(password.into())
-    }
-}
-
-fn bcrypt() -> impl Function {
-    |args: &HashMap<String, Value>| -> tera::Result<Value> {
-        let password: String = get_from_map(args, "password")?;
-        let hash = bcrypt::hash(password, DEFAULT_COST)
-            .map_err(|err| format!("Failed to create bcrypt hash: {err}"))?;
-
-        Ok(hash.into())
-    }
+pub fn bcrypt(kwargs: Kwargs, _: &State) -> TeraResult<String> {
+    let password = kwargs.must_get::<String>("password")?;
+    bcrypt::hash(password, DEFAULT_COST)
+        .map_err(|err| tera::Error::message(format!("Failed to create bcrypt hash: {err}")))
 }

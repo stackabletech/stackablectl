@@ -22,7 +22,7 @@ pub async fn create_if_needed(client: &Client, name: String) -> Result<(), Error
         .create_namespace_if_needed(name)
         .await
         .map_err(|err| match err {
-            k8s::Error::KubeClientCreate { source } => match source {
+            k8s::Error::KubeClientCreate { source } => match &*source {
                 kube::Error::Api(err) if err.code == 401 => Error::PermissionDenied,
                 _ => Error::KubeClientCreate {
                     source: Box::new(k8s::Error::KubeClientCreate { source }),
