@@ -17,364 +17,364 @@ _stackablectl() {
                 cmd="stackablectl"
                 ;;
             stackablectl,cache)
-                cmd="stackablectl__cache"
+                cmd="stackablectl__subcmd__cache"
                 ;;
             stackablectl,completions)
-                cmd="stackablectl__completions"
+                cmd="stackablectl__subcmd__completions"
                 ;;
             stackablectl,demo)
-                cmd="stackablectl__demo"
+                cmd="stackablectl__subcmd__demo"
                 ;;
             stackablectl,experimental-debug)
-                cmd="stackablectl__experimental__debug"
+                cmd="stackablectl__subcmd__experimental__subcmd__debug"
                 ;;
             stackablectl,help)
-                cmd="stackablectl__help"
+                cmd="stackablectl__subcmd__help"
                 ;;
             stackablectl,operator)
-                cmd="stackablectl__operator"
+                cmd="stackablectl__subcmd__operator"
                 ;;
             stackablectl,release)
-                cmd="stackablectl__release"
+                cmd="stackablectl__subcmd__release"
                 ;;
             stackablectl,stack)
-                cmd="stackablectl__stack"
+                cmd="stackablectl__subcmd__stack"
                 ;;
             stackablectl,stacklet)
-                cmd="stackablectl__stacklet"
+                cmd="stackablectl__subcmd__stacklet"
                 ;;
             stackablectl,version)
-                cmd="stackablectl__version"
+                cmd="stackablectl__subcmd__version"
                 ;;
-            stackablectl__cache,clean)
-                cmd="stackablectl__cache__clean"
+            stackablectl__subcmd__cache,clean)
+                cmd="stackablectl__subcmd__cache__subcmd__clean"
                 ;;
-            stackablectl__cache,help)
-                cmd="stackablectl__cache__help"
+            stackablectl__subcmd__cache,help)
+                cmd="stackablectl__subcmd__cache__subcmd__help"
                 ;;
-            stackablectl__cache,list)
-                cmd="stackablectl__cache__list"
+            stackablectl__subcmd__cache,list)
+                cmd="stackablectl__subcmd__cache__subcmd__list"
                 ;;
-            stackablectl__cache__help,clean)
-                cmd="stackablectl__cache__help__clean"
+            stackablectl__subcmd__cache__subcmd__help,clean)
+                cmd="stackablectl__subcmd__cache__subcmd__help__subcmd__clean"
                 ;;
-            stackablectl__cache__help,help)
-                cmd="stackablectl__cache__help__help"
+            stackablectl__subcmd__cache__subcmd__help,help)
+                cmd="stackablectl__subcmd__cache__subcmd__help__subcmd__help"
                 ;;
-            stackablectl__cache__help,list)
-                cmd="stackablectl__cache__help__list"
+            stackablectl__subcmd__cache__subcmd__help,list)
+                cmd="stackablectl__subcmd__cache__subcmd__help__subcmd__list"
                 ;;
-            stackablectl__completions,bash)
-                cmd="stackablectl__completions__bash"
+            stackablectl__subcmd__completions,bash)
+                cmd="stackablectl__subcmd__completions__subcmd__bash"
                 ;;
-            stackablectl__completions,elvish)
-                cmd="stackablectl__completions__elvish"
+            stackablectl__subcmd__completions,elvish)
+                cmd="stackablectl__subcmd__completions__subcmd__elvish"
                 ;;
-            stackablectl__completions,fish)
-                cmd="stackablectl__completions__fish"
+            stackablectl__subcmd__completions,fish)
+                cmd="stackablectl__subcmd__completions__subcmd__fish"
                 ;;
-            stackablectl__completions,help)
-                cmd="stackablectl__completions__help"
+            stackablectl__subcmd__completions,help)
+                cmd="stackablectl__subcmd__completions__subcmd__help"
                 ;;
-            stackablectl__completions,nushell)
-                cmd="stackablectl__completions__nushell"
+            stackablectl__subcmd__completions,nushell)
+                cmd="stackablectl__subcmd__completions__subcmd__nushell"
                 ;;
-            stackablectl__completions,zsh)
-                cmd="stackablectl__completions__zsh"
+            stackablectl__subcmd__completions,zsh)
+                cmd="stackablectl__subcmd__completions__subcmd__zsh"
                 ;;
-            stackablectl__completions__help,bash)
-                cmd="stackablectl__completions__help__bash"
+            stackablectl__subcmd__completions__subcmd__help,bash)
+                cmd="stackablectl__subcmd__completions__subcmd__help__subcmd__bash"
                 ;;
-            stackablectl__completions__help,elvish)
-                cmd="stackablectl__completions__help__elvish"
+            stackablectl__subcmd__completions__subcmd__help,elvish)
+                cmd="stackablectl__subcmd__completions__subcmd__help__subcmd__elvish"
                 ;;
-            stackablectl__completions__help,fish)
-                cmd="stackablectl__completions__help__fish"
+            stackablectl__subcmd__completions__subcmd__help,fish)
+                cmd="stackablectl__subcmd__completions__subcmd__help__subcmd__fish"
                 ;;
-            stackablectl__completions__help,help)
-                cmd="stackablectl__completions__help__help"
+            stackablectl__subcmd__completions__subcmd__help,help)
+                cmd="stackablectl__subcmd__completions__subcmd__help__subcmd__help"
                 ;;
-            stackablectl__completions__help,nushell)
-                cmd="stackablectl__completions__help__nushell"
+            stackablectl__subcmd__completions__subcmd__help,nushell)
+                cmd="stackablectl__subcmd__completions__subcmd__help__subcmd__nushell"
                 ;;
-            stackablectl__completions__help,zsh)
-                cmd="stackablectl__completions__help__zsh"
+            stackablectl__subcmd__completions__subcmd__help,zsh)
+                cmd="stackablectl__subcmd__completions__subcmd__help__subcmd__zsh"
                 ;;
-            stackablectl__demo,describe)
-                cmd="stackablectl__demo__describe"
+            stackablectl__subcmd__demo,describe)
+                cmd="stackablectl__subcmd__demo__subcmd__describe"
                 ;;
-            stackablectl__demo,help)
-                cmd="stackablectl__demo__help"
+            stackablectl__subcmd__demo,help)
+                cmd="stackablectl__subcmd__demo__subcmd__help"
                 ;;
-            stackablectl__demo,install)
-                cmd="stackablectl__demo__install"
+            stackablectl__subcmd__demo,install)
+                cmd="stackablectl__subcmd__demo__subcmd__install"
                 ;;
-            stackablectl__demo,list)
-                cmd="stackablectl__demo__list"
+            stackablectl__subcmd__demo,list)
+                cmd="stackablectl__subcmd__demo__subcmd__list"
                 ;;
-            stackablectl__demo,uninstall)
-                cmd="stackablectl__demo__uninstall"
+            stackablectl__subcmd__demo,uninstall)
+                cmd="stackablectl__subcmd__demo__subcmd__uninstall"
                 ;;
-            stackablectl__demo__help,describe)
-                cmd="stackablectl__demo__help__describe"
+            stackablectl__subcmd__demo__subcmd__help,describe)
+                cmd="stackablectl__subcmd__demo__subcmd__help__subcmd__describe"
                 ;;
-            stackablectl__demo__help,help)
-                cmd="stackablectl__demo__help__help"
+            stackablectl__subcmd__demo__subcmd__help,help)
+                cmd="stackablectl__subcmd__demo__subcmd__help__subcmd__help"
                 ;;
-            stackablectl__demo__help,install)
-                cmd="stackablectl__demo__help__install"
+            stackablectl__subcmd__demo__subcmd__help,install)
+                cmd="stackablectl__subcmd__demo__subcmd__help__subcmd__install"
                 ;;
-            stackablectl__demo__help,list)
-                cmd="stackablectl__demo__help__list"
+            stackablectl__subcmd__demo__subcmd__help,list)
+                cmd="stackablectl__subcmd__demo__subcmd__help__subcmd__list"
                 ;;
-            stackablectl__demo__help,uninstall)
-                cmd="stackablectl__demo__help__uninstall"
+            stackablectl__subcmd__demo__subcmd__help,uninstall)
+                cmd="stackablectl__subcmd__demo__subcmd__help__subcmd__uninstall"
                 ;;
-            stackablectl__help,cache)
-                cmd="stackablectl__help__cache"
+            stackablectl__subcmd__help,cache)
+                cmd="stackablectl__subcmd__help__subcmd__cache"
                 ;;
-            stackablectl__help,completions)
-                cmd="stackablectl__help__completions"
+            stackablectl__subcmd__help,completions)
+                cmd="stackablectl__subcmd__help__subcmd__completions"
                 ;;
-            stackablectl__help,demo)
-                cmd="stackablectl__help__demo"
+            stackablectl__subcmd__help,demo)
+                cmd="stackablectl__subcmd__help__subcmd__demo"
                 ;;
-            stackablectl__help,experimental-debug)
-                cmd="stackablectl__help__experimental__debug"
+            stackablectl__subcmd__help,experimental-debug)
+                cmd="stackablectl__subcmd__help__subcmd__experimental__subcmd__debug"
                 ;;
-            stackablectl__help,help)
-                cmd="stackablectl__help__help"
+            stackablectl__subcmd__help,help)
+                cmd="stackablectl__subcmd__help__subcmd__help"
                 ;;
-            stackablectl__help,operator)
-                cmd="stackablectl__help__operator"
+            stackablectl__subcmd__help,operator)
+                cmd="stackablectl__subcmd__help__subcmd__operator"
                 ;;
-            stackablectl__help,release)
-                cmd="stackablectl__help__release"
+            stackablectl__subcmd__help,release)
+                cmd="stackablectl__subcmd__help__subcmd__release"
                 ;;
-            stackablectl__help,stack)
-                cmd="stackablectl__help__stack"
+            stackablectl__subcmd__help,stack)
+                cmd="stackablectl__subcmd__help__subcmd__stack"
                 ;;
-            stackablectl__help,stacklet)
-                cmd="stackablectl__help__stacklet"
+            stackablectl__subcmd__help,stacklet)
+                cmd="stackablectl__subcmd__help__subcmd__stacklet"
                 ;;
-            stackablectl__help,version)
-                cmd="stackablectl__help__version"
+            stackablectl__subcmd__help,version)
+                cmd="stackablectl__subcmd__help__subcmd__version"
                 ;;
-            stackablectl__help__cache,clean)
-                cmd="stackablectl__help__cache__clean"
+            stackablectl__subcmd__help__subcmd__cache,clean)
+                cmd="stackablectl__subcmd__help__subcmd__cache__subcmd__clean"
                 ;;
-            stackablectl__help__cache,list)
-                cmd="stackablectl__help__cache__list"
+            stackablectl__subcmd__help__subcmd__cache,list)
+                cmd="stackablectl__subcmd__help__subcmd__cache__subcmd__list"
                 ;;
-            stackablectl__help__completions,bash)
-                cmd="stackablectl__help__completions__bash"
+            stackablectl__subcmd__help__subcmd__completions,bash)
+                cmd="stackablectl__subcmd__help__subcmd__completions__subcmd__bash"
                 ;;
-            stackablectl__help__completions,elvish)
-                cmd="stackablectl__help__completions__elvish"
+            stackablectl__subcmd__help__subcmd__completions,elvish)
+                cmd="stackablectl__subcmd__help__subcmd__completions__subcmd__elvish"
                 ;;
-            stackablectl__help__completions,fish)
-                cmd="stackablectl__help__completions__fish"
+            stackablectl__subcmd__help__subcmd__completions,fish)
+                cmd="stackablectl__subcmd__help__subcmd__completions__subcmd__fish"
                 ;;
-            stackablectl__help__completions,nushell)
-                cmd="stackablectl__help__completions__nushell"
+            stackablectl__subcmd__help__subcmd__completions,nushell)
+                cmd="stackablectl__subcmd__help__subcmd__completions__subcmd__nushell"
                 ;;
-            stackablectl__help__completions,zsh)
-                cmd="stackablectl__help__completions__zsh"
+            stackablectl__subcmd__help__subcmd__completions,zsh)
+                cmd="stackablectl__subcmd__help__subcmd__completions__subcmd__zsh"
                 ;;
-            stackablectl__help__demo,describe)
-                cmd="stackablectl__help__demo__describe"
+            stackablectl__subcmd__help__subcmd__demo,describe)
+                cmd="stackablectl__subcmd__help__subcmd__demo__subcmd__describe"
                 ;;
-            stackablectl__help__demo,install)
-                cmd="stackablectl__help__demo__install"
+            stackablectl__subcmd__help__subcmd__demo,install)
+                cmd="stackablectl__subcmd__help__subcmd__demo__subcmd__install"
                 ;;
-            stackablectl__help__demo,list)
-                cmd="stackablectl__help__demo__list"
+            stackablectl__subcmd__help__subcmd__demo,list)
+                cmd="stackablectl__subcmd__help__subcmd__demo__subcmd__list"
                 ;;
-            stackablectl__help__demo,uninstall)
-                cmd="stackablectl__help__demo__uninstall"
+            stackablectl__subcmd__help__subcmd__demo,uninstall)
+                cmd="stackablectl__subcmd__help__subcmd__demo__subcmd__uninstall"
                 ;;
-            stackablectl__help__operator,describe)
-                cmd="stackablectl__help__operator__describe"
+            stackablectl__subcmd__help__subcmd__operator,describe)
+                cmd="stackablectl__subcmd__help__subcmd__operator__subcmd__describe"
                 ;;
-            stackablectl__help__operator,install)
-                cmd="stackablectl__help__operator__install"
+            stackablectl__subcmd__help__subcmd__operator,install)
+                cmd="stackablectl__subcmd__help__subcmd__operator__subcmd__install"
                 ;;
-            stackablectl__help__operator,installed)
-                cmd="stackablectl__help__operator__installed"
+            stackablectl__subcmd__help__subcmd__operator,installed)
+                cmd="stackablectl__subcmd__help__subcmd__operator__subcmd__installed"
                 ;;
-            stackablectl__help__operator,list)
-                cmd="stackablectl__help__operator__list"
+            stackablectl__subcmd__help__subcmd__operator,list)
+                cmd="stackablectl__subcmd__help__subcmd__operator__subcmd__list"
                 ;;
-            stackablectl__help__operator,uninstall)
-                cmd="stackablectl__help__operator__uninstall"
+            stackablectl__subcmd__help__subcmd__operator,uninstall)
+                cmd="stackablectl__subcmd__help__subcmd__operator__subcmd__uninstall"
                 ;;
-            stackablectl__help__release,describe)
-                cmd="stackablectl__help__release__describe"
+            stackablectl__subcmd__help__subcmd__release,describe)
+                cmd="stackablectl__subcmd__help__subcmd__release__subcmd__describe"
                 ;;
-            stackablectl__help__release,install)
-                cmd="stackablectl__help__release__install"
+            stackablectl__subcmd__help__subcmd__release,install)
+                cmd="stackablectl__subcmd__help__subcmd__release__subcmd__install"
                 ;;
-            stackablectl__help__release,list)
-                cmd="stackablectl__help__release__list"
+            stackablectl__subcmd__help__subcmd__release,list)
+                cmd="stackablectl__subcmd__help__subcmd__release__subcmd__list"
                 ;;
-            stackablectl__help__release,uninstall)
-                cmd="stackablectl__help__release__uninstall"
+            stackablectl__subcmd__help__subcmd__release,uninstall)
+                cmd="stackablectl__subcmd__help__subcmd__release__subcmd__uninstall"
                 ;;
-            stackablectl__help__release,upgrade)
-                cmd="stackablectl__help__release__upgrade"
+            stackablectl__subcmd__help__subcmd__release,upgrade)
+                cmd="stackablectl__subcmd__help__subcmd__release__subcmd__upgrade"
                 ;;
-            stackablectl__help__stack,describe)
-                cmd="stackablectl__help__stack__describe"
+            stackablectl__subcmd__help__subcmd__stack,describe)
+                cmd="stackablectl__subcmd__help__subcmd__stack__subcmd__describe"
                 ;;
-            stackablectl__help__stack,install)
-                cmd="stackablectl__help__stack__install"
+            stackablectl__subcmd__help__subcmd__stack,install)
+                cmd="stackablectl__subcmd__help__subcmd__stack__subcmd__install"
                 ;;
-            stackablectl__help__stack,list)
-                cmd="stackablectl__help__stack__list"
+            stackablectl__subcmd__help__subcmd__stack,list)
+                cmd="stackablectl__subcmd__help__subcmd__stack__subcmd__list"
                 ;;
-            stackablectl__help__stack,uninstall)
-                cmd="stackablectl__help__stack__uninstall"
+            stackablectl__subcmd__help__subcmd__stack,uninstall)
+                cmd="stackablectl__subcmd__help__subcmd__stack__subcmd__uninstall"
                 ;;
-            stackablectl__help__stacklet,credentials)
-                cmd="stackablectl__help__stacklet__credentials"
+            stackablectl__subcmd__help__subcmd__stacklet,credentials)
+                cmd="stackablectl__subcmd__help__subcmd__stacklet__subcmd__credentials"
                 ;;
-            stackablectl__help__stacklet,list)
-                cmd="stackablectl__help__stacklet__list"
+            stackablectl__subcmd__help__subcmd__stacklet,list)
+                cmd="stackablectl__subcmd__help__subcmd__stacklet__subcmd__list"
                 ;;
-            stackablectl__help__version,check)
-                cmd="stackablectl__help__version__check"
+            stackablectl__subcmd__help__subcmd__version,check)
+                cmd="stackablectl__subcmd__help__subcmd__version__subcmd__check"
                 ;;
-            stackablectl__operator,describe)
-                cmd="stackablectl__operator__describe"
+            stackablectl__subcmd__operator,describe)
+                cmd="stackablectl__subcmd__operator__subcmd__describe"
                 ;;
-            stackablectl__operator,help)
-                cmd="stackablectl__operator__help"
+            stackablectl__subcmd__operator,help)
+                cmd="stackablectl__subcmd__operator__subcmd__help"
                 ;;
-            stackablectl__operator,install)
-                cmd="stackablectl__operator__install"
+            stackablectl__subcmd__operator,install)
+                cmd="stackablectl__subcmd__operator__subcmd__install"
                 ;;
-            stackablectl__operator,installed)
-                cmd="stackablectl__operator__installed"
+            stackablectl__subcmd__operator,installed)
+                cmd="stackablectl__subcmd__operator__subcmd__installed"
                 ;;
-            stackablectl__operator,list)
-                cmd="stackablectl__operator__list"
+            stackablectl__subcmd__operator,list)
+                cmd="stackablectl__subcmd__operator__subcmd__list"
                 ;;
-            stackablectl__operator,uninstall)
-                cmd="stackablectl__operator__uninstall"
+            stackablectl__subcmd__operator,uninstall)
+                cmd="stackablectl__subcmd__operator__subcmd__uninstall"
                 ;;
-            stackablectl__operator__help,describe)
-                cmd="stackablectl__operator__help__describe"
+            stackablectl__subcmd__operator__subcmd__help,describe)
+                cmd="stackablectl__subcmd__operator__subcmd__help__subcmd__describe"
                 ;;
-            stackablectl__operator__help,help)
-                cmd="stackablectl__operator__help__help"
+            stackablectl__subcmd__operator__subcmd__help,help)
+                cmd="stackablectl__subcmd__operator__subcmd__help__subcmd__help"
                 ;;
-            stackablectl__operator__help,install)
-                cmd="stackablectl__operator__help__install"
+            stackablectl__subcmd__operator__subcmd__help,install)
+                cmd="stackablectl__subcmd__operator__subcmd__help__subcmd__install"
                 ;;
-            stackablectl__operator__help,installed)
-                cmd="stackablectl__operator__help__installed"
+            stackablectl__subcmd__operator__subcmd__help,installed)
+                cmd="stackablectl__subcmd__operator__subcmd__help__subcmd__installed"
                 ;;
-            stackablectl__operator__help,list)
-                cmd="stackablectl__operator__help__list"
+            stackablectl__subcmd__operator__subcmd__help,list)
+                cmd="stackablectl__subcmd__operator__subcmd__help__subcmd__list"
                 ;;
-            stackablectl__operator__help,uninstall)
-                cmd="stackablectl__operator__help__uninstall"
+            stackablectl__subcmd__operator__subcmd__help,uninstall)
+                cmd="stackablectl__subcmd__operator__subcmd__help__subcmd__uninstall"
                 ;;
-            stackablectl__release,describe)
-                cmd="stackablectl__release__describe"
+            stackablectl__subcmd__release,describe)
+                cmd="stackablectl__subcmd__release__subcmd__describe"
                 ;;
-            stackablectl__release,help)
-                cmd="stackablectl__release__help"
+            stackablectl__subcmd__release,help)
+                cmd="stackablectl__subcmd__release__subcmd__help"
                 ;;
-            stackablectl__release,install)
-                cmd="stackablectl__release__install"
+            stackablectl__subcmd__release,install)
+                cmd="stackablectl__subcmd__release__subcmd__install"
                 ;;
-            stackablectl__release,list)
-                cmd="stackablectl__release__list"
+            stackablectl__subcmd__release,list)
+                cmd="stackablectl__subcmd__release__subcmd__list"
                 ;;
-            stackablectl__release,uninstall)
-                cmd="stackablectl__release__uninstall"
+            stackablectl__subcmd__release,uninstall)
+                cmd="stackablectl__subcmd__release__subcmd__uninstall"
                 ;;
-            stackablectl__release,upgrade)
-                cmd="stackablectl__release__upgrade"
+            stackablectl__subcmd__release,upgrade)
+                cmd="stackablectl__subcmd__release__subcmd__upgrade"
                 ;;
-            stackablectl__release__help,describe)
-                cmd="stackablectl__release__help__describe"
+            stackablectl__subcmd__release__subcmd__help,describe)
+                cmd="stackablectl__subcmd__release__subcmd__help__subcmd__describe"
                 ;;
-            stackablectl__release__help,help)
-                cmd="stackablectl__release__help__help"
+            stackablectl__subcmd__release__subcmd__help,help)
+                cmd="stackablectl__subcmd__release__subcmd__help__subcmd__help"
                 ;;
-            stackablectl__release__help,install)
-                cmd="stackablectl__release__help__install"
+            stackablectl__subcmd__release__subcmd__help,install)
+                cmd="stackablectl__subcmd__release__subcmd__help__subcmd__install"
                 ;;
-            stackablectl__release__help,list)
-                cmd="stackablectl__release__help__list"
+            stackablectl__subcmd__release__subcmd__help,list)
+                cmd="stackablectl__subcmd__release__subcmd__help__subcmd__list"
                 ;;
-            stackablectl__release__help,uninstall)
-                cmd="stackablectl__release__help__uninstall"
+            stackablectl__subcmd__release__subcmd__help,uninstall)
+                cmd="stackablectl__subcmd__release__subcmd__help__subcmd__uninstall"
                 ;;
-            stackablectl__release__help,upgrade)
-                cmd="stackablectl__release__help__upgrade"
+            stackablectl__subcmd__release__subcmd__help,upgrade)
+                cmd="stackablectl__subcmd__release__subcmd__help__subcmd__upgrade"
                 ;;
-            stackablectl__stack,describe)
-                cmd="stackablectl__stack__describe"
+            stackablectl__subcmd__stack,describe)
+                cmd="stackablectl__subcmd__stack__subcmd__describe"
                 ;;
-            stackablectl__stack,help)
-                cmd="stackablectl__stack__help"
+            stackablectl__subcmd__stack,help)
+                cmd="stackablectl__subcmd__stack__subcmd__help"
                 ;;
-            stackablectl__stack,install)
-                cmd="stackablectl__stack__install"
+            stackablectl__subcmd__stack,install)
+                cmd="stackablectl__subcmd__stack__subcmd__install"
                 ;;
-            stackablectl__stack,list)
-                cmd="stackablectl__stack__list"
+            stackablectl__subcmd__stack,list)
+                cmd="stackablectl__subcmd__stack__subcmd__list"
                 ;;
-            stackablectl__stack,uninstall)
-                cmd="stackablectl__stack__uninstall"
+            stackablectl__subcmd__stack,uninstall)
+                cmd="stackablectl__subcmd__stack__subcmd__uninstall"
                 ;;
-            stackablectl__stack__help,describe)
-                cmd="stackablectl__stack__help__describe"
+            stackablectl__subcmd__stack__subcmd__help,describe)
+                cmd="stackablectl__subcmd__stack__subcmd__help__subcmd__describe"
                 ;;
-            stackablectl__stack__help,help)
-                cmd="stackablectl__stack__help__help"
+            stackablectl__subcmd__stack__subcmd__help,help)
+                cmd="stackablectl__subcmd__stack__subcmd__help__subcmd__help"
                 ;;
-            stackablectl__stack__help,install)
-                cmd="stackablectl__stack__help__install"
+            stackablectl__subcmd__stack__subcmd__help,install)
+                cmd="stackablectl__subcmd__stack__subcmd__help__subcmd__install"
                 ;;
-            stackablectl__stack__help,list)
-                cmd="stackablectl__stack__help__list"
+            stackablectl__subcmd__stack__subcmd__help,list)
+                cmd="stackablectl__subcmd__stack__subcmd__help__subcmd__list"
                 ;;
-            stackablectl__stack__help,uninstall)
-                cmd="stackablectl__stack__help__uninstall"
+            stackablectl__subcmd__stack__subcmd__help,uninstall)
+                cmd="stackablectl__subcmd__stack__subcmd__help__subcmd__uninstall"
                 ;;
-            stackablectl__stacklet,credentials)
-                cmd="stackablectl__stacklet__credentials"
+            stackablectl__subcmd__stacklet,credentials)
+                cmd="stackablectl__subcmd__stacklet__subcmd__credentials"
                 ;;
-            stackablectl__stacklet,help)
-                cmd="stackablectl__stacklet__help"
+            stackablectl__subcmd__stacklet,help)
+                cmd="stackablectl__subcmd__stacklet__subcmd__help"
                 ;;
-            stackablectl__stacklet,list)
-                cmd="stackablectl__stacklet__list"
+            stackablectl__subcmd__stacklet,list)
+                cmd="stackablectl__subcmd__stacklet__subcmd__list"
                 ;;
-            stackablectl__stacklet__help,credentials)
-                cmd="stackablectl__stacklet__help__credentials"
+            stackablectl__subcmd__stacklet__subcmd__help,credentials)
+                cmd="stackablectl__subcmd__stacklet__subcmd__help__subcmd__credentials"
                 ;;
-            stackablectl__stacklet__help,help)
-                cmd="stackablectl__stacklet__help__help"
+            stackablectl__subcmd__stacklet__subcmd__help,help)
+                cmd="stackablectl__subcmd__stacklet__subcmd__help__subcmd__help"
                 ;;
-            stackablectl__stacklet__help,list)
-                cmd="stackablectl__stacklet__help__list"
+            stackablectl__subcmd__stacklet__subcmd__help,list)
+                cmd="stackablectl__subcmd__stacklet__subcmd__help__subcmd__list"
                 ;;
-            stackablectl__version,check)
-                cmd="stackablectl__version__check"
+            stackablectl__subcmd__version,check)
+                cmd="stackablectl__subcmd__version__subcmd__check"
                 ;;
-            stackablectl__version,help)
-                cmd="stackablectl__version__help"
+            stackablectl__subcmd__version,help)
+                cmd="stackablectl__subcmd__version__subcmd__help"
                 ;;
-            stackablectl__version__help,check)
-                cmd="stackablectl__version__help__check"
+            stackablectl__subcmd__version__subcmd__help,check)
+                cmd="stackablectl__subcmd__version__subcmd__help__subcmd__check"
                 ;;
-            stackablectl__version__help,help)
-                cmd="stackablectl__version__help__help"
+            stackablectl__subcmd__version__subcmd__help,help)
+                cmd="stackablectl__subcmd__version__subcmd__help__subcmd__help"
                 ;;
             *)
                 ;;
@@ -544,7 +544,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__cache)
+        stackablectl__subcmd__cache)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version list clean help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -706,7 +706,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__cache__clean)
+        stackablectl__subcmd__cache__subcmd__clean)
             opts="-l -d -s -r -f -h -V --outdated --old --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -868,7 +868,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__cache__help)
+        stackablectl__subcmd__cache__subcmd__help)
             opts="list clean help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -882,7 +882,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__cache__help__clean)
+        stackablectl__subcmd__cache__subcmd__help__subcmd__clean)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -896,7 +896,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__cache__help__help)
+        stackablectl__subcmd__cache__subcmd__help__subcmd__help)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -910,7 +910,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__cache__help__list)
+        stackablectl__subcmd__cache__subcmd__help__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -924,7 +924,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__cache__list)
+        stackablectl__subcmd__cache__subcmd__list)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1086,7 +1086,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions)
+        stackablectl__subcmd__completions)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version bash elvish fish nushell zsh help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1248,7 +1248,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__bash)
+        stackablectl__subcmd__completions__subcmd__bash)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1410,7 +1410,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__elvish)
+        stackablectl__subcmd__completions__subcmd__elvish)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1572,7 +1572,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__fish)
+        stackablectl__subcmd__completions__subcmd__fish)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1734,7 +1734,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__help)
+        stackablectl__subcmd__completions__subcmd__help)
             opts="bash elvish fish nushell zsh help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1748,7 +1748,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__help__bash)
+        stackablectl__subcmd__completions__subcmd__help__subcmd__bash)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1762,7 +1762,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__help__elvish)
+        stackablectl__subcmd__completions__subcmd__help__subcmd__elvish)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1776,7 +1776,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__help__fish)
+        stackablectl__subcmd__completions__subcmd__help__subcmd__fish)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1790,7 +1790,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__help__help)
+        stackablectl__subcmd__completions__subcmd__help__subcmd__help)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1804,7 +1804,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__help__nushell)
+        stackablectl__subcmd__completions__subcmd__help__subcmd__nushell)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1818,7 +1818,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__help__zsh)
+        stackablectl__subcmd__completions__subcmd__help__subcmd__zsh)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1832,7 +1832,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__nushell)
+        stackablectl__subcmd__completions__subcmd__nushell)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -1994,7 +1994,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__completions__zsh)
+        stackablectl__subcmd__completions__subcmd__zsh)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -2156,7 +2156,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__demo)
+        stackablectl__subcmd__demo)
             opts="-l -d -s -r -f -h -V --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version list describe install uninstall help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -2322,8 +2322,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__demo__describe)
-            opts="-o -l -d -s -r -f -h -V --output --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <DEMO>"
+        stackablectl__subcmd__demo__subcmd__describe)
+            opts="-o -l -d -s -r -f -h -V --output --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -2496,7 +2496,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__demo__help)
+        stackablectl__subcmd__demo__subcmd__help)
             opts="list describe install uninstall help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -2510,7 +2510,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__demo__help__describe)
+        stackablectl__subcmd__demo__subcmd__help__subcmd__describe)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -2524,7 +2524,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__demo__help__help)
+        stackablectl__subcmd__demo__subcmd__help__subcmd__help)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -2538,7 +2538,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__demo__help__install)
+        stackablectl__subcmd__demo__subcmd__help__subcmd__install)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -2552,7 +2552,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__demo__help__list)
+        stackablectl__subcmd__demo__subcmd__help__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -2566,7 +2566,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__demo__help__uninstall)
+        stackablectl__subcmd__demo__subcmd__help__subcmd__uninstall)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -2580,8 +2580,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__demo__install)
-            opts="-c -n -y -l -d -s -r -f -h -V --skip-release --stack-parameters --parameters --cluster --cluster-name --cluster-nodes --cluster-cp-nodes --operator-ns --operator-namespace --product-ns --namespace --yes --assume-yes --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <DEMO>"
+        stackablectl__subcmd__demo__subcmd__install)
+            opts="-c -n -y -l -d -s -r -f -h -V --skip-release --stack-parameters --parameters --cluster --cluster-name --cluster-nodes --cluster-cp-nodes --operator-ns --operator-namespace --product-ns --namespace --yes --assume-yes --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -2794,7 +2794,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__demo__list)
+        stackablectl__subcmd__demo__subcmd__list)
             opts="-o -l -d -s -r -f -h -V --output --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -2968,8 +2968,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__demo__uninstall)
-            opts="-n -y -l -d -s -r -f -h -V --operator-ns --operator-namespace --product-ns --namespace --skip-operators-and-crds --yes --assume-yes --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <DEMO_NAME>"
+        stackablectl__subcmd__demo__subcmd__uninstall)
+            opts="-n -y -l -d -s -r -f -h -V --operator-ns --operator-namespace --product-ns --namespace --skip-operators-and-crds --yes --assume-yes --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -3154,8 +3154,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__experimental__debug)
-            opts="-n -c -l -d -s -r -f -h -V --namespace --container --image --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <POD> [CMD]..."
+        stackablectl__subcmd__experimental__subcmd__debug)
+            opts="-n -c -l -d -s -r -f -h -V --namespace --container --image --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -3336,7 +3336,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help)
+        stackablectl__subcmd__help)
             opts="operator release stack stacklet demo completions cache experimental-debug version help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3350,7 +3350,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__cache)
+        stackablectl__subcmd__help__subcmd__cache)
             opts="list clean"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3364,7 +3364,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__cache__clean)
+        stackablectl__subcmd__help__subcmd__cache__subcmd__clean)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3378,7 +3378,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__cache__list)
+        stackablectl__subcmd__help__subcmd__cache__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3392,7 +3392,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__completions)
+        stackablectl__subcmd__help__subcmd__completions)
             opts="bash elvish fish nushell zsh"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3406,7 +3406,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__completions__bash)
+        stackablectl__subcmd__help__subcmd__completions__subcmd__bash)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3420,7 +3420,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__completions__elvish)
+        stackablectl__subcmd__help__subcmd__completions__subcmd__elvish)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3434,7 +3434,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__completions__fish)
+        stackablectl__subcmd__help__subcmd__completions__subcmd__fish)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3448,7 +3448,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__completions__nushell)
+        stackablectl__subcmd__help__subcmd__completions__subcmd__nushell)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3462,7 +3462,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__completions__zsh)
+        stackablectl__subcmd__help__subcmd__completions__subcmd__zsh)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3476,7 +3476,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__demo)
+        stackablectl__subcmd__help__subcmd__demo)
             opts="list describe install uninstall"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3490,7 +3490,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__demo__describe)
+        stackablectl__subcmd__help__subcmd__demo__subcmd__describe)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3504,7 +3504,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__demo__install)
+        stackablectl__subcmd__help__subcmd__demo__subcmd__install)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3518,7 +3518,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__demo__list)
+        stackablectl__subcmd__help__subcmd__demo__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3532,7 +3532,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__demo__uninstall)
+        stackablectl__subcmd__help__subcmd__demo__subcmd__uninstall)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3546,7 +3546,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__experimental__debug)
+        stackablectl__subcmd__help__subcmd__experimental__subcmd__debug)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3560,7 +3560,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__help)
+        stackablectl__subcmd__help__subcmd__help)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3574,7 +3574,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__operator)
+        stackablectl__subcmd__help__subcmd__operator)
             opts="list describe install uninstall installed"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3588,7 +3588,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__operator__describe)
+        stackablectl__subcmd__help__subcmd__operator__subcmd__describe)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3602,7 +3602,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__operator__install)
+        stackablectl__subcmd__help__subcmd__operator__subcmd__install)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3616,7 +3616,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__operator__installed)
+        stackablectl__subcmd__help__subcmd__operator__subcmd__installed)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3630,7 +3630,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__operator__list)
+        stackablectl__subcmd__help__subcmd__operator__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3644,7 +3644,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__operator__uninstall)
+        stackablectl__subcmd__help__subcmd__operator__subcmd__uninstall)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3658,7 +3658,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__release)
+        stackablectl__subcmd__help__subcmd__release)
             opts="list describe install uninstall upgrade"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3672,7 +3672,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__release__describe)
+        stackablectl__subcmd__help__subcmd__release__subcmd__describe)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3686,7 +3686,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__release__install)
+        stackablectl__subcmd__help__subcmd__release__subcmd__install)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3700,7 +3700,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__release__list)
+        stackablectl__subcmd__help__subcmd__release__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3714,7 +3714,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__release__uninstall)
+        stackablectl__subcmd__help__subcmd__release__subcmd__uninstall)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3728,7 +3728,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__release__upgrade)
+        stackablectl__subcmd__help__subcmd__release__subcmd__upgrade)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3742,7 +3742,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__stack)
+        stackablectl__subcmd__help__subcmd__stack)
             opts="list describe install uninstall"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3756,7 +3756,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__stack__describe)
+        stackablectl__subcmd__help__subcmd__stack__subcmd__describe)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3770,7 +3770,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__stack__install)
+        stackablectl__subcmd__help__subcmd__stack__subcmd__install)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3784,7 +3784,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__stack__list)
+        stackablectl__subcmd__help__subcmd__stack__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3798,7 +3798,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__stack__uninstall)
+        stackablectl__subcmd__help__subcmd__stack__subcmd__uninstall)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3812,7 +3812,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__stacklet)
+        stackablectl__subcmd__help__subcmd__stacklet)
             opts="credentials list"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3826,7 +3826,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__stacklet__credentials)
+        stackablectl__subcmd__help__subcmd__stacklet__subcmd__credentials)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3840,7 +3840,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__stacklet__list)
+        stackablectl__subcmd__help__subcmd__stacklet__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3854,7 +3854,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__version)
+        stackablectl__subcmd__help__subcmd__version)
             opts="check"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3868,7 +3868,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__help__version__check)
+        stackablectl__subcmd__help__subcmd__version__subcmd__check)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -3882,7 +3882,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator)
+        stackablectl__subcmd__operator)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version list describe install uninstall installed help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -4044,8 +4044,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__describe)
-            opts="-o -l -d -s -r -f -h -V --output --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <OPERATOR>"
+        stackablectl__subcmd__operator__subcmd__describe)
+            opts="-o -l -d -s -r -f -h -V --output --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -4214,7 +4214,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__help)
+        stackablectl__subcmd__operator__subcmd__help)
             opts="list describe install uninstall installed help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -4228,7 +4228,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__help__describe)
+        stackablectl__subcmd__operator__subcmd__help__subcmd__describe)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -4242,7 +4242,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__help__help)
+        stackablectl__subcmd__operator__subcmd__help__subcmd__help)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -4256,7 +4256,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__help__install)
+        stackablectl__subcmd__operator__subcmd__help__subcmd__install)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -4270,7 +4270,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__help__installed)
+        stackablectl__subcmd__operator__subcmd__help__subcmd__installed)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -4284,7 +4284,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__help__list)
+        stackablectl__subcmd__operator__subcmd__help__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -4298,7 +4298,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__help__uninstall)
+        stackablectl__subcmd__operator__subcmd__help__subcmd__uninstall)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -4312,8 +4312,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__install)
-            opts="-c -l -d -s -r -f -h -V --operator-ns --operator-namespace --cluster --cluster-name --cluster-nodes --cluster-cp-nodes --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <OPERATORS>..."
+        stackablectl__subcmd__operator__subcmd__install)
+            opts="-c -l -d -s -r -f -h -V --operator-ns --operator-namespace --cluster --cluster-name --cluster-nodes --cluster-cp-nodes --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -4502,7 +4502,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__installed)
+        stackablectl__subcmd__operator__subcmd__installed)
             opts="-o -l -d -s -r -f -h -V --output --operator-ns --operator-namespace --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -4680,7 +4680,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__list)
+        stackablectl__subcmd__operator__subcmd__list)
             opts="-o -l -d -s -r -f -h -V --output --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -4850,8 +4850,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__operator__uninstall)
-            opts="-l -d -s -r -f -h -V --operator-ns --operator-namespace --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <OPERATORS>..."
+        stackablectl__subcmd__operator__subcmd__uninstall)
+            opts="-l -d -s -r -f -h -V --operator-ns --operator-namespace --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -5020,7 +5020,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release)
+        stackablectl__subcmd__release)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version list describe install uninstall upgrade help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -5182,8 +5182,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__describe)
-            opts="-o -l -d -s -r -f -h -V --output --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <RELEASE>"
+        stackablectl__subcmd__release__subcmd__describe)
+            opts="-o -l -d -s -r -f -h -V --output --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -5352,7 +5352,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__help)
+        stackablectl__subcmd__release__subcmd__help)
             opts="list describe install uninstall upgrade help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -5366,7 +5366,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__help__describe)
+        stackablectl__subcmd__release__subcmd__help__subcmd__describe)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -5380,7 +5380,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__help__help)
+        stackablectl__subcmd__release__subcmd__help__subcmd__help)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -5394,7 +5394,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__help__install)
+        stackablectl__subcmd__release__subcmd__help__subcmd__install)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -5408,7 +5408,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__help__list)
+        stackablectl__subcmd__release__subcmd__help__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -5422,7 +5422,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__help__uninstall)
+        stackablectl__subcmd__release__subcmd__help__subcmd__uninstall)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -5436,7 +5436,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__help__upgrade)
+        stackablectl__subcmd__release__subcmd__help__subcmd__upgrade)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -5450,8 +5450,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__install)
-            opts="-i -e -c -l -d -s -r -f -h -V --include --exclude --operator-ns --operator-namespace --cluster --cluster-name --cluster-nodes --cluster-cp-nodes --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <RELEASE>"
+        stackablectl__subcmd__release__subcmd__install)
+            opts="-i -e -c -l -d -s -r -f -h -V --include --exclude --operator-ns --operator-namespace --cluster --cluster-name --cluster-nodes --cluster-cp-nodes --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -5656,7 +5656,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__list)
+        stackablectl__subcmd__release__subcmd__list)
             opts="-o -l -d -s -r -f -h -V --output --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -5826,8 +5826,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__uninstall)
-            opts="-l -d -s -r -f -h -V --operator-ns --operator-namespace --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <RELEASE>"
+        stackablectl__subcmd__release__subcmd__uninstall)
+            opts="-l -d -s -r -f -h -V --operator-ns --operator-namespace --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -5996,8 +5996,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__release__upgrade)
-            opts="-i -e -l -d -s -r -f -h -V --include --exclude --operator-ns --operator-namespace --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <RELEASE>"
+        stackablectl__subcmd__release__subcmd__upgrade)
+            opts="-i -e -l -d -s -r -f -h -V --include --exclude --operator-ns --operator-namespace --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -6182,7 +6182,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stack)
+        stackablectl__subcmd__stack)
             opts="-l -d -s -r -f -h -V --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version list describe install uninstall help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -6348,8 +6348,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stack__describe)
-            opts="-o -l -d -s -r -f -h -V --output --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <STACK_NAME>"
+        stackablectl__subcmd__stack__subcmd__describe)
+            opts="-o -l -d -s -r -f -h -V --output --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -6522,7 +6522,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stack__help)
+        stackablectl__subcmd__stack__subcmd__help)
             opts="list describe install uninstall help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -6536,7 +6536,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stack__help__describe)
+        stackablectl__subcmd__stack__subcmd__help__subcmd__describe)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -6550,7 +6550,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stack__help__help)
+        stackablectl__subcmd__stack__subcmd__help__subcmd__help)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -6564,7 +6564,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stack__help__install)
+        stackablectl__subcmd__stack__subcmd__help__subcmd__install)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -6578,7 +6578,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stack__help__list)
+        stackablectl__subcmd__stack__subcmd__help__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -6592,7 +6592,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stack__help__uninstall)
+        stackablectl__subcmd__stack__subcmd__help__subcmd__uninstall)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -6606,8 +6606,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stack__install)
-            opts="-c -n -y -l -d -s -r -f -h -V --skip-release --stack-parameters --parameters --cluster --cluster-name --cluster-nodes --cluster-cp-nodes --operator-ns --operator-namespace --product-ns --namespace --yes --assume-yes --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <STACK_NAME>"
+        stackablectl__subcmd__stack__subcmd__install)
+            opts="-c -n -y -l -d -s -r -f -h -V --skip-release --stack-parameters --parameters --cluster --cluster-name --cluster-nodes --cluster-cp-nodes --operator-ns --operator-namespace --product-ns --namespace --yes --assume-yes --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -6820,7 +6820,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stack__list)
+        stackablectl__subcmd__stack__subcmd__list)
             opts="-o -l -d -s -r -f -h -V --output --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -6994,8 +6994,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stack__uninstall)
-            opts="-n -y -l -d -s -r -f -h -V --operator-ns --operator-namespace --product-ns --namespace --skip-operators-and-crds --yes --assume-yes --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <STACK_NAME>"
+        stackablectl__subcmd__stack__subcmd__uninstall)
+            opts="-n -y -l -d -s -r -f -h -V --operator-ns --operator-namespace --product-ns --namespace --skip-operators-and-crds --yes --assume-yes --release --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -7180,7 +7180,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stacklet)
+        stackablectl__subcmd__stacklet)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version credentials list help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -7342,8 +7342,8 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stacklet__credentials)
-            opts="-n -l -d -s -r -f -h -V --namespace --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version <PRODUCT_NAME> <STACKLET_NAME>"
+        stackablectl__subcmd__stacklet__subcmd__credentials)
+            opts="-n -l -d -s -r -f -h -V --namespace --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -7512,7 +7512,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stacklet__help)
+        stackablectl__subcmd__stacklet__subcmd__help)
             opts="credentials list help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -7526,7 +7526,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stacklet__help__credentials)
+        stackablectl__subcmd__stacklet__subcmd__help__subcmd__credentials)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -7540,7 +7540,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stacklet__help__help)
+        stackablectl__subcmd__stacklet__subcmd__help__subcmd__help)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -7554,7 +7554,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stacklet__help__list)
+        stackablectl__subcmd__stacklet__subcmd__help__subcmd__list)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -7568,7 +7568,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__stacklet__list)
+        stackablectl__subcmd__stacklet__subcmd__list)
             opts="-o -n -l -d -s -r -f -h -V --output --operator-ns --operator-namespace --product-ns --namespace --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -7758,7 +7758,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__version)
+        stackablectl__subcmd__version)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version check help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -7920,7 +7920,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__version__check)
+        stackablectl__subcmd__version__subcmd__check)
             opts="-l -d -s -r -f -h -V --log-level --no-cache --demo-file --stack-file --release-file --operator-values --helm-repo-stable --helm-repo-test --helm-repo-dev --chart-source --listener-class-preset --help --version"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -8082,7 +8082,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__version__help)
+        stackablectl__subcmd__version__subcmd__help)
             opts="check help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -8096,7 +8096,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__version__help__check)
+        stackablectl__subcmd__version__subcmd__help__subcmd__check)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -8110,7 +8110,7 @@ _stackablectl() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        stackablectl__version__help__help)
+        stackablectl__subcmd__version__subcmd__help__subcmd__help)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 4 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )

@@ -68,7 +68,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 '--help[Print help (see more with '\''--help'\'')]' \
 '-V[Print version]' \
 '--version[Print version]' \
-":: :_stackablectl__operator_commands" \
+":: :_stackablectl__subcmd__operator_commands" \
 "*::: :->operator" \
 && ret=0
 
@@ -245,7 +245,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 ;;
 (help)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__operator__help_commands" \
+":: :_stackablectl__subcmd__operator__subcmd__help_commands" \
 "*::: :->help" \
 && ret=0
 
@@ -310,7 +310,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 '--help[Print help (see more with '\''--help'\'')]' \
 '-V[Print version]' \
 '--version[Print version]' \
-":: :_stackablectl__release_commands" \
+":: :_stackablectl__subcmd__release_commands" \
 "*::: :->release" \
 && ret=0
 
@@ -488,7 +488,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 ;;
 (help)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__release__help_commands" \
+":: :_stackablectl__subcmd__release__subcmd__help_commands" \
 "*::: :->help" \
 && ret=0
 
@@ -554,7 +554,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 '--help[Print help (see more with '\''--help'\'')]' \
 '-V[Print version]' \
 '--version[Print version]' \
-":: :_stackablectl__stack_commands" \
+":: :_stackablectl__subcmd__stack_commands" \
 "*::: :->stack" \
 && ret=0
 
@@ -716,7 +716,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 ;;
 (help)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__stack__help_commands" \
+":: :_stackablectl__subcmd__stack__subcmd__help_commands" \
 "*::: :->help" \
 && ret=0
 
@@ -777,7 +777,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 '--help[Print help (see more with '\''--help'\'')]' \
 '-V[Print version]' \
 '--version[Print version]' \
-":: :_stackablectl__stacklet_commands" \
+":: :_stackablectl__subcmd__stacklet_commands" \
 "*::: :->stacklet" \
 && ret=0
 
@@ -856,7 +856,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 ;;
 (help)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__stacklet__help_commands" \
+":: :_stackablectl__subcmd__stacklet__subcmd__help_commands" \
 "*::: :->help" \
 && ret=0
 
@@ -910,7 +910,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 '--help[Print help (see more with '\''--help'\'')]' \
 '-V[Print version]' \
 '--version[Print version]' \
-":: :_stackablectl__demo_commands" \
+":: :_stackablectl__subcmd__demo_commands" \
 "*::: :->demo" \
 && ret=0
 
@@ -1072,7 +1072,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 ;;
 (help)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__demo__help_commands" \
+":: :_stackablectl__subcmd__demo__subcmd__help_commands" \
 "*::: :->help" \
 && ret=0
 
@@ -1133,7 +1133,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 '--help[Print help (see more with '\''--help'\'')]' \
 '-V[Print version]' \
 '--version[Print version]' \
-":: :_stackablectl__completions_commands" \
+":: :_stackablectl__subcmd__completions_commands" \
 "*::: :->completions" \
 && ret=0
 
@@ -1270,7 +1270,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 ;;
 (help)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__completions__help_commands" \
+":: :_stackablectl__subcmd__completions__subcmd__help_commands" \
 "*::: :->help" \
 && ret=0
 
@@ -1335,7 +1335,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 '--help[Print help (see more with '\''--help'\'')]' \
 '-V[Print version]' \
 '--version[Print version]' \
-":: :_stackablectl__cache_commands" \
+":: :_stackablectl__subcmd__cache_commands" \
 "*::: :->cache" \
 && ret=0
 
@@ -1399,7 +1399,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 ;;
 (help)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__cache__help_commands" \
+":: :_stackablectl__subcmd__cache__subcmd__help_commands" \
 "*::: :->help" \
 && ret=0
 
@@ -1484,7 +1484,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 '--help[Print help (see more with '\''--help'\'')]' \
 '-V[Print version]' \
 '--version[Print version]' \
-":: :_stackablectl__version_commands" \
+":: :_stackablectl__subcmd__version_commands" \
 "*::: :->version" \
 && ret=0
 
@@ -1521,7 +1521,7 @@ repo\:"index.yaml-based repositories\: resolution (dev, test, stable) is based o
 ;;
 (help)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__version__help_commands" \
+":: :_stackablectl__subcmd__version__subcmd__help_commands" \
 "*::: :->help" \
 && ret=0
 
@@ -1549,7 +1549,7 @@ esac
 ;;
 (help)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__help_commands" \
+":: :_stackablectl__subcmd__help_commands" \
 "*::: :->help" \
 && ret=0
 
@@ -1561,7 +1561,7 @@ _arguments "${_arguments_options[@]}" : \
         case $line[1] in
             (operator)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__help__operator_commands" \
+":: :_stackablectl__subcmd__help__subcmd__operator_commands" \
 "*::: :->operator" \
 && ret=0
 
@@ -1597,7 +1597,7 @@ esac
 ;;
 (release)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__help__release_commands" \
+":: :_stackablectl__subcmd__help__subcmd__release_commands" \
 "*::: :->release" \
 && ret=0
 
@@ -1633,7 +1633,7 @@ esac
 ;;
 (stack)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__help__stack_commands" \
+":: :_stackablectl__subcmd__help__subcmd__stack_commands" \
 "*::: :->stack" \
 && ret=0
 
@@ -1665,7 +1665,7 @@ esac
 ;;
 (stacklet)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__help__stacklet_commands" \
+":: :_stackablectl__subcmd__help__subcmd__stacklet_commands" \
 "*::: :->stacklet" \
 && ret=0
 
@@ -1689,7 +1689,7 @@ esac
 ;;
 (demo)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__help__demo_commands" \
+":: :_stackablectl__subcmd__help__subcmd__demo_commands" \
 "*::: :->demo" \
 && ret=0
 
@@ -1721,7 +1721,7 @@ esac
 ;;
 (completions)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__help__completions_commands" \
+":: :_stackablectl__subcmd__help__subcmd__completions_commands" \
 "*::: :->completions" \
 && ret=0
 
@@ -1757,7 +1757,7 @@ esac
 ;;
 (cache)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__help__cache_commands" \
+":: :_stackablectl__subcmd__help__subcmd__cache_commands" \
 "*::: :->cache" \
 && ret=0
 
@@ -1785,7 +1785,7 @@ _arguments "${_arguments_options[@]}" : \
 ;;
 (version)
 _arguments "${_arguments_options[@]}" : \
-":: :_stackablectl__help__version_commands" \
+":: :_stackablectl__subcmd__help__subcmd__version_commands" \
 "*::: :->version" \
 && ret=0
 
@@ -1832,8 +1832,8 @@ _stackablectl_commands() {
     )
     _describe -t commands 'stackablectl commands' commands "$@"
 }
-(( $+functions[_stackablectl__cache_commands] )) ||
-_stackablectl__cache_commands() {
+(( $+functions[_stackablectl__subcmd__cache_commands] )) ||
+_stackablectl__subcmd__cache_commands() {
     local commands; commands=(
 'list:List cached files' \
 'clean:Clean cached files' \
@@ -1841,13 +1841,13 @@ _stackablectl__cache_commands() {
     )
     _describe -t commands 'stackablectl cache commands' commands "$@"
 }
-(( $+functions[_stackablectl__cache__clean_commands] )) ||
-_stackablectl__cache__clean_commands() {
+(( $+functions[_stackablectl__subcmd__cache__subcmd__clean_commands] )) ||
+_stackablectl__subcmd__cache__subcmd__clean_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl cache clean commands' commands "$@"
 }
-(( $+functions[_stackablectl__cache__help_commands] )) ||
-_stackablectl__cache__help_commands() {
+(( $+functions[_stackablectl__subcmd__cache__subcmd__help_commands] )) ||
+_stackablectl__subcmd__cache__subcmd__help_commands() {
     local commands; commands=(
 'list:List cached files' \
 'clean:Clean cached files' \
@@ -1855,28 +1855,28 @@ _stackablectl__cache__help_commands() {
     )
     _describe -t commands 'stackablectl cache help commands' commands "$@"
 }
-(( $+functions[_stackablectl__cache__help__clean_commands] )) ||
-_stackablectl__cache__help__clean_commands() {
+(( $+functions[_stackablectl__subcmd__cache__subcmd__help__subcmd__clean_commands] )) ||
+_stackablectl__subcmd__cache__subcmd__help__subcmd__clean_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl cache help clean commands' commands "$@"
 }
-(( $+functions[_stackablectl__cache__help__help_commands] )) ||
-_stackablectl__cache__help__help_commands() {
+(( $+functions[_stackablectl__subcmd__cache__subcmd__help__subcmd__help_commands] )) ||
+_stackablectl__subcmd__cache__subcmd__help__subcmd__help_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl cache help help commands' commands "$@"
 }
-(( $+functions[_stackablectl__cache__help__list_commands] )) ||
-_stackablectl__cache__help__list_commands() {
+(( $+functions[_stackablectl__subcmd__cache__subcmd__help__subcmd__list_commands] )) ||
+_stackablectl__subcmd__cache__subcmd__help__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl cache help list commands' commands "$@"
 }
-(( $+functions[_stackablectl__cache__list_commands] )) ||
-_stackablectl__cache__list_commands() {
+(( $+functions[_stackablectl__subcmd__cache__subcmd__list_commands] )) ||
+_stackablectl__subcmd__cache__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl cache list commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions_commands] )) ||
-_stackablectl__completions_commands() {
+(( $+functions[_stackablectl__subcmd__completions_commands] )) ||
+_stackablectl__subcmd__completions_commands() {
     local commands; commands=(
 'bash:Generate shell completions for Bash' \
 'elvish:Generate shell completions for Elvish' \
@@ -1887,23 +1887,23 @@ _stackablectl__completions_commands() {
     )
     _describe -t commands 'stackablectl completions commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__bash_commands] )) ||
-_stackablectl__completions__bash_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__bash_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__bash_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl completions bash commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__elvish_commands] )) ||
-_stackablectl__completions__elvish_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__elvish_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__elvish_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl completions elvish commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__fish_commands] )) ||
-_stackablectl__completions__fish_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__fish_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__fish_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl completions fish commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__help_commands] )) ||
-_stackablectl__completions__help_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__help_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__help_commands() {
     local commands; commands=(
 'bash:Generate shell completions for Bash' \
 'elvish:Generate shell completions for Elvish' \
@@ -1914,48 +1914,48 @@ _stackablectl__completions__help_commands() {
     )
     _describe -t commands 'stackablectl completions help commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__help__bash_commands] )) ||
-_stackablectl__completions__help__bash_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__help__subcmd__bash_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__help__subcmd__bash_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl completions help bash commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__help__elvish_commands] )) ||
-_stackablectl__completions__help__elvish_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__help__subcmd__elvish_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__help__subcmd__elvish_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl completions help elvish commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__help__fish_commands] )) ||
-_stackablectl__completions__help__fish_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__help__subcmd__fish_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__help__subcmd__fish_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl completions help fish commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__help__help_commands] )) ||
-_stackablectl__completions__help__help_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__help__subcmd__help_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__help__subcmd__help_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl completions help help commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__help__nushell_commands] )) ||
-_stackablectl__completions__help__nushell_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__help__subcmd__nushell_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__help__subcmd__nushell_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl completions help nushell commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__help__zsh_commands] )) ||
-_stackablectl__completions__help__zsh_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__help__subcmd__zsh_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__help__subcmd__zsh_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl completions help zsh commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__nushell_commands] )) ||
-_stackablectl__completions__nushell_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__nushell_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__nushell_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl completions nushell commands' commands "$@"
 }
-(( $+functions[_stackablectl__completions__zsh_commands] )) ||
-_stackablectl__completions__zsh_commands() {
+(( $+functions[_stackablectl__subcmd__completions__subcmd__zsh_commands] )) ||
+_stackablectl__subcmd__completions__subcmd__zsh_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl completions zsh commands' commands "$@"
 }
-(( $+functions[_stackablectl__demo_commands] )) ||
-_stackablectl__demo_commands() {
+(( $+functions[_stackablectl__subcmd__demo_commands] )) ||
+_stackablectl__subcmd__demo_commands() {
     local commands; commands=(
 'list:List available demos' \
 'describe:Print out detailed demo information' \
@@ -1965,13 +1965,13 @@ _stackablectl__demo_commands() {
     )
     _describe -t commands 'stackablectl demo commands' commands "$@"
 }
-(( $+functions[_stackablectl__demo__describe_commands] )) ||
-_stackablectl__demo__describe_commands() {
+(( $+functions[_stackablectl__subcmd__demo__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__demo__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl demo describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__demo__help_commands] )) ||
-_stackablectl__demo__help_commands() {
+(( $+functions[_stackablectl__subcmd__demo__subcmd__help_commands] )) ||
+_stackablectl__subcmd__demo__subcmd__help_commands() {
     local commands; commands=(
 'list:List available demos' \
 'describe:Print out detailed demo information' \
@@ -1981,53 +1981,53 @@ _stackablectl__demo__help_commands() {
     )
     _describe -t commands 'stackablectl demo help commands' commands "$@"
 }
-(( $+functions[_stackablectl__demo__help__describe_commands] )) ||
-_stackablectl__demo__help__describe_commands() {
+(( $+functions[_stackablectl__subcmd__demo__subcmd__help__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__demo__subcmd__help__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl demo help describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__demo__help__help_commands] )) ||
-_stackablectl__demo__help__help_commands() {
+(( $+functions[_stackablectl__subcmd__demo__subcmd__help__subcmd__help_commands] )) ||
+_stackablectl__subcmd__demo__subcmd__help__subcmd__help_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl demo help help commands' commands "$@"
 }
-(( $+functions[_stackablectl__demo__help__install_commands] )) ||
-_stackablectl__demo__help__install_commands() {
+(( $+functions[_stackablectl__subcmd__demo__subcmd__help__subcmd__install_commands] )) ||
+_stackablectl__subcmd__demo__subcmd__help__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl demo help install commands' commands "$@"
 }
-(( $+functions[_stackablectl__demo__help__list_commands] )) ||
-_stackablectl__demo__help__list_commands() {
+(( $+functions[_stackablectl__subcmd__demo__subcmd__help__subcmd__list_commands] )) ||
+_stackablectl__subcmd__demo__subcmd__help__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl demo help list commands' commands "$@"
 }
-(( $+functions[_stackablectl__demo__help__uninstall_commands] )) ||
-_stackablectl__demo__help__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__demo__subcmd__help__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__demo__subcmd__help__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl demo help uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__demo__install_commands] )) ||
-_stackablectl__demo__install_commands() {
+(( $+functions[_stackablectl__subcmd__demo__subcmd__install_commands] )) ||
+_stackablectl__subcmd__demo__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl demo install commands' commands "$@"
 }
-(( $+functions[_stackablectl__demo__list_commands] )) ||
-_stackablectl__demo__list_commands() {
+(( $+functions[_stackablectl__subcmd__demo__subcmd__list_commands] )) ||
+_stackablectl__subcmd__demo__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl demo list commands' commands "$@"
 }
-(( $+functions[_stackablectl__demo__uninstall_commands] )) ||
-_stackablectl__demo__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__demo__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__demo__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl demo uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__experimental-debug_commands] )) ||
-_stackablectl__experimental-debug_commands() {
+(( $+functions[_stackablectl__subcmd__experimental-debug_commands] )) ||
+_stackablectl__subcmd__experimental-debug_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl experimental-debug commands' commands "$@"
 }
-(( $+functions[_stackablectl__help_commands] )) ||
-_stackablectl__help_commands() {
+(( $+functions[_stackablectl__subcmd__help_commands] )) ||
+_stackablectl__subcmd__help_commands() {
     local commands; commands=(
 'operator:Interact with single operator instead of the full platform' \
 'release:Interact with all operators of the platform which are released together' \
@@ -2042,26 +2042,26 @@ _stackablectl__help_commands() {
     )
     _describe -t commands 'stackablectl help commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__cache_commands] )) ||
-_stackablectl__help__cache_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__cache_commands] )) ||
+_stackablectl__subcmd__help__subcmd__cache_commands() {
     local commands; commands=(
 'list:List cached files' \
 'clean:Clean cached files' \
     )
     _describe -t commands 'stackablectl help cache commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__cache__clean_commands] )) ||
-_stackablectl__help__cache__clean_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__cache__subcmd__clean_commands] )) ||
+_stackablectl__subcmd__help__subcmd__cache__subcmd__clean_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help cache clean commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__cache__list_commands] )) ||
-_stackablectl__help__cache__list_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__cache__subcmd__list_commands] )) ||
+_stackablectl__subcmd__help__subcmd__cache__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help cache list commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__completions_commands] )) ||
-_stackablectl__help__completions_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__completions_commands] )) ||
+_stackablectl__subcmd__help__subcmd__completions_commands() {
     local commands; commands=(
 'bash:Generate shell completions for Bash' \
 'elvish:Generate shell completions for Elvish' \
@@ -2071,33 +2071,33 @@ _stackablectl__help__completions_commands() {
     )
     _describe -t commands 'stackablectl help completions commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__completions__bash_commands] )) ||
-_stackablectl__help__completions__bash_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__completions__subcmd__bash_commands] )) ||
+_stackablectl__subcmd__help__subcmd__completions__subcmd__bash_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help completions bash commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__completions__elvish_commands] )) ||
-_stackablectl__help__completions__elvish_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__completions__subcmd__elvish_commands] )) ||
+_stackablectl__subcmd__help__subcmd__completions__subcmd__elvish_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help completions elvish commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__completions__fish_commands] )) ||
-_stackablectl__help__completions__fish_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__completions__subcmd__fish_commands] )) ||
+_stackablectl__subcmd__help__subcmd__completions__subcmd__fish_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help completions fish commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__completions__nushell_commands] )) ||
-_stackablectl__help__completions__nushell_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__completions__subcmd__nushell_commands] )) ||
+_stackablectl__subcmd__help__subcmd__completions__subcmd__nushell_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help completions nushell commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__completions__zsh_commands] )) ||
-_stackablectl__help__completions__zsh_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__completions__subcmd__zsh_commands] )) ||
+_stackablectl__subcmd__help__subcmd__completions__subcmd__zsh_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help completions zsh commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__demo_commands] )) ||
-_stackablectl__help__demo_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__demo_commands] )) ||
+_stackablectl__subcmd__help__subcmd__demo_commands() {
     local commands; commands=(
 'list:List available demos' \
 'describe:Print out detailed demo information' \
@@ -2106,38 +2106,38 @@ _stackablectl__help__demo_commands() {
     )
     _describe -t commands 'stackablectl help demo commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__demo__describe_commands] )) ||
-_stackablectl__help__demo__describe_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__demo__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__help__subcmd__demo__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help demo describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__demo__install_commands] )) ||
-_stackablectl__help__demo__install_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__demo__subcmd__install_commands] )) ||
+_stackablectl__subcmd__help__subcmd__demo__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help demo install commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__demo__list_commands] )) ||
-_stackablectl__help__demo__list_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__demo__subcmd__list_commands] )) ||
+_stackablectl__subcmd__help__subcmd__demo__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help demo list commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__demo__uninstall_commands] )) ||
-_stackablectl__help__demo__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__demo__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__help__subcmd__demo__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help demo uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__experimental-debug_commands] )) ||
-_stackablectl__help__experimental-debug_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__experimental-debug_commands] )) ||
+_stackablectl__subcmd__help__subcmd__experimental-debug_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help experimental-debug commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__help_commands] )) ||
-_stackablectl__help__help_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__help_commands] )) ||
+_stackablectl__subcmd__help__subcmd__help_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help help commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__operator_commands] )) ||
-_stackablectl__help__operator_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__operator_commands] )) ||
+_stackablectl__subcmd__help__subcmd__operator_commands() {
     local commands; commands=(
 'list:List available operators' \
 'describe:Print out detailed operator information' \
@@ -2147,33 +2147,33 @@ _stackablectl__help__operator_commands() {
     )
     _describe -t commands 'stackablectl help operator commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__operator__describe_commands] )) ||
-_stackablectl__help__operator__describe_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__operator__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__help__subcmd__operator__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help operator describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__operator__install_commands] )) ||
-_stackablectl__help__operator__install_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__operator__subcmd__install_commands] )) ||
+_stackablectl__subcmd__help__subcmd__operator__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help operator install commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__operator__installed_commands] )) ||
-_stackablectl__help__operator__installed_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__operator__subcmd__installed_commands] )) ||
+_stackablectl__subcmd__help__subcmd__operator__subcmd__installed_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help operator installed commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__operator__list_commands] )) ||
-_stackablectl__help__operator__list_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__operator__subcmd__list_commands] )) ||
+_stackablectl__subcmd__help__subcmd__operator__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help operator list commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__operator__uninstall_commands] )) ||
-_stackablectl__help__operator__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__operator__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__help__subcmd__operator__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help operator uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__release_commands] )) ||
-_stackablectl__help__release_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__release_commands] )) ||
+_stackablectl__subcmd__help__subcmd__release_commands() {
     local commands; commands=(
 'list:List available releases' \
 'describe:Print out detailed release information' \
@@ -2183,33 +2183,33 @@ _stackablectl__help__release_commands() {
     )
     _describe -t commands 'stackablectl help release commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__release__describe_commands] )) ||
-_stackablectl__help__release__describe_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__release__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__help__subcmd__release__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help release describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__release__install_commands] )) ||
-_stackablectl__help__release__install_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__release__subcmd__install_commands] )) ||
+_stackablectl__subcmd__help__subcmd__release__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help release install commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__release__list_commands] )) ||
-_stackablectl__help__release__list_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__release__subcmd__list_commands] )) ||
+_stackablectl__subcmd__help__subcmd__release__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help release list commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__release__uninstall_commands] )) ||
-_stackablectl__help__release__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__release__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__help__subcmd__release__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help release uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__release__upgrade_commands] )) ||
-_stackablectl__help__release__upgrade_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__release__subcmd__upgrade_commands] )) ||
+_stackablectl__subcmd__help__subcmd__release__subcmd__upgrade_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help release upgrade commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__stack_commands] )) ||
-_stackablectl__help__stack_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__stack_commands] )) ||
+_stackablectl__subcmd__help__subcmd__stack_commands() {
     local commands; commands=(
 'list:List available stacks' \
 'describe:Describe a specific stack' \
@@ -2218,58 +2218,58 @@ _stackablectl__help__stack_commands() {
     )
     _describe -t commands 'stackablectl help stack commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__stack__describe_commands] )) ||
-_stackablectl__help__stack__describe_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__stack__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__help__subcmd__stack__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help stack describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__stack__install_commands] )) ||
-_stackablectl__help__stack__install_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__stack__subcmd__install_commands] )) ||
+_stackablectl__subcmd__help__subcmd__stack__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help stack install commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__stack__list_commands] )) ||
-_stackablectl__help__stack__list_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__stack__subcmd__list_commands] )) ||
+_stackablectl__subcmd__help__subcmd__stack__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help stack list commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__stack__uninstall_commands] )) ||
-_stackablectl__help__stack__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__stack__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__help__subcmd__stack__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help stack uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__stacklet_commands] )) ||
-_stackablectl__help__stacklet_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__stacklet_commands] )) ||
+_stackablectl__subcmd__help__subcmd__stacklet_commands() {
     local commands; commands=(
 'credentials:Display credentials for a stacklet' \
 'list:List deployed stacklets' \
     )
     _describe -t commands 'stackablectl help stacklet commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__stacklet__credentials_commands] )) ||
-_stackablectl__help__stacklet__credentials_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__stacklet__subcmd__credentials_commands] )) ||
+_stackablectl__subcmd__help__subcmd__stacklet__subcmd__credentials_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help stacklet credentials commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__stacklet__list_commands] )) ||
-_stackablectl__help__stacklet__list_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__stacklet__subcmd__list_commands] )) ||
+_stackablectl__subcmd__help__subcmd__stacklet__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help stacklet list commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__version_commands] )) ||
-_stackablectl__help__version_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__version_commands] )) ||
+_stackablectl__subcmd__help__subcmd__version_commands() {
     local commands; commands=(
 'check:Check if there is a new version available' \
     )
     _describe -t commands 'stackablectl help version commands' commands "$@"
 }
-(( $+functions[_stackablectl__help__version__check_commands] )) ||
-_stackablectl__help__version__check_commands() {
+(( $+functions[_stackablectl__subcmd__help__subcmd__version__subcmd__check_commands] )) ||
+_stackablectl__subcmd__help__subcmd__version__subcmd__check_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl help version check commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator_commands] )) ||
-_stackablectl__operator_commands() {
+(( $+functions[_stackablectl__subcmd__operator_commands] )) ||
+_stackablectl__subcmd__operator_commands() {
     local commands; commands=(
 'list:List available operators' \
 'describe:Print out detailed operator information' \
@@ -2280,13 +2280,13 @@ _stackablectl__operator_commands() {
     )
     _describe -t commands 'stackablectl operator commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__describe_commands] )) ||
-_stackablectl__operator__describe_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl operator describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__help_commands] )) ||
-_stackablectl__operator__help_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__help_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__help_commands() {
     local commands; commands=(
 'list:List available operators' \
 'describe:Print out detailed operator information' \
@@ -2297,58 +2297,58 @@ _stackablectl__operator__help_commands() {
     )
     _describe -t commands 'stackablectl operator help commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__help__describe_commands] )) ||
-_stackablectl__operator__help__describe_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__help__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__help__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl operator help describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__help__help_commands] )) ||
-_stackablectl__operator__help__help_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__help__subcmd__help_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__help__subcmd__help_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl operator help help commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__help__install_commands] )) ||
-_stackablectl__operator__help__install_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__help__subcmd__install_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__help__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl operator help install commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__help__installed_commands] )) ||
-_stackablectl__operator__help__installed_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__help__subcmd__installed_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__help__subcmd__installed_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl operator help installed commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__help__list_commands] )) ||
-_stackablectl__operator__help__list_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__help__subcmd__list_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__help__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl operator help list commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__help__uninstall_commands] )) ||
-_stackablectl__operator__help__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__help__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__help__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl operator help uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__install_commands] )) ||
-_stackablectl__operator__install_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__install_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl operator install commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__installed_commands] )) ||
-_stackablectl__operator__installed_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__installed_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__installed_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl operator installed commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__list_commands] )) ||
-_stackablectl__operator__list_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__list_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl operator list commands' commands "$@"
 }
-(( $+functions[_stackablectl__operator__uninstall_commands] )) ||
-_stackablectl__operator__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__operator__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__operator__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl operator uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__release_commands] )) ||
-_stackablectl__release_commands() {
+(( $+functions[_stackablectl__subcmd__release_commands] )) ||
+_stackablectl__subcmd__release_commands() {
     local commands; commands=(
 'list:List available releases' \
 'describe:Print out detailed release information' \
@@ -2359,13 +2359,13 @@ _stackablectl__release_commands() {
     )
     _describe -t commands 'stackablectl release commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__describe_commands] )) ||
-_stackablectl__release__describe_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__release__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl release describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__help_commands] )) ||
-_stackablectl__release__help_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__help_commands] )) ||
+_stackablectl__subcmd__release__subcmd__help_commands() {
     local commands; commands=(
 'list:List available releases' \
 'describe:Print out detailed release information' \
@@ -2376,58 +2376,58 @@ _stackablectl__release__help_commands() {
     )
     _describe -t commands 'stackablectl release help commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__help__describe_commands] )) ||
-_stackablectl__release__help__describe_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__help__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__release__subcmd__help__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl release help describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__help__help_commands] )) ||
-_stackablectl__release__help__help_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__help__subcmd__help_commands] )) ||
+_stackablectl__subcmd__release__subcmd__help__subcmd__help_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl release help help commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__help__install_commands] )) ||
-_stackablectl__release__help__install_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__help__subcmd__install_commands] )) ||
+_stackablectl__subcmd__release__subcmd__help__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl release help install commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__help__list_commands] )) ||
-_stackablectl__release__help__list_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__help__subcmd__list_commands] )) ||
+_stackablectl__subcmd__release__subcmd__help__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl release help list commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__help__uninstall_commands] )) ||
-_stackablectl__release__help__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__help__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__release__subcmd__help__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl release help uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__help__upgrade_commands] )) ||
-_stackablectl__release__help__upgrade_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__help__subcmd__upgrade_commands] )) ||
+_stackablectl__subcmd__release__subcmd__help__subcmd__upgrade_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl release help upgrade commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__install_commands] )) ||
-_stackablectl__release__install_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__install_commands] )) ||
+_stackablectl__subcmd__release__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl release install commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__list_commands] )) ||
-_stackablectl__release__list_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__list_commands] )) ||
+_stackablectl__subcmd__release__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl release list commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__uninstall_commands] )) ||
-_stackablectl__release__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__release__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl release uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__release__upgrade_commands] )) ||
-_stackablectl__release__upgrade_commands() {
+(( $+functions[_stackablectl__subcmd__release__subcmd__upgrade_commands] )) ||
+_stackablectl__subcmd__release__subcmd__upgrade_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl release upgrade commands' commands "$@"
 }
-(( $+functions[_stackablectl__stack_commands] )) ||
-_stackablectl__stack_commands() {
+(( $+functions[_stackablectl__subcmd__stack_commands] )) ||
+_stackablectl__subcmd__stack_commands() {
     local commands; commands=(
 'list:List available stacks' \
 'describe:Describe a specific stack' \
@@ -2437,13 +2437,13 @@ _stackablectl__stack_commands() {
     )
     _describe -t commands 'stackablectl stack commands' commands "$@"
 }
-(( $+functions[_stackablectl__stack__describe_commands] )) ||
-_stackablectl__stack__describe_commands() {
+(( $+functions[_stackablectl__subcmd__stack__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__stack__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stack describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__stack__help_commands] )) ||
-_stackablectl__stack__help_commands() {
+(( $+functions[_stackablectl__subcmd__stack__subcmd__help_commands] )) ||
+_stackablectl__subcmd__stack__subcmd__help_commands() {
     local commands; commands=(
 'list:List available stacks' \
 'describe:Describe a specific stack' \
@@ -2453,48 +2453,48 @@ _stackablectl__stack__help_commands() {
     )
     _describe -t commands 'stackablectl stack help commands' commands "$@"
 }
-(( $+functions[_stackablectl__stack__help__describe_commands] )) ||
-_stackablectl__stack__help__describe_commands() {
+(( $+functions[_stackablectl__subcmd__stack__subcmd__help__subcmd__describe_commands] )) ||
+_stackablectl__subcmd__stack__subcmd__help__subcmd__describe_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stack help describe commands' commands "$@"
 }
-(( $+functions[_stackablectl__stack__help__help_commands] )) ||
-_stackablectl__stack__help__help_commands() {
+(( $+functions[_stackablectl__subcmd__stack__subcmd__help__subcmd__help_commands] )) ||
+_stackablectl__subcmd__stack__subcmd__help__subcmd__help_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stack help help commands' commands "$@"
 }
-(( $+functions[_stackablectl__stack__help__install_commands] )) ||
-_stackablectl__stack__help__install_commands() {
+(( $+functions[_stackablectl__subcmd__stack__subcmd__help__subcmd__install_commands] )) ||
+_stackablectl__subcmd__stack__subcmd__help__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stack help install commands' commands "$@"
 }
-(( $+functions[_stackablectl__stack__help__list_commands] )) ||
-_stackablectl__stack__help__list_commands() {
+(( $+functions[_stackablectl__subcmd__stack__subcmd__help__subcmd__list_commands] )) ||
+_stackablectl__subcmd__stack__subcmd__help__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stack help list commands' commands "$@"
 }
-(( $+functions[_stackablectl__stack__help__uninstall_commands] )) ||
-_stackablectl__stack__help__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__stack__subcmd__help__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__stack__subcmd__help__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stack help uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__stack__install_commands] )) ||
-_stackablectl__stack__install_commands() {
+(( $+functions[_stackablectl__subcmd__stack__subcmd__install_commands] )) ||
+_stackablectl__subcmd__stack__subcmd__install_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stack install commands' commands "$@"
 }
-(( $+functions[_stackablectl__stack__list_commands] )) ||
-_stackablectl__stack__list_commands() {
+(( $+functions[_stackablectl__subcmd__stack__subcmd__list_commands] )) ||
+_stackablectl__subcmd__stack__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stack list commands' commands "$@"
 }
-(( $+functions[_stackablectl__stack__uninstall_commands] )) ||
-_stackablectl__stack__uninstall_commands() {
+(( $+functions[_stackablectl__subcmd__stack__subcmd__uninstall_commands] )) ||
+_stackablectl__subcmd__stack__subcmd__uninstall_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stack uninstall commands' commands "$@"
 }
-(( $+functions[_stackablectl__stacklet_commands] )) ||
-_stackablectl__stacklet_commands() {
+(( $+functions[_stackablectl__subcmd__stacklet_commands] )) ||
+_stackablectl__subcmd__stacklet_commands() {
     local commands; commands=(
 'credentials:Display credentials for a stacklet' \
 'list:List deployed stacklets' \
@@ -2502,13 +2502,13 @@ _stackablectl__stacklet_commands() {
     )
     _describe -t commands 'stackablectl stacklet commands' commands "$@"
 }
-(( $+functions[_stackablectl__stacklet__credentials_commands] )) ||
-_stackablectl__stacklet__credentials_commands() {
+(( $+functions[_stackablectl__subcmd__stacklet__subcmd__credentials_commands] )) ||
+_stackablectl__subcmd__stacklet__subcmd__credentials_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stacklet credentials commands' commands "$@"
 }
-(( $+functions[_stackablectl__stacklet__help_commands] )) ||
-_stackablectl__stacklet__help_commands() {
+(( $+functions[_stackablectl__subcmd__stacklet__subcmd__help_commands] )) ||
+_stackablectl__subcmd__stacklet__subcmd__help_commands() {
     local commands; commands=(
 'credentials:Display credentials for a stacklet' \
 'list:List deployed stacklets' \
@@ -2516,54 +2516,54 @@ _stackablectl__stacklet__help_commands() {
     )
     _describe -t commands 'stackablectl stacklet help commands' commands "$@"
 }
-(( $+functions[_stackablectl__stacklet__help__credentials_commands] )) ||
-_stackablectl__stacklet__help__credentials_commands() {
+(( $+functions[_stackablectl__subcmd__stacklet__subcmd__help__subcmd__credentials_commands] )) ||
+_stackablectl__subcmd__stacklet__subcmd__help__subcmd__credentials_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stacklet help credentials commands' commands "$@"
 }
-(( $+functions[_stackablectl__stacklet__help__help_commands] )) ||
-_stackablectl__stacklet__help__help_commands() {
+(( $+functions[_stackablectl__subcmd__stacklet__subcmd__help__subcmd__help_commands] )) ||
+_stackablectl__subcmd__stacklet__subcmd__help__subcmd__help_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stacklet help help commands' commands "$@"
 }
-(( $+functions[_stackablectl__stacklet__help__list_commands] )) ||
-_stackablectl__stacklet__help__list_commands() {
+(( $+functions[_stackablectl__subcmd__stacklet__subcmd__help__subcmd__list_commands] )) ||
+_stackablectl__subcmd__stacklet__subcmd__help__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stacklet help list commands' commands "$@"
 }
-(( $+functions[_stackablectl__stacklet__list_commands] )) ||
-_stackablectl__stacklet__list_commands() {
+(( $+functions[_stackablectl__subcmd__stacklet__subcmd__list_commands] )) ||
+_stackablectl__subcmd__stacklet__subcmd__list_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl stacklet list commands' commands "$@"
 }
-(( $+functions[_stackablectl__version_commands] )) ||
-_stackablectl__version_commands() {
+(( $+functions[_stackablectl__subcmd__version_commands] )) ||
+_stackablectl__subcmd__version_commands() {
     local commands; commands=(
 'check:Check if there is a new version available' \
 'help:Print this message or the help of the given subcommand(s)' \
     )
     _describe -t commands 'stackablectl version commands' commands "$@"
 }
-(( $+functions[_stackablectl__version__check_commands] )) ||
-_stackablectl__version__check_commands() {
+(( $+functions[_stackablectl__subcmd__version__subcmd__check_commands] )) ||
+_stackablectl__subcmd__version__subcmd__check_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl version check commands' commands "$@"
 }
-(( $+functions[_stackablectl__version__help_commands] )) ||
-_stackablectl__version__help_commands() {
+(( $+functions[_stackablectl__subcmd__version__subcmd__help_commands] )) ||
+_stackablectl__subcmd__version__subcmd__help_commands() {
     local commands; commands=(
 'check:Check if there is a new version available' \
 'help:Print this message or the help of the given subcommand(s)' \
     )
     _describe -t commands 'stackablectl version help commands' commands "$@"
 }
-(( $+functions[_stackablectl__version__help__check_commands] )) ||
-_stackablectl__version__help__check_commands() {
+(( $+functions[_stackablectl__subcmd__version__subcmd__help__subcmd__check_commands] )) ||
+_stackablectl__subcmd__version__subcmd__help__subcmd__check_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl version help check commands' commands "$@"
 }
-(( $+functions[_stackablectl__version__help__help_commands] )) ||
-_stackablectl__version__help__help_commands() {
+(( $+functions[_stackablectl__subcmd__version__subcmd__help__subcmd__help_commands] )) ||
+_stackablectl__subcmd__version__subcmd__help__subcmd__help_commands() {
     local commands; commands=()
     _describe -t commands 'stackablectl version help help commands' commands "$@"
 }
