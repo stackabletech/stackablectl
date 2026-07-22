@@ -2,7 +2,7 @@
 name = "stackablectl"
 description = "Command line tool to interact with the Stackable Data Platform"
 # See <project-root>/Cargo.toml
-version = "1.4.0"
+version = "1.5.0"
 authors.workspace = true
 license.workspace = true
 edition.workspace = true

@@ -23,8 +23,8 @@ axum-extra = { version = "0.12", features = ["typed-header"] }
 bcrypt = "0.19"
 bindgen = "0.72"
 built = "0.8"
-cc = "1.0"
-clap = { version = "4.5", features = ["derive", "env"] }
+cc = "1.3"
+clap = { version = "4.6", features = ["derive", "env"] }
 clap_complete = "4.5"
 clap_complete_nushell = "4.5"
 comfy-table = { version = "7.1", features = ["custom_styling"] }
@@ -55,7 +55,7 @@ snafu = { version = "0.9", features = ["futures"] }
 stackable-operator = { git = "https://github.com/stackabletech/operator-rs.git", tag = "stackable-operator-0.113.4", default-features = false, features = ["crds", "kube-ws"] }
 tera = "2.0"
 termion = "4.0"
-tokio = { version = "1.38", features = ["rt-multi-thread", "macros", "fs", "process", "io-std"] }
+tokio = { version = "1.53", features = ["rt-multi-thread", "macros", "fs", "process", "io-std"] }
 toml = { version = "1.0", features = ["serde"] }
 tower-http = { version = "0.7", features = ["validate-request"] }
 tracing = "0.1"
