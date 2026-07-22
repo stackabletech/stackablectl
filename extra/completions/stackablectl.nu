@@ -1228,7 +1228,6 @@ module completions {
     --help(-h)                # Print help (see more with '--help')
     --version(-V)             # Print version
     pod: string               # The Pod to debug
-    ...cmd: string            # The command to run in the debug container
   ]
 
   def "nu-complete stackablectl version chart_source" [] {
