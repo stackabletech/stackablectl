@@ -14,7 +14,7 @@ on:
       - "go.sum"
 
 env:
-  RUST_VERSION: 1.93.0
+  RUST_VERSION: 1.95.0
   GO_VERSION: '^1.26.0'
   CARGO_TERM_COLOR: always
   CARGO_INCREMENTAL: "0"

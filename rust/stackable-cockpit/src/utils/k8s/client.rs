@@ -37,17 +37,27 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 #[derive(Debug, Snafu)]
 pub enum Error {
     #[snafu(display("failed to create Kubernetes client"))]
-    KubeClientCreate { source: kube::error::Error },
+    KubeClientCreate {
+        #[snafu(source(from(kube::error::Error, Box::new)))]
+        source: Box<kube::error::Error>,
+    },
 
     #[snafu(display("failed to fetch data from Kubernetes API"))]
-    KubeClientFetch { source: kube::error::Error },
+    KubeClientFetch {
+        #[snafu(source(from(kube::error::Error, Box::new)))]
+        source: Box<kube::error::Error>,
+    },
 
     #[snafu(display("failed to patch/create Kubernetes object"))]
-    KubeClientPatch { source: kube::error::Error },
+    KubeClientPatch {
+        #[snafu(source(from(kube::error::Error, Box::new)))]
+        source: Box<kube::error::Error>,
+    },
 
     #[snafu(display("failed to replace Kubernetes object"))]
     KubeClientReplace {
-        source: kube::error::Error,
+        #[snafu(source(from(kube::error::Error, Box::new)))]
+        source: Box<kube::error::Error>,
         gvk: GroupVersionKind,
     },
 
@@ -60,7 +70,10 @@ pub enum Error {
     DeserializeYaml { source: serde_yaml::Error },
 
     #[snafu(display("failed to run GVK discovery"))]
-    GVKDiscoveryRun { source: kube::error::Error },
+    GVKDiscoveryRun {
+        #[snafu(source(from(kube::error::Error, Box::new)))]
+        source: Box<kube::error::Error>,
+    },
 
     #[snafu(display("failed to deploy manifest because type of object {object:?} is not set"))]
     ObjectType { object: Box<DynamicObject> },

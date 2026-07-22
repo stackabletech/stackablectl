@@ -54,7 +54,10 @@ pub enum Error {
     Cache { source: cache::CmdError },
 
     #[snafu(display("failed to execute debug (sub)command"))]
-    Debug { source: debug::CmdError },
+    Debug {
+        #[snafu(source(from(debug::CmdError, Box::new)))]
+        source: Box<debug::CmdError>,
+    },
 
     #[snafu(display("failed to execute version (sub)command"))]
     Version { source: version::CmdError },
@@ -194,7 +197,6 @@ impl Cli {
         }
     }
 
-    #[allow(clippy::result_large_err)]
     fn xdg_directories() -> Result<ProjectDirs, Error> {
         ProjectDirs::from(
             USER_DIR_QUALIFIER,

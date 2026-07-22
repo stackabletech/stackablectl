@@ -18,6 +18,7 @@ helm-sys = { path = "../helm-sys" }
 bcrypt.workspace = true
 clap.workspace = true
 either.workspace = true
+hex.workspace = true
 indexmap.workspace = true
 rand.workspace = true
 reqwest.workspace = true

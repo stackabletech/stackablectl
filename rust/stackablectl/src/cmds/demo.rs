@@ -170,7 +170,8 @@ pub enum CmdError {
 
     #[snafu(display("failed to install demo {demo_name:?}"))]
     InstallDemo {
-        source: demo::Error,
+        #[snafu(source(from(demo::Error, Box::new)))]
+        source: Box<demo::Error>,
         demo_name: String,
     },
 
@@ -179,7 +180,8 @@ pub enum CmdError {
 
     #[snafu(display("failed to uninstall demo {demo_name:?}"))]
     UninstallDemo {
-        source: demo::Error,
+        #[snafu(source(from(demo::Error, Box::new)))]
+        source: Box<demo::Error>,
         demo_name: String,
     },
 

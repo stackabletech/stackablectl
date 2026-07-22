@@ -222,16 +222,12 @@ impl Cache {
     }
 
     fn file_path(base_path: &Path, file_url: &Url) -> PathBuf {
-        let mut hasher = Sha256::new();
-
         let sanitized_file_name = file_url
             .as_str()
             .replace(|c: char| !c.is_alphanumeric(), "-");
+        let file_url_hash = hex::encode(Sha256::digest(file_url.as_str().as_bytes()));
 
-        hasher.update(file_url.as_str().as_bytes());
-        let file_url_hash = hasher.finalize();
-
-        base_path.join(format!("{sanitized_file_name}-{file_url_hash:x}"))
+        base_path.join(format!("{sanitized_file_name}-{file_url_hash}"))
     }
 }
 
