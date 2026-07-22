@@ -1,6 +1,12 @@
-* Add heuristic for setting listener presets when the environment is Minikube ([#438]).
-* Add `uninstall` subcommand for `demo`/`stack` commands ([#429]).
-* Add confirmation prompt to `install` subcommand for namespace selection ([#429]).
-* Add `--assume-yes` option for running commands non-interactively ([#429]).
-* Support Helm charts sourced from OCI registries in demo/stack manifests ([#440]).
-* Abort early if `uninstall` is issued for `default` namespace ([#442]).
+* Add heuristic for setting listener presets when the environment is Minikube
+  See https://github.com/stackabletech/stackablectl/pull/438[stackablectl#438].
+* Add `uninstall` subcommand for `demo`/`stack` commands
+  See https://github.com/stackabletech/stackablectl/pull/429[stackablectl#429].
+* Add confirmation prompt to `install` subcommand for namespace selection
+  See https://github.com/stackabletech/stackablectl/pull/429[stackablectl#429].
+* Add `--assume-yes` option for running commands non-interactively
+  See https://github.com/stackabletech/stackablectl/pull/429[stackablectl#429].
+* Support Helm charts sourced from OCI registries in demo/stack manifests
+  See https://github.com/stackabletech/stackablectl/pull/440[stackablectl#440].
+* Abort early if `uninstall` is issued for `default` namespace
+  See https://github.com/stackabletech/stackablectl/pull/442[stackablectl#442].
