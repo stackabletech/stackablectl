@@ -210,6 +210,9 @@ pub async fn get_oci_index<'a>() -> Result<HashMap<&'a str, ChartSourceMetadata>
                 };
 
                 match release_version.as_str() {
+                    // Ignore "artifacthub.io" tags which don't point to an actual Helm Chart, but
+                    // to an ArtifactHub metadata file.
+                    "artifacthub.io" => continue,
                     "0.0.0-dev" => {
                         if let Some(repo) = source_index_files.get_mut(HELM_REPO_NAME_DEV) {
                             repo.entries
