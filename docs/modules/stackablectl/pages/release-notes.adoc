@@ -6,6 +6,8 @@ A full list of changes is available directly in https://github.com/stackabletech
 
 // WARNING: Please keep the empty newlines, otherwise headings are broken.
 
+include::partial$release-notes/release-1.5.2.adoc[]
+
 include::partial$release-notes/release-1.5.1.adoc[]
 
 include::partial$release-notes/release-1.5.0.adoc[]

@@ -1,0 +1,6 @@
+== 1.5.2
+
+* Do not add `index.yaml` based repos when OCI source is used.
+  See https://github.com/stackabletech/stackablectl/pull/457[stackablectl#457].
+* Ignore `artifacthub.io` tags in OCI index.
+  See https://github.com/stackabletech/stackablectl/pull/457[stackablectl#457].

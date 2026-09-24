@@ -4,7 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.2] - 2026-09-24
+
+### Changed
+
+- Do not add `index.yaml` based repos when OCI source is used ([#457]).
+
+### Fixed
+
+- Ignore `artifacthub.io` tags in OCI index ([#457]).
+
+[#457]: https://github.com/stackabletech/stackablectl/pull/457
+
 ## [1.5.1] - 2026-09-04
+
+### Fixed
 
 - Re-enable kube's proxy support ([#453]).
 
