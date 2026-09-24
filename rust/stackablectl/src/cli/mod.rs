@@ -170,6 +170,10 @@ impl Cli {
     /// Adds the default (or custom) Helm repository URLs. Internally this calls the Helm SDK written in Go through the
     /// `go-helm-wrapper`.
     pub fn add_helm_repos(&self) -> Result<(), helm::Error> {
+        if self.repos.chart_source == ChartSourceTypeArg::OCI {
+            return Ok(());
+        }
+
         tracing::info!("Add Helm repos");
 
         // Stable repository
@@ -400,7 +404,7 @@ fn get_files(default_file: &str, env_key: &str) -> Result<Vec<PathOrUrl>, PathOr
 /// mapped to ChartSourceType (see below): the reason why we don't have one
 /// enum is to avoid having to add clap dependencies to stackable-cockpit
 /// for the ValueEnum macro.
-#[derive(Clone, Debug, Default, ValueEnum)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, ValueEnum)]
 pub enum ChartSourceTypeArg {
     /// OCI registry
     #[default]
