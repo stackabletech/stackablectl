@@ -29,7 +29,7 @@ impl DisplayCondition {
 
 /// This trait unifies the different conditions, like [`Condition`],
 /// [`DeploymentCondition`], [`ClusterCondition`]. The method `plain` returns
-/// a plain text representation of the list of conditions. This list ist suited
+/// a plain text representation of the list of conditions. This list is suited
 /// for terminal output, i.e. stackablectl.
 pub trait ConditionsExt
 where

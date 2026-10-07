@@ -667,7 +667,7 @@ impl Client {
         })
     }
 
-    /// Creates a new [`Discovery`] object and immediatly runs a discovery.
+    /// Creates a new [`Discovery`] object and immediately runs a discovery.
     #[tracing::instrument(skip_all)]
     async fn run_discovery(client: kube::client::Client) -> Result<Discovery> {
         info!("running discovery");

@@ -177,7 +177,7 @@ impl ReleaseSpec {
             let iter_span = tracing::info_span!("upgrade_crds_iter", indicatif.pb_show = true);
 
             async move {
-                Span::current().pb_set_message(format!("Ugrading CRDs for {product_name}-operator").as_str());
+                Span::current().pb_set_message(format!("Upgrading CRDs for {product_name}-operator").as_str());
 
                 let release_branch = match product.version.pre.as_str() {
                     "dev" => "main".to_string(),

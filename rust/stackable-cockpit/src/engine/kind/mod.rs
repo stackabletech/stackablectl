@@ -30,7 +30,7 @@ pub enum Error {
     #[snafu(display("failed to run kind command"))]
     CommandFailedToRun { source: std::io::Error },
 
-    #[snafu(display("failed to successfuly run kind command ({error})"))]
+    #[snafu(display("failed to successfully run kind command ({error})"))]
     CommandErroredOut { error: String },
 
     #[snafu(display("missing required binary {binary:?}"))]

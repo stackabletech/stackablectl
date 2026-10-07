@@ -667,7 +667,7 @@ mod coffee {
 
         fn from_str(s: &str) -> Result<Self, Self::Err> {
             match s {
-                "coffee" | "coffe" => Ok(OperatorOrCoffee::Coffee),
+                "coffee" | "coffe" => Ok(OperatorOrCoffee::Coffee), // typos:ignore-line
                 _ => s.parse().map(OperatorOrCoffee::Operator),
             }
         }

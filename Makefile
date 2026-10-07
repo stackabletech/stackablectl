@@ -133,7 +133,7 @@ regenerate-nix:
 build: regenerate-charts regenerate-nix helm-package docker-build
 
 # This target is used by the CI
-# It doesn't make use of any nix dependencies and thus aviods building the
+# It doesn't make use of any nix dependencies and thus avoids building the
 # operator unnecessarily often.
 build-ci: regenerate-charts helm-package docker-build
 

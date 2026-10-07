@@ -170,4 +170,4 @@ $ stackablectl release upgrade 25.3 -i druid -i nifi
 ----
 would upgrade the existing operators as well as install the Stackable operators for Apache Druid and Apache NiFi.
 
-Likewise, operators can be exluded from the upgrade using the `--exclude`/`-e` subcommands.
+Likewise, operators can be excluded from the upgrade using the `--exclude`/`-e` subcommands.
