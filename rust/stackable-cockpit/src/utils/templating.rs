@@ -7,7 +7,7 @@ use tera::{Context, Kwargs, State, Tera, TeraResult};
 use crate::constants::PASSWORD_LENGTH;
 
 /// Renders the templated `content` by replacing template strings with the
-/// appropiate `parameters`. Internally this uses [`tera`] to render the final
+/// appropriate `parameters`. Internally this uses [`tera`] to render the final
 /// output. Available helper functions are:
 ///
 /// - `random_password`: Returns a random password with a relatively secure RNG.

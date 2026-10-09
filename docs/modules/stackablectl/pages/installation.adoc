@@ -2,7 +2,7 @@
 :page-aliases: stable@stackablectl::installation.adoc
 
 :latest-release: https://github.com/stackabletech/stackablectl/releases/tag/stackablectl-1.5.2
-:fish-comp-loations: https://fishshell.com/docs/current/completions.html#where-to-put-completions
+:fish-comp-locations: https://fishshell.com/docs/current/completions.html#where-to-put-completions
 :nushell-comp-locations: https://www.nushell.sh/book/custom_commands.html#persisting
 
 == Using Pre-Compiled Binaries
@@ -163,7 +163,7 @@ $ mv _stackablectl /usr/local/share/zsh/site-functions/
 Fish::
 +
 --
-Download the completions file and place it in any of the supported location listed {fish-comp-loations}[here].
+Download the completions file and place it in any of the supported location listed {fish-comp-locations}[here].
 
 [source,console]
 ----

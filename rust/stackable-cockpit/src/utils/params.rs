@@ -9,7 +9,7 @@ use snafu::{ResultExt, Snafu, ensure};
 #[cfg(feature = "openapi")]
 use utoipa::ToSchema;
 
-/// Parameter descibes a common parameter format. This format is used in demo
+/// Parameter describes a common parameter format. This format is used in demo
 /// and stack definitions.
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[cfg_attr(feature = "openapi", derive(ToSchema))]
@@ -21,7 +21,7 @@ pub struct Parameter {
     /// Parameter default value
     pub default: String,
 
-    /// Parameer value
+    /// Parameter value
     #[serde(skip)]
     pub value: String,
 
@@ -54,10 +54,10 @@ pub trait IntoParameters: Sized + IntoRawParameters {
             .map(|p| (p.name.clone(), p.default.clone()))
             .collect();
 
-        for raw_paramater in raw_parameters {
-            if !parameters.contains_key(&raw_paramater.name) {
+        for raw_parameter in raw_parameters {
+            if !parameters.contains_key(&raw_parameter.name) {
                 return InvalidParameterSnafu {
-                    parameter: raw_paramater.name,
+                    parameter: raw_parameter.name,
                     expected: parameters
                         .keys()
                         .cloned()
@@ -66,7 +66,7 @@ pub trait IntoParameters: Sized + IntoRawParameters {
                 }
                 .fail();
             }
-            parameters.insert(raw_paramater.name, raw_paramater.value);
+            parameters.insert(raw_parameter.name, raw_parameter.value);
         }
 
         Ok(parameters)

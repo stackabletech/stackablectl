@@ -49,7 +49,7 @@ where
     }
 }
 
-/// Returns wether the application should use colored output based on the user
+/// Returns whether the application should use colored output based on the user
 /// requested output and the `NO_COLOR` env variable. It currently does not
 /// factor in terminal support.
 pub fn use_colored_output(use_color: bool) -> bool {

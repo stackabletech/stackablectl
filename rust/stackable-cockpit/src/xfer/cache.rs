@@ -50,7 +50,7 @@ pub struct Cache {
 }
 
 impl Cache {
-    /// Returns wether the cache is enabled.
+    /// Returns whether the cache is enabled.
     pub fn is_enabled(&self) -> bool {
         match self.backend {
             Backend::Disk { .. } => true,

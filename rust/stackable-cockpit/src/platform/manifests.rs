@@ -69,7 +69,7 @@ pub enum Error {
     #[snafu(display("failed to create Kubernetes client"))]
     CreateKubeClient { source: k8s::Error },
 
-    /// This error indicates that the kube client failed to deloy manifests.
+    /// This error indicates that the kube client failed to deploy manifests.
     #[snafu(display("failed to deploy manifests using the kube client"))]
     DeployManifest { source: k8s::Error },
 }
