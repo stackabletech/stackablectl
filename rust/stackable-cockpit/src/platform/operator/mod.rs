@@ -3,10 +3,10 @@ use std::{fmt::Display, str::FromStr};
 use listener_operator::LISTENER_CLASS_PRESET;
 use semver::Version;
 use serde::Serialize;
-use yaml_serde::{Mapping, Value};
 use snafu::{ResultExt, Snafu, ensure};
 use tracing::{Span, info, instrument};
 use tracing_indicatif::{indicatif_println, span_ext::IndicatifSpanExt};
+use yaml_serde::{Mapping, Value};
 
 use crate::{
     constants::{

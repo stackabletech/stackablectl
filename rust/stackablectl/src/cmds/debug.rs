@@ -335,7 +335,13 @@ impl AsyncStdin {
             }
         };
         Ok(Self {
-            fd: AsyncFd::new(stdin).context(AsyncFdStdinSnafu)?,
+            // SAFETY: `stdin` is a handle to the process-wide standard input. Its file
+            // descriptor is valid and open, and `Stdin` neither closes nor replaces it, so it
+            // keeps referring to the same file description for the entire lifetime of the
+            // `AsyncFd`.
+            fd: unsafe { AsyncFd::register(stdin) }
+                .map_err(|err| err.into_parts().1)
+                .context(AsyncFdStdinSnafu)?,
             old_flags,
         })
     }

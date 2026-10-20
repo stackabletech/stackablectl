@@ -1,5 +1,5 @@
-use yaml_serde::Mapping;
 use stackable_operator::kvp::Labels;
+use yaml_serde::Mapping;
 
 use crate::platform::operator::ChartSourceType;
 
