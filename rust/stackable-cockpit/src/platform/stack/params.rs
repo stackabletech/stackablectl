@@ -1,4 +1,4 @@
-use serde_yaml::Mapping;
+use yaml_serde::Mapping;
 use stackable_operator::kvp::Labels;
 
 use crate::platform::operator::ChartSourceType;

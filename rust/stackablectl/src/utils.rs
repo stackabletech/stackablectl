@@ -1,6 +1,6 @@
 use std::env;
 
-use serde_yaml::{Mapping, Value};
+use yaml_serde::{Mapping, Value};
 use snafu::{ResultExt, Snafu};
 use stackable_cockpit::{
     constants::{HELM_REPO_NAME_DEV, HELM_REPO_NAME_STABLE, HELM_REPO_NAME_TEST},

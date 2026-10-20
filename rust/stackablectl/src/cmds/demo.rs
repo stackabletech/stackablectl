@@ -145,7 +145,7 @@ pub struct DemoUninstallArgs {
 #[derive(Debug, Snafu)]
 pub enum CmdError {
     #[snafu(display("failed to serialize YAML output"))]
-    SerializeYamlOutput { source: serde_yaml::Error },
+    SerializeYamlOutput { source: yaml_serde::Error },
 
     #[snafu(display("failed to serialize JSON output"))]
     SerializeJsonOutput { source: serde_json::Error },
@@ -301,7 +301,7 @@ async fn list_cmd(args: &DemoListArgs, list: demo::List) -> Result<String, CmdEr
             Ok(result.render())
         }
         OutputType::Json => serde_json::to_string(&*list).context(SerializeJsonOutputSnafu),
-        OutputType::Yaml => serde_yaml::to_string(&*list).context(SerializeYamlOutputSnafu),
+        OutputType::Yaml => yaml_serde::to_string(&*list).context(SerializeYamlOutputSnafu),
     }
 }
 
@@ -357,7 +357,7 @@ async fn describe_cmd(args: &DemoDescribeArgs, list: demo::List) -> Result<Strin
             Ok(result.render())
         }
         OutputType::Json => serde_json::to_string(&demo).context(SerializeJsonOutputSnafu),
-        OutputType::Yaml => serde_yaml::to_string(&demo).context(SerializeYamlOutputSnafu),
+        OutputType::Yaml => yaml_serde::to_string(&demo).context(SerializeYamlOutputSnafu),
     }
 }
 

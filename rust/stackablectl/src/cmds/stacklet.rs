@@ -72,7 +72,7 @@ pub enum CmdError {
     StackletCredentials { source: stacklet::Error },
 
     #[snafu(display("failed to serialize YAML output"))]
-    SerializeYamlOutput { source: serde_yaml::Error },
+    SerializeYamlOutput { source: yaml_serde::Error },
 
     #[snafu(display("failed to serialize JSON output"))]
     SerializeJsonOutput { source: serde_json::Error },
@@ -200,7 +200,7 @@ async fn list_cmd(args: &StackletListArgs) -> Result<String, CmdError> {
             Ok(result.render())
         }
         OutputType::Json => serde_json::to_string(&stacklets).context(SerializeJsonOutputSnafu),
-        OutputType::Yaml => serde_yaml::to_string(&stacklets).context(SerializeYamlOutputSnafu),
+        OutputType::Yaml => yaml_serde::to_string(&stacklets).context(SerializeYamlOutputSnafu),
     }
 }
 

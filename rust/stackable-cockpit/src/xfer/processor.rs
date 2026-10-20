@@ -10,7 +10,7 @@ pub type Result<T, E = ProcessorError> = std::result::Result<T, E>;
 #[derive(Debug, Snafu)]
 pub enum ProcessorError {
     #[snafu(display("failed to deserialize YAML content"))]
-    DeserializeYaml { source: serde_yaml::Error },
+    DeserializeYaml { source: yaml_serde::Error },
 
     #[snafu(display("failed to deserialize JSON content"))]
     DeserializeJson { source: serde_json::Error },
@@ -74,7 +74,7 @@ where
     type Output = T;
 
     fn process(&self, input: Self::Input) -> Result<Self::Output> {
-        serde_yaml::from_str(&input).context(DeserializeYamlSnafu)
+        yaml_serde::from_str(&input).context(DeserializeYamlSnafu)
     }
 }
 

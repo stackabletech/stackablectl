@@ -10,7 +10,7 @@ use crate::common::list::SpecIter;
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Releases {
-    #[serde(with = "serde_yaml::with::singleton_map_recursive")]
+    #[serde(with = "yaml_serde::with::singleton_map_recursive")]
     releases: IndexMap<String, ReleaseSpec>,
 }
 

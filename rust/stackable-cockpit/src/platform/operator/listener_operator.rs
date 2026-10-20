@@ -1,5 +1,5 @@
 use clap::ValueEnum;
-use serde_yaml::Value;
+use yaml_serde::Value;
 use snafu::ResultExt;
 use stackable_operator::{
     k8s_openapi::api::core::v1::Node,

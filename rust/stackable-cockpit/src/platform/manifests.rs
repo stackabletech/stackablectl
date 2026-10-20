@@ -63,7 +63,7 @@ pub enum Error {
     /// This error indicates that Helm chart options could not be serialized
     /// into YAML.
     #[snafu(display("failed to serialize Helm chart options"))]
-    SerializeOptions { source: serde_yaml::Error },
+    SerializeOptions { source: yaml_serde::Error },
 
     /// This error indicates that the creation of a kube client failed.
     #[snafu(display("failed to create Kubernetes client"))]
@@ -127,7 +127,7 @@ pub trait InstallManifestsExt {
                     };
 
                     // Serialize chart options to string
-                    let values_yaml = serde_yaml::to_string(&helm_chart.options)
+                    let values_yaml = yaml_serde::to_string(&helm_chart.options)
                         .context(SerializeOptionsSnafu)?;
 
                     // Install the Helm chart using the Helm wrapper

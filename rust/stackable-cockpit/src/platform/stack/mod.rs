@@ -13,7 +13,7 @@ use crate::common::list::SpecIter;
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StacksV2 {
-    #[serde(with = "serde_yaml::with::singleton_map_recursive")]
+    #[serde(with = "yaml_serde::with::singleton_map_recursive")]
     stacks: IndexMap<String, StackSpec>,
 }
 

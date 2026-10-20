@@ -3,7 +3,7 @@ use std::{fmt::Display, str::FromStr};
 use listener_operator::LISTENER_CLASS_PRESET;
 use semver::Version;
 use serde::Serialize;
-use serde_yaml::{Mapping, Value};
+use yaml_serde::{Mapping, Value};
 use snafu::{ResultExt, Snafu, ensure};
 use tracing::{Span, info, instrument};
 use tracing_indicatif::{indicatif_println, span_ext::IndicatifSpanExt};
@@ -230,7 +230,7 @@ impl OperatorSpec {
             None
         } else {
             Some(
-                serde_yaml::to_string(&helm_values)
+                yaml_serde::to_string(&helm_values)
                     .expect("serializing a small YAML Mapping back to a YAML string can't fail"),
             )
         };
