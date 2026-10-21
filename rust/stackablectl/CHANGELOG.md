@@ -6,13 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Replace unmaintained `serde_yaml` with its maintained fork `yaml_serde` ([#473]).
 - Bump `stackable-operator` to 0.121.0 ([#473]).
-- Bump `utoipa` to 6.0.0 and `utoipa-swagger-ui` to 10.0.1. The latter is pinned to an
-  unreleased commit to fix a vulnerability in `zip`, see [RUSTSEC-2026-0369] ([#473]).
+- Replace unmaintained `serde_yaml` with its maintained fork `yaml_serde` ([#473]).
 
 [#473]: https://github.com/stackabletech/stackablectl/pull/473
-[RUSTSEC-2026-0369]: https://rustsec.org/advisories/RUSTSEC-2026-0369
 
 ## [1.5.2] - 2026-09-24
 

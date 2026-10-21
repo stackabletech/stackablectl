@@ -14515,12 +14515,7 @@ rec {
         crateName = "utoipa";
         version = "6.0.0";
         edition = "2021";
-        workspace_member = null;
-        src = pkgs.fetchgit {
-          url = "https://github.com/juhaku/utoipa.git";
-          rev = "5aff30b375c0c72aeccfa8fa6100db8f2901b3ba";
-          sha256 = "02cmifjlgffr2z6za4pal7an6hsdkh72hi0rqy79qzpnla57l48g";
-        };
+        sha256 = "0kwr8hjzygz6wifx47nq1mykm1nzy564gylh7wm02wgzmqkzwrc7";
         authors = [
           "Juha Kukkonen <juha7kukkonen@gmail.com>"
         ];
@@ -14577,12 +14572,7 @@ rec {
         crateName = "utoipa-gen";
         version = "6.0.1";
         edition = "2021";
-        workspace_member = null;
-        src = pkgs.fetchgit {
-          url = "https://github.com/juhaku/utoipa.git";
-          rev = "5aff30b375c0c72aeccfa8fa6100db8f2901b3ba";
-          sha256 = "02cmifjlgffr2z6za4pal7an6hsdkh72hi0rqy79qzpnla57l48g";
-        };
+        sha256 = "1ay8n80153120ds33c6pwvz4mskqx860s1dykgq8i2yz7z4g2dfr";
         procMacro = true;
         libName = "utoipa_gen";
         authors = [
@@ -14606,27 +14596,21 @@ rec {
         features = {
           "actix_extras" = [ "regex" "syn/extra-traits" ];
           "axum_extras" = [ "regex" "syn/extra-traits" ];
-          "config" = [ "dep:utoipa-config" ];
+          "config" = [ "dep:utoipa-config" "dep:once_cell" ];
           "debug" = [ "syn/extra-traits" ];
           "regex" = [ "dep:regex" ];
           "rocket_extras" = [ "regex" "syn/extra-traits" ];
           "ulid" = [ "dep:ulid" ];
           "url" = [ "dep:url" ];
           "uuid" = [ "dep:uuid" ];
-          "yaml" = [ "utoipa/yaml" ];
         };
         resolvedDefaultFeatures = [ "indexmap" ];
       };
       "utoipa-swagger-ui" = rec {
         crateName = "utoipa-swagger-ui";
-        version = "10.0.1";
+        version = "10.0.2";
         edition = "2021";
-        workspace_member = null;
-        src = pkgs.fetchgit {
-          url = "https://github.com/juhaku/utoipa.git";
-          rev = "5aff30b375c0c72aeccfa8fa6100db8f2901b3ba";
-          sha256 = "02cmifjlgffr2z6za4pal7an6hsdkh72hi0rqy79qzpnla57l48g";
-        };
+        sha256 = "14jwl5vp65lws9w7yqdlqxfq4n1bibg5y4gldxf8hf2qc7wx47sg";
         libName = "utoipa_swagger_ui";
         authors = [
           "Juha Kukkonen <juha7kukkonen@gmail.com>"

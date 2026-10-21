@@ -1,7 +1,4 @@
 {
-  "git+https://github.com/juhaku/utoipa.git?rev=5aff30b375c0c72aeccfa8fa6100db8f2901b3ba#utoipa-gen@6.0.1": "02cmifjlgffr2z6za4pal7an6hsdkh72hi0rqy79qzpnla57l48g",
-  "git+https://github.com/juhaku/utoipa.git?rev=5aff30b375c0c72aeccfa8fa6100db8f2901b3ba#utoipa-swagger-ui@10.0.1": "02cmifjlgffr2z6za4pal7an6hsdkh72hi0rqy79qzpnla57l48g",
-  "git+https://github.com/juhaku/utoipa.git?rev=5aff30b375c0c72aeccfa8fa6100db8f2901b3ba#utoipa@6.0.0": "02cmifjlgffr2z6za4pal7an6hsdkh72hi0rqy79qzpnla57l48g",
   "git+https://github.com/stackabletech/operator-rs.git?tag=stackable-operator-0.121.0#k8s-version@0.1.4": "1dax2l1ghd609k19z4kznpnk5v40xbl84qwwxlfvwjamvf7jj6mm",
   "git+https://github.com/stackabletech/operator-rs.git?tag=stackable-operator-0.121.0#stackable-operator-derive@0.3.1": "1dax2l1ghd609k19z4kznpnk5v40xbl84qwwxlfvwjamvf7jj6mm",
   "git+https://github.com/stackabletech/operator-rs.git?tag=stackable-operator-0.121.0#stackable-operator@0.121.0": "1dax2l1ghd609k19z4kznpnk5v40xbl84qwwxlfvwjamvf7jj6mm",
