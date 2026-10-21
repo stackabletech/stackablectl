@@ -13,7 +13,7 @@ pub use spec::*;
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DemosV2 {
-    #[serde(with = "serde_yaml::with::singleton_map_recursive")]
+    #[serde(with = "yaml_serde::with::singleton_map_recursive")]
     demos: IndexMap<String, DemoSpec>,
 }
 

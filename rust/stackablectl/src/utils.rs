@@ -1,12 +1,12 @@
 use std::env;
 
-use serde_yaml::{Mapping, Value};
 use snafu::{ResultExt, Snafu};
 use stackable_cockpit::{
     constants::{HELM_REPO_NAME_DEV, HELM_REPO_NAME_STABLE, HELM_REPO_NAME_TEST},
     utils::path::PathOrUrl,
     xfer::{self, processor::Yaml},
 };
+use yaml_serde::{Mapping, Value};
 
 use crate::constants::{HELM_REPO_URL_DEV, HELM_REPO_URL_STABLE, HELM_REPO_URL_TEST};
 

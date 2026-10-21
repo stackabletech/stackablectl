@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Bump `stackable-operator` to 0.121.0 ([#473]).
+- Replace unmaintained `serde_yaml` with its maintained fork `yaml_serde` ([#473]).
+
+[#473]: https://github.com/stackabletech/stackablectl/pull/473
+
 ## [1.5.2] - 2026-09-24
 
 ### Changed

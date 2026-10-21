@@ -2,13 +2,13 @@ use futures::{StreamExt as _, TryStreamExt};
 use indexmap::IndexMap;
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
-use serde_yaml::Mapping;
 use snafu::{ResultExt, Snafu};
 use tokio::task::JoinError;
 use tracing::{Instrument, Span, debug, info, instrument};
 use tracing_indicatif::span_ext::IndicatifSpanExt as _;
 #[cfg(feature = "openapi")]
 use utoipa::ToSchema;
+use yaml_serde::Mapping;
 
 use crate::{
     PROGRESS_BAR_STYLE, helm,

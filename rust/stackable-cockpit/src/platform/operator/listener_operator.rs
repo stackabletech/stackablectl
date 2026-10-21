@@ -1,5 +1,4 @@
 use clap::ValueEnum;
-use serde_yaml::Value;
 use snafu::ResultExt;
 use stackable_operator::{
     k8s_openapi::api::core::v1::Node,
@@ -7,6 +6,7 @@ use stackable_operator::{
 };
 use tokio::sync::OnceCell;
 use tracing::{debug, info, instrument};
+use yaml_serde::Value;
 
 pub static LISTENER_CLASS_PRESET: OnceCell<ListenerClassPreset> = OnceCell::const_new();
 

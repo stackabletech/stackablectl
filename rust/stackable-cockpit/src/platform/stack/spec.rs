@@ -1,11 +1,11 @@
 use serde::{Deserialize, Serialize};
-use serde_yaml::Mapping;
 use snafu::{OptionExt, ResultExt, Snafu};
 use stackable_operator::kvp::{Label, LabelError};
 use tracing::{Span, debug, info, instrument, log::warn};
 use tracing_indicatif::span_ext::IndicatifSpanExt as _;
 #[cfg(feature = "openapi")]
 use utoipa::ToSchema;
+use yaml_serde::Mapping;
 
 use crate::{
     common::manifest::ManifestSpec,

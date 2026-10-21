@@ -132,7 +132,7 @@ pub enum CmdError {
     HelmError { source: helm::Error },
 
     #[snafu(display("failed to serialize YAML output"))]
-    SerializeYamlOutput { source: serde_yaml::Error },
+    SerializeYamlOutput { source: yaml_serde::Error },
 
     #[snafu(display("failed to serialize JSON output"))]
     SerializeJsonOutput { source: serde_json::Error },
@@ -252,7 +252,7 @@ async fn list_cmd(
             Ok(result.render())
         }
         OutputType::Json => serde_json::to_string(&release_list).context(SerializeJsonOutputSnafu),
-        OutputType::Yaml => serde_yaml::to_string(&release_list).context(SerializeYamlOutputSnafu),
+        OutputType::Yaml => yaml_serde::to_string(&release_list).context(SerializeYamlOutputSnafu),
     }
 }
 
@@ -314,7 +314,7 @@ async fn describe_cmd(
                 Ok(result.render())
             }
             OutputType::Json => serde_json::to_string(&release).context(SerializeJsonOutputSnafu),
-            OutputType::Yaml => serde_yaml::to_string(&release).context(SerializeYamlOutputSnafu),
+            OutputType::Yaml => yaml_serde::to_string(&release).context(SerializeYamlOutputSnafu),
         },
         None => Err(CmdError::NoSuchRelease {
             release: args.release.clone(),

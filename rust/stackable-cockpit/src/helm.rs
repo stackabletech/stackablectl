@@ -29,7 +29,7 @@ pub struct Chart {
     pub name: String,
     pub repo: ChartRepo,
     pub version: String,
-    pub options: serde_yaml::Value,
+    pub options: yaml_serde::Value,
 }
 
 #[derive(Debug, Deserialize)]
@@ -81,7 +81,7 @@ pub enum Error {
     DeserializeJson { source: serde_json::Error },
 
     #[snafu(display("failed to deserialize YAML data"))]
-    DeserializeYaml { source: serde_yaml::Error },
+    DeserializeYaml { source: yaml_serde::Error },
 
     #[snafu(display("failed to retrieve remote content"))]
     FetchRemoteContent { source: reqwest::Error },
@@ -537,7 +537,7 @@ where
         .await
         .context(FetchRemoteContentSnafu)?;
 
-    serde_yaml::from_str(&index_file_content).context(DeserializeYamlSnafu)
+    yaml_serde::from_str(&index_file_content).context(DeserializeYamlSnafu)
 }
 
 #[cfg(test)]

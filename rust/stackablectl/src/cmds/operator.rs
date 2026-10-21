@@ -153,7 +153,7 @@ pub enum CmdError {
     CommonClusterArgs { source: CommonClusterArgsError },
 
     #[snafu(display("failed to serialize YAML output"))]
-    SerializeYamlOutput { source: serde_yaml::Error },
+    SerializeYamlOutput { source: yaml_serde::Error },
 
     #[snafu(display("failed to serialize JSON output"))]
     SerializeJsonOutput { source: serde_json::Error },
@@ -256,7 +256,7 @@ async fn list_cmd(args: &OperatorListArgs, cli: &Cli) -> Result<String, CmdError
             Ok(result.render())
         }
         OutputType::Json => serde_json::to_string(&versions_list).context(SerializeJsonOutputSnafu),
-        OutputType::Yaml => serde_yaml::to_string(&versions_list).context(SerializeYamlOutputSnafu),
+        OutputType::Yaml => yaml_serde::to_string(&versions_list).context(SerializeYamlOutputSnafu),
     }
 }
 
@@ -319,7 +319,7 @@ async fn describe_cmd(args: &OperatorDescribeArgs, cli: &Cli) -> Result<String, 
             Ok(result.render())
         }
         OutputType::Json => serde_json::to_string(&versions_list).context(SerializeJsonOutputSnafu),
-        OutputType::Yaml => serde_yaml::to_string(&versions_list).context(SerializeYamlOutputSnafu),
+        OutputType::Yaml => yaml_serde::to_string(&versions_list).context(SerializeYamlOutputSnafu),
     }
 }
 
@@ -502,7 +502,7 @@ fn installed_cmd(args: &OperatorInstalledArgs) -> Result<String, CmdError> {
             Ok(result.render())
         }
         OutputType::Json => serde_json::to_string(&installed).context(SerializeJsonOutputSnafu),
-        OutputType::Yaml => serde_yaml::to_string(&installed).context(SerializeYamlOutputSnafu),
+        OutputType::Yaml => yaml_serde::to_string(&installed).context(SerializeYamlOutputSnafu),
     }
 }
 

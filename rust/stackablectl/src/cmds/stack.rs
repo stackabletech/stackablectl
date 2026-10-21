@@ -144,7 +144,7 @@ pub enum CmdError {
     PathOrUrlParse { source: PathOrUrlParseError },
 
     #[snafu(display("failed to serialize YAML output"))]
-    SerializeYamlOutput { source: serde_yaml::Error },
+    SerializeYamlOutput { source: yaml_serde::Error },
 
     #[snafu(display("failed to serialize JSON output"))]
     SerializeJsonOutput { source: serde_json::Error },
@@ -291,7 +291,7 @@ fn list_cmd(args: &StackListArgs, stack_list: stack::StackList) -> Result<String
             Ok(result.render())
         }
         OutputType::Json => serde_json::to_string(&stack_list).context(SerializeJsonOutputSnafu),
-        OutputType::Yaml => serde_yaml::to_string(&stack_list).context(SerializeYamlOutputSnafu),
+        OutputType::Yaml => yaml_serde::to_string(&stack_list).context(SerializeYamlOutputSnafu),
     }
 }
 
@@ -354,7 +354,7 @@ fn describe_cmd(
                 Ok(result.render())
             }
             OutputType::Json => serde_json::to_string(&stack).context(SerializeJsonOutputSnafu),
-            OutputType::Yaml => serde_yaml::to_string(&stack).context(SerializeYamlOutputSnafu),
+            OutputType::Yaml => yaml_serde::to_string(&stack).context(SerializeYamlOutputSnafu),
         },
         None => Ok("No such stack".into()),
     }

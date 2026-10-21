@@ -1,4 +1,4 @@
-use serde_yaml::{Mapping, Value};
+use yaml_serde::{Mapping, Value};
 
 /// Extracts the Helm values for a specific operator from the operator values mapping.
 ///

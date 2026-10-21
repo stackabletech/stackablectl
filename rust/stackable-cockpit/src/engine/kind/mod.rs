@@ -40,7 +40,7 @@ pub enum Error {
     DockerCheckCommand { source: docker::Error },
 
     #[snafu(display("failed to covert kind config to YAML"))]
-    ConfigSerialization { source: serde_yaml::Error },
+    ConfigSerialization { source: yaml_serde::Error },
 }
 
 #[derive(Debug)]
@@ -80,7 +80,7 @@ impl Cluster {
 
         debug!("Creating kind cluster config");
         let config = Config::new(self.node_count, self.cp_node_count);
-        let config_string = serde_yaml::to_string(&config).context(ConfigSerializationSnafu)?;
+        let config_string = yaml_serde::to_string(&config).context(ConfigSerializationSnafu)?;
 
         debug!("Creating kind cluster");
         let mut kind_cmd = Command::new("kind")

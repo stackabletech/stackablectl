@@ -67,7 +67,7 @@ pub enum Error {
     },
 
     #[snafu(display("failed to deserialize YAML data"))]
-    DeserializeYaml { source: serde_yaml::Error },
+    DeserializeYaml { source: yaml_serde::Error },
 
     #[snafu(display("failed to run GVK discovery"))]
     GVKDiscoveryRun {
@@ -140,7 +140,7 @@ impl Client {
         // TODO (Techassi): Impl IntoIterator for Labels
         let labels: BTreeMap<String, String> = labels.into();
 
-        for manifest in serde_yaml::Deserializer::from_str(manifests) {
+        for manifest in yaml_serde::Deserializer::from_str(manifests) {
             let mut object = DynamicObject::deserialize(manifest).context(DeserializeYamlSnafu)?;
 
             // Add our own labels to the object
@@ -220,7 +220,7 @@ impl Client {
     /// method will fail if it is unable to parse the CRDs, unable to
     /// resolve GVKs or unable to replace/create the dynamic objects.
     pub async fn replace_crds(&self, crds: &str) -> Result<()> {
-        for crd in serde_yaml::Deserializer::from_str(crds) {
+        for crd in yaml_serde::Deserializer::from_str(crds) {
             let mut object = DynamicObject::deserialize(crd).context(DeserializeYamlSnafu)?;
 
             let object_type = object.types.as_ref().ok_or(
