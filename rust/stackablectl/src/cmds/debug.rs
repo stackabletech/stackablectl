@@ -1,6 +1,6 @@
 use std::{
     io::{Read, Stdin},
-    os::fd::AsRawFd,
+    os::fd::{AsRawFd, RawFd},
     task::{Poll, ready},
 };
 
@@ -333,29 +333,44 @@ impl AsyncStdin {
             if status == -1 {
                 return Err(std::io::Error::last_os_error()).context(AsyncifyStdinSnafu);
             }
+        }
+
+        // From here on stdin is non-blocking, so every error path has to revert the flags itself.
+        // `Drop` cannot do that for us, because it only runs once `Self` has been constructed, and
+        // the flags are shared with the stdin of the shell we are returning to.
+        // SAFETY: `stdin` is a handle to the process-wide standard input. Its file descriptor is
+        // valid and open, and `Stdin` neither closes nor replaces it, so it keeps referring to the
+        // same file description for the entire lifetime of the `AsyncFd`.
+        let fd = match unsafe { AsyncFd::register(stdin) } {
+            Ok(fd) => fd,
+            Err(err) => {
+                let (stdin, err) = err.into_parts();
+                revert_stdin_flags(stdin.as_raw_fd(), old_flags);
+                return Err(err).context(AsyncFdStdinSnafu);
+            }
         };
-        Ok(Self {
-            // SAFETY: `stdin` is a handle to the process-wide standard input. Its file
-            // descriptor is valid and open, and `Stdin` neither closes nor replaces it, so it
-            // keeps referring to the same file description for the entire lifetime of the
-            // `AsyncFd`.
-            fd: unsafe { AsyncFd::register(stdin) }
-                .map_err(|err| err.into_parts().1)
-                .context(AsyncFdStdinSnafu)?,
-            old_flags,
-        })
+
+        Ok(Self { fd, old_flags })
+    }
+}
+
+/// Reverts the file status flags of the stdin file descriptor `fd` to `old_flags`.
+///
+/// A failure is only logged, because the callers either fail already or are being dropped. Panicking
+/// here would be counter-productive: while unwinding, it would abort the process and thereby skip
+/// restoring the terminal from raw mode, which is worse than a non-blocking stdin.
+fn revert_stdin_flags(fd: RawFd, old_flags: i32) {
+    if unsafe { libc::fcntl(fd, libc::F_SETFL, old_flags) } == -1 {
+        error!(
+            "unable to revert stdin flags: {error}",
+            error = std::io::Error::last_os_error()
+        );
     }
 }
 
 impl Drop for AsyncStdin {
     fn drop(&mut self) {
-        let status = unsafe { libc::fcntl(self.fd.as_raw_fd(), libc::F_SETFL, self.old_flags) };
-        if status == -1 {
-            panic!(
-                "unable to revert stdin flags: {error}",
-                error = std::io::Error::last_os_error()
-            );
-        }
+        revert_stdin_flags(self.fd.as_raw_fd(), self.old_flags);
     }
 }
 
