@@ -1,0 +1,6 @@
+== 1.5.3
+
+* Bump `stackable-operator` to 0.121.0.
+  See https://github.com/stackabletech/stackablectl/pull/473[stackablectl#473]
+* Replace unmaintained `serde_yaml` with its maintained fork `yaml_serde`.
+  See https://github.com/stackabletech/stackablectl/pull/473[stackablectl#473]
