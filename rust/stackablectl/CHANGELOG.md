@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.3] - 2026-11-20
+
 ### Changed
 
 - Bump `stackable-operator` to 0.121.0 ([#473]).
